@@ -3,7 +3,7 @@
 Hlavná verzia denníka je v Claude Docs „Rozoberačka – denník stavby“. Tento súbor je jeho pracovná kópia pre agenta Dirigent.
 
 ## Otvorené úlohy
-- [ ] P1 Prepnúť repozitár na Private (Settings → Danger Zone → Change visibility)
+- [x] P1 Prepnúť repozitár na Private (Settings → Danger Zone → Change visibility)
 - [ ] P3 Rozhovory s 10 vrakoviskami – odložené
 - [ ] P3 Pilot s 5 až 20 vrakoviskami – odložené
 - [ ] P2 Cieľová skupina a kraj pilotu (návrh: vrakoviská, značky Škoda a VW) – potvrdiť
@@ -24,6 +24,7 @@ Hlavná verzia denníka je v Claude Docs „Rozoberačka – denník stavby“. 
 ## Denník
 | Kedy | Čo sme urobili | Čo to znamená |
 | --- | --- | --- |
+| 2. 11. 2026, 17:45 | Repozitár kamiljabarkhel-svg/Rozoberacka prepnutý na Private (urobil majiteľ). Overené cez GitHub API: „private: true“ | Kód a dáta projektu nevidí nikto cudzí |
 | 2. 11. 2026, 17:42 | Denník zlúčený do vetvy `main` (odteraz sa ukladá do main). Návod `supabase/README.md`: nasadenie v 8 krokoch (Free, Frankfurt, súbory 01→02→03, kontrola počtov 6/98/706/11/53, RLS, bucket) a čo robiť pri chybe „must be owner of table objects“ – storage časť je na konci `01_schema.sql`, chýbajú len 3 pravidlá pre fotky, doklikajú sa v Storage → Policies. Pridaná úloha: repozitár na Private | Majiteľ môže nasadiť databázu aj pri tejto chybe; kód ani databáza sa nemenili |
 | 2. 11. 2026, 17:30 | Session: zhrnutie stavu, navrhnutý prvý krok – založiť projekt v Supabase (región EU, Frankfurt) a v SQL Editore spustiť `01_schema.sql`, `02_kategorie.sql`, `03_katalog.sql`, potom kontrola počtov. Kód ani databáza sa nemenili | Čaká sa na súhlas majiteľa a založenie účtu Supabase |
 | 2. 11. 2026, 17:21 | GitHub: repozitár kamiljabarkhel-svg/rozoberacka, nainštalovaná aplikácia Claude, nahraný celý projekt | Agent v Claude Code môže začať kódovať |
