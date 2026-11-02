@@ -7,3 +7,4 @@ node_modules/
 out/
 .env*.local
 !.env.example
+.claude/worktrees/
