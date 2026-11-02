@@ -102,3 +102,14 @@ Zdroj: analýza RRR.lt/Ovoko, Opisto.fr, Autobazar.sk (otvorené 2. 11. 2026). V
 9. Mazanie inzerátu je dvojkrokové priamo na stránke (žiadne vyskakovacie okná prehliadača).
 
 Zámerne NEROBÍME teraz: online platby a doručenie cez portál (RRR, Opisto), hľadanie podľa ŠPZ (Opisto), platforma pre servisy so zľavou (Opisto.pro), blog, newsletter. Sú v denníku ako neskoršie nápady.
+
+## Formulár predajcu a nástenka (2. 11. 2026, 18:01)
+Vzor je v `prototyp.html`.
+- **Povinné polia** (označené *, chyba sa ukáže červeno pri poli): názov dielu (min. 3 znaky), kategória, kód súčiastky / OEM číslo (min. 4 písmená alebo číslice), značka auta, model (ak ho katalóg pozná), ročník, stav, cena > 0 €, záruka, odovzdanie, aspoň 1 fotka, popis (min. 20 znakov), mesto, telefón (min. 9 číslic). Nepovinné: podkategória, výrobca dielu (Bosch, Valeo…), motorizácia (prázdna = všetky), prevodovka, km, strana, „pasuje aj na“, odskúšaný, vrátenie.
+- Formulár je v 5 krokoch: Diel → Auto → Stav, cena a podmienky → Fotky a popis → Kontakt.
+- Overovanie musí byť aj v databáze (NOT NULL a CHECK), nielen vo formulári. Nový stĺpec `listings.part_maker text`.
+- CSV import: povinné stĺpce nazov, znacka, model, oem, cena, kategoria.
+- **Nástenka predajcu** (prvá záložka portálu): pozdrav a dátum, rýchle akcie (Pridať inzerát, Import, Všetky inzeráty), 6 čísel (aktívne + ich hodnota v €, zobrazenia, odkryté telefóny + počet na 100 zobrazení, nové správy, predané + suma, pozastavené), graf najsledovanejších inzerátov, zoznam „Treba vybaviť“ (správy, bez fotky, bez OEM, bez popisu, pozastavené, profil) a počty aktívnych inzerátov podľa kategórie.
+- **Moje inzeráty**: hromadný výber a akcie (aktivovať, pozastaviť, predané, zmazať s potvrdením), triedenie (najnovšie, zobrazenia, telefóny, cena), filtre aj „bez OEM“ a „bez popisu“.
+- Na počítači má portál bočné menu, na mobile záložky hore. Vstup: tlačidlo „Prihlásenie predajcu“ v hlavičke a odkaz „Vytvorte si účet predajcu zadarmo“ na úvode.
+- Chyba z prototypu, nesmie sa zopakovať: CSS trieda `top` bola použitá aj pre hlavičku aj pre TOP inzerát, takže TOP inzeráty ostávali prilepené pri scrollovaní. Používať jednoznačné názvy tried (napr. `is-top`).
