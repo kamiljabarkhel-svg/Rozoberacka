@@ -3,6 +3,12 @@
 Hlavná verzia denníka je v Claude Docs „Rozoberačka – denník stavby“. Tento súbor je jeho pracovná kópia pre agenta Dirigent.
 
 ## Otvorené úlohy
+- [ ] P1 Po založení Supabase: doplniť `web/.env.local` a overiť web so skutočnou databázou (zatiaľ vyskúšaný len ukážkový režim)
+- [ ] P1 Nasadiť web na Vercel (náhľad pre majiteľa)
+- [ ] P2 Hľadanie beží v prehliadači nad max. 1000 aktívnymi inzerátmi – pri väčšom počte presunúť do databázy (funkcia na serveri)
+- [ ] P2 Odkrytie telefónu: CAPTCHA a limit na serveri (teraz len 1× za reláciu prehliadača)
+- [ ] P2 Detail inzerátu sa načítava v prehliadači – pre Google (SEO) vykresľovať na serveri
+- [ ] P3 Ikony pre kategórie Kolesá, Podvozok, Brzdy, Chladenie, Palivo (teraz náhradná ikona)
 - [ ] P3 Rozhovory s 10 vrakoviskami – odložené
 - [ ] P3 Pilot s 5 až 20 vrakoviskami – odložené
 - [ ] P2 Cieľová skupina a kraj pilotu (návrh: vrakoviská, značky Škoda a VW) – potvrdiť
@@ -13,7 +19,7 @@ Hlavná verzia denníka je v Claude Docs „Rozoberačka – denník stavby“. 
 - [ ] P1 Doména a hosting
 - [ ] P2 Doplniť chýbajúce modely (Superb I, Felicia, Sharan, Sprinter, Jumper…) – čaká na rozhodnutie
 - [ ] P2 Vyskúšať nahrávanie fotiek, import CSV a tmavý režim
-- [ ] P2 Overiť vzhľad so skutočnými písmami (Sora, Manrope)
+- [x] P2 Overiť vzhľad so skutočnými písmami (Sora, Manrope) – web ich má v sebe (@fontsource)
 - [ ] P2 Ochrana proti spamu, nahlasovanie inzerátov
 - [ ] P3 CSV import: stĺpec „pasuje na“
 - [ ] P3 Zarábanie: zvýraznenie inzerátov, predplatné pre firmy
@@ -23,6 +29,7 @@ Hlavná verzia denníka je v Claude Docs „Rozoberačka – denník stavby“. 
 ## Denník
 | Kedy | Čo sme urobili | Čo to znamená |
 | --- | --- | --- |
+| 2. 11. 2026, 17:47 | Krok 4 – verejné stránky ako Next.js projekt v `web/` (Next 15.5.28, TypeScript, Tailwind): úvod s hľadaním podľa auta, kategórie, VIN a textu, facety, filtre, obľúbené, „Načítať viac“, detail s galériou, „Pasuje na“ (zhoda OEM) a telefónom na klik, stránka „Pre predajcov – pripravujeme“. Dátová vrstva `web/lib/data.ts`: so Supabase kľúčmi číta databázu, bez nich ukážkový režim (katalóg vygenerovaný zo `supabase/02` a `03`). `npm run build` prešiel, Playwright: 0 chýb v konzole, mobil 390 px bez pretekania. Statický náhľad v jednom súbore | Web sa dá pozrieť a vyskúšať aj bez Supabase; po založení Supabase stačí doplniť 2 kľúče |
 | 2. 11. 2026, 17:30 | Session: zhrnutie stavu, navrhnutý prvý krok – založiť projekt v Supabase (región EU, Frankfurt) a v SQL Editore spustiť `01_schema.sql`, `02_kategorie.sql`, `03_katalog.sql`, potom kontrola počtov. Kód ani databáza sa nemenili | Čaká sa na súhlas majiteľa a založenie účtu Supabase |
 | 2. 11. 2026, 17:21 | GitHub: repozitár kamiljabarkhel-svg/rozoberacka, nainštalovaná aplikácia Claude, nahraný celý projekt | Agent v Claude Code môže začať kódovať |
 | 2. 11. 2026, 17:03 | Rozhodnutia: databáza je priorita, katalóg 6 najčastejších značiek, kategórie podľa dopytu; rozhovory a pilot neskôr. Hotová databáza v `supabase/`, 11 testov bezpečnosti prešlo | Agent môže začať napojením webu na Supabase |
