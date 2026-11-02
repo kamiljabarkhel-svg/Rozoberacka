@@ -9,7 +9,7 @@ body{margin:0;background:var(--bg);color:var(--ink);font:500 16px/1.5 var(--f-b)
 select,input,button,textarea{font:inherit}
 :focus-visible{outline:3px solid var(--acc);outline-offset:2px}
 h1,h2,h3{font-family:var(--f-d);text-wrap:balance}
-.top{background:color-mix(in srgb,var(--card) 88%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding:calc(env(safe-area-inset-top,0px) + 10px) 16px 10px;position:sticky;top:0;z-index:15}
+.site-header{background:color-mix(in srgb,var(--card) 88%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding:calc(env(safe-area-inset-top,0px) + 10px) 16px 10px;position:sticky;top:0;z-index:15}
 .tb{max-width:1160px;margin:0 auto;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
 .brand{display:flex;align-items:center;gap:9px;font:800 1.2rem/1 var(--f-d);letter-spacing:-.01em}
 .brand svg{display:block;width:32px;height:32px;padding:6px;border-radius:4px;background:var(--pet);color:var(--acc)}

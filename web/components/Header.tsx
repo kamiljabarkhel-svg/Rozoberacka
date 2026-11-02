@@ -26,7 +26,7 @@ export default function Header() {
 
   const Brand = STATIC_PREVIEW ? "a" : Link;
   return (
-    <header className="top">
+    <header className="site-header">
       <div className="tb">
         <Brand className="brand" href={homeHref}><Icon id="i-pr" />Rozoberačka</Brand>
         <form className="gs" role="search" onSubmit={(e) => { e.preventDefault(); send(q, true); }}>
