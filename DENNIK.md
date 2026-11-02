@@ -7,7 +7,11 @@ Hlavná verzia denníka je v Claude Docs „Rozoberačka – denník stavby“. 
 - [ ] P2 Doplniť do databázy stĺpce a tabuľku `messages` pre nové funkcie (CLAUDE.md, sekcia Funkcie podľa konkurencie)
 - [ ] P3 Neskôr zvážiť: online platby a doručenie cez portál, platforma pre servisy, blog s radami k modelom, newsletter
 - [ ] P1 Po založení Supabase: doplniť `web/.env.local` a overiť web so skutočnou databázou (zatiaľ vyskúšaný len ukážkový režim)
-- [ ] P1 Nasadiť web na Vercel (náhľad pre majiteľa)
+- [ ] P1 Nasadiť web na Vercel (Root Directory web, NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY) – návod vo `web/README.md`
+- [ ] P1 Supabase → Authentication → URL Configuration: Site URL = adresa z Vercelu (+ Redirect URLs `https://<nazov>.vercel.app/**`, `http://localhost:3000/**`)
+- [ ] P1 Po nasadení otestovať celý postup: registrácia predajcu, potvrdzovací e-mail vedie na Vercel (nie localhost), pridanie inzerátu, zobrazenie na úvode
+- [ ] P2 `npm audit`: hlásené zraniteľnosti v balíkoch postcss a sharp (cez Next.js) – zvážiť aktualizáciu Next.js, len so súhlasom
+- [ ] P2 Vlastný SMTP pre e-maily (vstavané e-maily Supabase majú nízky limit) – pred pilotom
 - [ ] P2 Hľadanie beží v prehliadači nad max. 1000 aktívnymi inzerátmi – pri väčšom počte presunúť do databázy (funkcia na serveri)
 - [ ] P2 Odkrytie telefónu: CAPTCHA a limit na serveri (teraz len 1× za reláciu prehliadača)
 - [ ] P2 Detail inzerátu sa načítava v prehliadači – pre Google (SEO) vykresľovať na serveri
@@ -16,7 +20,7 @@ Hlavná verzia denníka je v Claude Docs „Rozoberačka – denník stavby“. 
 - [ ] P3 Rozhovory s 10 vrakoviskami – odložené
 - [ ] P3 Pilot s 5 až 20 vrakoviskami – odložené
 - [ ] P2 Cieľová skupina a kraj pilotu (návrh: vrakoviská, značky Škoda a VW) – potvrdiť
-- [ ] P1 PRIORITA: nasadiť `supabase/` do Supabase a napojiť web (návrh hotový a otestovaný)
+- [x] P1 PRIORITA: nasadiť `supabase/` do Supabase a napojiť web (hotové 22:00: 01–04 nasadené, RLS overené, portál predajcu af9fb53)
 - [x] P1 GitHub: repozitár `rozoberacka` a pripojenie ku Claude
 - [ ] P1 Katalóg áut z overeného zdroja (napr. licencovaný TecDoc); súčasný je z pamäte
 - [ ] P1 Právny základ: GDPR, obchodné podmienky, forma podnikania
@@ -33,6 +37,7 @@ Hlavná verzia denníka je v Claude Docs „Rozoberačka – denník stavby“. 
 ## Denník
 | Kedy | Čo sme urobili | Čo to znamená |
 | --- | --- | --- |
+| 2. 11. 2026, 22:06 | Príprava na Vercel (nič nenasadené): `npm ci`, `npm run build`, `npx tsc --noEmit`, `npx eslint .` bez chýb; `web/.env.example` má obe premenné; v gite nie je žiadny kľúč (`.env.local` je v `.gitignore`). Prihlásenie a obnova hesla posielajú spiatočnú adresu z `window.location.origin` (`/predajca`, `/predajca?heslo=1`), nie natvrdo localhost. Do `web/README.md` pridaný návod „Nasadenie na Vercel (krok za krokom)“ vrátane Site URL a Redirect URLs v Supabase. `npm audit` hlási zraniteľnosti v postcss a sharp (P2) | Ďalší krok robí majiteľ: založiť Vercel (Hobby, zadarmo), nasadiť priečinok `web` s 2 premennými a v Supabase nastaviť Site URL a Redirect URLs; potom spolu otestujeme registráciu |
 | 2. 11. 2026, 22:00 | Supabase nasadená a overená: katalóg 6 značiek / 98 modelov / 706 motorizácií, 11 kategórií, `04_funkcie.sql` (nové stĺpce strana, prevodovka, km, odskúšaný, vrátenie, TOP, výrobca dielu; povinné polia aj v databáze; tabuľka `messages`; funkcie `send_message` a `public_stats`). RLS zapnuté na všetkých 12 tabuľkách, bucket `listing-photos` verejný na čítanie. Test cez verejný kľúč: katalóg sa číta, telefóny, správy a súkromné údaje predajcov sa nedajú prečítať, zápis bez prihlásenia zamietnutý. Web: portál predajcu (`/pre-predajcov` prihlásenie a registrácia, `/predajca` Nástenka, Moje inzeráty s hromadnými akciami, formulár v 5 krokoch s povinnými poľami a fotkami do Storage, Import CSV so stĺpcom `pasuje`, Správy, Profil, TOP na 30 dní), na verejnej časti správa predajcovi, zdieľanie, štítky a filtre strana/odskúšané/vrátenie, OEM hľadanie, najhľadanejšie diely, počítadlo. Build, tsc, eslint bez chýb | Web je pripravený na zverejnenie na Verceli; ostáva nasadenie a skúška celého postupu predajcu a kupujúceho |
 | 2. 11. 2026, 21:16 | Web: hlavička premenovaná z CSS triedy `top` na `site-header` (`web/components/Header.tsx`, `web/app/globals.css`). Overené: build, tsc, eslint bez chýb; v prehliadači na 1280 a 390 px je hlavička `header.site-header`, prilepená hore (sticky), vyzerá rovnako, žiadny prvok s triedou `top`, konzola bez chýb | Rovnaká chyba ako v prototype sa nezopakuje: budúci TOP inzerát použije triedu `is-top` (CLAUDE.md, pravidlo o názvoch tried) |
 | 2. 11. 2026, 21:02 | Web v `web/` upravený podľa „Tvar dizajnu“ (rovnako ako prototyp): rohy najviac 6 px (karty a panely 6 px, tlačidlá, polia, chipy, štítky 3–4 px), žiadne pilulky okrem bodiek stavu, karty bez tieňa a bez dvíhania (pri prejdení myšou sa zmení len farba okraja), úvodný pás jednofarebný bez farebných škvŕn. Zmenený len `web/app/globals.css`. Build, tsc, eslint bez chýb; kontrola v prehliadači (svetlý aj tmavý režim, mobil 390 px): žiadny roh nad 6 px okrem bodiek stavu, karty bez tieňa, karta pri prejdení myšou bez posunu. Statický náhľad znova vyrobený | Ostrý web vyzerá rovnako „hranato“ ako prototyp |
