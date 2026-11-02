@@ -88,3 +88,17 @@ Row Level Security: všetci čítajú aktívne inzeráty; zapisovať/mazať mô�
 - Majiteľ projektu píše nápady a myšlienky v chate s Claude.
 - Agent Dirigent v Claude Code stavia web a vedie DENNIK.md.
 - Claude v chate je druhý kontrolór: kontroluje prácu Dirigenta podľa jeho reportov.
+
+## Funkcie podľa konkurencie (2. 11. 2026, 17:46)
+Zdroj: analýza RRR.lt/Ovoko, Opisto.fr, Autobazar.sk (otvorené 2. 11. 2026). Všetko je už v `prototyp.html`, v ostrej verzii postaviť rovnako:
+1. **Hľadanie podľa čísla dielu (OEM)**: samostatné pole; porovnáva sa normalizované OEM (bez medzier a pomlčiek).
+2. **Najhľadanejšie diely**: rýchle tlačidlá (Predné svetlo, Zadné svetlo, Nárazník, Kapota, Zrkadlo, Dvere, Riadiaca jednotka, Alternátor, Turbo, Motor, Prevodovka, Volant).
+3. **Počítadlo na úvode**: „X dielov od Y predajcov“ zo skutočných údajov.
+4. **Nové polia inzerátu**: strana auta (ľavá/pravá), prevodovka auta, z ktorého je diel, najazdené km, „odskúšaný“, „vrátenie do 14 dní“. Štítky na karte a v detaile, filtre „Strana“, „Len odskúšané“, „Len s možnosťou vrátenia“. Do databázy: stĺpce `side`, `donor_gearbox`, `donor_km`, `tested`, `returns_14d` v `listings`.
+5. **Uložené hľadanie (strážca)**: kupujúci bez účtu si uloží hľadanie (v prehliadači); pri novom vyhovujúcom diele vidí „nové“. V ostrej verzii voliteľne e-mailové upozornenie (potrebuje e-mail a súhlas, GDPR).
+6. **Správa predajcovi**: formulár v detaile (meno, kontakt, text), predajca vidí správy v záložke „Správy“ v portáli. Do databázy: tabuľka `messages` (listing_id, seller_id, meno, kontakt, text, created_at, read_at), RLS: čítať len vlastník inzerátu, vkladať ktokoľvek s ochranou proti spamu.
+7. **Zdieľanie odkazu** („Poslať odkaz mechanikovi“): každý inzerát má vlastnú adresu.
+8. **TOP zvýraznenie**: predajca zvýrazní inzerát, zobrazí sa medzi prvými so štítkom TOP. Neskôr platená služba. Do databázy: `listings.top_until timestamptz`.
+9. Mazanie inzerátu je dvojkrokové priamo na stránke (žiadne vyskakovacie okná prehliadača).
+
+Zámerne NEROBÍME teraz: online platby a doručenie cez portál (RRR, Opisto), hľadanie podľa ŠPZ (Opisto), platforma pre servisy so zľavou (Opisto.pro), blog, newsletter. Sú v denníku ako neskoršie nápady.

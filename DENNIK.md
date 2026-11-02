@@ -3,6 +3,8 @@
 Hlavná verzia denníka je v Claude Docs „Rozoberačka – denník stavby“. Tento súbor je jeho pracovná kópia pre agenta Dirigent.
 
 ## Otvorené úlohy
+- [ ] P2 Doplniť do databázy stĺpce a tabuľku `messages` pre nové funkcie (CLAUDE.md, sekcia Funkcie podľa konkurencie)
+- [ ] P3 Neskôr zvážiť: online platby a doručenie cez portál, platforma pre servisy, blog s radami k modelom, newsletter
 - [ ] P1 Po založení Supabase: doplniť `web/.env.local` a overiť web so skutočnou databázou (zatiaľ vyskúšaný len ukážkový režim)
 - [ ] P1 Nasadiť web na Vercel (náhľad pre majiteľa)
 - [ ] P2 Hľadanie beží v prehliadači nad max. 1000 aktívnymi inzerátmi – pri väčšom počte presunúť do databázy (funkcia na serveri)
@@ -30,6 +32,7 @@ Hlavná verzia denníka je v Claude Docs „Rozoberačka – denník stavby“. 
 ## Denník
 | Kedy | Čo sme urobili | Čo to znamená |
 | --- | --- | --- |
+| 2. 11. 2026, 17:46 | Analýza konkurencie (RRR.lt/Ovoko, Opisto, Autobazar.sk) a 9 nových funkcií v prototype: OEM hľadanie, najhľadanejšie diely, počítadlo, nové polia (strana, km, odskúšané, vrátenie), uložené hľadanie, správa predajcovi, zdieľanie odkazu, TOP, bezpečné mazanie | Ostrá verzia má podľa CLAUDE.md tieto funkcie mať tiež |
 | 2. 11. 2026, 17:47 | Krok 4 – verejné stránky ako Next.js projekt v `web/` (Next 15.5.28, TypeScript, Tailwind): úvod s hľadaním podľa auta, kategórie, VIN a textu, facety, filtre, obľúbené, „Načítať viac“, detail s galériou, „Pasuje na“ (zhoda OEM) a telefónom na klik, stránka „Pre predajcov – pripravujeme“. Dátová vrstva `web/lib/data.ts`: so Supabase kľúčmi číta databázu, bez nich ukážkový režim (katalóg vygenerovaný zo `supabase/02` a `03`). `npm run build` prešiel, Playwright: 0 chýb v konzole, mobil 390 px bez pretekania. Statický náhľad v jednom súbore | Web sa dá pozrieť a vyskúšať aj bez Supabase; po založení Supabase stačí doplniť 2 kľúče |
 | 2. 11. 2026, 17:45 | Repozitár kamiljabarkhel-svg/Rozoberacka prepnutý na Private (urobil majiteľ). Overené cez GitHub API: „private: true“ | Kód a dáta projektu nevidí nikto cudzí |
 | 2. 11. 2026, 17:42 | Denník zlúčený do vetvy `main` (odteraz sa ukladá do main). Návod `supabase/README.md`: nasadenie v 8 krokoch (Free, Frankfurt, súbory 01→02→03, kontrola počtov 6/98/706/11/53, RLS, bucket) a čo robiť pri chybe „must be owner of table objects“ – storage časť je na konci `01_schema.sql`, chýbajú len 3 pravidlá pre fotky, doklikajú sa v Storage → Policies. Pridaná úloha: repozitár na Private | Majiteľ môže nasadiť databázu aj pri tejto chybe; kód ani databáza sa nemenili |

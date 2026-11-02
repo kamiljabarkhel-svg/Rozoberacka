@@ -236,6 +236,36 @@ a.btn2{display:inline-block;text-decoration:none}
   .mp{grid-column:2}
 }
 @media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}.card:hover{transform:none}}
+.chk{display:flex!important;flex-direction:row!important;align-items:center;gap:10px;font-weight:700;color:var(--ink)!important;cursor:pointer}
+.chk input{width:20px!important;height:20px;accent-color:var(--pet2);flex:none}
+.bdgs{display:flex;gap:6px;flex-wrap:wrap}
+.tg{font-size:.74rem;font-weight:800;border-radius:99px;padding:3px 9px;background:var(--chip);color:var(--ink);white-space:nowrap}
+.tg.ok{background:color-mix(in srgb,var(--ok) 16%,transparent);color:var(--ok)}
+.tg.ret{background:color-mix(in srgb,var(--link) 14%,transparent);color:var(--link)}
+.toptag{position:absolute;left:10px;top:10px;background:var(--acc);color:var(--accink);border-radius:99px;padding:3px 11px;font-size:.76rem;font-weight:800;letter-spacing:.02em}
+.card.top{border-color:var(--acc);box-shadow:0 0 0 2px color-mix(in srgb,var(--acc) 55%,transparent),var(--sh1)}
+.stats{margin:-8px 0 18px;color:rgba(255,255,255,.9);font-weight:700}
+.stats b{color:var(--acc)}
+.pop{margin:4px 0 6px}
+.pop .sh{margin:0 0 10px}
+.oemrow{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:end;padding-top:14px;border-top:1px solid var(--line)}
+.oemrow input{width:100%;min-width:0;background:var(--chip);color:var(--ink);border:2px solid transparent;border-radius:12px;padding:13px 12px;font:600 1.05rem var(--f-m);letter-spacing:.04em}
+.oemrow input:focus{border-color:var(--pet2);background:var(--card);outline:none}
+@media(max-width:560px){.oemrow{grid-template-columns:1fr}}
+.savedbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:-8px 0 16px}
+.savedbar .mute{font-weight:700}
+.savedbar .chip b{background:var(--acc);color:var(--accink);border-radius:99px;padding:0 7px;margin-left:6px;font-size:.78rem}
+.savedbar .chip i{font-style:normal;margin-left:8px;color:var(--mute)}
+.hbtns{display:flex;gap:8px;flex-wrap:wrap}
+.msgbox{display:grid;gap:10px;background:var(--bg);border-radius:16px;padding:16px}
+.msgbox label{display:grid;gap:5px;font-size:.88rem;color:var(--mute);font-weight:700}
+.msgbox input,.msgbox textarea{width:100%;background:var(--card);color:var(--ink);border:2px solid var(--line);border-radius:12px;padding:11px 12px;font:inherit}
+.msgbox textarea{min-height:90px;resize:vertical}
+.sharebox{display:flex;gap:8px}
+.sharebox input{flex:1;min-width:0;background:var(--chip);color:var(--ink);border:0;border-radius:10px;padding:10px 12px;font-size:.88rem}
+.msgi{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin-bottom:10px;display:grid;gap:4px}
+.msgi.new{border-color:var(--acc);box-shadow:0 0 0 2px color-mix(in srgb,var(--acc) 40%,transparent)}
+.msgi p{margin:4px 0 0;white-space:pre-wrap}
 </style>
 </head>
 <body>
@@ -271,6 +301,7 @@ a.btn2{display:inline-block;text-decoration:none}
   <section class="hero"><div class="in"><span id="main"></span>
     <h1>Použité autodiely presne na vaše auto</h1>
     <p class="sub">Vyberte značku, model a motorizáciu a uvidíte len diely, ktoré naň pasujú. Predajcov kontaktujete bez registrácie.</p>
+    <p class="stats" id="stats"></p>
     <div class="qb" id="qb" aria-label="Najčastejšie značky"></div>
   </div></section>
   <div class="wrap">
@@ -289,6 +320,13 @@ a.btn2{display:inline-block;text-decoration:none}
       <label>Stav<select id="cond"><option value="">Každý stav</option><option>Veľmi dobrý</option><option>Dobrý</option><option>Na opravu</option></select></label>
       <label>Mesto<select id="city"></select></label>
       <label>Zoradiť<select id="sort"><option value="new">Najnovšie</option><option value="asc">Najlacnejšie</option><option value="desc">Najdrahšie</option></select></label>
+      <label>Strana<select id="side"><option value="">Ľavá aj pravá</option><option>Ľavá</option><option>Pravá</option></select></label>
+      <label class="chk"><input type="checkbox" id="tested"> Len odskúšané diely</label>
+      <label class="chk"><input type="checkbox" id="retonly"> Len s možnosťou vrátenia</label>
+    </div>
+    <div class="oemrow">
+      <label>Číslo dielu (OEM)<input id="oemq" placeholder="napr. 03G903023 alebo 5E0 807 221" autocomplete="off"></label>
+      <button class="btn2" id="oemGo">Hľadať podľa čísla</button>
     </div>
     <div class="pa"><button class="lnk" id="advBtn" aria-expanded="false">Rozšírené hľadanie</button><button class="btn" id="goF">Hľadať</button></div>
   </section>
@@ -304,7 +342,9 @@ a.btn2{display:inline-block;text-decoration:none}
     <p class="vmsg" id="vmsg" role="status"></p>
   </section>
 
-  <div id="res" class="head"><span class="cnt" id="cnt"></span><button class="chip" id="favonly" aria-pressed="false">♥ Obľúbené</button><button class="add" id="add" hidden>+ Pridať inzerát</button></div>
+  <div class="pop"><h2 class="sh">Najhľadanejšie diely</h2><div class="chips" id="popp"></div></div>
+  <div id="res" class="head"><span class="cnt" id="cnt"></span><span class="hbtns"><button class="chip" id="savesearch">🔔 Uložiť hľadanie</button><button class="chip" id="favonly" aria-pressed="false">♥ Obľúbené</button></span><button class="add" id="add" hidden>+ Pridať inzerát</button></div>
+  <div class="savedbar" id="saved" hidden></div>
   <div class="chips" id="facets" aria-label="Kategórie nájdených dielov"></div>
 
   <div class="form" id="form">
@@ -321,6 +361,11 @@ a.btn2{display:inline-block;text-decoration:none}
     <label>Cena (€)<input id="f-price" type="number" min="0" inputmode="decimal"></label>
     <label>Mesto<input id="f-city" placeholder="Nitra"></label>
     <label>Stav<select id="f-cond"><option>Veľmi dobrý</option><option>Dobrý</option><option>Na opravu</option></select></label>
+    <label>Strana auta<select id="f-side"><option value="">Neuvádza sa</option><option>Ľavá</option><option>Pravá</option></select></label>
+    <label>Prevodovka auta, z ktorého je diel<select id="f-gear"><option value="">Neuvedená</option><option>Manuálna</option><option>Automatická</option></select></label>
+    <label>Najazdené km auta<input id="f-km" type="number" min="0" inputmode="numeric" placeholder="napr. 185000"></label>
+    <label class="full chk"><input type="checkbox" id="f-tested"> Diel je odskúšaný a funkčný</label>
+    <label class="full chk"><input type="checkbox" id="f-ret"> Umožním vrátenie do 14 dní, ak diel nepasuje</label>
     <label>Telefón<input id="f-tel" type="tel" placeholder="+421 9xx xxx xxx"></label>
     <label class="full">Popis dielu<textarea id="f-desc" maxlength="1000" placeholder="Z akého auta diel pochádza, v akom je stave, či je odskúšaný, prípadné poškodenia…"></textarea><span id="dcnt">0 / 1000</span></label>
     <label>Záruka<select id="f-war"><option>Bez záruky</option><option>14 dní</option><option>3 mesiace</option></select></label>
@@ -350,6 +395,7 @@ a.btn2{display:inline-block;text-decoration:none}
     <button data-tab="list" role="tab" aria-selected="false">Moje inzeráty</button>
     <button data-tab="add" role="tab" aria-selected="false">+ Pridať inzerát</button>
     <button data-tab="csv" role="tab" aria-selected="false">Import z CSV</button>
+    <button data-tab="msg" role="tab" aria-selected="false" id="msgTab">Správy</button>
     <button data-tab="prof" role="tab" aria-selected="false">Profil</button>
   </div>
 
@@ -380,6 +426,12 @@ a.btn2{display:inline-block;text-decoration:none}
     <div id="csvOut"></div>
     <h3 class="sh">Vzor súboru</h3>
     <pre class="pre" id="csvPre"></pre>
+  </section>
+
+  <section id="tab-msg" hidden>
+    <h2 class="sh">Správy od kupujúcich</h2>
+    <p class="mute">Kupujúci vám môžu napísať priamo z inzerátu. Odpovedzte im na telefón alebo e-mail, ktorý uviedli.</p>
+    <div id="msglist"></div>
   </section>
 
   <section id="tab-prof" hidden>
@@ -436,6 +488,8 @@ var DESC={
 var EXTRA={1:["Autovrakovisko Žilina","Firma",1,2,"3 mesiace","Zasielam kuriérom"],2:["Auto-diely Nitra","Firma",1,0,"14 dní","Zasielam kuriérom"],3:["Peter K.","Súkromná osoba",0,5,"Bez záruky","Len osobný odber"],4:["Rozoberačka Bratislava","Firma",1,1,"14 dní","Zasielam kuriérom"],5:["Martin H.","Súkromná osoba",0,9,"Bez záruky","Len osobný odber"],6:["Vrakovisko Prešov","Firma",0,3,"14 dní","Zasielam kuriérom"],7:["Auto Banská Bystrica","Firma",1,4,"3 mesiace","Zasielam kuriérom"],8:["Diely Poprad","Firma",0,7,"14 dní","Zasielam kuriérom"],9:["Autodiely Bratislava","Firma",1,0,"3 mesiace","Zasielam kuriérom"],10:["Autovrakovisko Žilina","Firma",1,1,"3 mesiace","Zasielam kuriérom"],11:["Motory Nitra","Firma",1,6,"3 mesiace","Len osobný odber"],12:["Rozoberačka Košice","Firma",0,2,"14 dní","Zasielam kuriérom"]};
 var NPH=[4,3,2,1,5,3,4,0,3,4,2,3];
 var ENG={1:"2.0 TDI 103 kW",3:"1.6 TDI 77 kW",5:"1.6 HDi 80 kW",8:"1.6 TDCi 80 kW",11:"1.9 TDI 77 kW"};
+var EXTRA2={1:{tested:1,gear:"Manuálna",km:212000,ret:1},2:{top:1,ret:1},3:{tested:1,gear:"Manuálna",km:168000},4:{side:"Pravá"},5:{gear:"Manuálna",km:143000,tested:1},6:{side:"Ľavá",ret:1},8:{tested:1,km:190000},9:{top:1},10:{side:"Ľavá",tested:1,ret:1},11:{tested:1,gear:"Manuálna",km:231000,ret:1},12:{tested:1}};
+seed.forEach(function(s){var x=EXTRA2[s.id];if(x)for(var k in x)s[k]=x[k]});
 seed.forEach(function(s){var e=EXTRA[s.id];s.eng=ENG[s.id]||"";s.desc=DESC[s.id];s.seller=e[0];s.stype=e[1];s.ver=e[2];s.ago=e[3];s.war=e[4];s.ship=e[5];s.photos=[];for(var k=0;k<NPH[s.id-1];k++)s.photos.push("ph")});
 var items=seed.slice(),shown=8,fo=false,favs=[],me=null,mode="in";
 try{var s0=localStorage.getItem(KEY);if(s0){var u0=JSON.parse(s0);if(Array.isArray(u0))items=u0.concat(seed)}}catch(e){}
@@ -498,7 +552,8 @@ function fitsHtml(i){
 function render(){
   buildIdx();
   var q=$("q").value.trim().toLowerCase().replace(/\s/g,""),br=$("brand").value,vm=$("vmodel").value,cc=$("cat").value,sb=$("subsel").value,
-  vy=$("vyear").value,ve=$("veng").value,cd=$("cond").value,ct=$("city").value,px=parseFloat($("pmax").value),so=$("sort").value;
+  vy=$("vyear").value,ve=$("veng").value,cd=$("cond").value,ct=$("city").value,px=parseFloat($("pmax").value),so=$("sort").value,
+  sd=$("side").value,tq=$("tested").checked,rq=$("retonly").checked,qk=oemKey($("q").value);
   var noCat=false,flt=function(i){
     if(i.status&&i.status!=="active")return false;
     var own=(!br||i.brand===br)&&(!vm||i.mod===vm)&&(!ve||!i.eng||i.eng===ve);
@@ -513,18 +568,22 @@ function render(){
     if(ct&&i.city!==ct)return false;
     if(!isNaN(px)&&i.price>px)return false;
     if(fo&&favs.indexOf(i.id)<0)return false;
+    if(sd&&i.side&&i.side!==sd)return false;
+    if(tq&&!i.tested)return false;
+    if(rq&&!i.ret)return false;
+    if(qk.length>=4&&oemKey(i.oem).indexOf(qk)>-1)return true;
     var h=(i.name+i.brand+i.model+i.oem+i.city+(i.sub||"")+(i.desc||"")).toLowerCase().replace(/\s/g,"");
     return !q||h.indexOf(q)>-1;
   };
   var r=items.filter(flt);noCat=true;var base=items.filter(flt);noCat=false;drawFacets(base,cc,sb);
   if(so==="asc")r.sort(function(a,b){return a.price-b.price});
   else if(so==="desc")r.sort(function(a,b){return b.price-a.price});
-  else r.sort(function(a,b){return b.t-a.t});
-  var n=r.length;r=r.slice(0,shown);
+  else r.sort(function(a,b){return (b.top?1:0)-(a.top?1:0)||b.t-a.t});
+  var n=r.length;drawStats();drawSaved();r=r.slice(0,shown);
   $("cnt").textContent=n+" "+(n===1?"diel":n>=2&&n<=4?"diely":"dielov");
   $("list").innerHTML=n?r.map(function(i){
     var d=i.cond==="Na opravu"?"b":i.cond==="Dobrý"?"w":"";
-    return '<article class="card" data-id="'+i.id+'">'+photoBlock(i)+'<div class="cb"><h2>'+esc(i.name)+'</h2><p class="car">'+esc(i.brand)+' '+esc(i.model)+'</p>'+
+    return '<article class="card'+(i.top?' top':'')+'" data-id="'+i.id+'">'+photoBlock(i)+'<div class="cb"><h2>'+esc(i.name)+'</h2><p class="car">'+esc(i.brand)+' '+esc(i.model)+'</p>'+tags(i)+
     '<div class="meta"><span class="cond"><i class="dot '+d+'"></i>'+esc(i.cond)+'</span><span>'+esc(i.city)+'</span>'+(i.war&&i.war!=="Bez záruky"?'<span>Záruka '+esc(i.war)+'</span>':'')+'</div></div>'+
     '<div class="side"><span class="oem">'+esc(i.oem||"bez OEM")+'</span><span class="price">'+esc(i.price)+' €</span>'+contact(i)+'</div></article>';
   }).join("")+(n>shown?'<button class="add" data-more="1" style="grid-column:1/-1">Zobraziť ďalšie ('+(n-shown)+')</button>':""):'<div class="empty">Nič sme nenašli. Skúste iné slovo, kategóriu alebo všetky značky.<br><button class="add" id="resetF">Zrušiť všetky filtre</button></div>';
@@ -550,7 +609,7 @@ $("q").oninput=ren;$("q").onkeydown=function(e){if(e.key==="Enter")toRes()};
 $("go").onclick=function(){ren();toRes()};$("goF").onclick=function(){ren();toRes()};
 $("brand").onchange=function(){$("vmodel").value="";$("vyear").value="";ren()};
 $("vmodel").onchange=ren;$("cat").onchange=function(){$("subsel").value="";ren()};
-["subsel","veng","vyear","cond","city","sort"].forEach(function(i){$(i).onchange=ren});
+["subsel","veng","vyear","cond","city","sort","side","tested","retonly"].forEach(function(i){$(i).onchange=ren});
 $("pmax").oninput=ren;
 $("advBtn").onclick=function(){var h=$("adv").hidden;$("adv").hidden=!h;this.setAttribute("aria-expanded",h)};
 $("favonly").onclick=function(){fo=!fo;this.setAttribute("aria-pressed",fo);ren()};
@@ -582,7 +641,7 @@ function contact(i){
 function paint(){
   $("user").innerHTML=me?(view==="seller"?'<button class="ubtn" id="ubp">← Inzeráty</button> ':'<button class="ubtn" id="ubs">Portál predajcu</button> ')+'<button class="ubtn" id="ub">Odhlásiť</button>':'<button class="ubtn" id="ub">Pre predajcov</button>';
   $("add").hidden=true;
-  render();
+  render();if(typeof msgBadge==="function")msgBadge();
 }
 function openAuth(){$("auth").classList.add("open");$("a-msg").textContent=""}
 function setMode(m){mode=m;$("t-in").setAttribute("aria-pressed",m==="in");$("t-up").setAttribute("aria-pressed",m==="up");$("a-up").style.display=m==="up"?"grid":"none";$("a-go").textContent=m==="in"?"Prihlásiť sa":"Vytvoriť účet"}
@@ -637,7 +696,7 @@ function phSrc(it,k){
 function photoBlock(i){
   var n=i.photos?i.photos.length:0;
   var inner=n?'<img loading="lazy" alt="'+esc(i.name)+'" src="'+phSrc(i,0)+'">':'<div class="nop">'+icon(catIcon(i.cat))+'<span>Bez fotky</span></div>';
-  return '<div class="ph">'+inner+(n>1?'<span class="pc">'+ft(n)+'</span>':'')+'<button class="fav" data-fav="'+i.id+'" aria-label="Obľúbené">'+(favs.indexOf(i.id)>-1?"♥":"♡")+'</button></div>';
+  return '<div class="ph">'+inner+(i.top?'<span class="toptag">TOP</span>':'')+(n>1?'<span class="pc">'+ft(n)+'</span>':'')+'<button class="fav" data-fav="'+i.id+'" aria-label="Obľúbené">'+(favs.indexOf(i.id)>-1?"♥":"♡")+'</button></div>';
 }
 function galHtml(i){
   var n=i.photos?i.photos.length:0;
@@ -655,11 +714,17 @@ function openDet(id){
   buildIdx();gcur=i;gi=0;if(!(me&&i.owner===me.email)){i.views=(i.views||0)+1;if(i.owner)saveMine()}
   var d=i.cond==="Na opravu"?"b":i.cond==="Dobrý"?"w":"";
   var rows=[["Značka",i.brand],["Model",i.mod||i.model||"neuvedené"],["Motorizácia",i.eng||"Pasuje na všetky motorizácie"],["Ročník",i.year||"neuvedené"],["OEM číslo",i.oem||"neuvedené"],["Kategória",catName(i.cat)+(i.sub?" · "+i.sub:"")],["Stav",i.cond],["Záruka",i.war||"Bez záruky"],["Zasielanie",i.ship||"Len osobný odber"],["Mesto",i.city]];
+  if(i.side)rows.splice(5,0,["Strana auta",i.side]);
+  if(i.gear)rows.push(["Prevodovka auta",i.gear]);
+  if(i.km)rows.push(["Najazdené km auta",Number(i.km).toLocaleString("sk-SK")+" km"]);
+  rows.push(["Odskúšaný",i.tested?"Áno, podľa predajcu":"Neuvedené"]);
+  rows.push(["Vrátenie",i.ret?"Do 14 dní, ak diel nepasuje":"Podľa dohody s predajcom"]);
   var sim=items.filter(function(x){return x.id!==i.id&&(!x.status||x.status==="active")&&(x.cat===i.cat||x.brand===i.brand)}).slice(0,3);
   $("det-b").innerHTML='<div class="dg"><div>'+galHtml(i)+'</div><div class="di"><h2>'+esc(i.name)+'</h2>'+
   '<div class="dpr"><span class="price">'+esc(i.price)+' €</span><span class="cond"><i class="dot '+d+'"></i>'+esc(i.cond)+'</span></div>'+
   '<p class="car">'+esc(i.brand)+' '+esc(i.model||"")+'</p>'+
   '<div class="dacts">'+(i.tel?'<button class="call" data-tel="'+i.id+'">Zobraziť telefón</button>':'')+'<button class="fav" data-fav="'+i.id+'">'+(favs.indexOf(i.id)>-1?"♥":"♡")+' Obľúbené</button></div>'+
+  (me&&i.owner===me.email?'':'<div class="hbtns"><button class="chip" data-msg="'+i.id+'">✉ Napísať predajcovi</button><button class="chip" data-share="'+i.id+'">↗ Poslať odkaz mechanikovi</button></div>')+'<div id="dxbox"></div>'+tags(i)+
   '<div class="seller"><b>'+esc(i.seller||"Predajca")+(i.ver?'<span class="bdg">Overený predajca</span>':'')+'</b><span class="mute">'+esc(i.stype||"Predajca")+' · '+esc(i.city)+'</span><span class="mute">Inzerát pridaný '+agoTxt(i.ago||0)+'</span></div></div></div>'+
   '<h3 class="sh">Popis</h3><p class="desc">'+(i.desc?esc(i.desc):'Predajca nepridal popis.')+'</p>'+
   '<h3 class="sh">Parametre</h3><dl class="dl">'+rows.map(function(r){return'<dt>'+r[0]+'</dt><dd>'+esc(r[1])+'</dd>'}).join("")+'</dl>'+fitsHtml(i)+
@@ -674,7 +739,11 @@ $("det").onclick=function(e){
   var gn=e.target.closest("[data-gn]");if(gn){setGal(gi+Number(gn.getAttribute("data-gn")));return}
   var g=e.target.closest("[data-g]");if(g){setGal(Number(g.getAttribute("data-g")));return}
   var sm=e.target.closest("[data-sim]");if(sm){openDet(Number(sm.getAttribute("data-sim")));return}
-  var fv=e.target.closest("[data-fav]");if(fv){fv.textContent=(toggleFav(fv)?"♥":"♡")+" Obľúbené";render()}
+  var fv=e.target.closest("[data-fav]");if(fv){fv.textContent=(toggleFav(fv)?"♥":"♡")+" Obľúbené";render();return}
+  var mb=e.target.closest("[data-msg]");if(mb){msgForm(+mb.getAttribute("data-msg"));return}
+  var sh=e.target.closest("[data-share]");if(sh){shareBox(+sh.getAttribute("data-share"));return}
+  if(e.target.closest("#msgSend")){sendMsg();return}
+  if(e.target.closest("#shareCopy")){var inp=$("shareUrl");inp.select();try{navigator.clipboard.writeText(inp.value).then(function(){toast("Odkaz je skopírovaný.")},function(){toast("Odkaz je označený, skopírujte ho Ctrl+C.")})}catch(x){toast("Odkaz je označený, skopírujte ho Ctrl+C.")}}
 };
 document.addEventListener("keydown",function(e){
   if(!$("det").classList.contains("open"))return;
@@ -1150,12 +1219,13 @@ function showView(v){
 }
 function setTab(t){
   sTab=t;
-  ["over","list","add","csv","prof"].forEach(function(k){$("tab-"+k).hidden=k!==t});
+  ["over","list","add","csv","msg","prof"].forEach(function(k){$("tab-"+k).hidden=k!==t});
   Array.prototype.forEach.call(document.querySelectorAll("#stabs button"),function(b){b.setAttribute("aria-selected",b.getAttribute("data-tab")===t)});
   if(!me)return;
   if(t==="over")drawOver();
   if(t==="list")drawMine();
   if(t==="prof")fillProf();
+  if(t==="msg")drawMsgs();
   if(t==="add"&&editId===null)prefillNew();
 }
 $("stabs").onclick=function(e){var b=e.target.closest("[data-tab]");if(!b)return;if(b.getAttribute("data-tab")!=="add"&&editId!==null){editId=null;resetForm()}setTab(b.getAttribute("data-tab"))};
@@ -1179,6 +1249,7 @@ function mrow(i){
   var th=n?'<img alt="" src="'+phSrc(i,0)+'">':'<div class="nop">'+icon(catIcon(i.cat))+'</div>';
   var acts='<button class="chip" data-act="edit" data-id="'+id+'">Upraviť</button>'+
     (s==="active"?'<button class="chip" data-act="sold" data-id="'+id+'">Predané</button><button class="chip" data-act="pause" data-id="'+id+'">Pozastaviť</button>':'<button class="chip" data-act="act" data-id="'+id+'">Aktivovať</button>')+
+    (s==="active"?'<button class="chip" data-act="top" data-id="'+id+'">'+(i.top?'Zrušiť TOP':'★ Zvýrazniť (TOP)')+'</button>':'')+
     '<button class="chip" data-act="dup" data-id="'+id+'">Duplikovať</button><button class="chip dgr" data-act="del" data-id="'+id+'">Zmazať</button>';
   return '<article class="mrow"><div class="mth">'+th+'</div><div class="mb"><b>'+esc(i.name)+'</b><span class="mute">'+esc(i.brand+" "+(i.model||""))+(i.oem?" · OEM "+esc(i.oem):"")+'</span><span><span class="st '+stCls(s)+'">'+stLabel(s)+'</span> <span class="mute">'+(i.views||0)+' zobrazení · '+(i.calls||0)+' telefón</span></span></div><div class="mp">'+esc(i.price)+' €</div><div class="macts">'+acts+'</div></article>';
 }
@@ -1199,8 +1270,9 @@ $("mlist").onclick=function(e){
   var b=e.target.closest("[data-act]");if(!b)return;
   var id=Number(b.getAttribute("data-id")),a=b.getAttribute("data-act"),it=mine().filter(function(x){return x.id===id})[0];if(!it)return;
   if(a==="edit"){startEdit(id);return}
-  if(a==="del"){if(!confirm("Zmazať inzerát „"+it.name+"“?"))return;items=items.filter(function(x){return x.id!==id});toast("Inzerát bol zmazaný.")}
-  else if(a==="dup"){var c=Object.assign({},it,{id:Date.now(),t:Date.now(),views:0,calls:0,status:"active",ago:0});items.unshift(c);toast("Inzerát bol duplikovaný. Upravte ho podľa potreby.")}
+  if(a==="del"){if(b.getAttribute("data-sure")!=="1"){b.setAttribute("data-sure","1");b.textContent="Naozaj zmazať? Kliknite znova";return}items=items.filter(function(x){return x.id!==id});toast("Inzerát bol zmazaný.")}
+  else if(a==="top"){it.top=it.top?0:1;toast(it.top?"Inzerát je zvýraznený (TOP) a zobrazí sa medzi prvými. V ostrej verzii bude táto služba platená.":"Zvýraznenie je zrušené.")}
+  else if(a==="dup"){var c=Object.assign({},it,{id:Date.now(),t:Date.now(),views:0,calls:0,status:"active",ago:0,top:0});items.unshift(c);toast("Inzerát bol duplikovaný. Upravte ho podľa potreby.")}
   else{it.status=a==="sold"?"sold":a==="pause"?"paused":"active";toast("Stav inzerátu: "+stLabel(it.status)+".")}
   saveMine();fillAll();drawMine();
 };
@@ -1210,6 +1282,7 @@ function resetForm(){
   editId=null;
   ["f-name","f-oem","f-price","f-sub","f-desc","f-city","f-tel"].forEach(function(i){$(i).value=""});
   $("f-brand").value="";$("f-model").value="";$("f-eng").value="";$("f-year").value="";
+  $("f-side").value="";$("f-gear").value="";$("f-km").value="";$("f-tested").checked=false;$("f-ret").checked=false;
   fits=[];upl=[];drawPv();drawFits();$("dcnt").textContent="0 / 1000";fillForm();prefillNew();
   $("fh").textContent="Nový inzerát";$("save").textContent="Zverejniť inzerát";$("cancelEdit").hidden=true;$("msg").textContent="";
 }
@@ -1220,6 +1293,7 @@ function startEdit(id){
   $("f-cat").value=i.cat;$("f-sub").value=i.sub||"";$("f-oem").value=i.oem||"";$("f-price").value=i.price;$("f-city").value=i.city||"";$("f-cond").value=i.cond;$("f-tel").value=i.tel||"";
   $("f-desc").value=i.desc||"";$("dcnt").textContent=$("f-desc").value.length+" / 1000";$("f-war").value=i.war||"Bez záruky";$("f-ship").value=i.ship||"Len osobný odber";
   upl=(i.photos||[]).slice();drawPv();fits=(i.fits||[]).slice();drawFits();
+  $("f-side").value=i.side||"";$("f-gear").value=i.gear||"";$("f-km").value=i.km||"";$("f-tested").checked=!!i.tested;$("f-ret").checked=!!i.ret;
   $("fh").textContent="Upraviť inzerát";$("save").textContent="Uložiť zmeny";$("cancelEdit").hidden=false;$("msg").textContent="";
   setTab("add");window.scrollTo(0,0);
 }
@@ -1229,7 +1303,8 @@ $("save").onclick=function(){
   if(!n||!b||isNaN(p)||p<0){msg.textContent="Vyplňte názov dielu, značku a cenu.";return}
   if(!me||me.role!=="seller"){msg.textContent="Inzeráty môžu pridávať len predajcovia.";return}
   var md=$("f-model").value,yr=parseInt($("f-year").value)||0,en=$("f-eng").value;
-  var data={fits:fits.slice(),sub:$("f-sub").value.trim(),cat:$("f-cat").value,name:n,brand:b,mod:md,eng:en,year:yr,model:md+(en?" "+en:"")+(yr?", "+yr:""),oem:$("f-oem").value.trim(),price:p,city:$("f-city").value.trim()||me.city||"Slovensko",cond:$("f-cond").value,tel:$("f-tel").value.trim(),desc:$("f-desc").value.trim(),war:$("f-war").value,ship:$("f-ship").value,photos:upl.slice(),seller:me.name||me.email.split("@")[0],stype:me.type||"Predajca"};
+  var km=parseInt($("f-km").value)||0;
+  var data={side:$("f-side").value,gear:$("f-gear").value,km:km>0?km:0,tested:$("f-tested").checked?1:0,ret:$("f-ret").checked?1:0,fits:fits.slice(),sub:$("f-sub").value.trim(),cat:$("f-cat").value,name:n,brand:b,mod:md,eng:en,year:yr,model:md+(en?" "+en:"")+(yr?", "+yr:""),oem:$("f-oem").value.trim(),price:p,city:$("f-city").value.trim()||me.city||"Slovensko",cond:$("f-cond").value,tel:$("f-tel").value.trim(),desc:$("f-desc").value.trim(),war:$("f-war").value,ship:$("f-ship").value,photos:upl.slice(),seller:me.name||me.email.split("@")[0],stype:me.type||"Predajca"};
   var ok;
   if(editId!==null){
     var it=mine().filter(function(x){return x.id===editId})[0];if(!it)return;
@@ -1329,7 +1404,91 @@ $("f-fadd").onclick=function(){
 $("fitList").onclick=function(e){var b=e.target.closest("[data-fx]");if(!b)return;fits.splice(Number(b.getAttribute("data-fx")),1);drawFits()};
 fillFits();
 $("addSlot").appendChild($("form"));$("form").classList.add("open");
-fillForm();fillAll();drawQb();paint();
+function tags(i){
+  var t=[];
+  if(i.tested)t.push('<span class="tg ok">✓ Odskúšané</span>');
+  if(i.ret)t.push('<span class="tg ret">Vrátenie 14 dní</span>');
+  if(i.side)t.push('<span class="tg">'+esc(i.side)+' strana</span>');
+  if(i.km)t.push('<span class="tg">'+Number(i.km).toLocaleString("sk-SK")+' km</span>');
+  return t.length?'<div class="bdgs">'+t.join("")+'</div>':'';
+}
+function drawStats(){
+  var a=items.filter(function(i){return !i.status||i.status==="active"}),s={};
+  a.forEach(function(i){s[i.seller||i.owner||"?"]=1});
+  var n=a.length,k=Object.keys(s).length;
+  $("stats").innerHTML='<b>'+n.toLocaleString("sk-SK")+'</b> '+(n===1?"diel":n>=2&&n<=4?"diely":"dielov")+' od <b>'+k+'</b> '+(k===1?"predajcu":"predajcov")+' na jednom mieste';
+}
+var POP=["Predné svetlo","Zadné svetlo","Nárazník","Kapota","Zrkadlo","Dvere","Riadiaca jednotka","Alternátor","Turbo","Motor","Prevodovka","Volant"];
+$("popp").innerHTML=POP.map(function(p){return '<button class="chip" data-pop="'+esc(p)+'">'+esc(p)+'</button>'}).join("");
+$("popp").onclick=function(e){var b=e.target.closest("[data-pop]");if(!b)return;$("q").value=b.getAttribute("data-pop");ren();toRes()};
+$("oemGo").onclick=function(){var v=$("oemq").value.trim();if(!v){$("oemq").focus();return}$("q").value=v;ren();toRes()};
+$("oemq").addEventListener("keydown",function(e){if(e.key==="Enter")$("oemGo").click()});
+
+var SKEY="rozoberacka-saved",saved=[];
+try{saved=JSON.parse(localStorage.getItem(SKEY)||"[]")}catch(x){saved=[]}
+var FKEYS=["q","brand","vmodel","veng","cat","subsel","vyear","pmax","cond","city","side"];
+function curF(){var f={};FKEYS.forEach(function(k){f[k]=$(k).value});f.tested=$("tested").checked;f.retonly=$("retonly").checked;return f}
+function fLabel(f){var p=[];if(f.brand)p.push(f.brand+(f.vmodel?" "+f.vmodel:"")+(f.veng?" "+f.veng:""));if(f.cat)p.push(catName(f.cat));if(f.q)p.push("„"+f.q+"“");if(f.pmax)p.push("do "+f.pmax+" €");if(f.city)p.push(f.city);if(f.side)p.push(f.side+" strana");return p.join(", ")||"Všetky diely"}
+function applyF(f,silent){
+  $("brand").value=f.brand||"";fillAll();$("vmodel").value=f.vmodel||"";fillAll();$("veng").value=f.veng||"";$("vyear").value=f.vyear||"";
+  ["q","cat","pmax","cond","city","side"].forEach(function(k){$(k).value=f[k]||""});fillAll();$("subsel").value=f.subsel||"";
+  $("tested").checked=!!f.tested;$("retonly").checked=!!f.retonly;
+  if(!silent)ren();
+}
+function drawSaved(){
+  var b=$("saved");if(!saved.length){b.hidden=true;b.innerHTML="";return}
+  b.hidden=false;
+  b.innerHTML='<span class="mute">Uložené hľadania:</span>'+saved.map(function(s,k){var nw=(s.newIds||[]).length;return '<button class="chip" data-sv="'+k+'">'+esc(s.label)+(nw?'<b>'+nw+' nové</b>':'')+'<i data-svx="'+k+'" aria-label="Zmazať">×</i></button>'}).join("");
+}
+$("saved").onclick=function(e){
+  var x=e.target.closest("[data-svx]");if(x){saved.splice(+x.getAttribute("data-svx"),1);persistSaved();render();toast("Uložené hľadanie je zmazané.");return}
+  var b=e.target.closest("[data-sv]");if(!b)return;var s=saved[+b.getAttribute("data-sv")];
+  s.seen=(s.seen||[]).concat(s.newIds||[]);s.newIds=[];persistSaved();applyF(s.f);toRes();
+};
+function persistSaved(){try{localStorage.setItem(SKEY,JSON.stringify(saved))}catch(x){}}
+function visibleIds(){var tmp=shown;shown=1e9;render();var ids=Array.prototype.map.call(document.querySelectorAll("#list .card"),function(c){return +c.getAttribute("data-id")});shown=tmp;return ids}
+$("savesearch").onclick=function(){
+  var f=curF(),lab=fLabel(f);
+  if(saved.some(function(s){return s.label===lab})){toast("Toto hľadanie už máte uložené.");return}
+  var ids=visibleIds();saved.unshift({label:lab,f:f,seen:ids,newIds:[]});saved=saved.slice(0,10);persistSaved();render();
+  toast("Hľadanie je uložené. Keď pribudne nový diel, uvidíte ho tu ako „nové“. V ostrej verzii príde aj e-mail.");
+};
+function refreshSaved(){
+  if(!saved.length)return;var keep=curF(),tmp=shown;shown=1e9;
+  saved.forEach(function(s){applyF(s.f,true);render();var ids=Array.prototype.map.call(document.querySelectorAll("#list .card"),function(c){return +c.getAttribute("data-id")});s.newIds=ids.filter(function(id){return (s.seen||[]).indexOf(id)<0})});
+  shown=tmp;applyF(keep,true);persistSaved();
+}
+
+var MKEY="rozoberacka-msgs";
+function getMsgs(){try{return JSON.parse(localStorage.getItem(MKEY)||"[]")}catch(x){return[]}}
+function putMsgs(a){try{localStorage.setItem(MKEY,JSON.stringify(a));return true}catch(x){return false}}
+function msgForm(id){
+  var i=items.filter(function(x){return x.id===id})[0];if(!i)return;
+  $("dxbox").innerHTML='<div class="msgbox" data-for="'+id+'"><b>Správa pre '+esc(i.seller||"predajcu")+'</b><label>Vaše meno<input id="m-name" autocomplete="name"></label><label>Telefón alebo e-mail na odpoveď<input id="m-contact" autocomplete="email"></label><label>Správa<textarea id="m-text" maxlength="800">Dobrý deň, je diel „'+esc(i.name)+'“ ešte k dispozícii? Pasuje na moje auto: </textarea></label><button class="call" id="msgSend">Odoslať správu</button><p class="mute" id="m-msg">Ukážka: správa sa uloží len v tomto prehliadači a predajca ju uvidí v záložke Správy.</p></div>';
+  $("m-name").focus();
+}
+function sendMsg(){
+  var box=document.querySelector(".msgbox");if(!box)return;var id=+box.getAttribute("data-for"),i=items.filter(function(x){return x.id===id})[0];
+  var nm=$("m-name").value.trim(),ct=$("m-contact").value.trim(),tx=$("m-text").value.trim();
+  if(!nm||!ct||tx.length<5){$("m-msg").textContent="Vyplňte meno, kontakt a správu.";return}
+  var a=getMsgs();a.unshift({id:Date.now(),listing:id,name:i.name,owner:i.owner||("seed:"+i.seller),from:nm,contact:ct,text:tx,t:Date.now(),read:0});
+  putMsgs(a.slice(0,300));$("dxbox").innerHTML='<div class="warn">Správa bola odoslaná predajcovi. Ozve sa vám na kontakt, ktorý ste uviedli.</div>';
+}
+function shareBox(id){
+  var url=location.href.split("#")[0]+"#inzerat-"+id;
+  $("dxbox").innerHTML='<div class="msgbox"><b>Pošlite odkaz mechanikovi alebo známemu</b><div class="sharebox"><input id="shareUrl" readonly value="'+esc(url)+'"><button class="call" id="shareCopy">Kopírovať</button></div></div>';
+  var u=$("shareUrl");u.focus();u.select();
+}
+function drawMsgs(){
+  var a=getMsgs().filter(function(m){return me&&m.owner===me.email});
+  $("msglist").innerHTML=a.length?a.map(function(m){return '<div class="msgi'+(m.read?'':' new')+'"><b>'+esc(m.from)+' · '+esc(m.contact)+'</b><span class="mute">K inzerátu: '+esc(m.name)+' · '+new Date(m.t).toLocaleString("sk-SK")+'</span><p>'+esc(m.text)+'</p></div>'}).join(""):'<div class="empty">Zatiaľ nemáte žiadne správy. Keď vám kupujúci napíše z inzerátu, uvidíte to tu.</div>';
+  var all=getMsgs();all.forEach(function(m){if(me&&m.owner===me.email)m.read=1});putMsgs(all);msgBadge();
+}
+function msgBadge(){var n=me?getMsgs().filter(function(m){return m.owner===me.email&&!m.read}).length:0;$("msgTab").textContent=n?"Správy ("+n+")":"Správy"}
+function openFromHash(){var m=/^#inzerat-(\d+)$/.exec(location.hash);if(m&&items.some(function(x){return x.id===+m[1]}))openDet(+m[1])}
+window.addEventListener("hashchange",openFromHash);
+
+fillForm();fillAll();drawQb();refreshSaved();paint();msgBadge();openFromHash();
 </script>
 </body>
 </html>
