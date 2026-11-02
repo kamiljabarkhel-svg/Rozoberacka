@@ -23,6 +23,7 @@ Hlavná verzia denníka je v Claude Docs „Rozoberačka – denník stavby“. 
 ## Denník
 | Kedy | Čo sme urobili | Čo to znamená |
 | --- | --- | --- |
+| 2. 11. 2026, 17:30 | Session: zhrnutie stavu, navrhnutý prvý krok – založiť projekt v Supabase (región EU, Frankfurt) a v SQL Editore spustiť `01_schema.sql`, `02_kategorie.sql`, `03_katalog.sql`, potom kontrola počtov. Kód ani databáza sa nemenili | Čaká sa na súhlas majiteľa a založenie účtu Supabase |
 | 2. 11. 2026, 17:21 | GitHub: repozitár kamiljabarkhel-svg/rozoberacka, nainštalovaná aplikácia Claude, nahraný celý projekt | Agent v Claude Code môže začať kódovať |
 | 2. 11. 2026, 17:03 | Rozhodnutia: databáza je priorita, katalóg 6 najčastejších značiek, kategórie podľa dopytu; rozhovory a pilot neskôr. Hotová databáza v `supabase/`, 11 testov bezpečnosti prešlo | Agent môže začať napojením webu na Supabase |
 | 2. 11. 2026, 16:50 | Denník, mapa trhu, agent Dirigent | Jedno miesto na postup a úlohy |
