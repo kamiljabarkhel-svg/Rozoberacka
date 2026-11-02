@@ -1,0 +1,4632 @@
+{
+ "source": "supabase/02_kategorie.sql + supabase/03_katalog.sql",
+ "categories": [
+  {
+   "id": "motor",
+   "name": "Motor",
+   "sort": 4
+  },
+  {
+   "id": "pr",
+   "name": "Prevodovka",
+   "sort": 6
+  },
+  {
+   "id": "kar",
+   "name": "Karoséria",
+   "sort": 1
+  },
+  {
+   "id": "sv",
+   "name": "Svetlá",
+   "sort": 2
+  },
+  {
+   "id": "kol",
+   "name": "Kolesá a disky",
+   "sort": 5
+  },
+  {
+   "id": "el",
+   "name": "Elektro",
+   "sort": 3
+  },
+  {
+   "id": "pod",
+   "name": "Podvozok a riadenie",
+   "sort": 7
+  },
+  {
+   "id": "brz",
+   "name": "Brzdy",
+   "sort": 9
+  },
+  {
+   "id": "chl",
+   "name": "Chladenie a klimatizácia",
+   "sort": 8
+  },
+  {
+   "id": "pal",
+   "name": "Palivo a výfuk",
+   "sort": 10
+  },
+  {
+   "id": "int",
+   "name": "Interiér",
+   "sort": 11
+  }
+ ],
+ "subcategories": [
+  {
+   "id": 1,
+   "categoryId": "motor",
+   "name": "Motory kompletné",
+   "sort": 1
+  },
+  {
+   "id": 2,
+   "categoryId": "motor",
+   "name": "Hlavy valcov",
+   "sort": 2
+  },
+  {
+   "id": 3,
+   "categoryId": "motor",
+   "name": "Turbodúchadlá",
+   "sort": 3
+  },
+  {
+   "id": 4,
+   "categoryId": "motor",
+   "name": "Riadiace jednotky motora",
+   "sort": 4
+  },
+  {
+   "id": 5,
+   "categoryId": "motor",
+   "name": "Vstrekovače",
+   "sort": 5
+  },
+  {
+   "id": 6,
+   "categoryId": "motor",
+   "name": "Rozvody a remene",
+   "sort": 6
+  },
+  {
+   "id": 7,
+   "categoryId": "pr",
+   "name": "Manuálne prevodovky",
+   "sort": 1
+  },
+  {
+   "id": 8,
+   "categoryId": "pr",
+   "name": "Automatické prevodovky",
+   "sort": 2
+  },
+  {
+   "id": 9,
+   "categoryId": "pr",
+   "name": "Spojky a zotrvačníky",
+   "sort": 3
+  },
+  {
+   "id": 10,
+   "categoryId": "pr",
+   "name": "Polosi a kĺby",
+   "sort": 4
+  },
+  {
+   "id": 11,
+   "categoryId": "kar",
+   "name": "Nárazníky",
+   "sort": 1
+  },
+  {
+   "id": 12,
+   "categoryId": "kar",
+   "name": "Kapoty",
+   "sort": 2
+  },
+  {
+   "id": 13,
+   "categoryId": "kar",
+   "name": "Dvere",
+   "sort": 3
+  },
+  {
+   "id": 14,
+   "categoryId": "kar",
+   "name": "Blatníky",
+   "sort": 4
+  },
+  {
+   "id": 15,
+   "categoryId": "kar",
+   "name": "Spätné zrkadlá",
+   "sort": 5
+  },
+  {
+   "id": 16,
+   "categoryId": "kar",
+   "name": "Masky a mriežky",
+   "sort": 6
+  },
+  {
+   "id": 17,
+   "categoryId": "kar",
+   "name": "Veká a piate dvere",
+   "sort": 7
+  },
+  {
+   "id": 18,
+   "categoryId": "kar",
+   "name": "Sklá",
+   "sort": 8
+  },
+  {
+   "id": 19,
+   "categoryId": "sv",
+   "name": "Predné svetlá",
+   "sort": 1
+  },
+  {
+   "id": 20,
+   "categoryId": "sv",
+   "name": "Zadné svetlá",
+   "sort": 2
+  },
+  {
+   "id": 21,
+   "categoryId": "sv",
+   "name": "Hmlovky",
+   "sort": 3
+  },
+  {
+   "id": 22,
+   "categoryId": "sv",
+   "name": "Smerovky",
+   "sort": 4
+  },
+  {
+   "id": 23,
+   "categoryId": "kol",
+   "name": "Disky hliníkové",
+   "sort": 1
+  },
+  {
+   "id": 24,
+   "categoryId": "kol",
+   "name": "Disky oceľové",
+   "sort": 2
+  },
+  {
+   "id": 25,
+   "categoryId": "kol",
+   "name": "Kolesá s pneumatikami",
+   "sort": 3
+  },
+  {
+   "id": 26,
+   "categoryId": "el",
+   "name": "Alternátory",
+   "sort": 1
+  },
+  {
+   "id": 27,
+   "categoryId": "el",
+   "name": "Štartéry",
+   "sort": 2
+  },
+  {
+   "id": 28,
+   "categoryId": "el",
+   "name": "Riadiace jednotky",
+   "sort": 3
+  },
+  {
+   "id": 29,
+   "categoryId": "el",
+   "name": "Prístrojové panely",
+   "sort": 4
+  },
+  {
+   "id": 30,
+   "categoryId": "el",
+   "name": "Rádiá a navigácie",
+   "sort": 5
+  },
+  {
+   "id": 31,
+   "categoryId": "el",
+   "name": "Káblové zväzky",
+   "sort": 6
+  },
+  {
+   "id": 32,
+   "categoryId": "el",
+   "name": "Spínače a ovládače",
+   "sort": 7
+  },
+  {
+   "id": 33,
+   "categoryId": "pod",
+   "name": "Tlmiče a pružiny",
+   "sort": 1
+  },
+  {
+   "id": 34,
+   "categoryId": "pod",
+   "name": "Ramená a nápravy",
+   "sort": 2
+  },
+  {
+   "id": 35,
+   "categoryId": "pod",
+   "name": "Riadenie a servo",
+   "sort": 3
+  },
+  {
+   "id": 36,
+   "categoryId": "pod",
+   "name": "Náboje a ložiská",
+   "sort": 4
+  },
+  {
+   "id": 37,
+   "categoryId": "brz",
+   "name": "Strmene",
+   "sort": 1
+  },
+  {
+   "id": 38,
+   "categoryId": "brz",
+   "name": "Kotúče",
+   "sort": 2
+  },
+  {
+   "id": 39,
+   "categoryId": "brz",
+   "name": "ABS jednotky",
+   "sort": 3
+  },
+  {
+   "id": 40,
+   "categoryId": "chl",
+   "name": "Chladiče",
+   "sort": 1
+  },
+  {
+   "id": 41,
+   "categoryId": "chl",
+   "name": "Kompresory klimatizácie",
+   "sort": 2
+  },
+  {
+   "id": 42,
+   "categoryId": "chl",
+   "name": "Ventilátory",
+   "sort": 3
+  },
+  {
+   "id": 43,
+   "categoryId": "chl",
+   "name": "Kúrenie",
+   "sort": 4
+  },
+  {
+   "id": 44,
+   "categoryId": "pal",
+   "name": "Palivové čerpadlá",
+   "sort": 1
+  },
+  {
+   "id": 45,
+   "categoryId": "pal",
+   "name": "Nádrže",
+   "sort": 2
+  },
+  {
+   "id": 46,
+   "categoryId": "pal",
+   "name": "Výfuky",
+   "sort": 3
+  },
+  {
+   "id": 47,
+   "categoryId": "pal",
+   "name": "Filtre pevných častíc (DPF)",
+   "sort": 4
+  },
+  {
+   "id": 48,
+   "categoryId": "pal",
+   "name": "Katalyzátory",
+   "sort": 5
+  },
+  {
+   "id": 49,
+   "categoryId": "int",
+   "name": "Sedadlá",
+   "sort": 1
+  },
+  {
+   "id": 50,
+   "categoryId": "int",
+   "name": "Volanty a airbagy",
+   "sort": 2
+  },
+  {
+   "id": 51,
+   "categoryId": "int",
+   "name": "Palubné dosky",
+   "sort": 3
+  },
+  {
+   "id": 52,
+   "categoryId": "int",
+   "name": "Čalúnenie a výplne",
+   "sort": 4
+  },
+  {
+   "id": 53,
+   "categoryId": "int",
+   "name": "Pásy",
+   "sort": 5
+  }
+ ],
+ "brands": [
+  {
+   "id": 1,
+   "name": "Škoda",
+   "popular": true
+  },
+  {
+   "id": 2,
+   "name": "Volkswagen",
+   "popular": true
+  },
+  {
+   "id": 3,
+   "name": "Audi",
+   "popular": true
+  },
+  {
+   "id": 4,
+   "name": "BMW",
+   "popular": true
+  },
+  {
+   "id": 5,
+   "name": "Kia",
+   "popular": true
+  },
+  {
+   "id": 6,
+   "name": "Hyundai",
+   "popular": true
+  }
+ ],
+ "models": [
+  {
+   "id": 1,
+   "brandId": 1,
+   "name": "Fabia I",
+   "yearFrom": 1999,
+   "yearTo": 2007
+  },
+  {
+   "id": 2,
+   "brandId": 1,
+   "name": "Fabia II",
+   "yearFrom": 2007,
+   "yearTo": 2014
+  },
+  {
+   "id": 3,
+   "brandId": 1,
+   "name": "Fabia III",
+   "yearFrom": 2014,
+   "yearTo": 2021
+  },
+  {
+   "id": 4,
+   "brandId": 1,
+   "name": "Fabia IV",
+   "yearFrom": 2021,
+   "yearTo": null
+  },
+  {
+   "id": 5,
+   "brandId": 1,
+   "name": "Citigo",
+   "yearFrom": 2011,
+   "yearTo": 2019
+  },
+  {
+   "id": 6,
+   "brandId": 1,
+   "name": "Rapid",
+   "yearFrom": 2012,
+   "yearTo": 2019
+  },
+  {
+   "id": 7,
+   "brandId": 1,
+   "name": "Roomster",
+   "yearFrom": 2006,
+   "yearTo": 2015
+  },
+  {
+   "id": 8,
+   "brandId": 1,
+   "name": "Octavia I",
+   "yearFrom": 1996,
+   "yearTo": 2010
+  },
+  {
+   "id": 9,
+   "brandId": 1,
+   "name": "Octavia II",
+   "yearFrom": 2004,
+   "yearTo": 2013
+  },
+  {
+   "id": 10,
+   "brandId": 1,
+   "name": "Octavia III",
+   "yearFrom": 2012,
+   "yearTo": 2020
+  },
+  {
+   "id": 11,
+   "brandId": 1,
+   "name": "Octavia IV",
+   "yearFrom": 2019,
+   "yearTo": null
+  },
+  {
+   "id": 12,
+   "brandId": 1,
+   "name": "Superb II",
+   "yearFrom": 2008,
+   "yearTo": 2015
+  },
+  {
+   "id": 13,
+   "brandId": 1,
+   "name": "Superb III",
+   "yearFrom": 2015,
+   "yearTo": null
+  },
+  {
+   "id": 14,
+   "brandId": 1,
+   "name": "Yeti",
+   "yearFrom": 2009,
+   "yearTo": 2017
+  },
+  {
+   "id": 15,
+   "brandId": 1,
+   "name": "Kodiaq",
+   "yearFrom": 2016,
+   "yearTo": null
+  },
+  {
+   "id": 16,
+   "brandId": 1,
+   "name": "Karoq",
+   "yearFrom": 2017,
+   "yearTo": null
+  },
+  {
+   "id": 17,
+   "brandId": 1,
+   "name": "Scala",
+   "yearFrom": 2019,
+   "yearTo": null
+  },
+  {
+   "id": 18,
+   "brandId": 1,
+   "name": "Kamiq",
+   "yearFrom": 2019,
+   "yearTo": null
+  },
+  {
+   "id": 19,
+   "brandId": 1,
+   "name": "Enyaq iV",
+   "yearFrom": 2020,
+   "yearTo": null
+  },
+  {
+   "id": 20,
+   "brandId": 2,
+   "name": "Up!",
+   "yearFrom": 2011,
+   "yearTo": 2023
+  },
+  {
+   "id": 21,
+   "brandId": 2,
+   "name": "Polo IV (9N)",
+   "yearFrom": 2001,
+   "yearTo": 2009
+  },
+  {
+   "id": 22,
+   "brandId": 2,
+   "name": "Polo V (6R)",
+   "yearFrom": 2009,
+   "yearTo": 2017
+  },
+  {
+   "id": 23,
+   "brandId": 2,
+   "name": "Polo VI (AW)",
+   "yearFrom": 2017,
+   "yearTo": null
+  },
+  {
+   "id": 24,
+   "brandId": 2,
+   "name": "Golf IV",
+   "yearFrom": 1997,
+   "yearTo": 2006
+  },
+  {
+   "id": 25,
+   "brandId": 2,
+   "name": "Golf V",
+   "yearFrom": 2003,
+   "yearTo": 2009
+  },
+  {
+   "id": 26,
+   "brandId": 2,
+   "name": "Golf VI",
+   "yearFrom": 2008,
+   "yearTo": 2013
+  },
+  {
+   "id": 27,
+   "brandId": 2,
+   "name": "Golf VII",
+   "yearFrom": 2012,
+   "yearTo": 2020
+  },
+  {
+   "id": 28,
+   "brandId": 2,
+   "name": "Golf VIII",
+   "yearFrom": 2019,
+   "yearTo": null
+  },
+  {
+   "id": 29,
+   "brandId": 2,
+   "name": "Passat B5",
+   "yearFrom": 1996,
+   "yearTo": 2005
+  },
+  {
+   "id": 30,
+   "brandId": 2,
+   "name": "Passat B6",
+   "yearFrom": 2005,
+   "yearTo": 2010
+  },
+  {
+   "id": 31,
+   "brandId": 2,
+   "name": "Passat B7",
+   "yearFrom": 2010,
+   "yearTo": 2014
+  },
+  {
+   "id": 32,
+   "brandId": 2,
+   "name": "Passat B8",
+   "yearFrom": 2014,
+   "yearTo": null
+  },
+  {
+   "id": 33,
+   "brandId": 2,
+   "name": "Arteon",
+   "yearFrom": 2017,
+   "yearTo": null
+  },
+  {
+   "id": 34,
+   "brandId": 2,
+   "name": "Touran I",
+   "yearFrom": 2003,
+   "yearTo": 2015
+  },
+  {
+   "id": 35,
+   "brandId": 2,
+   "name": "Touran II (5T)",
+   "yearFrom": 2015,
+   "yearTo": null
+  },
+  {
+   "id": 36,
+   "brandId": 2,
+   "name": "Tiguan I (5N)",
+   "yearFrom": 2007,
+   "yearTo": 2016
+  },
+  {
+   "id": 37,
+   "brandId": 2,
+   "name": "Tiguan II (AD)",
+   "yearFrom": 2016,
+   "yearTo": null
+  },
+  {
+   "id": 38,
+   "brandId": 2,
+   "name": "T-Roc",
+   "yearFrom": 2017,
+   "yearTo": null
+  },
+  {
+   "id": 39,
+   "brandId": 2,
+   "name": "Caddy III",
+   "yearFrom": 2004,
+   "yearTo": 2015
+  },
+  {
+   "id": 40,
+   "brandId": 2,
+   "name": "Caddy IV",
+   "yearFrom": 2015,
+   "yearTo": 2020
+  },
+  {
+   "id": 41,
+   "brandId": 2,
+   "name": "Transporter T5",
+   "yearFrom": 2003,
+   "yearTo": 2015
+  },
+  {
+   "id": 42,
+   "brandId": 2,
+   "name": "ID.3",
+   "yearFrom": 2019,
+   "yearTo": null
+  },
+  {
+   "id": 43,
+   "brandId": 2,
+   "name": "ID.4",
+   "yearFrom": 2020,
+   "yearTo": null
+  },
+  {
+   "id": 44,
+   "brandId": 3,
+   "name": "A1 (8X)",
+   "yearFrom": 2010,
+   "yearTo": 2018
+  },
+  {
+   "id": 45,
+   "brandId": 3,
+   "name": "A3 (8L)",
+   "yearFrom": 1996,
+   "yearTo": 2003
+  },
+  {
+   "id": 46,
+   "brandId": 3,
+   "name": "A3 (8P)",
+   "yearFrom": 2003,
+   "yearTo": 2012
+  },
+  {
+   "id": 47,
+   "brandId": 3,
+   "name": "A3 (8V)",
+   "yearFrom": 2012,
+   "yearTo": 2020
+  },
+  {
+   "id": 48,
+   "brandId": 3,
+   "name": "A4 B6",
+   "yearFrom": 2000,
+   "yearTo": 2004
+  },
+  {
+   "id": 49,
+   "brandId": 3,
+   "name": "A4 B7",
+   "yearFrom": 2004,
+   "yearTo": 2008
+  },
+  {
+   "id": 50,
+   "brandId": 3,
+   "name": "A4 B8",
+   "yearFrom": 2007,
+   "yearTo": 2015
+  },
+  {
+   "id": 51,
+   "brandId": 3,
+   "name": "A4 B9",
+   "yearFrom": 2015,
+   "yearTo": null
+  },
+  {
+   "id": 52,
+   "brandId": 3,
+   "name": "A5 (8T)",
+   "yearFrom": 2007,
+   "yearTo": 2016
+  },
+  {
+   "id": 53,
+   "brandId": 3,
+   "name": "A6 C5",
+   "yearFrom": 1997,
+   "yearTo": 2005
+  },
+  {
+   "id": 54,
+   "brandId": 3,
+   "name": "A6 C6",
+   "yearFrom": 2004,
+   "yearTo": 2011
+  },
+  {
+   "id": 55,
+   "brandId": 3,
+   "name": "A6 C7",
+   "yearFrom": 2011,
+   "yearTo": 2018
+  },
+  {
+   "id": 56,
+   "brandId": 3,
+   "name": "Q3 (8U)",
+   "yearFrom": 2011,
+   "yearTo": 2018
+  },
+  {
+   "id": 57,
+   "brandId": 3,
+   "name": "Q5 (8R)",
+   "yearFrom": 2008,
+   "yearTo": 2017
+  },
+  {
+   "id": 58,
+   "brandId": 3,
+   "name": "Q7 (4L)",
+   "yearFrom": 2005,
+   "yearTo": 2015
+  },
+  {
+   "id": 59,
+   "brandId": 3,
+   "name": "TT (8J)",
+   "yearFrom": 2006,
+   "yearTo": 2014
+  },
+  {
+   "id": 60,
+   "brandId": 4,
+   "name": "1 (E87)",
+   "yearFrom": 2004,
+   "yearTo": 2011
+  },
+  {
+   "id": 61,
+   "brandId": 4,
+   "name": "1 (F20)",
+   "yearFrom": 2011,
+   "yearTo": 2019
+  },
+  {
+   "id": 62,
+   "brandId": 4,
+   "name": "3 (E46)",
+   "yearFrom": 1998,
+   "yearTo": 2007
+  },
+  {
+   "id": 63,
+   "brandId": 4,
+   "name": "3 (E90)",
+   "yearFrom": 2005,
+   "yearTo": 2012
+  },
+  {
+   "id": 64,
+   "brandId": 4,
+   "name": "3 (F30)",
+   "yearFrom": 2011,
+   "yearTo": 2019
+  },
+  {
+   "id": 65,
+   "brandId": 4,
+   "name": "3 (G20)",
+   "yearFrom": 2018,
+   "yearTo": null
+  },
+  {
+   "id": 66,
+   "brandId": 4,
+   "name": "5 (E39)",
+   "yearFrom": 1995,
+   "yearTo": 2003
+  },
+  {
+   "id": 67,
+   "brandId": 4,
+   "name": "5 (E60)",
+   "yearFrom": 2003,
+   "yearTo": 2010
+  },
+  {
+   "id": 68,
+   "brandId": 4,
+   "name": "5 (F10)",
+   "yearFrom": 2010,
+   "yearTo": 2017
+  },
+  {
+   "id": 69,
+   "brandId": 4,
+   "name": "5 (G30)",
+   "yearFrom": 2016,
+   "yearTo": null
+  },
+  {
+   "id": 70,
+   "brandId": 4,
+   "name": "X1 (E84)",
+   "yearFrom": 2009,
+   "yearTo": 2015
+  },
+  {
+   "id": 71,
+   "brandId": 4,
+   "name": "X3 (E83)",
+   "yearFrom": 2003,
+   "yearTo": 2010
+  },
+  {
+   "id": 72,
+   "brandId": 4,
+   "name": "X3 (F25)",
+   "yearFrom": 2010,
+   "yearTo": 2017
+  },
+  {
+   "id": 73,
+   "brandId": 4,
+   "name": "X5 (E53)",
+   "yearFrom": 2000,
+   "yearTo": 2006
+  },
+  {
+   "id": 74,
+   "brandId": 5,
+   "name": "Picanto I",
+   "yearFrom": 2004,
+   "yearTo": 2011
+  },
+  {
+   "id": 75,
+   "brandId": 5,
+   "name": "Picanto II",
+   "yearFrom": 2011,
+   "yearTo": 2017
+  },
+  {
+   "id": 76,
+   "brandId": 5,
+   "name": "Rio II",
+   "yearFrom": 2005,
+   "yearTo": 2011
+  },
+  {
+   "id": 77,
+   "brandId": 5,
+   "name": "Rio III",
+   "yearFrom": 2011,
+   "yearTo": 2017
+  },
+  {
+   "id": 78,
+   "brandId": 5,
+   "name": "Ceed I",
+   "yearFrom": 2006,
+   "yearTo": 2012
+  },
+  {
+   "id": 79,
+   "brandId": 5,
+   "name": "Ceed II",
+   "yearFrom": 2012,
+   "yearTo": 2018
+  },
+  {
+   "id": 80,
+   "brandId": 5,
+   "name": "Venga",
+   "yearFrom": 2010,
+   "yearTo": 2019
+  },
+  {
+   "id": 81,
+   "brandId": 5,
+   "name": "Sportage III",
+   "yearFrom": 2010,
+   "yearTo": 2015
+  },
+  {
+   "id": 82,
+   "brandId": 5,
+   "name": "Sportage IV",
+   "yearFrom": 2015,
+   "yearTo": 2021
+  },
+  {
+   "id": 83,
+   "brandId": 5,
+   "name": "Sorento II",
+   "yearFrom": 2009,
+   "yearTo": 2014
+  },
+  {
+   "id": 84,
+   "brandId": 5,
+   "name": "Stonic",
+   "yearFrom": 2017,
+   "yearTo": null
+  },
+  {
+   "id": 85,
+   "brandId": 5,
+   "name": "Niro",
+   "yearFrom": 2016,
+   "yearTo": null
+  },
+  {
+   "id": 86,
+   "brandId": 6,
+   "name": "Getz",
+   "yearFrom": 2002,
+   "yearTo": 2011
+  },
+  {
+   "id": 87,
+   "brandId": 6,
+   "name": "i10 I",
+   "yearFrom": 2007,
+   "yearTo": 2013
+  },
+  {
+   "id": 88,
+   "brandId": 6,
+   "name": "i10 II",
+   "yearFrom": 2013,
+   "yearTo": 2019
+  },
+  {
+   "id": 89,
+   "brandId": 6,
+   "name": "i20 I",
+   "yearFrom": 2008,
+   "yearTo": 2014
+  },
+  {
+   "id": 90,
+   "brandId": 6,
+   "name": "i20 II",
+   "yearFrom": 2014,
+   "yearTo": 2020
+  },
+  {
+   "id": 91,
+   "brandId": 6,
+   "name": "i30 I",
+   "yearFrom": 2007,
+   "yearTo": 2011
+  },
+  {
+   "id": 92,
+   "brandId": 6,
+   "name": "i30 II",
+   "yearFrom": 2012,
+   "yearTo": 2017
+  },
+  {
+   "id": 93,
+   "brandId": 6,
+   "name": "i30 III",
+   "yearFrom": 2017,
+   "yearTo": null
+  },
+  {
+   "id": 94,
+   "brandId": 6,
+   "name": "ix35",
+   "yearFrom": 2010,
+   "yearTo": 2015
+  },
+  {
+   "id": 95,
+   "brandId": 6,
+   "name": "Tucson I",
+   "yearFrom": 2004,
+   "yearTo": 2010
+  },
+  {
+   "id": 96,
+   "brandId": 6,
+   "name": "Tucson III",
+   "yearFrom": 2015,
+   "yearTo": 2020
+  },
+  {
+   "id": 97,
+   "brandId": 6,
+   "name": "Santa Fe II",
+   "yearFrom": 2006,
+   "yearTo": 2012
+  },
+  {
+   "id": 98,
+   "brandId": 6,
+   "name": "Kona",
+   "yearFrom": 2017,
+   "yearTo": null
+  }
+ ],
+ "engines": [
+  {
+   "id": 1,
+   "modelId": 1,
+   "name": "1.0 37 kW"
+  },
+  {
+   "id": 2,
+   "modelId": 1,
+   "name": "1.2 40 kW"
+  },
+  {
+   "id": 3,
+   "modelId": 1,
+   "name": "1.2 47 kW"
+  },
+  {
+   "id": 4,
+   "modelId": 1,
+   "name": "1.4 44 kW"
+  },
+  {
+   "id": 5,
+   "modelId": 1,
+   "name": "1.4 55 kW"
+  },
+  {
+   "id": 6,
+   "modelId": 1,
+   "name": "1.4 74 kW"
+  },
+  {
+   "id": 7,
+   "modelId": 1,
+   "name": "1.9 SDI 47 kW"
+  },
+  {
+   "id": 8,
+   "modelId": 1,
+   "name": "1.9 TDI 74 kW"
+  },
+  {
+   "id": 9,
+   "modelId": 1,
+   "name": "1.9 TDI 96 kW"
+  },
+  {
+   "id": 10,
+   "modelId": 2,
+   "name": "1.2 44 kW"
+  },
+  {
+   "id": 11,
+   "modelId": 2,
+   "name": "1.2 51 kW"
+  },
+  {
+   "id": 12,
+   "modelId": 2,
+   "name": "1.2 TSI 63 kW"
+  },
+  {
+   "id": 13,
+   "modelId": 2,
+   "name": "1.2 TSI 77 kW"
+  },
+  {
+   "id": 14,
+   "modelId": 2,
+   "name": "1.4 63 kW"
+  },
+  {
+   "id": 15,
+   "modelId": 2,
+   "name": "1.6 77 kW"
+  },
+  {
+   "id": 16,
+   "modelId": 2,
+   "name": "1.2 TDI 55 kW"
+  },
+  {
+   "id": 17,
+   "modelId": 2,
+   "name": "1.4 TDI 51 kW"
+  },
+  {
+   "id": 18,
+   "modelId": 2,
+   "name": "1.4 TDI 59 kW"
+  },
+  {
+   "id": 19,
+   "modelId": 2,
+   "name": "1.6 TDI 55 kW"
+  },
+  {
+   "id": 20,
+   "modelId": 2,
+   "name": "1.6 TDI 66 kW"
+  },
+  {
+   "id": 21,
+   "modelId": 2,
+   "name": "1.6 TDI 77 kW"
+  },
+  {
+   "id": 22,
+   "modelId": 3,
+   "name": "1.0 44 kW"
+  },
+  {
+   "id": 23,
+   "modelId": 3,
+   "name": "1.0 55 kW"
+  },
+  {
+   "id": 24,
+   "modelId": 3,
+   "name": "1.0 TSI 70 kW"
+  },
+  {
+   "id": 25,
+   "modelId": 3,
+   "name": "1.0 TSI 81 kW"
+  },
+  {
+   "id": 26,
+   "modelId": 3,
+   "name": "1.2 TSI 66 kW"
+  },
+  {
+   "id": 27,
+   "modelId": 3,
+   "name": "1.2 TSI 81 kW"
+  },
+  {
+   "id": 28,
+   "modelId": 3,
+   "name": "1.4 TDI 55 kW"
+  },
+  {
+   "id": 29,
+   "modelId": 3,
+   "name": "1.4 TDI 66 kW"
+  },
+  {
+   "id": 30,
+   "modelId": 3,
+   "name": "1.4 TDI 77 kW"
+  },
+  {
+   "id": 31,
+   "modelId": 4,
+   "name": "1.0 59 kW"
+  },
+  {
+   "id": 32,
+   "modelId": 4,
+   "name": "1.0 TSI 70 kW"
+  },
+  {
+   "id": 33,
+   "modelId": 4,
+   "name": "1.0 TSI 81 kW"
+  },
+  {
+   "id": 34,
+   "modelId": 4,
+   "name": "1.5 TSI 110 kW"
+  },
+  {
+   "id": 35,
+   "modelId": 5,
+   "name": "1.0 44 kW"
+  },
+  {
+   "id": 36,
+   "modelId": 5,
+   "name": "1.0 55 kW"
+  },
+  {
+   "id": 37,
+   "modelId": 5,
+   "name": "1.0 G-TEC 50 kW"
+  },
+  {
+   "id": 38,
+   "modelId": 6,
+   "name": "1.2 55 kW"
+  },
+  {
+   "id": 39,
+   "modelId": 6,
+   "name": "1.6 77 kW"
+  },
+  {
+   "id": 40,
+   "modelId": 6,
+   "name": "1.0 TSI 70 kW"
+  },
+  {
+   "id": 41,
+   "modelId": 6,
+   "name": "1.2 TSI 63 kW"
+  },
+  {
+   "id": 42,
+   "modelId": 6,
+   "name": "1.2 TSI 77 kW"
+  },
+  {
+   "id": 43,
+   "modelId": 6,
+   "name": "1.2 TSI 81 kW"
+  },
+  {
+   "id": 44,
+   "modelId": 6,
+   "name": "1.4 TSI 92 kW"
+  },
+  {
+   "id": 45,
+   "modelId": 6,
+   "name": "1.4 TDI 55 kW"
+  },
+  {
+   "id": 46,
+   "modelId": 6,
+   "name": "1.4 TDI 66 kW"
+  },
+  {
+   "id": 47,
+   "modelId": 6,
+   "name": "1.4 TDI 77 kW"
+  },
+  {
+   "id": 48,
+   "modelId": 6,
+   "name": "1.6 TDI 66 kW"
+  },
+  {
+   "id": 49,
+   "modelId": 6,
+   "name": "1.6 TDI 77 kW"
+  },
+  {
+   "id": 50,
+   "modelId": 7,
+   "name": "1.2 51 kW"
+  },
+  {
+   "id": 51,
+   "modelId": 7,
+   "name": "1.2 TSI 63 kW"
+  },
+  {
+   "id": 52,
+   "modelId": 7,
+   "name": "1.4 63 kW"
+  },
+  {
+   "id": 53,
+   "modelId": 7,
+   "name": "1.6 77 kW"
+  },
+  {
+   "id": 54,
+   "modelId": 7,
+   "name": "1.4 TDI 51 kW"
+  },
+  {
+   "id": 55,
+   "modelId": 7,
+   "name": "1.4 TDI 59 kW"
+  },
+  {
+   "id": 56,
+   "modelId": 7,
+   "name": "1.6 TDI 55 kW"
+  },
+  {
+   "id": 57,
+   "modelId": 7,
+   "name": "1.6 TDI 66 kW"
+  },
+  {
+   "id": 58,
+   "modelId": 7,
+   "name": "1.9 TDI 77 kW"
+  },
+  {
+   "id": 59,
+   "modelId": 8,
+   "name": "1.4 44 kW"
+  },
+  {
+   "id": 60,
+   "modelId": 8,
+   "name": "1.4 55 kW"
+  },
+  {
+   "id": 61,
+   "modelId": 8,
+   "name": "1.6 74 kW"
+  },
+  {
+   "id": 62,
+   "modelId": 8,
+   "name": "1.8 92 kW"
+  },
+  {
+   "id": 63,
+   "modelId": 8,
+   "name": "1.8 T 110 kW"
+  },
+  {
+   "id": 64,
+   "modelId": 8,
+   "name": "1.8 T RS 132 kW"
+  },
+  {
+   "id": 65,
+   "modelId": 8,
+   "name": "2.0 85 kW"
+  },
+  {
+   "id": 66,
+   "modelId": 8,
+   "name": "1.9 SDI 50 kW"
+  },
+  {
+   "id": 67,
+   "modelId": 8,
+   "name": "1.9 TDI 66 kW"
+  },
+  {
+   "id": 68,
+   "modelId": 8,
+   "name": "1.9 TDI 81 kW"
+  },
+  {
+   "id": 69,
+   "modelId": 8,
+   "name": "1.9 TDI 96 kW"
+  },
+  {
+   "id": 70,
+   "modelId": 9,
+   "name": "1.2 TSI 77 kW"
+  },
+  {
+   "id": 71,
+   "modelId": 9,
+   "name": "1.4 59 kW"
+  },
+  {
+   "id": 72,
+   "modelId": 9,
+   "name": "1.4 TSI 90 kW"
+  },
+  {
+   "id": 73,
+   "modelId": 9,
+   "name": "1.6 75 kW"
+  },
+  {
+   "id": 74,
+   "modelId": 9,
+   "name": "1.6 FSI 85 kW"
+  },
+  {
+   "id": 75,
+   "modelId": 9,
+   "name": "1.8 TSI 118 kW"
+  },
+  {
+   "id": 76,
+   "modelId": 9,
+   "name": "2.0 FSI 110 kW"
+  },
+  {
+   "id": 77,
+   "modelId": 9,
+   "name": "2.0 TFSI RS 147 kW"
+  },
+  {
+   "id": 78,
+   "modelId": 9,
+   "name": "1.6 TDI 77 kW"
+  },
+  {
+   "id": 79,
+   "modelId": 9,
+   "name": "1.9 TDI 77 kW"
+  },
+  {
+   "id": 80,
+   "modelId": 9,
+   "name": "2.0 TDI 81 kW"
+  },
+  {
+   "id": 81,
+   "modelId": 9,
+   "name": "2.0 TDI 103 kW"
+  },
+  {
+   "id": 82,
+   "modelId": 9,
+   "name": "2.0 TDI RS 125 kW"
+  },
+  {
+   "id": 83,
+   "modelId": 10,
+   "name": "1.0 TSI 85 kW"
+  },
+  {
+   "id": 84,
+   "modelId": 10,
+   "name": "1.2 TSI 63 kW"
+  },
+  {
+   "id": 85,
+   "modelId": 10,
+   "name": "1.2 TSI 77 kW"
+  },
+  {
+   "id": 86,
+   "modelId": 10,
+   "name": "1.2 TSI 81 kW"
+  },
+  {
+   "id": 87,
+   "modelId": 10,
+   "name": "1.4 TSI 103 kW"
+  },
+  {
+   "id": 88,
+   "modelId": 10,
+   "name": "1.4 TSI 110 kW"
+  },
+  {
+   "id": 89,
+   "modelId": 10,
+   "name": "1.5 TSI 110 kW"
+  },
+  {
+   "id": 90,
+   "modelId": 10,
+   "name": "1.8 TSI 132 kW"
+  },
+  {
+   "id": 91,
+   "modelId": 10,
+   "name": "2.0 TSI RS 162 kW"
+  },
+  {
+   "id": 92,
+   "modelId": 10,
+   "name": "2.0 TSI RS 180 kW"
+  },
+  {
+   "id": 93,
+   "modelId": 10,
+   "name": "1.6 TDI 77 kW"
+  },
+  {
+   "id": 94,
+   "modelId": 10,
+   "name": "1.6 TDI 81 kW"
+  },
+  {
+   "id": 95,
+   "modelId": 10,
+   "name": "2.0 TDI 110 kW"
+  },
+  {
+   "id": 96,
+   "modelId": 10,
+   "name": "2.0 TDI 135 kW"
+  },
+  {
+   "id": 97,
+   "modelId": 11,
+   "name": "1.0 TSI 81 kW"
+  },
+  {
+   "id": 98,
+   "modelId": 11,
+   "name": "1.5 TSI 110 kW"
+  },
+  {
+   "id": 99,
+   "modelId": 11,
+   "name": "2.0 TSI 140 kW"
+  },
+  {
+   "id": 100,
+   "modelId": 11,
+   "name": "2.0 TSI RS 180 kW"
+  },
+  {
+   "id": 101,
+   "modelId": 11,
+   "name": "1.4 TSI iV 150 kW"
+  },
+  {
+   "id": 102,
+   "modelId": 11,
+   "name": "2.0 TDI 85 kW"
+  },
+  {
+   "id": 103,
+   "modelId": 11,
+   "name": "2.0 TDI 110 kW"
+  },
+  {
+   "id": 104,
+   "modelId": 11,
+   "name": "2.0 TDI RS 147 kW"
+  },
+  {
+   "id": 105,
+   "modelId": 12,
+   "name": "1.4 TSI 92 kW"
+  },
+  {
+   "id": 106,
+   "modelId": 12,
+   "name": "1.8 TSI 118 kW"
+  },
+  {
+   "id": 107,
+   "modelId": 12,
+   "name": "2.0 TSI 147 kW"
+  },
+  {
+   "id": 108,
+   "modelId": 12,
+   "name": "3.6 FSI 191 kW"
+  },
+  {
+   "id": 109,
+   "modelId": 12,
+   "name": "1.6 TDI 77 kW"
+  },
+  {
+   "id": 110,
+   "modelId": 12,
+   "name": "2.0 TDI 81 kW"
+  },
+  {
+   "id": 111,
+   "modelId": 12,
+   "name": "2.0 TDI 103 kW"
+  },
+  {
+   "id": 112,
+   "modelId": 12,
+   "name": "2.0 TDI 125 kW"
+  },
+  {
+   "id": 113,
+   "modelId": 13,
+   "name": "1.4 TSI 92 kW"
+  },
+  {
+   "id": 114,
+   "modelId": 13,
+   "name": "1.4 TSI 110 kW"
+  },
+  {
+   "id": 115,
+   "modelId": 13,
+   "name": "1.5 TSI 110 kW"
+  },
+  {
+   "id": 116,
+   "modelId": 13,
+   "name": "1.8 TSI 132 kW"
+  },
+  {
+   "id": 117,
+   "modelId": 13,
+   "name": "2.0 TSI 162 kW"
+  },
+  {
+   "id": 118,
+   "modelId": 13,
+   "name": "2.0 TSI 206 kW"
+  },
+  {
+   "id": 119,
+   "modelId": 13,
+   "name": "1.6 TDI 88 kW"
+  },
+  {
+   "id": 120,
+   "modelId": 13,
+   "name": "2.0 TDI 110 kW"
+  },
+  {
+   "id": 121,
+   "modelId": 13,
+   "name": "2.0 TDI 140 kW"
+  },
+  {
+   "id": 122,
+   "modelId": 13,
+   "name": "2.0 TDI 176 kW"
+  },
+  {
+   "id": 123,
+   "modelId": 13,
+   "name": "1.4 TSI iV 160 kW"
+  },
+  {
+   "id": 124,
+   "modelId": 14,
+   "name": "1.2 TSI 77 kW"
+  },
+  {
+   "id": 125,
+   "modelId": 14,
+   "name": "1.2 TSI 81 kW"
+  },
+  {
+   "id": 126,
+   "modelId": 14,
+   "name": "1.4 TSI 92 kW"
+  },
+  {
+   "id": 127,
+   "modelId": 14,
+   "name": "1.8 TSI 112 kW"
+  },
+  {
+   "id": 128,
+   "modelId": 14,
+   "name": "1.6 TDI 77 kW"
+  },
+  {
+   "id": 129,
+   "modelId": 14,
+   "name": "2.0 TDI 81 kW"
+  },
+  {
+   "id": 130,
+   "modelId": 14,
+   "name": "2.0 TDI 103 kW"
+  },
+  {
+   "id": 131,
+   "modelId": 14,
+   "name": "2.0 TDI 125 kW"
+  },
+  {
+   "id": 132,
+   "modelId": 15,
+   "name": "1.4 TSI 92 kW"
+  },
+  {
+   "id": 133,
+   "modelId": 15,
+   "name": "1.4 TSI 110 kW"
+  },
+  {
+   "id": 134,
+   "modelId": 15,
+   "name": "1.5 TSI 110 kW"
+  },
+  {
+   "id": 135,
+   "modelId": 15,
+   "name": "2.0 TSI 132 kW"
+  },
+  {
+   "id": 136,
+   "modelId": 15,
+   "name": "2.0 TSI 180 kW"
+  },
+  {
+   "id": 137,
+   "modelId": 15,
+   "name": "2.0 TDI 110 kW"
+  },
+  {
+   "id": 138,
+   "modelId": 15,
+   "name": "2.0 TDI 140 kW"
+  },
+  {
+   "id": 139,
+   "modelId": 15,
+   "name": "2.0 TDI 176 kW"
+  },
+  {
+   "id": 140,
+   "modelId": 16,
+   "name": "1.0 TSI 81 kW"
+  },
+  {
+   "id": 141,
+   "modelId": 16,
+   "name": "1.4 TSI 110 kW"
+  },
+  {
+   "id": 142,
+   "modelId": 16,
+   "name": "1.5 TSI 110 kW"
+  },
+  {
+   "id": 143,
+   "modelId": 16,
+   "name": "2.0 TSI 140 kW"
+  },
+  {
+   "id": 144,
+   "modelId": 16,
+   "name": "1.6 TDI 85 kW"
+  },
+  {
+   "id": 145,
+   "modelId": 16,
+   "name": "2.0 TDI 85 kW"
+  },
+  {
+   "id": 146,
+   "modelId": 16,
+   "name": "2.0 TDI 110 kW"
+  },
+  {
+   "id": 147,
+   "modelId": 16,
+   "name": "2.0 TDI 140 kW"
+  },
+  {
+   "id": 148,
+   "modelId": 17,
+   "name": "1.0 TSI 70 kW"
+  },
+  {
+   "id": 149,
+   "modelId": 17,
+   "name": "1.0 TSI 81 kW"
+  },
+  {
+   "id": 150,
+   "modelId": 17,
+   "name": "1.5 TSI 110 kW"
+  },
+  {
+   "id": 151,
+   "modelId": 17,
+   "name": "1.6 TDI 85 kW"
+  },
+  {
+   "id": 152,
+   "modelId": 18,
+   "name": "1.0 TSI 70 kW"
+  },
+  {
+   "id": 153,
+   "modelId": 18,
+   "name": "1.0 TSI 81 kW"
+  },
+  {
+   "id": 154,
+   "modelId": 18,
+   "name": "1.5 TSI 110 kW"
+  },
+  {
+   "id": 155,
+   "modelId": 18,
+   "name": "1.6 TDI 85 kW"
+  },
+  {
+   "id": 156,
+   "modelId": 19,
+   "name": "iV 60 132 kW"
+  },
+  {
+   "id": 157,
+   "modelId": 19,
+   "name": "iV 80 150 kW"
+  },
+  {
+   "id": 158,
+   "modelId": 19,
+   "name": "iV 80x 195 kW"
+  },
+  {
+   "id": 159,
+   "modelId": 19,
+   "name": "RS 220 kW"
+  },
+  {
+   "id": 160,
+   "modelId": 20,
+   "name": "1.0 44 kW"
+  },
+  {
+   "id": 161,
+   "modelId": 20,
+   "name": "1.0 55 kW"
+  },
+  {
+   "id": 162,
+   "modelId": 20,
+   "name": "1.0 TSI 66 kW"
+  },
+  {
+   "id": 163,
+   "modelId": 20,
+   "name": "1.0 TSI GTI 85 kW"
+  },
+  {
+   "id": 164,
+   "modelId": 20,
+   "name": "1.0 EcoFuel 50 kW"
+  },
+  {
+   "id": 165,
+   "modelId": 20,
+   "name": "e-up! 60 kW"
+  },
+  {
+   "id": 166,
+   "modelId": 21,
+   "name": "1.2 40 kW"
+  },
+  {
+   "id": 167,
+   "modelId": 21,
+   "name": "1.2 47 kW"
+  },
+  {
+   "id": 168,
+   "modelId": 21,
+   "name": "1.4 16V 55 kW"
+  },
+  {
+   "id": 169,
+   "modelId": 21,
+   "name": "1.4 16V 59 kW"
+  },
+  {
+   "id": 170,
+   "modelId": 21,
+   "name": "1.6 16V 77 kW"
+  },
+  {
+   "id": 171,
+   "modelId": 21,
+   "name": "1.4 TDI 51 kW"
+  },
+  {
+   "id": 172,
+   "modelId": 21,
+   "name": "1.4 TDI 59 kW"
+  },
+  {
+   "id": 173,
+   "modelId": 21,
+   "name": "1.9 SDI 47 kW"
+  },
+  {
+   "id": 174,
+   "modelId": 21,
+   "name": "1.9 TDI 74 kW"
+  },
+  {
+   "id": 175,
+   "modelId": 22,
+   "name": "1.0 44 kW"
+  },
+  {
+   "id": 176,
+   "modelId": 22,
+   "name": "1.0 55 kW"
+  },
+  {
+   "id": 177,
+   "modelId": 22,
+   "name": "1.2 44 kW"
+  },
+  {
+   "id": 178,
+   "modelId": 22,
+   "name": "1.2 51 kW"
+  },
+  {
+   "id": 179,
+   "modelId": 22,
+   "name": "1.2 TSI 66 kW"
+  },
+  {
+   "id": 180,
+   "modelId": 22,
+   "name": "1.2 TSI 77 kW"
+  },
+  {
+   "id": 181,
+   "modelId": 22,
+   "name": "1.4 63 kW"
+  },
+  {
+   "id": 182,
+   "modelId": 22,
+   "name": "1.4 TSI GTI 132 kW"
+  },
+  {
+   "id": 183,
+   "modelId": 22,
+   "name": "1.6 77 kW"
+  },
+  {
+   "id": 184,
+   "modelId": 22,
+   "name": "1.2 TDI 55 kW"
+  },
+  {
+   "id": 185,
+   "modelId": 22,
+   "name": "1.4 TDI 66 kW"
+  },
+  {
+   "id": 186,
+   "modelId": 22,
+   "name": "1.6 TDI 55 kW"
+  },
+  {
+   "id": 187,
+   "modelId": 22,
+   "name": "1.6 TDI 66 kW"
+  },
+  {
+   "id": 188,
+   "modelId": 22,
+   "name": "1.6 TDI 77 kW"
+  },
+  {
+   "id": 189,
+   "modelId": 23,
+   "name": "1.0 48 kW"
+  },
+  {
+   "id": 190,
+   "modelId": 23,
+   "name": "1.0 59 kW"
+  },
+  {
+   "id": 191,
+   "modelId": 23,
+   "name": "1.0 TSI 70 kW"
+  },
+  {
+   "id": 192,
+   "modelId": 23,
+   "name": "1.0 TSI 85 kW"
+  },
+  {
+   "id": 193,
+   "modelId": 23,
+   "name": "1.5 TSI 110 kW"
+  },
+  {
+   "id": 194,
+   "modelId": 23,
+   "name": "2.0 TSI GTI 147 kW"
+  },
+  {
+   "id": 195,
+   "modelId": 23,
+   "name": "1.6 TDI 59 kW"
+  },
+  {
+   "id": 196,
+   "modelId": 23,
+   "name": "1.6 TDI 70 kW"
+  },
+  {
+   "id": 197,
+   "modelId": 24,
+   "name": "1.4 55 kW"
+  },
+  {
+   "id": 198,
+   "modelId": 24,
+   "name": "1.6 74 kW"
+  },
+  {
+   "id": 199,
+   "modelId": 24,
+   "name": "1.6 77 kW"
+  },
+  {
+   "id": 200,
+   "modelId": 24,
+   "name": "1.8 92 kW"
+  },
+  {
+   "id": 201,
+   "modelId": 24,
+   "name": "1.8 T 110 kW"
+  },
+  {
+   "id": 202,
+   "modelId": 24,
+   "name": "1.8 T GTI 132 kW"
+  },
+  {
+   "id": 203,
+   "modelId": 24,
+   "name": "2.0 85 kW"
+  },
+  {
+   "id": 204,
+   "modelId": 24,
+   "name": "2.3 V5 110 kW"
+  },
+  {
+   "id": 205,
+   "modelId": 24,
+   "name": "2.8 VR6 150 kW"
+  },
+  {
+   "id": 206,
+   "modelId": 24,
+   "name": "1.9 SDI 50 kW"
+  },
+  {
+   "id": 207,
+   "modelId": 24,
+   "name": "1.9 TDI 66 kW"
+  },
+  {
+   "id": 208,
+   "modelId": 24,
+   "name": "1.9 TDI 74 kW"
+  },
+  {
+   "id": 209,
+   "modelId": 24,
+   "name": "1.9 TDI 81 kW"
+  },
+  {
+   "id": 210,
+   "modelId": 24,
+   "name": "1.9 TDI 85 kW"
+  },
+  {
+   "id": 211,
+   "modelId": 24,
+   "name": "1.9 TDI 96 kW"
+  },
+  {
+   "id": 212,
+   "modelId": 25,
+   "name": "1.4 55 kW"
+  },
+  {
+   "id": 213,
+   "modelId": 25,
+   "name": "1.4 59 kW"
+  },
+  {
+   "id": 214,
+   "modelId": 25,
+   "name": "1.4 FSI 66 kW"
+  },
+  {
+   "id": 215,
+   "modelId": 25,
+   "name": "1.4 TSI 103 kW"
+  },
+  {
+   "id": 216,
+   "modelId": 25,
+   "name": "1.4 TSI 125 kW"
+  },
+  {
+   "id": 217,
+   "modelId": 25,
+   "name": "1.6 75 kW"
+  },
+  {
+   "id": 218,
+   "modelId": 25,
+   "name": "1.6 FSI 85 kW"
+  },
+  {
+   "id": 219,
+   "modelId": 25,
+   "name": "2.0 FSI 110 kW"
+  },
+  {
+   "id": 220,
+   "modelId": 25,
+   "name": "2.0 TFSI GTI 147 kW"
+  },
+  {
+   "id": 221,
+   "modelId": 25,
+   "name": "3.2 R32 184 kW"
+  },
+  {
+   "id": 222,
+   "modelId": 25,
+   "name": "1.9 TDI 66 kW"
+  },
+  {
+   "id": 223,
+   "modelId": 25,
+   "name": "1.9 TDI 77 kW"
+  },
+  {
+   "id": 224,
+   "modelId": 25,
+   "name": "2.0 TDI 103 kW"
+  },
+  {
+   "id": 225,
+   "modelId": 25,
+   "name": "2.0 TDI 125 kW"
+  },
+  {
+   "id": 226,
+   "modelId": 26,
+   "name": "1.2 TSI 63 kW"
+  },
+  {
+   "id": 227,
+   "modelId": 26,
+   "name": "1.2 TSI 77 kW"
+  },
+  {
+   "id": 228,
+   "modelId": 26,
+   "name": "1.4 59 kW"
+  },
+  {
+   "id": 229,
+   "modelId": 26,
+   "name": "1.4 TSI 90 kW"
+  },
+  {
+   "id": 230,
+   "modelId": 26,
+   "name": "1.4 TSI 118 kW"
+  },
+  {
+   "id": 231,
+   "modelId": 26,
+   "name": "1.6 75 kW"
+  },
+  {
+   "id": 232,
+   "modelId": 26,
+   "name": "2.0 TSI GTI 155 kW"
+  },
+  {
+   "id": 233,
+   "modelId": 26,
+   "name": "2.0 TSI R 188 kW"
+  },
+  {
+   "id": 234,
+   "modelId": 26,
+   "name": "1.6 TDI 66 kW"
+  },
+  {
+   "id": 235,
+   "modelId": 26,
+   "name": "1.6 TDI 77 kW"
+  },
+  {
+   "id": 236,
+   "modelId": 26,
+   "name": "2.0 TDI 81 kW"
+  },
+  {
+   "id": 237,
+   "modelId": 26,
+   "name": "2.0 TDI 103 kW"
+  },
+  {
+   "id": 238,
+   "modelId": 26,
+   "name": "2.0 TDI GTD 125 kW"
+  },
+  {
+   "id": 239,
+   "modelId": 27,
+   "name": "1.0 TSI 63 kW"
+  },
+  {
+   "id": 240,
+   "modelId": 27,
+   "name": "1.0 TSI 85 kW"
+  },
+  {
+   "id": 241,
+   "modelId": 27,
+   "name": "1.2 TSI 63 kW"
+  },
+  {
+   "id": 242,
+   "modelId": 27,
+   "name": "1.2 TSI 77 kW"
+  },
+  {
+   "id": 243,
+   "modelId": 27,
+   "name": "1.2 TSI 81 kW"
+  },
+  {
+   "id": 244,
+   "modelId": 27,
+   "name": "1.4 TSI 90 kW"
+  },
+  {
+   "id": 245,
+   "modelId": 27,
+   "name": "1.4 TSI 103 kW"
+  },
+  {
+   "id": 246,
+   "modelId": 27,
+   "name": "1.4 TSI 110 kW"
+  },
+  {
+   "id": 247,
+   "modelId": 27,
+   "name": "1.5 TSI 96 kW"
+  },
+  {
+   "id": 248,
+   "modelId": 27,
+   "name": "1.5 TSI 110 kW"
+  },
+  {
+   "id": 249,
+   "modelId": 27,
+   "name": "2.0 TSI GTI 162 kW"
+  },
+  {
+   "id": 250,
+   "modelId": 27,
+   "name": "2.0 TSI R 221 kW"
+  },
+  {
+   "id": 251,
+   "modelId": 27,
+   "name": "1.6 TDI 66 kW"
+  },
+  {
+   "id": 252,
+   "modelId": 27,
+   "name": "1.6 TDI 81 kW"
+  },
+  {
+   "id": 253,
+   "modelId": 27,
+   "name": "2.0 TDI 110 kW"
+  },
+  {
+   "id": 254,
+   "modelId": 27,
+   "name": "2.0 TDI 135 kW"
+  },
+  {
+   "id": 255,
+   "modelId": 27,
+   "name": "e-Golf 100 kW"
+  },
+  {
+   "id": 256,
+   "modelId": 28,
+   "name": "1.0 TSI 66 kW"
+  },
+  {
+   "id": 257,
+   "modelId": 28,
+   "name": "1.0 TSI 81 kW"
+  },
+  {
+   "id": 258,
+   "modelId": 28,
+   "name": "1.5 TSI 96 kW"
+  },
+  {
+   "id": 259,
+   "modelId": 28,
+   "name": "1.5 TSI 110 kW"
+  },
+  {
+   "id": 260,
+   "modelId": 28,
+   "name": "2.0 TSI GTI 180 kW"
+  },
+  {
+   "id": 261,
+   "modelId": 28,
+   "name": "2.0 TSI R 235 kW"
+  },
+  {
+   "id": 262,
+   "modelId": 28,
+   "name": "2.0 TDI 85 kW"
+  },
+  {
+   "id": 263,
+   "modelId": 28,
+   "name": "2.0 TDI 110 kW"
+  },
+  {
+   "id": 264,
+   "modelId": 29,
+   "name": "1.6 75 kW"
+  },
+  {
+   "id": 265,
+   "modelId": 29,
+   "name": "1.8 92 kW"
+  },
+  {
+   "id": 266,
+   "modelId": 29,
+   "name": "1.8 T 110 kW"
+  },
+  {
+   "id": 267,
+   "modelId": 29,
+   "name": "2.0 85 kW"
+  },
+  {
+   "id": 268,
+   "modelId": 29,
+   "name": "2.8 V6 142 kW"
+  },
+  {
+   "id": 269,
+   "modelId": 29,
+   "name": "1.9 TDI 66 kW"
+  },
+  {
+   "id": 270,
+   "modelId": 29,
+   "name": "1.9 TDI 85 kW"
+  },
+  {
+   "id": 271,
+   "modelId": 29,
+   "name": "1.9 TDI 96 kW"
+  },
+  {
+   "id": 272,
+   "modelId": 29,
+   "name": "2.5 TDI 110 kW"
+  },
+  {
+   "id": 273,
+   "modelId": 30,
+   "name": "1.4 TSI 90 kW"
+  },
+  {
+   "id": 274,
+   "modelId": 30,
+   "name": "1.6 75 kW"
+  },
+  {
+   "id": 275,
+   "modelId": 30,
+   "name": "1.6 FSI 85 kW"
+  },
+  {
+   "id": 276,
+   "modelId": 30,
+   "name": "1.8 TSI 118 kW"
+  },
+  {
+   "id": 277,
+   "modelId": 30,
+   "name": "2.0 FSI 110 kW"
+  },
+  {
+   "id": 278,
+   "modelId": 30,
+   "name": "2.0 TFSI 147 kW"
+  },
+  {
+   "id": 279,
+   "modelId": 30,
+   "name": "3.2 V6 184 kW"
+  },
+  {
+   "id": 280,
+   "modelId": 30,
+   "name": "1.6 TDI 77 kW"
+  },
+  {
+   "id": 281,
+   "modelId": 30,
+   "name": "1.9 TDI 77 kW"
+  },
+  {
+   "id": 282,
+   "modelId": 30,
+   "name": "2.0 TDI 81 kW"
+  },
+  {
+   "id": 283,
+   "modelId": 30,
+   "name": "2.0 TDI 103 kW"
+  },
+  {
+   "id": 284,
+   "modelId": 30,
+   "name": "2.0 TDI 125 kW"
+  },
+  {
+   "id": 285,
+   "modelId": 31,
+   "name": "1.4 TSI 90 kW"
+  },
+  {
+   "id": 286,
+   "modelId": 31,
+   "name": "1.8 TSI 118 kW"
+  },
+  {
+   "id": 287,
+   "modelId": 31,
+   "name": "3.6 V6 220 kW"
+  },
+  {
+   "id": 288,
+   "modelId": 31,
+   "name": "1.6 TDI 77 kW"
+  },
+  {
+   "id": 289,
+   "modelId": 31,
+   "name": "2.0 TDI 81 kW"
+  },
+  {
+   "id": 290,
+   "modelId": 31,
+   "name": "2.0 TDI 103 kW"
+  },
+  {
+   "id": 291,
+   "modelId": 31,
+   "name": "2.0 TDI 125 kW"
+  },
+  {
+   "id": 292,
+   "modelId": 32,
+   "name": "1.4 TSI 92 kW"
+  },
+  {
+   "id": 293,
+   "modelId": 32,
+   "name": "1.4 TSI 110 kW"
+  },
+  {
+   "id": 294,
+   "modelId": 32,
+   "name": "1.5 TSI 110 kW"
+  },
+  {
+   "id": 295,
+   "modelId": 32,
+   "name": "1.8 TSI 132 kW"
+  },
+  {
+   "id": 296,
+   "modelId": 32,
+   "name": "2.0 TSI 162 kW"
+  },
+  {
+   "id": 297,
+   "modelId": 32,
+   "name": "2.0 TSI 206 kW"
+  },
+  {
+   "id": 298,
+   "modelId": 32,
+   "name": "1.6 TDI 88 kW"
+  },
+  {
+   "id": 299,
+   "modelId": 32,
+   "name": "2.0 TDI 110 kW"
+  },
+  {
+   "id": 300,
+   "modelId": 32,
+   "name": "2.0 TDI 140 kW"
+  },
+  {
+   "id": 301,
+   "modelId": 32,
+   "name": "2.0 TDI 176 kW"
+  },
+  {
+   "id": 302,
+   "modelId": 32,
+   "name": "1.4 TSI GTE 160 kW"
+  },
+  {
+   "id": 303,
+   "modelId": 33,
+   "name": "1.5 TSI 110 kW"
+  },
+  {
+   "id": 304,
+   "modelId": 33,
+   "name": "2.0 TSI 140 kW"
+  },
+  {
+   "id": 305,
+   "modelId": 33,
+   "name": "2.0 TSI 206 kW"
+  },
+  {
+   "id": 306,
+   "modelId": 33,
+   "name": "2.0 TDI 110 kW"
+  },
+  {
+   "id": 307,
+   "modelId": 33,
+   "name": "2.0 TDI 140 kW"
+  },
+  {
+   "id": 308,
+   "modelId": 33,
+   "name": "2.0 TDI 176 kW"
+  },
+  {
+   "id": 309,
+   "modelId": 34,
+   "name": "1.4 TSI 103 kW"
+  },
+  {
+   "id": 310,
+   "modelId": 34,
+   "name": "1.4 TSI 125 kW"
+  },
+  {
+   "id": 311,
+   "modelId": 34,
+   "name": "1.6 75 kW"
+  },
+  {
+   "id": 312,
+   "modelId": 34,
+   "name": "1.6 FSI 85 kW"
+  },
+  {
+   "id": 313,
+   "modelId": 34,
+   "name": "2.0 FSI 110 kW"
+  },
+  {
+   "id": 314,
+   "modelId": 34,
+   "name": "1.6 TDI 66 kW"
+  },
+  {
+   "id": 315,
+   "modelId": 34,
+   "name": "1.6 TDI 77 kW"
+  },
+  {
+   "id": 316,
+   "modelId": 34,
+   "name": "1.9 TDI 66 kW"
+  },
+  {
+   "id": 317,
+   "modelId": 34,
+   "name": "1.9 TDI 77 kW"
+  },
+  {
+   "id": 318,
+   "modelId": 34,
+   "name": "2.0 TDI 81 kW"
+  },
+  {
+   "id": 319,
+   "modelId": 34,
+   "name": "2.0 TDI 103 kW"
+  },
+  {
+   "id": 320,
+   "modelId": 35,
+   "name": "1.2 TSI 81 kW"
+  },
+  {
+   "id": 321,
+   "modelId": 35,
+   "name": "1.4 TSI 103 kW"
+  },
+  {
+   "id": 322,
+   "modelId": 35,
+   "name": "1.5 TSI 110 kW"
+  },
+  {
+   "id": 323,
+   "modelId": 35,
+   "name": "1.6 TDI 85 kW"
+  },
+  {
+   "id": 324,
+   "modelId": 35,
+   "name": "2.0 TDI 90 kW"
+  },
+  {
+   "id": 325,
+   "modelId": 35,
+   "name": "2.0 TDI 110 kW"
+  },
+  {
+   "id": 326,
+   "modelId": 35,
+   "name": "2.0 TDI 135 kW"
+  },
+  {
+   "id": 327,
+   "modelId": 36,
+   "name": "1.4 TSI 110 kW"
+  },
+  {
+   "id": 328,
+   "modelId": 36,
+   "name": "2.0 TSI 125 kW"
+  },
+  {
+   "id": 329,
+   "modelId": 36,
+   "name": "2.0 TSI 132 kW"
+  },
+  {
+   "id": 330,
+   "modelId": 36,
+   "name": "2.0 TSI 155 kW"
+  },
+  {
+   "id": 331,
+   "modelId": 36,
+   "name": "2.0 TDI 81 kW"
+  },
+  {
+   "id": 332,
+   "modelId": 36,
+   "name": "2.0 TDI 103 kW"
+  },
+  {
+   "id": 333,
+   "modelId": 36,
+   "name": "2.0 TDI 110 kW"
+  },
+  {
+   "id": 334,
+   "modelId": 36,
+   "name": "2.0 TDI 130 kW"
+  },
+  {
+   "id": 335,
+   "modelId": 37,
+   "name": "1.4 TSI 92 kW"
+  },
+  {
+   "id": 336,
+   "modelId": 37,
+   "name": "1.4 TSI 110 kW"
+  },
+  {
+   "id": 337,
+   "modelId": 37,
+   "name": "1.5 TSI 96 kW"
+  },
+  {
+   "id": 338,
+   "modelId": 37,
+   "name": "1.5 TSI 110 kW"
+  },
+  {
+   "id": 339,
+   "modelId": 37,
+   "name": "2.0 TSI 132 kW"
+  },
+  {
+   "id": 340,
+   "modelId": 37,
+   "name": "2.0 TSI 180 kW"
+  },
+  {
+   "id": 341,
+   "modelId": 37,
+   "name": "2.0 TDI 85 kW"
+  },
+  {
+   "id": 342,
+   "modelId": 37,
+   "name": "2.0 TDI 110 kW"
+  },
+  {
+   "id": 343,
+   "modelId": 37,
+   "name": "2.0 TDI 140 kW"
+  },
+  {
+   "id": 344,
+   "modelId": 37,
+   "name": "2.0 TDI 176 kW"
+  },
+  {
+   "id": 345,
+   "modelId": 38,
+   "name": "1.0 TSI 85 kW"
+  },
+  {
+   "id": 346,
+   "modelId": 38,
+   "name": "1.5 TSI 110 kW"
+  },
+  {
+   "id": 347,
+   "modelId": 38,
+   "name": "2.0 TSI 140 kW"
+  },
+  {
+   "id": 348,
+   "modelId": 38,
+   "name": "2.0 TSI R 221 kW"
+  },
+  {
+   "id": 349,
+   "modelId": 38,
+   "name": "1.6 TDI 85 kW"
+  },
+  {
+   "id": 350,
+   "modelId": 38,
+   "name": "2.0 TDI 110 kW"
+  },
+  {
+   "id": 351,
+   "modelId": 38,
+   "name": "2.0 TDI 140 kW"
+  },
+  {
+   "id": 352,
+   "modelId": 39,
+   "name": "1.2 TSI 63 kW"
+  },
+  {
+   "id": 353,
+   "modelId": 39,
+   "name": "1.4 59 kW"
+  },
+  {
+   "id": 354,
+   "modelId": 39,
+   "name": "1.6 75 kW"
+  },
+  {
+   "id": 355,
+   "modelId": 39,
+   "name": "1.6 TDI 55 kW"
+  },
+  {
+   "id": 356,
+   "modelId": 39,
+   "name": "1.6 TDI 75 kW"
+  },
+  {
+   "id": 357,
+   "modelId": 39,
+   "name": "1.9 SDI 51 kW"
+  },
+  {
+   "id": 358,
+   "modelId": 39,
+   "name": "1.9 TDI 77 kW"
+  },
+  {
+   "id": 359,
+   "modelId": 39,
+   "name": "2.0 TDI 81 kW"
+  },
+  {
+   "id": 360,
+   "modelId": 39,
+   "name": "2.0 TDI 103 kW"
+  },
+  {
+   "id": 361,
+   "modelId": 40,
+   "name": "1.0 TSI 75 kW"
+  },
+  {
+   "id": 362,
+   "modelId": 40,
+   "name": "1.4 TSI 92 kW"
+  },
+  {
+   "id": 363,
+   "modelId": 40,
+   "name": "1.6 TDI 55 kW"
+  },
+  {
+   "id": 364,
+   "modelId": 40,
+   "name": "1.6 TDI 75 kW"
+  },
+  {
+   "id": 365,
+   "modelId": 40,
+   "name": "2.0 TDI 90 kW"
+  },
+  {
+   "id": 366,
+   "modelId": 40,
+   "name": "2.0 TDI 110 kW"
+  },
+  {
+   "id": 367,
+   "modelId": 41,
+   "name": "2.0 85 kW"
+  },
+  {
+   "id": 368,
+   "modelId": 41,
+   "name": "1.9 TDI 63 kW"
+  },
+  {
+   "id": 369,
+   "modelId": 41,
+   "name": "1.9 TDI 77 kW"
+  },
+  {
+   "id": 370,
+   "modelId": 41,
+   "name": "2.0 TDI 62 kW"
+  },
+  {
+   "id": 371,
+   "modelId": 41,
+   "name": "2.0 TDI 75 kW"
+  },
+  {
+   "id": 372,
+   "modelId": 41,
+   "name": "2.0 TDI 103 kW"
+  },
+  {
+   "id": 373,
+   "modelId": 41,
+   "name": "2.0 BiTDI 132 kW"
+  },
+  {
+   "id": 374,
+   "modelId": 41,
+   "name": "2.5 TDI 96 kW"
+  },
+  {
+   "id": 375,
+   "modelId": 41,
+   "name": "2.5 TDI 128 kW"
+  },
+  {
+   "id": 376,
+   "modelId": 42,
+   "name": "Pure 110 kW"
+  },
+  {
+   "id": 377,
+   "modelId": 42,
+   "name": "Pro 150 kW"
+  },
+  {
+   "id": 378,
+   "modelId": 42,
+   "name": "Pro S 150 kW"
+  },
+  {
+   "id": 379,
+   "modelId": 42,
+   "name": "GTX 240 kW"
+  },
+  {
+   "id": 380,
+   "modelId": 43,
+   "name": "Pure 109 kW"
+  },
+  {
+   "id": 381,
+   "modelId": 43,
+   "name": "Pro 150 kW"
+  },
+  {
+   "id": 382,
+   "modelId": 43,
+   "name": "GTX 220 kW"
+  },
+  {
+   "id": 383,
+   "modelId": 44,
+   "name": "1.0 TFSI 70 kW"
+  },
+  {
+   "id": 384,
+   "modelId": 44,
+   "name": "1.2 TFSI 63 kW"
+  },
+  {
+   "id": 385,
+   "modelId": 44,
+   "name": "1.4 TFSI 90 kW"
+  },
+  {
+   "id": 386,
+   "modelId": 44,
+   "name": "1.4 TFSI 103 kW"
+  },
+  {
+   "id": 387,
+   "modelId": 44,
+   "name": "1.6 TDI 66 kW"
+  },
+  {
+   "id": 388,
+   "modelId": 44,
+   "name": "1.6 TDI 77 kW"
+  },
+  {
+   "id": 389,
+   "modelId": 44,
+   "name": "2.0 TFSI S1 170 kW"
+  },
+  {
+   "id": 390,
+   "modelId": 45,
+   "name": "1.6 74 kW"
+  },
+  {
+   "id": 391,
+   "modelId": 45,
+   "name": "1.8 92 kW"
+  },
+  {
+   "id": 392,
+   "modelId": 45,
+   "name": "1.8 T 110 kW"
+  },
+  {
+   "id": 393,
+   "modelId": 45,
+   "name": "1.8 T 132 kW"
+  },
+  {
+   "id": 394,
+   "modelId": 45,
+   "name": "1.9 TDI 66 kW"
+  },
+  {
+   "id": 395,
+   "modelId": 45,
+   "name": "1.9 TDI 81 kW"
+  },
+  {
+   "id": 396,
+   "modelId": 45,
+   "name": "1.9 TDI 96 kW"
+  },
+  {
+   "id": 397,
+   "modelId": 46,
+   "name": "1.2 TFSI 77 kW"
+  },
+  {
+   "id": 398,
+   "modelId": 46,
+   "name": "1.4 TFSI 92 kW"
+  },
+  {
+   "id": 399,
+   "modelId": 46,
+   "name": "1.6 75 kW"
+  },
+  {
+   "id": 400,
+   "modelId": 46,
+   "name": "1.8 TFSI 118 kW"
+  },
+  {
+   "id": 401,
+   "modelId": 46,
+   "name": "2.0 FSI 110 kW"
+  },
+  {
+   "id": 402,
+   "modelId": 46,
+   "name": "2.0 TFSI 147 kW"
+  },
+  {
+   "id": 403,
+   "modelId": 46,
+   "name": "1.6 TDI 77 kW"
+  },
+  {
+   "id": 404,
+   "modelId": 46,
+   "name": "1.9 TDI 77 kW"
+  },
+  {
+   "id": 405,
+   "modelId": 46,
+   "name": "2.0 TDI 103 kW"
+  },
+  {
+   "id": 406,
+   "modelId": 46,
+   "name": "2.0 TDI 125 kW"
+  },
+  {
+   "id": 407,
+   "modelId": 47,
+   "name": "1.0 TFSI 85 kW"
+  },
+  {
+   "id": 408,
+   "modelId": 47,
+   "name": "1.2 TFSI 63 kW"
+  },
+  {
+   "id": 409,
+   "modelId": 47,
+   "name": "1.4 TFSI 90 kW"
+  },
+  {
+   "id": 410,
+   "modelId": 47,
+   "name": "1.4 TFSI 103 kW"
+  },
+  {
+   "id": 411,
+   "modelId": 47,
+   "name": "1.8 TFSI 132 kW"
+  },
+  {
+   "id": 412,
+   "modelId": 47,
+   "name": "2.0 TFSI 140 kW"
+  },
+  {
+   "id": 413,
+   "modelId": 47,
+   "name": "2.0 TFSI S3 213 kW"
+  },
+  {
+   "id": 414,
+   "modelId": 47,
+   "name": "1.6 TDI 81 kW"
+  },
+  {
+   "id": 415,
+   "modelId": 47,
+   "name": "2.0 TDI 110 kW"
+  },
+  {
+   "id": 416,
+   "modelId": 47,
+   "name": "2.0 TDI 135 kW"
+  },
+  {
+   "id": 417,
+   "modelId": 48,
+   "name": "1.6 75 kW"
+  },
+  {
+   "id": 418,
+   "modelId": 48,
+   "name": "1.8 T 110 kW"
+  },
+  {
+   "id": 419,
+   "modelId": 48,
+   "name": "1.8 T 120 kW"
+  },
+  {
+   "id": 420,
+   "modelId": 48,
+   "name": "2.0 96 kW"
+  },
+  {
+   "id": 421,
+   "modelId": 48,
+   "name": "2.4 V6 125 kW"
+  },
+  {
+   "id": 422,
+   "modelId": 48,
+   "name": "3.0 V6 162 kW"
+  },
+  {
+   "id": 423,
+   "modelId": 48,
+   "name": "1.9 TDI 74 kW"
+  },
+  {
+   "id": 424,
+   "modelId": 48,
+   "name": "1.9 TDI 96 kW"
+  },
+  {
+   "id": 425,
+   "modelId": 48,
+   "name": "2.5 TDI 120 kW"
+  },
+  {
+   "id": 426,
+   "modelId": 49,
+   "name": "1.6 75 kW"
+  },
+  {
+   "id": 427,
+   "modelId": 49,
+   "name": "1.8 T 120 kW"
+  },
+  {
+   "id": 428,
+   "modelId": 49,
+   "name": "2.0 96 kW"
+  },
+  {
+   "id": 429,
+   "modelId": 49,
+   "name": "2.0 TFSI 147 kW"
+  },
+  {
+   "id": 430,
+   "modelId": 49,
+   "name": "3.2 FSI 188 kW"
+  },
+  {
+   "id": 431,
+   "modelId": 49,
+   "name": "1.9 TDI 85 kW"
+  },
+  {
+   "id": 432,
+   "modelId": 49,
+   "name": "2.0 TDI 103 kW"
+  },
+  {
+   "id": 433,
+   "modelId": 49,
+   "name": "2.0 TDI 125 kW"
+  },
+  {
+   "id": 434,
+   "modelId": 49,
+   "name": "2.5 TDI 120 kW"
+  },
+  {
+   "id": 435,
+   "modelId": 49,
+   "name": "3.0 TDI 171 kW"
+  },
+  {
+   "id": 436,
+   "modelId": 50,
+   "name": "1.8 TFSI 88 kW"
+  },
+  {
+   "id": 437,
+   "modelId": 50,
+   "name": "1.8 TFSI 118 kW"
+  },
+  {
+   "id": 438,
+   "modelId": 50,
+   "name": "2.0 TFSI 132 kW"
+  },
+  {
+   "id": 439,
+   "modelId": 50,
+   "name": "2.0 TFSI 155 kW"
+  },
+  {
+   "id": 440,
+   "modelId": 50,
+   "name": "3.2 FSI 195 kW"
+  },
+  {
+   "id": 441,
+   "modelId": 50,
+   "name": "2.0 TDI 88 kW"
+  },
+  {
+   "id": 442,
+   "modelId": 50,
+   "name": "2.0 TDI 105 kW"
+  },
+  {
+   "id": 443,
+   "modelId": 50,
+   "name": "2.0 TDI 130 kW"
+  },
+  {
+   "id": 444,
+   "modelId": 50,
+   "name": "2.7 TDI 140 kW"
+  },
+  {
+   "id": 445,
+   "modelId": 50,
+   "name": "3.0 TDI 176 kW"
+  },
+  {
+   "id": 446,
+   "modelId": 51,
+   "name": "1.4 TFSI 110 kW"
+  },
+  {
+   "id": 447,
+   "modelId": 51,
+   "name": "2.0 TFSI 140 kW"
+  },
+  {
+   "id": 448,
+   "modelId": 51,
+   "name": "2.0 TFSI 185 kW"
+  },
+  {
+   "id": 449,
+   "modelId": 51,
+   "name": "2.0 TDI 90 kW"
+  },
+  {
+   "id": 450,
+   "modelId": 51,
+   "name": "2.0 TDI 110 kW"
+  },
+  {
+   "id": 451,
+   "modelId": 51,
+   "name": "2.0 TDI 140 kW"
+  },
+  {
+   "id": 452,
+   "modelId": 51,
+   "name": "3.0 TDI 160 kW"
+  },
+  {
+   "id": 453,
+   "modelId": 51,
+   "name": "3.0 TDI 200 kW"
+  },
+  {
+   "id": 454,
+   "modelId": 52,
+   "name": "1.8 TFSI 125 kW"
+  },
+  {
+   "id": 455,
+   "modelId": 52,
+   "name": "2.0 TFSI 155 kW"
+  },
+  {
+   "id": 456,
+   "modelId": 52,
+   "name": "2.0 TDI 130 kW"
+  },
+  {
+   "id": 457,
+   "modelId": 52,
+   "name": "3.0 TDI 176 kW"
+  },
+  {
+   "id": 458,
+   "modelId": 53,
+   "name": "1.8 T 110 kW"
+  },
+  {
+   "id": 459,
+   "modelId": 53,
+   "name": "2.4 120 kW"
+  },
+  {
+   "id": 460,
+   "modelId": 53,
+   "name": "1.9 TDI 85 kW"
+  },
+  {
+   "id": 461,
+   "modelId": 53,
+   "name": "2.5 TDI 110 kW"
+  },
+  {
+   "id": 462,
+   "modelId": 54,
+   "name": "2.0 TFSI 125 kW"
+  },
+  {
+   "id": 463,
+   "modelId": 54,
+   "name": "2.4 130 kW"
+  },
+  {
+   "id": 464,
+   "modelId": 54,
+   "name": "2.8 FSI 154 kW"
+  },
+  {
+   "id": 465,
+   "modelId": 54,
+   "name": "3.0 TFSI 213 kW"
+  },
+  {
+   "id": 466,
+   "modelId": 54,
+   "name": "3.2 FSI 188 kW"
+  },
+  {
+   "id": 467,
+   "modelId": 54,
+   "name": "2.0 TDI 103 kW"
+  },
+  {
+   "id": 468,
+   "modelId": 54,
+   "name": "2.7 TDI 132 kW"
+  },
+  {
+   "id": 469,
+   "modelId": 54,
+   "name": "3.0 TDI 176 kW"
+  },
+  {
+   "id": 470,
+   "modelId": 55,
+   "name": "1.8 TFSI 140 kW"
+  },
+  {
+   "id": 471,
+   "modelId": 55,
+   "name": "2.0 TFSI 132 kW"
+  },
+  {
+   "id": 472,
+   "modelId": 55,
+   "name": "2.8 FSI 150 kW"
+  },
+  {
+   "id": 473,
+   "modelId": 55,
+   "name": "3.0 TFSI 220 kW"
+  },
+  {
+   "id": 474,
+   "modelId": 55,
+   "name": "2.0 TDI 130 kW"
+  },
+  {
+   "id": 475,
+   "modelId": 55,
+   "name": "2.0 TDI 140 kW"
+  },
+  {
+   "id": 476,
+   "modelId": 55,
+   "name": "3.0 TDI 150 kW"
+  },
+  {
+   "id": 477,
+   "modelId": 55,
+   "name": "3.0 TDI 180 kW"
+  },
+  {
+   "id": 478,
+   "modelId": 55,
+   "name": "3.0 TDI 200 kW"
+  },
+  {
+   "id": 479,
+   "modelId": 56,
+   "name": "1.4 TFSI 110 kW"
+  },
+  {
+   "id": 480,
+   "modelId": 56,
+   "name": "2.0 TFSI 125 kW"
+  },
+  {
+   "id": 481,
+   "modelId": 56,
+   "name": "2.0 TFSI 155 kW"
+  },
+  {
+   "id": 482,
+   "modelId": 56,
+   "name": "2.0 TDI 103 kW"
+  },
+  {
+   "id": 483,
+   "modelId": 56,
+   "name": "2.0 TDI 110 kW"
+  },
+  {
+   "id": 484,
+   "modelId": 56,
+   "name": "2.0 TDI 130 kW"
+  },
+  {
+   "id": 485,
+   "modelId": 57,
+   "name": "2.0 TFSI 155 kW"
+  },
+  {
+   "id": 486,
+   "modelId": 57,
+   "name": "2.0 TFSI 165 kW"
+  },
+  {
+   "id": 487,
+   "modelId": 57,
+   "name": "3.2 FSI 199 kW"
+  },
+  {
+   "id": 488,
+   "modelId": 57,
+   "name": "2.0 TDI 105 kW"
+  },
+  {
+   "id": 489,
+   "modelId": 57,
+   "name": "2.0 TDI 130 kW"
+  },
+  {
+   "id": 490,
+   "modelId": 57,
+   "name": "3.0 TDI 176 kW"
+  },
+  {
+   "id": 491,
+   "modelId": 58,
+   "name": "3.6 FSI 206 kW"
+  },
+  {
+   "id": 492,
+   "modelId": 58,
+   "name": "4.2 FSI 253 kW"
+  },
+  {
+   "id": 493,
+   "modelId": 58,
+   "name": "3.0 TDI 171 kW"
+  },
+  {
+   "id": 494,
+   "modelId": 58,
+   "name": "3.0 TDI 176 kW"
+  },
+  {
+   "id": 495,
+   "modelId": 58,
+   "name": "4.2 TDI 240 kW"
+  },
+  {
+   "id": 496,
+   "modelId": 59,
+   "name": "1.8 TFSI 118 kW"
+  },
+  {
+   "id": 497,
+   "modelId": 59,
+   "name": "2.0 TFSI 147 kW"
+  },
+  {
+   "id": 498,
+   "modelId": 59,
+   "name": "2.0 TFSI TTS 200 kW"
+  },
+  {
+   "id": 499,
+   "modelId": 59,
+   "name": "3.2 184 kW"
+  },
+  {
+   "id": 500,
+   "modelId": 59,
+   "name": "2.0 TDI 125 kW"
+  },
+  {
+   "id": 501,
+   "modelId": 60,
+   "name": "116i 85 kW"
+  },
+  {
+   "id": 502,
+   "modelId": 60,
+   "name": "118i 95 kW"
+  },
+  {
+   "id": 503,
+   "modelId": 60,
+   "name": "120i 110 kW"
+  },
+  {
+   "id": 504,
+   "modelId": 60,
+   "name": "130i 195 kW"
+  },
+  {
+   "id": 505,
+   "modelId": 60,
+   "name": "116d 85 kW"
+  },
+  {
+   "id": 506,
+   "modelId": 60,
+   "name": "118d 90 kW"
+  },
+  {
+   "id": 507,
+   "modelId": 60,
+   "name": "118d 105 kW"
+  },
+  {
+   "id": 508,
+   "modelId": 60,
+   "name": "120d 120 kW"
+  },
+  {
+   "id": 509,
+   "modelId": 60,
+   "name": "123d 150 kW"
+  },
+  {
+   "id": 510,
+   "modelId": 61,
+   "name": "114i 75 kW"
+  },
+  {
+   "id": 511,
+   "modelId": 61,
+   "name": "116i 100 kW"
+  },
+  {
+   "id": 512,
+   "modelId": 61,
+   "name": "118i 125 kW"
+  },
+  {
+   "id": 513,
+   "modelId": 61,
+   "name": "120i 135 kW"
+  },
+  {
+   "id": 514,
+   "modelId": 61,
+   "name": "125i 160 kW"
+  },
+  {
+   "id": 515,
+   "modelId": 61,
+   "name": "M135i 235 kW"
+  },
+  {
+   "id": 516,
+   "modelId": 61,
+   "name": "114d 70 kW"
+  },
+  {
+   "id": 517,
+   "modelId": 61,
+   "name": "116d 85 kW"
+  },
+  {
+   "id": 518,
+   "modelId": 61,
+   "name": "118d 105 kW"
+  },
+  {
+   "id": 519,
+   "modelId": 61,
+   "name": "120d 130 kW"
+  },
+  {
+   "id": 520,
+   "modelId": 61,
+   "name": "125d 160 kW"
+  },
+  {
+   "id": 521,
+   "modelId": 62,
+   "name": "316i 77 kW"
+  },
+  {
+   "id": 522,
+   "modelId": 62,
+   "name": "318i 87 kW"
+  },
+  {
+   "id": 523,
+   "modelId": 62,
+   "name": "320i 125 kW"
+  },
+  {
+   "id": 524,
+   "modelId": 62,
+   "name": "325i 141 kW"
+  },
+  {
+   "id": 525,
+   "modelId": 62,
+   "name": "330i 170 kW"
+  },
+  {
+   "id": 526,
+   "modelId": 62,
+   "name": "318d 85 kW"
+  },
+  {
+   "id": 527,
+   "modelId": 62,
+   "name": "320d 100 kW"
+  },
+  {
+   "id": 528,
+   "modelId": 62,
+   "name": "320d 110 kW"
+  },
+  {
+   "id": 529,
+   "modelId": 62,
+   "name": "330d 150 kW"
+  },
+  {
+   "id": 530,
+   "modelId": 63,
+   "name": "316i 90 kW"
+  },
+  {
+   "id": 531,
+   "modelId": 63,
+   "name": "318i 95 kW"
+  },
+  {
+   "id": 532,
+   "modelId": 63,
+   "name": "320i 110 kW"
+  },
+  {
+   "id": 533,
+   "modelId": 63,
+   "name": "325i 160 kW"
+  },
+  {
+   "id": 534,
+   "modelId": 63,
+   "name": "330i 200 kW"
+  },
+  {
+   "id": 535,
+   "modelId": 63,
+   "name": "335i 225 kW"
+  },
+  {
+   "id": 536,
+   "modelId": 63,
+   "name": "316d 85 kW"
+  },
+  {
+   "id": 537,
+   "modelId": 63,
+   "name": "318d 105 kW"
+  },
+  {
+   "id": 538,
+   "modelId": 63,
+   "name": "320d 120 kW"
+  },
+  {
+   "id": 539,
+   "modelId": 63,
+   "name": "320d 130 kW"
+  },
+  {
+   "id": 540,
+   "modelId": 63,
+   "name": "325d 145 kW"
+  },
+  {
+   "id": 541,
+   "modelId": 63,
+   "name": "330d 180 kW"
+  },
+  {
+   "id": 542,
+   "modelId": 63,
+   "name": "335d 210 kW"
+  },
+  {
+   "id": 543,
+   "modelId": 64,
+   "name": "316i 80 kW"
+  },
+  {
+   "id": 544,
+   "modelId": 64,
+   "name": "318i 100 kW"
+  },
+  {
+   "id": 545,
+   "modelId": 64,
+   "name": "320i 135 kW"
+  },
+  {
+   "id": 546,
+   "modelId": 64,
+   "name": "328i 180 kW"
+  },
+  {
+   "id": 547,
+   "modelId": 64,
+   "name": "335i 225 kW"
+  },
+  {
+   "id": 548,
+   "modelId": 64,
+   "name": "316d 85 kW"
+  },
+  {
+   "id": 549,
+   "modelId": 64,
+   "name": "318d 100 kW"
+  },
+  {
+   "id": 550,
+   "modelId": 64,
+   "name": "320d 120 kW"
+  },
+  {
+   "id": 551,
+   "modelId": 64,
+   "name": "320d 135 kW"
+  },
+  {
+   "id": 552,
+   "modelId": 64,
+   "name": "325d 160 kW"
+  },
+  {
+   "id": 553,
+   "modelId": 64,
+   "name": "330d 190 kW"
+  },
+  {
+   "id": 554,
+   "modelId": 65,
+   "name": "318i 115 kW"
+  },
+  {
+   "id": 555,
+   "modelId": 65,
+   "name": "320i 135 kW"
+  },
+  {
+   "id": 556,
+   "modelId": 65,
+   "name": "330i 190 kW"
+  },
+  {
+   "id": 557,
+   "modelId": 65,
+   "name": "M340i 285 kW"
+  },
+  {
+   "id": 558,
+   "modelId": 65,
+   "name": "318d 110 kW"
+  },
+  {
+   "id": 559,
+   "modelId": 65,
+   "name": "320d 140 kW"
+  },
+  {
+   "id": 560,
+   "modelId": 65,
+   "name": "330d 210 kW"
+  },
+  {
+   "id": 561,
+   "modelId": 65,
+   "name": "330e 215 kW"
+  },
+  {
+   "id": 562,
+   "modelId": 66,
+   "name": "520i 110 kW"
+  },
+  {
+   "id": 563,
+   "modelId": 66,
+   "name": "523i 125 kW"
+  },
+  {
+   "id": 564,
+   "modelId": 66,
+   "name": "525i 141 kW"
+  },
+  {
+   "id": 565,
+   "modelId": 66,
+   "name": "528i 142 kW"
+  },
+  {
+   "id": 566,
+   "modelId": 66,
+   "name": "530i 170 kW"
+  },
+  {
+   "id": 567,
+   "modelId": 66,
+   "name": "520d 100 kW"
+  },
+  {
+   "id": 568,
+   "modelId": 66,
+   "name": "525d 120 kW"
+  },
+  {
+   "id": 569,
+   "modelId": 66,
+   "name": "530d 142 kW"
+  },
+  {
+   "id": 570,
+   "modelId": 67,
+   "name": "520i 110 kW"
+  },
+  {
+   "id": 571,
+   "modelId": 67,
+   "name": "523i 130 kW"
+  },
+  {
+   "id": 572,
+   "modelId": 67,
+   "name": "525i 160 kW"
+  },
+  {
+   "id": 573,
+   "modelId": 67,
+   "name": "530i 190 kW"
+  },
+  {
+   "id": 574,
+   "modelId": 67,
+   "name": "520d 120 kW"
+  },
+  {
+   "id": 575,
+   "modelId": 67,
+   "name": "525d 130 kW"
+  },
+  {
+   "id": 576,
+   "modelId": 67,
+   "name": "530d 173 kW"
+  },
+  {
+   "id": 577,
+   "modelId": 67,
+   "name": "535d 200 kW"
+  },
+  {
+   "id": 578,
+   "modelId": 68,
+   "name": "520i 135 kW"
+  },
+  {
+   "id": 579,
+   "modelId": 68,
+   "name": "523i 150 kW"
+  },
+  {
+   "id": 580,
+   "modelId": 68,
+   "name": "528i 180 kW"
+  },
+  {
+   "id": 581,
+   "modelId": 68,
+   "name": "535i 225 kW"
+  },
+  {
+   "id": 582,
+   "modelId": 68,
+   "name": "518d 105 kW"
+  },
+  {
+   "id": 583,
+   "modelId": 68,
+   "name": "520d 120 kW"
+  },
+  {
+   "id": 584,
+   "modelId": 68,
+   "name": "520d 135 kW"
+  },
+  {
+   "id": 585,
+   "modelId": 68,
+   "name": "525d 160 kW"
+  },
+  {
+   "id": 586,
+   "modelId": 68,
+   "name": "530d 190 kW"
+  },
+  {
+   "id": 587,
+   "modelId": 68,
+   "name": "535d 230 kW"
+  },
+  {
+   "id": 588,
+   "modelId": 69,
+   "name": "520i 135 kW"
+  },
+  {
+   "id": 589,
+   "modelId": 69,
+   "name": "530i 185 kW"
+  },
+  {
+   "id": 590,
+   "modelId": 69,
+   "name": "540i 250 kW"
+  },
+  {
+   "id": 591,
+   "modelId": 69,
+   "name": "520d 140 kW"
+  },
+  {
+   "id": 592,
+   "modelId": 69,
+   "name": "530d 195 kW"
+  },
+  {
+   "id": 593,
+   "modelId": 69,
+   "name": "530e 185 kW"
+  },
+  {
+   "id": 594,
+   "modelId": 70,
+   "name": "sDrive18i 110 kW"
+  },
+  {
+   "id": 595,
+   "modelId": 70,
+   "name": "xDrive20i 135 kW"
+  },
+  {
+   "id": 596,
+   "modelId": 70,
+   "name": "xDrive28i 180 kW"
+  },
+  {
+   "id": 597,
+   "modelId": 70,
+   "name": "sDrive16d 85 kW"
+  },
+  {
+   "id": 598,
+   "modelId": 70,
+   "name": "sDrive18d 105 kW"
+  },
+  {
+   "id": 599,
+   "modelId": 70,
+   "name": "xDrive20d 130 kW"
+  },
+  {
+   "id": 600,
+   "modelId": 71,
+   "name": "2.0i 110 kW"
+  },
+  {
+   "id": 601,
+   "modelId": 71,
+   "name": "2.5i 141 kW"
+  },
+  {
+   "id": 602,
+   "modelId": 71,
+   "name": "3.0i 170 kW"
+  },
+  {
+   "id": 603,
+   "modelId": 71,
+   "name": "2.0d 110 kW"
+  },
+  {
+   "id": 604,
+   "modelId": 71,
+   "name": "3.0d 160 kW"
+  },
+  {
+   "id": 605,
+   "modelId": 72,
+   "name": "xDrive20i 135 kW"
+  },
+  {
+   "id": 606,
+   "modelId": 72,
+   "name": "xDrive28i 180 kW"
+  },
+  {
+   "id": 607,
+   "modelId": 72,
+   "name": "xDrive20d 135 kW"
+  },
+  {
+   "id": 608,
+   "modelId": 72,
+   "name": "xDrive30d 190 kW"
+  },
+  {
+   "id": 609,
+   "modelId": 72,
+   "name": "xDrive35d 230 kW"
+  },
+  {
+   "id": 610,
+   "modelId": 73,
+   "name": "3.0i 170 kW"
+  },
+  {
+   "id": 611,
+   "modelId": 73,
+   "name": "4.4i 210 kW"
+  },
+  {
+   "id": 612,
+   "modelId": 73,
+   "name": "3.0d 160 kW"
+  },
+  {
+   "id": 613,
+   "modelId": 74,
+   "name": "1.0 46 kW"
+  },
+  {
+   "id": 614,
+   "modelId": 74,
+   "name": "1.1 48 kW"
+  },
+  {
+   "id": 615,
+   "modelId": 75,
+   "name": "1.0 51 kW"
+  },
+  {
+   "id": 616,
+   "modelId": 75,
+   "name": "1.2 63 kW"
+  },
+  {
+   "id": 617,
+   "modelId": 76,
+   "name": "1.4 71 kW"
+  },
+  {
+   "id": 618,
+   "modelId": 76,
+   "name": "1.6 82 kW"
+  },
+  {
+   "id": 619,
+   "modelId": 77,
+   "name": "1.2 62 kW"
+  },
+  {
+   "id": 620,
+   "modelId": 77,
+   "name": "1.4 74 kW"
+  },
+  {
+   "id": 621,
+   "modelId": 77,
+   "name": "1.1 CRDi 55 kW"
+  },
+  {
+   "id": 622,
+   "modelId": 77,
+   "name": "1.4 CRDi 66 kW"
+  },
+  {
+   "id": 623,
+   "modelId": 78,
+   "name": "1.4 80 kW"
+  },
+  {
+   "id": 624,
+   "modelId": 78,
+   "name": "1.6 91 kW"
+  },
+  {
+   "id": 625,
+   "modelId": 78,
+   "name": "2.0 105 kW"
+  },
+  {
+   "id": 626,
+   "modelId": 78,
+   "name": "1.6 CRDi 66 kW"
+  },
+  {
+   "id": 627,
+   "modelId": 78,
+   "name": "1.6 CRDi 85 kW"
+  },
+  {
+   "id": 628,
+   "modelId": 79,
+   "name": "1.4 73 kW"
+  },
+  {
+   "id": 629,
+   "modelId": 79,
+   "name": "1.6 99 kW"
+  },
+  {
+   "id": 630,
+   "modelId": 79,
+   "name": "1.6 T-GDI 150 kW"
+  },
+  {
+   "id": 631,
+   "modelId": 79,
+   "name": "1.4 CRDi 66 kW"
+  },
+  {
+   "id": 632,
+   "modelId": 79,
+   "name": "1.6 CRDi 81 kW"
+  },
+  {
+   "id": 633,
+   "modelId": 79,
+   "name": "1.6 CRDi 94 kW"
+  },
+  {
+   "id": 634,
+   "modelId": 80,
+   "name": "1.4 66 kW"
+  },
+  {
+   "id": 635,
+   "modelId": 80,
+   "name": "1.6 92 kW"
+  },
+  {
+   "id": 636,
+   "modelId": 80,
+   "name": "1.4 CRDi 66 kW"
+  },
+  {
+   "id": 637,
+   "modelId": 80,
+   "name": "1.6 CRDi 85 kW"
+  },
+  {
+   "id": 638,
+   "modelId": 81,
+   "name": "1.6 GDI 99 kW"
+  },
+  {
+   "id": 639,
+   "modelId": 81,
+   "name": "2.0 122 kW"
+  },
+  {
+   "id": 640,
+   "modelId": 81,
+   "name": "1.7 CRDi 85 kW"
+  },
+  {
+   "id": 641,
+   "modelId": 81,
+   "name": "2.0 CRDi 100 kW"
+  },
+  {
+   "id": 642,
+   "modelId": 81,
+   "name": "2.0 CRDi 135 kW"
+  },
+  {
+   "id": 643,
+   "modelId": 82,
+   "name": "1.6 GDI 97 kW"
+  },
+  {
+   "id": 644,
+   "modelId": 82,
+   "name": "1.6 T-GDI 130 kW"
+  },
+  {
+   "id": 645,
+   "modelId": 82,
+   "name": "1.7 CRDi 85 kW"
+  },
+  {
+   "id": 646,
+   "modelId": 82,
+   "name": "2.0 CRDi 100 kW"
+  },
+  {
+   "id": 647,
+   "modelId": 82,
+   "name": "2.0 CRDi 136 kW"
+  },
+  {
+   "id": 648,
+   "modelId": 83,
+   "name": "2.2 CRDi 145 kW"
+  },
+  {
+   "id": 649,
+   "modelId": 83,
+   "name": "2.4 128 kW"
+  },
+  {
+   "id": 650,
+   "modelId": 84,
+   "name": "1.0 T-GDI 88 kW"
+  },
+  {
+   "id": 651,
+   "modelId": 84,
+   "name": "1.4 74 kW"
+  },
+  {
+   "id": 652,
+   "modelId": 84,
+   "name": "1.6 CRDi 85 kW"
+  },
+  {
+   "id": 653,
+   "modelId": 85,
+   "name": "1.6 GDI Hybrid 104 kW"
+  },
+  {
+   "id": 654,
+   "modelId": 85,
+   "name": "e-Niro 150 kW"
+  },
+  {
+   "id": 655,
+   "modelId": 86,
+   "name": "1.1 48 kW"
+  },
+  {
+   "id": 656,
+   "modelId": 86,
+   "name": "1.3 62 kW"
+  },
+  {
+   "id": 657,
+   "modelId": 86,
+   "name": "1.4 71 kW"
+  },
+  {
+   "id": 658,
+   "modelId": 86,
+   "name": "1.5 CRDi 60 kW"
+  },
+  {
+   "id": 659,
+   "modelId": 87,
+   "name": "1.1 49 kW"
+  },
+  {
+   "id": 660,
+   "modelId": 87,
+   "name": "1.2 57 kW"
+  },
+  {
+   "id": 661,
+   "modelId": 88,
+   "name": "1.0 49 kW"
+  },
+  {
+   "id": 662,
+   "modelId": 88,
+   "name": "1.2 64 kW"
+  },
+  {
+   "id": 663,
+   "modelId": 89,
+   "name": "1.2 57 kW"
+  },
+  {
+   "id": 664,
+   "modelId": 89,
+   "name": "1.4 74 kW"
+  },
+  {
+   "id": 665,
+   "modelId": 89,
+   "name": "1.1 CRDi 55 kW"
+  },
+  {
+   "id": 666,
+   "modelId": 89,
+   "name": "1.4 CRDi 66 kW"
+  },
+  {
+   "id": 667,
+   "modelId": 90,
+   "name": "1.2 55 kW"
+  },
+  {
+   "id": 668,
+   "modelId": 90,
+   "name": "1.25 62 kW"
+  },
+  {
+   "id": 669,
+   "modelId": 90,
+   "name": "1.4 74 kW"
+  },
+  {
+   "id": 670,
+   "modelId": 90,
+   "name": "1.0 T-GDI 74 kW"
+  },
+  {
+   "id": 671,
+   "modelId": 90,
+   "name": "1.1 CRDi 55 kW"
+  },
+  {
+   "id": 672,
+   "modelId": 90,
+   "name": "1.4 CRDi 66 kW"
+  },
+  {
+   "id": 673,
+   "modelId": 91,
+   "name": "1.4 80 kW"
+  },
+  {
+   "id": 674,
+   "modelId": 91,
+   "name": "1.6 91 kW"
+  },
+  {
+   "id": 675,
+   "modelId": 91,
+   "name": "2.0 105 kW"
+  },
+  {
+   "id": 676,
+   "modelId": 91,
+   "name": "1.6 CRDi 66 kW"
+  },
+  {
+   "id": 677,
+   "modelId": 91,
+   "name": "1.6 CRDi 85 kW"
+  },
+  {
+   "id": 678,
+   "modelId": 92,
+   "name": "1.4 74 kW"
+  },
+  {
+   "id": 679,
+   "modelId": 92,
+   "name": "1.6 99 kW"
+  },
+  {
+   "id": 680,
+   "modelId": 92,
+   "name": "1.4 CRDi 66 kW"
+  },
+  {
+   "id": 681,
+   "modelId": 92,
+   "name": "1.6 CRDi 81 kW"
+  },
+  {
+   "id": 682,
+   "modelId": 92,
+   "name": "1.6 CRDi 94 kW"
+  },
+  {
+   "id": 683,
+   "modelId": 93,
+   "name": "1.0 T-GDI 88 kW"
+  },
+  {
+   "id": 684,
+   "modelId": 93,
+   "name": "1.4 T-GDI 103 kW"
+  },
+  {
+   "id": 685,
+   "modelId": 93,
+   "name": "1.6 CRDi 85 kW"
+  },
+  {
+   "id": 686,
+   "modelId": 94,
+   "name": "1.6 GDI 99 kW"
+  },
+  {
+   "id": 687,
+   "modelId": 94,
+   "name": "2.0 120 kW"
+  },
+  {
+   "id": 688,
+   "modelId": 94,
+   "name": "1.7 CRDi 85 kW"
+  },
+  {
+   "id": 689,
+   "modelId": 94,
+   "name": "2.0 CRDi 100 kW"
+  },
+  {
+   "id": 690,
+   "modelId": 94,
+   "name": "2.0 CRDi 135 kW"
+  },
+  {
+   "id": 691,
+   "modelId": 95,
+   "name": "2.0 104 kW"
+  },
+  {
+   "id": 692,
+   "modelId": 95,
+   "name": "2.0 CRDi 83 kW"
+  },
+  {
+   "id": 693,
+   "modelId": 95,
+   "name": "2.0 CRDi 103 kW"
+  },
+  {
+   "id": 694,
+   "modelId": 96,
+   "name": "1.6 GDI 97 kW"
+  },
+  {
+   "id": 695,
+   "modelId": 96,
+   "name": "1.6 T-GDI 130 kW"
+  },
+  {
+   "id": 696,
+   "modelId": 96,
+   "name": "1.7 CRDi 85 kW"
+  },
+  {
+   "id": 697,
+   "modelId": 96,
+   "name": "2.0 CRDi 100 kW"
+  },
+  {
+   "id": 698,
+   "modelId": 96,
+   "name": "2.0 CRDi 136 kW"
+  },
+  {
+   "id": 699,
+   "modelId": 97,
+   "name": "2.2 CRDi 114 kW"
+  },
+  {
+   "id": 700,
+   "modelId": 97,
+   "name": "2.2 CRDi 145 kW"
+  },
+  {
+   "id": 701,
+   "modelId": 97,
+   "name": "2.4 126 kW"
+  },
+  {
+   "id": 702,
+   "modelId": 98,
+   "name": "1.0 T-GDI 88 kW"
+  },
+  {
+   "id": 703,
+   "modelId": 98,
+   "name": "1.6 T-GDI 130 kW"
+  },
+  {
+   "id": 704,
+   "modelId": 98,
+   "name": "1.6 CRDi 85 kW"
+  },
+  {
+   "id": 705,
+   "modelId": 98,
+   "name": "Electric 100 kW"
+  },
+  {
+   "id": 706,
+   "modelId": 98,
+   "name": "Electric 150 kW"
+  }
+ ]
+}
