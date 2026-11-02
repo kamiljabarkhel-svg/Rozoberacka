@@ -32,6 +32,7 @@ Portál predajcu (po prihlásení), záložky:
 - Profil: názov/firma, typ (Firma/Súkromná osoba), mesto, telefón, IČO.
 
 ## Databáza (návrh pre Supabase)
+PLATNÁ VERZIA je v `supabase/01_schema.sql` (otestovaná). Náčrt nižšie je pôvodný a slúži len na orientáciu.
 ```sql
 create table sellers (
   id uuid primary key references auth.users on delete cascade,
