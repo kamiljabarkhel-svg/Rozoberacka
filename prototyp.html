@@ -1,0 +1,1335 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Rozoberačka – použité autodiely</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=Manrope:wght@500;600;700;800&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+/* Rozoberačka: moderný trhovisko-štýl.
+   Farby: hlboká modrozelená (hlavička a hrdina), jantárová (hlavná akcia), biele plochy na svetlom podklade, jemná zelená pre stavy.
+   Písmo: Sora na nadpisy a ceny, Manrope na text, IBM Plex Mono na OEM a VIN.
+   Rozloženie: tmavý hrdina s plávajúcim vyhľadávaním, mriežka kariet s veľkými fotkami, zaoblené tvary a jemné tiene. */
+:root{--bg:#f3f6f7;--card:#fff;--ink:#0d1b22;--mute:#5a6b75;--line:#e1e8ec;--chip:#e9eff2;--ico:#dfe8ec;--icoink:#0a6a75;--pet:#0a3b44;--pet2:#0f5a66;--acc:#ffb400;--accink:#241800;--link:#0a6a75;--ok:#1f9d6a;--warn:#d99100;--bad:#d64545;--sh1:0 1px 2px rgba(13,43,52,.06),0 1px 3px rgba(13,43,52,.05);--sh2:0 14px 34px rgba(13,43,52,.14);color-scheme:light;box-sizing:border-box;padding-bottom:env(safe-area-inset-bottom,0px);--f-d:"Sora","Segoe UI",system-ui,sans-serif;--f-b:"Manrope","Segoe UI",system-ui,sans-serif;--f-m:"IBM Plex Mono",ui-monospace,Menlo,monospace}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b1317;--card:#131f25;--ink:#e8f0f3;--mute:#92a6af;--line:#243139;--chip:#1b2931;--ico:#1d2d35;--icoink:#6fd0da;--pet:#0a2f37;--pet2:#14636f;--link:#6fd0da;--ok:#46c593;--warn:#f0b73c;--bad:#f08a8a;--sh1:0 1px 2px rgba(0,0,0,.4);--sh2:0 14px 34px rgba(0,0,0,.5);color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0b1317;--card:#131f25;--ink:#e8f0f3;--mute:#92a6af;--line:#243139;--chip:#1b2931;--ico:#1d2d35;--icoink:#6fd0da;--pet:#0a2f37;--pet2:#14636f;--link:#6fd0da;--ok:#46c593;--warn:#f0b73c;--bad:#f08a8a;--sh1:0 1px 2px rgba(0,0,0,.4);--sh2:0 14px 34px rgba(0,0,0,.5);color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:500 16px/1.5 var(--f-b);-webkit-font-smoothing:antialiased}
+select,input,button,textarea{font:inherit}
+:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+h1,h2,h3{font-family:var(--f-d);text-wrap:balance}
+.top{background:color-mix(in srgb,var(--card) 88%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding:calc(env(safe-area-inset-top,0px) + 10px) 16px 10px;position:sticky;top:0;z-index:15}
+.tb{max-width:1160px;margin:0 auto;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:9px;font:800 1.2rem/1 var(--f-d);letter-spacing:-.01em}
+.brand svg{display:block;width:32px;height:32px;padding:6px;border-radius:10px;background:var(--pet);color:var(--acc)}
+.gs{flex:1 1 280px;order:3;display:flex;background:var(--chip);border-radius:99px;overflow:hidden;min-width:0;border:1px solid transparent}
+.gs:focus-within{background:var(--card);border-color:var(--pet2)}
+@media(min-width:760px){.gs{order:0}}
+.gs input{flex:1;min-width:0;border:0;padding:11px 18px;color:var(--ink);background:transparent;outline:none}
+.gs button{border:0;background:var(--acc);color:var(--accink);width:48px;margin:4px;border-radius:99px;cursor:pointer;display:grid;place-items:center}
+.gs svg{width:20px;height:20px}
+#user{margin-left:auto}
+@media(min-width:760px){#user{margin-left:0}}
+.ubtn{background:var(--chip);color:var(--ink);border:0;border-radius:99px;padding:9px 16px;font-weight:700;cursor:pointer;font-size:.9rem}
+.ubtn:hover{background:var(--line)}
+.hero{background:radial-gradient(800px 360px at 88% -10%,rgba(70,200,215,.30),transparent 60%),radial-gradient(700px 400px at 0% 110%,rgba(30,170,180,.28),transparent 60%),linear-gradient(160deg,var(--pet) 0%,#0c4a56 100%);color:#fff;padding:44px 16px 110px}
+.in{max-width:1128px;margin:0 auto}
+.hero h1{font:800 clamp(2rem,5.6vw,3.5rem)/1.05 var(--f-d);letter-spacing:-.025em;margin:0 0 12px;max-width:18ch;color:#fff}
+.sub{margin:0 0 20px;font-size:1.1rem;max-width:52ch;color:rgba(255,255,255,.82)}
+.wrap{max-width:1160px;margin:0 auto;padding:0 16px 28px}
+.main{max-width:1160px;margin:0 auto;padding:26px 16px}
+.panel{background:var(--card);color:var(--ink);border-radius:22px;padding:22px;display:grid;gap:18px;box-shadow:var(--sh2);margin:-72px 0 18px;position:relative;z-index:2}
+.qb{display:flex;gap:8px;flex-wrap:wrap}
+.pg{display:grid;gap:14px;grid-template-columns:repeat(4,1fr)}
+@media(max-width:860px){.pg{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.pg{grid-template-columns:1fr}}
+.panel label,.plate label{display:grid;gap:6px;font-weight:700;font-size:.88rem;color:var(--mute)}
+.panel select,.panel input,.plate select{width:100%;min-width:0;background:var(--chip);color:var(--ink);border:2px solid transparent;border-radius:12px;padding:13px 12px;font-weight:600}
+.panel select:focus,.panel input:focus,.plate select:focus{border-color:var(--pet2);background:var(--card);outline:none}
+.panel select:disabled{color:var(--mute);opacity:.6}
+.adv{display:grid;gap:14px;grid-template-columns:repeat(3,1fr);padding-top:16px;border-top:1px solid var(--line)}
+.adv[hidden]{display:none}
+@media(max-width:760px){.adv{grid-template-columns:1fr 1fr}}
+.pa{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.lnk{background:none;border:0;color:var(--link);font-weight:700;cursor:pointer;padding:6px 0}
+.lnk:hover{text-decoration:underline}
+.btn{background:var(--acc);color:var(--accink);border:0;border-radius:14px;padding:14px 36px;font:800 1.02rem var(--f-d);cursor:pointer;box-shadow:0 6px 16px rgba(255,180,0,.35)}
+.btn:hover,.save:hover,.agox:hover,.add:hover{filter:brightness(1.06)}
+.plate{background:var(--card);border-radius:20px;padding:22px;margin:0 0 18px;display:grid;gap:12px;box-shadow:var(--sh1);border:1px solid var(--line)}
+.plate h2{font:800 1.25rem var(--f-d);margin:0}
+.pg2{display:grid;gap:14px;grid-template-columns:1.4fr 1fr auto;align-items:end}
+@media(max-width:700px){.pg2{grid-template-columns:1fr}}
+.pl{display:flex;border:2px solid var(--ink);border-radius:12px;overflow:hidden;background:var(--card)}
+.eu{background:#1c4fa0;color:#fff;font:700 .78rem var(--f-m);padding:0 12px;display:grid;place-items:center}
+.pl input{flex:1;min-width:0;border:0!important;padding:13px 14px!important;font:600 1.15rem var(--f-m)!important;letter-spacing:.1em;text-transform:uppercase;color:var(--ink);background:transparent!important;outline:none;border-radius:0!important}
+.btn2{background:transparent;color:var(--ink);border:2px solid var(--ink);border-radius:14px;padding:12px 26px;font:800 .98rem var(--f-d);cursor:pointer}
+.btn2:hover{background:var(--ink);color:var(--card)}
+.plate p{margin:0;color:var(--mute);font-size:.92rem;max-width:70ch}
+.vmsg{color:var(--icoink)!important;font-weight:700}.vmsg:empty{display:none}
+.head{display:flex;justify-content:space-between;align-items:center;margin:30px 0 14px;gap:10px}
+.cnt{font:800 1.6rem var(--f-d);letter-spacing:-.02em}
+.chip{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:99px;padding:8px 15px;font-weight:700;cursor:pointer;font-size:.93rem}
+.chip:hover{border-color:var(--pet2)}
+.chip[aria-pressed="true"]{background:var(--pet);border-color:var(--pet);color:#fff}
+.qb .chip{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.28);color:#fff;font-size:.88rem;padding:7px 14px}
+.qb .chip:hover{background:rgba(255,255,255,.22);border-color:#fff}
+.add{background:var(--acc);color:var(--accink);border:0;border-radius:12px;padding:11px 18px;font-weight:800;cursor:pointer}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 20px}
+.chips .chip{display:inline-flex;align-items:center;gap:7px}
+.chips .chip svg{width:18px;height:18px;flex:none}
+.grid{display:grid;gap:20px;grid-template-columns:repeat(auto-fill,minmax(270px,1fr))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden;display:flex;flex-direction:column;cursor:pointer;box-shadow:var(--sh1);transition:transform .18s,box-shadow .18s}
+.card:hover{transform:translateY(-4px);box-shadow:var(--sh2)}
+.ph{position:relative;aspect-ratio:4/3;background:var(--ico);overflow:hidden}
+.ph img{width:100%;height:100%;object-fit:cover;display:block}
+.ph .fav{position:absolute;top:10px;right:10px;background:var(--card);border:0;border-radius:99px;width:38px;height:38px;padding:0;display:grid;place-items:center;color:var(--bad);box-shadow:0 2px 8px rgba(0,0,0,.18);font-size:1.05rem}
+.pc{position:absolute;left:10px;bottom:10px;background:rgba(8,24,30,.72);color:#fff;border-radius:99px;padding:3px 10px;font-size:.78rem;font-weight:700;backdrop-filter:blur(4px)}
+.nop{width:100%;height:100%;display:grid;place-items:center;align-content:center;gap:6px;color:var(--icoink);font-weight:700;text-align:center;font-size:.9rem}
+.nop svg{width:42px;height:42px}
+.cb{padding:16px 18px 6px;display:grid;gap:4px;min-width:0}
+.card h2{font:700 1.12rem/1.25 var(--f-d);margin:0;letter-spacing:-.01em}
+.car{margin:0;color:var(--mute);font-size:.93rem;font-weight:600}
+.meta{display:flex;gap:4px 14px;flex-wrap:wrap;color:var(--mute);font-size:.88rem;margin-top:6px;align-items:center}
+.cond{display:inline-flex;align-items:center;gap:6px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--ok);display:inline-block}.dot.w{background:var(--warn)}.dot.b{background:var(--bad)}
+.side{display:grid;grid-template-columns:1fr auto;gap:10px 12px;align-items:center;padding:12px 18px 18px;margin-top:auto}
+.side .oem{grid-column:1/-1;justify-self:start;order:-1}
+.oem{font:600 .78rem/1 var(--f-m);background:var(--chip);color:var(--ink);padding:7px 10px;border-radius:8px;letter-spacing:.03em;white-space:nowrap}
+.price{font:800 1.55rem/1 var(--f-d);letter-spacing:-.02em;white-space:nowrap;font-variant-numeric:tabular-nums;color:var(--ink)}
+.call{text-decoration:none;background:var(--pet);color:#fff;border:0;border-radius:12px;padding:10px 16px;font-weight:700;font-size:.9rem;cursor:pointer;display:inline-block}
+.call:hover{background:var(--pet2)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .call{background:var(--acc);color:var(--accink)}:root:not([data-theme="light"]) .chip[aria-pressed="true"]{background:var(--acc);border-color:var(--acc);color:var(--accink)}}
+:root[data-theme="dark"] .call{background:var(--acc);color:var(--accink)}
+:root[data-theme="dark"] .chip[aria-pressed="true"]{background:var(--acc);border-color:var(--acc);color:var(--accink)}
+.fav{background:transparent;border:1px solid var(--line);color:var(--bad);border-radius:10px;padding:5px 10px;font-size:1.05rem;cursor:pointer}
+.del{background:transparent;border:1px solid var(--bad);color:var(--bad);border-radius:10px;padding:6px 12px;font-weight:700;cursor:pointer}
+.empty{grid-column:1/-1;text-align:center;color:var(--mute);padding:48px 14px;border:2px dashed var(--line);border-radius:20px;background:var(--card)}
+.empty button{margin-top:14px}
+.form{display:none;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:22px;margin-bottom:16px;gap:14px;grid-template-columns:1fr 1fr;box-shadow:var(--sh1)}
+.form.open{display:grid}.form h3{grid-column:1/-1;margin:0;font:800 1.35rem var(--f-d)}
+.form label{display:grid;gap:5px;font-size:.88rem;color:var(--mute);font-weight:700}
+.form input,.form select,.form textarea{width:100%;min-width:0;background:var(--chip);color:var(--ink);border:2px solid transparent;border-radius:12px;padding:11px 12px;font-weight:600}
+.form input:focus,.form select:focus,.form textarea:focus{border-color:var(--pet2);background:var(--card);outline:none}
+.form textarea{min-height:110px;resize:vertical}
+.full{grid-column:1/-1}
+.msg{grid-column:1/-1;margin:0;color:var(--icoink);min-height:1.2em;font-weight:700}
+.save{grid-column:1/-1;background:var(--acc);color:var(--accink);border:0;border-radius:14px;padding:15px;font:800 1.05rem var(--f-d);cursor:pointer;box-shadow:0 6px 16px rgba(255,180,0,.3)}
+@media(max-width:520px){.form{grid-template-columns:1fr}}
+.note{color:var(--mute);font-size:.85rem;margin:22px 0 8px}
+.auth{position:fixed;inset:0;background:rgba(6,20,26,.62);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center;padding:16px;z-index:20}
+.auth.open{display:flex}
+.box{background:var(--card);color:var(--ink);border-radius:24px;padding:26px;width:100%;max-width:420px;display:grid;gap:14px;max-height:100%;overflow:auto;box-shadow:var(--sh2)}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;background:var(--chip);padding:4px;border-radius:14px}
+.tabs button{border:0;background:transparent;color:var(--mute);padding:10px;border-radius:10px;font-weight:700;cursor:pointer}
+.tabs button[aria-pressed=true]{background:var(--card);color:var(--ink);box-shadow:var(--sh1)}
+.box label{display:grid;gap:5px;font-size:.88rem;color:var(--mute);font-weight:700}
+.box input[type=email],.box input[type=password],.box input[type=text]{width:100%;background:var(--chip);color:var(--ink);border:2px solid transparent;border-radius:12px;padding:12px;font-weight:600}
+.box input:focus{border-color:var(--pet2);background:var(--card);outline:none}
+.up{display:none;gap:14px}
+.agox{background:var(--acc);color:var(--accink);border:0;border-radius:14px;padding:14px;font:800 1.02rem var(--f-d);cursor:pointer}
+.close{background:transparent;border:0;color:var(--mute);cursor:pointer;padding:4px;font-weight:700}
+#det-b{display:grid;gap:16px}.dh{display:flex;gap:14px;align-items:center}
+.dl{display:grid;grid-template-columns:auto 1fr;gap:0;margin:0;border-radius:16px;background:var(--bg);padding:6px 18px}.dl dt,.dl dd{padding:10px 0;border-bottom:1px solid var(--line);margin:0}.dl dt:nth-last-of-type(1),.dl dd:last-of-type{border-bottom:0}.dl dt{color:var(--mute);padding-right:28px}.dl dd{font-weight:700}
+.dacts{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.dacts .call{flex:1;text-align:center;padding:14px 16px;font-size:1rem;border-radius:14px}
+.box.wide{max-width:980px;overflow-x:hidden}
+.dg{display:grid;gap:28px;grid-template-columns:1.3fr 1fr;align-items:start}
+.dg>*,.di>*{min-width:0}
+@media(max-width:760px){.dg{grid-template-columns:1fr}}
+.gal .main{position:relative;aspect-ratio:4/3;background:var(--ico);border-radius:18px;overflow:hidden}
+.gal .main img{width:100%;height:100%;object-fit:cover;display:block}
+.gn{position:absolute;top:50%;transform:translateY(-50%);width:42px;height:42px;border-radius:99px;border:0;background:var(--card);color:var(--ink);font-size:1.5rem;line-height:1;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.gn.l{left:10px}.gn.r{right:10px}
+.gc{position:absolute;right:10px;bottom:10px;background:rgba(8,24,30,.72);color:#fff;border-radius:99px;padding:3px 11px;font-size:.82rem;font-weight:700}
+.th{display:flex;gap:8px;margin-top:10px;overflow-x:auto;padding-bottom:2px}
+.th button{flex:none;width:74px;height:56px;padding:0;border:2px solid transparent;border-radius:12px;overflow:hidden;background:none;cursor:pointer;opacity:.7}
+.th button[aria-current="true"]{border-color:var(--pet2);opacity:1}
+.th img{width:100%;height:100%;object-fit:cover;display:block}
+.di{display:flex;flex-direction:column;gap:14px}
+.di h2{font:800 1.75rem/1.1 var(--f-d);letter-spacing:-.02em;margin:0}
+.dpr{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.dpr .price{font-size:2.1rem;background:var(--acc);color:var(--accink);padding:8px 16px;border-radius:14px}
+.seller{background:var(--bg);border-radius:16px;padding:14px 16px;display:grid;gap:3px}
+.bdg{background:var(--ok);color:#fff;border-radius:99px;padding:2px 10px;font-size:.76rem;font-weight:700;margin-left:6px}
+.mute{color:var(--mute);font-size:.92rem}
+.sh{font:800 1.15rem var(--f-d);margin:10px 0 0}
+.desc{white-space:pre-wrap;line-height:1.65;margin:0;max-width:70ch}
+.warn{background:var(--ico);border-radius:14px;padding:12px 16px;font-size:.94rem}
+.sim{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:520px){.sim{grid-template-columns:1fr 1fr}}
+.simc{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:16px;padding:0;overflow:hidden;cursor:pointer;text-align:left;display:grid}
+.simc span,.simc b{padding:4px 12px;font-size:.9rem}.simc b{padding-bottom:10px;font-family:var(--f-d)}
+.dz{grid-column:1/-1;border:2px dashed var(--line);border-radius:16px;padding:18px;text-align:center;color:var(--mute);cursor:pointer;font-weight:700;background:var(--bg)}
+.dz:hover{border-color:var(--pet2);color:var(--ink)}
+.pv{grid-column:1/-1;display:flex;gap:8px;flex-wrap:wrap}
+.pv div{position:relative;width:96px;height:72px;border-radius:12px;overflow:hidden}
+.pv img{width:100%;height:100%;object-fit:cover}
+.pv b{position:absolute;left:4px;bottom:4px;background:var(--acc);color:var(--accink);font-size:.7rem;padding:1px 7px;border-radius:99px}
+.pv button{position:absolute;top:4px;right:4px;width:22px;height:22px;border:0;border-radius:99px;background:rgba(0,0,0,.65);color:#fff;cursor:pointer;line-height:1;padding:0}
+.stabs{display:flex;gap:6px;overflow-x:auto;margin:14px 0 20px;padding-bottom:4px}
+.stabs button{border:0;background:var(--chip);color:var(--mute);padding:10px 18px;font:700 .95rem var(--f-b);cursor:pointer;border-radius:99px;white-space:nowrap}
+.stabs button[aria-selected="true"]{background:var(--pet);color:#fff}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .stabs button[aria-selected="true"]{background:var(--acc);color:var(--accink)}}
+:root[data-theme="dark"] .stabs button[aria-selected="true"]{background:var(--acc);color:var(--accink)}
+.stiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:16px}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;display:grid;gap:4px;box-shadow:var(--sh1)}
+.tile .mute{font-weight:700}
+.tile b{font:800 2.4rem/1 var(--f-d);letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+#alerts .warn,#tab-over .warn{margin:12px 0}
+.lnk2{background:none;border:0;color:var(--link);text-decoration:underline;text-underline-offset:3px;font-weight:700;cursor:pointer;padding:0}
+.tools2{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.tools2 input,.tools2 select{flex:1 1 200px;min-width:0;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:14px;padding:12px 14px;font-weight:600}
+.mrow{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px;display:grid;grid-template-columns:96px 1fr auto;gap:10px 16px;margin-bottom:12px;align-items:center;box-shadow:var(--sh1)}
+.mth{width:96px;height:72px;border-radius:12px;overflow:hidden;background:var(--ico)}
+.mth img{width:100%;height:100%;object-fit:cover;display:block}
+.mth .nop svg{width:26px;height:26px}
+.mb{display:grid;gap:2px;min-width:0}
+.mb b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:var(--f-d);font-weight:700}
+.mp{font:800 1.35rem var(--f-d);letter-spacing:-.02em}
+.macts{grid-column:1/-1;display:flex;gap:6px;flex-wrap:wrap}
+.macts .chip.dgr{color:var(--bad);border-color:var(--bad)}
+.st{font-size:.76rem;font-weight:800;border-radius:99px;padding:3px 10px}
+.st.a{background:color-mix(in srgb,var(--ok) 18%,transparent);color:var(--ok)}.st.p{background:color-mix(in srgb,var(--warn) 20%,transparent);color:var(--warn)}.st.s{background:var(--chip);color:var(--mute)}
+a.btn2{display:inline-block;text-decoration:none}
+.csvbox{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin:14px 0}
+.csvbox .dz{flex:1 1 220px;margin:0}
+.pre{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;overflow:auto;font:.82rem var(--f-m);white-space:pre}
+.errl{margin:8px 0;color:var(--bad);font-size:.93rem}
+#csvOut .save{width:100%;margin-top:10px}
+.toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 20px);transform:translateX(-50%);background:var(--ink);color:var(--card);padding:12px 20px;border-radius:14px;z-index:40;opacity:0;pointer-events:none;transition:opacity .2s;max-width:90vw;font-weight:700;box-shadow:var(--sh2)}
+.toast.show{opacity:1}
+.fitbox{display:grid;gap:10px;border:2px dashed var(--line);border-radius:16px;padding:14px}
+.fitrow{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:8px}
+.fitrow select{min-width:0}
+@media(max-width:640px){.fitrow{grid-template-columns:1fr}}
+.fitl{display:flex;flex-wrap:wrap;gap:6px}
+.fitl .chip button{border:0;background:none;color:inherit;cursor:pointer;margin-left:4px;font-weight:700}
+.fits{display:grid;gap:8px;margin:0 0 10px;padding:0;list-style:none}
+.fits li{background:var(--bg);border-radius:12px;padding:10px 14px}
+.skip{position:absolute;left:-999px;top:8px;background:var(--acc);color:var(--accink);padding:8px 14px;border-radius:10px;z-index:100;font-weight:800}
+.skip:focus{left:8px}
+.pw{position:relative;display:block}
+.pw input{width:100%;padding-right:84px}
+.pw button{position:absolute;right:6px;top:50%;transform:translateY(-50%);border:0;background:none;color:var(--link);font-weight:700;cursor:pointer;padding:6px 8px}
+.how{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:44px 0 8px}
+.how div{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:22px;display:grid;gap:6px;align-content:start;box-shadow:var(--sh1)}
+.how h3{margin:0;font:700 1.1rem var(--f-d)}
+.how p{margin:0;color:var(--mute);font-size:.95rem}
+.foot2{max-width:1160px;margin:20px auto 0;padding:22px 16px calc(env(safe-area-inset-bottom,0px) + 30px);border-top:1px solid var(--line);color:var(--mute);font-size:.9rem;display:grid;gap:6px}
+.foot2 b{color:var(--ink);font:800 1.1rem var(--f-d)}
+#sell h1{font:800 clamp(1.7rem,4.5vw,2.4rem)/1.1 var(--f-d);letter-spacing:-.02em;margin:4px 0 6px}
+@media(max-width:760px){
+  .how{grid-template-columns:1fr}
+  .hero{padding:30px 16px 96px}
+  .panel{padding:16px;border-radius:20px;margin:-64px 0 18px}
+  .chips{flex-wrap:nowrap;overflow-x:auto;margin-right:-16px;padding-right:16px;scrollbar-width:none}
+  .chips::-webkit-scrollbar{display:none}
+  .chips .chip{flex:none;white-space:nowrap}
+  .qb{flex-wrap:nowrap;overflow-x:auto;margin-right:-16px;padding-right:16px;scrollbar-width:none}
+  .qb::-webkit-scrollbar{display:none}
+  .qb .chip{flex:none}
+  .tb{gap:8px}
+  .ubtn{padding:8px 12px;font-size:.85rem}
+  #user{display:flex;gap:6px}
+  .mrow{grid-template-columns:76px 1fr}
+  .mth{width:76px;height:58px}
+  .mp{grid-column:2}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}.card:hover{transform:none}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-motor" viewBox="0 0 24 24"><path d="M3 10h3V8h3V6h6v2h2v2h3v6h-3v2H8l-2-2H3z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="13" r="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
+<symbol id="i-kar" viewBox="0 0 24 24"><path d="M3 15l2-6c.3-.9 1-1.5 2-1.5h10c1 0 1.7.6 2 1.5l2 6v3H3z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="7.5" cy="15.5" r="1.2" fill="currentColor"/><circle cx="16.5" cy="15.5" r="1.2" fill="currentColor"/></symbol>
+<symbol id="i-sv" viewBox="0 0 24 24"><path d="M10 5a7 7 0 000 14c4 0 9-2 9-7s-5-7-9-7z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M3 9h3M3 12h3M3 15h3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+<symbol id="i-el" viewBox="0 0 24 24"><path d="M13 3L5 14h6l-1 7 8-11h-6z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+<symbol id="i-pr" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+<symbol id="i-int" viewBox="0 0 24 24"><path d="M8 4h5l1 8h4l1 4H8z M8 20h11" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/></symbol>
+<symbol id="i-q" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M16 16l4.5 4.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+</defs></svg>
+
+<a class="skip" href="#main">Preskočiť na obsah</a>
+<header class="top"><div class="tb">
+  <div class="brand"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-pr"/></svg>Rozoberačka</div>
+  <div class="gs"><input type="search" id="q" placeholder="Hľadajte diel, OEM číslo alebo auto" aria-label="Hľadať"><button id="go" aria-label="Hľadať"><svg viewBox="0 0 24 24"><use href="#i-q"/></svg></button></div>
+  <div id="user"></div>
+</div></header>
+
+<div class="auth" id="det"><div class="box wide"><div id="det-b"></div><button class="close" id="det-x">Zavrieť</button></div></div>
+<div class="auth" id="auth"><div class="box" role="dialog" aria-label="Prihlásenie">
+  <div class="tabs"><button id="t-in" aria-pressed="true">Prihlásenie</button><button id="t-up" aria-pressed="false">Registrácia</button></div>
+  <label>E-mail<input id="a-email" type="email" autocomplete="email"></label>
+  <label>Heslo<span class="pw"><input id="a-pw" type="password" autocomplete="current-password" placeholder="aspoň 6 znakov"><button type="button" id="a-eye">Zobraziť</button></span></label>
+  <div class="up" id="a-up"><p class="msg">Účet je len pre predajcov. Kupujúci ho nepotrebujú.</p><label>Meno alebo názov firmy<input id="a-name" type="text"></label></div>
+  <p class="msg" id="a-msg" role="status"></p>
+  <button class="agox" id="a-go">Prihlásiť sa</button>
+  <button class="close" id="a-x">Zavrieť</button>
+</div></div>
+
+<main id="pub" tabindex="-1">
+  <section class="hero"><div class="in"><span id="main"></span>
+    <h1>Použité autodiely presne na vaše auto</h1>
+    <p class="sub">Vyberte značku, model a motorizáciu a uvidíte len diely, ktoré naň pasujú. Predajcov kontaktujete bez registrácie.</p>
+    <div class="qb" id="qb" aria-label="Najčastejšie značky"></div>
+  </div></section>
+  <div class="wrap">
+
+  <section class="panel" aria-label="Hľadanie dielov">
+    <div class="pg">
+      <label>Značka<select id="brand"></select></label>
+      <label>Model<select id="vmodel" disabled></select></label>
+      <label>Kategória<select id="cat"></select></label>
+      <label>Motorizácia<select id="veng" disabled></select></label>
+    </div>
+    <div class="adv" id="adv" hidden>
+      <label>Podkategória<select id="subsel"></select></label>
+      <label>Ročník<select id="vyear"></select></label>
+      <label>Cena do<input id="pmax" type="number" min="0" inputmode="numeric" placeholder="€"></label>
+      <label>Stav<select id="cond"><option value="">Každý stav</option><option>Veľmi dobrý</option><option>Dobrý</option><option>Na opravu</option></select></label>
+      <label>Mesto<select id="city"></select></label>
+      <label>Zoradiť<select id="sort"><option value="new">Najnovšie</option><option value="asc">Najlacnejšie</option><option value="desc">Najdrahšie</option></select></label>
+    </div>
+    <div class="pa"><button class="lnk" id="advBtn" aria-expanded="false">Rozšírené hľadanie</button><button class="btn" id="goF">Hľadať</button></div>
+  </section>
+
+  <section class="plate" aria-label="Hľadanie podľa VIN">
+    <h2>Hľadať podľa VIN</h2>
+    <div class="pg2">
+      <label>VIN (17 znakov)<span class="pl"><span class="eu">VIN</span><input id="vin" placeholder="TMBJJ7NE0G0123456" maxlength="17" autocomplete="off"></span></label>
+      <label>Hľadám<select id="pcat"></select></label>
+      <button class="btn2" id="vinGo">Dekódovať VIN</button>
+    </div>
+    <p>VIN nájdete v osvedčení o evidencii (časť I, pole E) a na štítku pri čelnom skle. Ukážka z neho prečíta značku a približný ročník. Model a motorizáciu vyberte v paneli vyššie.</p>
+    <p class="vmsg" id="vmsg" role="status"></p>
+  </section>
+
+  <div id="res" class="head"><span class="cnt" id="cnt"></span><button class="chip" id="favonly" aria-pressed="false">♥ Obľúbené</button><button class="add" id="add" hidden>+ Pridať inzerát</button></div>
+  <div class="chips" id="facets" aria-label="Kategórie nájdených dielov"></div>
+
+  <div class="form" id="form">
+    <h3 id="fh">Nový inzerát</h3>
+    <label class="full">Názov dielu<input id="f-name" placeholder="Napr. Predný nárazník"></label>
+    <label>Značka auta<select id="f-brand"></select></label>
+    <label>Kategória<select id="f-cat"></select></label>
+    <label class="full">Podkategória<input id="f-sub" placeholder="Napr. Nárazníky"></label>
+    <label>Model<select id="f-model"></select></label>
+    <label>Motorizácia<select id="f-eng"></select></label>
+    <label>Ročník auta<select id="f-year"></select></label>
+    <div class="full fitbox"><b>Pasuje aj na ďalšie autá</b><span class="mute">Nepovinné. Pridajte autá, na ktoré tento diel s týmto OEM číslom pasuje. Portál z toho poskladá zoznam „Pasuje na“ a diel sa zobrazí aj pri hľadaní podľa týchto áut.</span><div class="fitrow"><select id="f-fb" aria-label="Značka"></select><select id="f-fm" aria-label="Model"></select><select id="f-fe" aria-label="Motorizácia"></select><button type="button" class="chip" id="f-fadd">Pridať</button></div><div class="fitl" id="fitList"></div></div>
+    <label>OEM číslo<input id="f-oem" placeholder="5E0807221"></label>
+    <label>Cena (€)<input id="f-price" type="number" min="0" inputmode="decimal"></label>
+    <label>Mesto<input id="f-city" placeholder="Nitra"></label>
+    <label>Stav<select id="f-cond"><option>Veľmi dobrý</option><option>Dobrý</option><option>Na opravu</option></select></label>
+    <label>Telefón<input id="f-tel" type="tel" placeholder="+421 9xx xxx xxx"></label>
+    <label class="full">Popis dielu<textarea id="f-desc" maxlength="1000" placeholder="Z akého auta diel pochádza, v akom je stave, či je odskúšaný, prípadné poškodenia…"></textarea><span id="dcnt">0 / 1000</span></label>
+    <label>Záruka<select id="f-war"><option>Bez záruky</option><option>14 dní</option><option>3 mesiace</option></select></label>
+    <label>Zasielanie<select id="f-ship"><option>Len osobný odber</option><option>Zasielam kuriérom</option></select></label>
+    <label class="dz" for="f-ph">+ Pridať fotky (max. 8, prvá je hlavná)</label><input id="f-ph" type="file" accept="image/*" multiple hidden>
+    <div class="pv" id="pv"></div>
+    <p class="msg" id="msg" role="status"></p>
+    <button class="save" id="save">Zverejniť inzerát</button>
+    <button class="chip full" id="cancelEdit" hidden>Zrušiť úpravu</button>
+  </div>
+
+  <div class="grid" id="list"></div>
+  <p class="note">Ukážková verzia: účty a inzeráty sa ukladajú len v tomto prehliadači a nie sú zabezpečené. Skutočné prihlásenie sa musí overovať na serveri.</p>
+  <section class="how" aria-label="Ako to funguje">
+    <div><b>1</b><h3>Vyberte svoje auto</h3><p>Značka, model a motorizácia, alebo VIN číslo. Diely, ktoré naň pasujú, uvidíte hneď.</p></div>
+    <div><b>2</b><h3>Nájdite diel</h3><p>Zúžte výber podľa kategórie, ceny, stavu alebo mesta a porovnajte OEM číslo so starým dielom.</p></div>
+    <div><b>3</b><h3>Zavolajte predajcovi</h3><p>Bez registrácie. Telefón sa zobrazí jedným kliknutím a dohodnete sa priamo s predajcom.</p></div>
+  </section>
+  </div>
+</main>
+
+<main class="main" id="sell" hidden>
+  <h1>Portál predajcu</h1>
+  <p class="mute" id="sellHi"></p>
+  <div class="stabs" id="stabs" role="tablist">
+    <button data-tab="over" role="tab" aria-selected="true">Prehľad</button>
+    <button data-tab="list" role="tab" aria-selected="false">Moje inzeráty</button>
+    <button data-tab="add" role="tab" aria-selected="false">+ Pridať inzerát</button>
+    <button data-tab="csv" role="tab" aria-selected="false">Import z CSV</button>
+    <button data-tab="prof" role="tab" aria-selected="false">Profil</button>
+  </div>
+
+  <section id="tab-over">
+    <div class="stiles" id="tiles"></div>
+    <div id="alerts"></div>
+    <div class="warn"><b>Ako predať rýchlejšie</b><br>Pridajte aspoň tri fotky z rôznych strán, uveďte OEM číslo z dielu a presnú motorizáciu auta. Napíšte, či je diel odskúšaný a či má poškodenia. Inzeráty s popisom a fotkami sa nájdu aj pri hľadaní podľa auta.</div>
+  </section>
+
+  <section id="tab-list" hidden>
+    <div class="tools2">
+      <input id="sq" type="search" placeholder="Hľadať vo svojich inzerátoch" aria-label="Hľadať vo svojich inzerátoch">
+      <select id="sfilter" aria-label="Filter stavu"><option value="all">Všetky</option><option value="active">Aktívne</option><option value="paused">Pozastavené</option><option value="sold">Predané</option><option value="nofoto">Bez fotky</option></select>
+    </div>
+    <div id="mlist"></div>
+  </section>
+
+  <section id="tab-add" hidden><div id="addSlot"></div></section>
+
+  <section id="tab-csv" hidden>
+    <h2 class="sh">Hromadné pridanie dielov</h2>
+    <p class="mute">Nahrajte súbor CSV (v Exceli: Uložiť ako CSV). Prvý riadok musí obsahovať názvy stĺpcov. Povinné sú nazov, znacka, cena a kategoria. Fotky doplníte neskôr pri úprave inzerátu. Najviac 500 riadkov naraz.</p>
+    <div class="csvbox">
+      <span class="mute">Vzor súboru nájdete nižšie, skopírujte ho do Excelu.</span>
+      <label class="dz" for="csvFile">+ Vybrať súbor CSV</label>
+      <input id="csvFile" type="file" accept=".csv,text/csv" hidden>
+    </div>
+    <div id="csvOut"></div>
+    <h3 class="sh">Vzor súboru</h3>
+    <pre class="pre" id="csvPre"></pre>
+  </section>
+
+  <section id="tab-prof" hidden>
+    <div class="form open">
+      <h3>Údaje predajcu</h3>
+      <label class="full">E-mail (prihlasovací)<input id="p-mail" disabled></label>
+      <label>Názov predajcu alebo firmy<input id="p-name"></label>
+      <label>Typ<select id="p-type"><option>Firma</option><option>Súkromná osoba</option></select></label>
+      <label>Mesto<input id="p-city"></label>
+      <label>Telefón<input id="p-tel" type="tel" placeholder="+421 9xx xxx xxx"></label>
+      <label class="full">IČO (nepovinné)<input id="p-ico"></label>
+      <p class="msg" id="p-msg" role="status"></p>
+      <button class="save" id="p-save">Uložiť profil</button>
+    </div>
+  </section>
+</main>
+<footer class="foot2"><b>Rozoberačka</b><span>Inzertný portál na použité autodiely. Portál sprostredkúva inzerciu a nie je účastníkom predaja. Za správnosť údajov a zhodu dielu s vozidlom zodpovedá predajca, pred nákupom preto vždy porovnajte OEM číslo.</span><span>Ukážková verzia: údaje sa ukladajú len vo vašom prehliadači.</span></footer>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+var KEY="rozoberacka-v2",USERS="rozoberacka-users",SESS="rozoberacka-session";
+var CATS=[["motor","Motor","i-motor"],["kar","Karoséria","i-kar"],["sv","Svetlá","i-sv"],["el","Elektro","i-el"],["pr","Prevodovka","i-pr"],["int","Interiér","i-int"]];
+var seed=[
+{id:1,cat:"el",name:"Alternátor 140A",brand:"Škoda",model:"Octavia II 2.0 TDI, 2009",oem:"03G903023",price:55,city:"Žilina",cond:"Dobrý",tel:"+421900111222",t:1},
+{id:2,cat:"kar",name:"Predný nárazník",brand:"Škoda",model:"Octavia III, 2016",oem:"5E0807221",price:90,city:"Nitra",cond:"Veľmi dobrý",tel:"+421900222333",t:2},
+{id:3,cat:"motor",name:"Riadiaca jednotka motora",brand:"Volkswagen",model:"Golf VI 1.6 TDI, 2011",oem:"03L906023",price:120,city:"Košice",cond:"Dobrý",tel:"+421900333444",t:3},
+{id:4,cat:"sv",name:"Pravé predné svetlo",brand:"BMW",model:"3 (E90), 2008",oem:"63117161666",price:70,city:"Bratislava",cond:"Na opravu",tel:"+421900444555",t:4},
+{id:5,cat:"pr",name:"Prevodovka 5-stupňová",brand:"Peugeot",model:"308 1.6 HDi, 2010",oem:"20DL78",price:260,city:"Trnava",cond:"Dobrý",tel:"+421900555666",t:5},
+{id:6,cat:"kar",name:"Zadné dvere ľavé",brand:"Citroën",model:"C4 Picasso, 2013",oem:"9004AE",price:110,city:"Prešov",cond:"Veľmi dobrý",tel:"+421900666777",t:6},
+{id:7,cat:"int",name:"Sedadlo vodiča, koža",brand:"Audi",model:"A4 B8, 2012",oem:"8K0881105",price:150,city:"Banská Bystrica",cond:"Dobrý",tel:"+421900777888",t:7},
+{id:8,cat:"motor",name:"Turbodúchadlo",brand:"Ford",model:"Focus 1.6 TDCi, 2010",oem:"9663199180",price:130,city:"Poprad",cond:"Veľmi dobrý",tel:"+421900888999",t:8},
+{id:9,cat:"kar",name:"Kapota",brand:"Volkswagen",model:"Passat B7, 2013",oem:"3AA823031",price:85,city:"Bratislava",cond:"Dobrý",tel:"+421900123456",t:9},
+{id:10,cat:"sv",name:"Zadné svetlo ľavé LED",brand:"Škoda",model:"Superb III, 2018",oem:"3V5945095",price:95,city:"Žilina",cond:"Veľmi dobrý",tel:"+421900234567",t:10},
+{id:11,cat:"motor",name:"Motor 1.9 TDI 77 kW",brand:"Volkswagen",model:"Passat B6, 2007",oem:"BXE",price:480,city:"Nitra",cond:"Dobrý",tel:"+421900345678",t:11},
+{id:12,cat:"int",name:"Volant multifunkčný",brand:"BMW",model:"5 (F10), 2012",oem:"32306854480",price:140,city:"Košice",cond:"Veľmi dobrý",tel:"+421900456789",t:12}
+];
+var SUB={1:"Alternátory",2:"Nárazníky",3:"Riadiace jednotky",4:"Svetlomety",5:"Prevodovky",6:"Dvere",7:"Sedadlá",8:"Turbá",9:"Kapoty",10:"Zadné svetlá",11:"Kompletné motory",12:"Volanty"},
+MOD={1:"Octavia II",2:"Octavia III",3:"Golf VI",4:"3 (E90)",5:"308 I",6:"C4 Picasso II",7:"A4 B8",8:"Focus II",9:"Passat B7",10:"Superb III",11:"Passat B6",12:"5 (F10)"},
+YR={1:2009,2:2016,3:2011,4:2008,5:2010,6:2013,7:2012,8:2010,9:2013,10:2018,11:2007,12:2012};
+seed.forEach(function(s){s.sub=SUB[s.id];s.mod=MOD[s.id];s.year=YR[s.id]});
+var DESC={
+1:"Alternátor 140 A z Octavie II 2.0 TDI. Demontovaný z auta po nehode zozadu, motor bol nepoškodený. Odskúšaný, nabíja správne.",
+2:"Predný nárazník v pôvodnej farbe, bez prasklín. Drobné škrabance na spodnej hrane. Zahŕňa aj držiaky.\nOEM číslo si overte podľa vášho auta.",
+3:"Riadiaca jednotka motora 1.6 TDI. Vyberaná z funkčného auta, bez zásahov. Pri montáži treba kódovanie u servisu.",
+4:"Pravé predné svetlo, halogén. Praskliny na jednom úchyte, sklo bez poškodenia. Vhodné na opravu alebo ako náhrada.",
+5:"Prevodovka 5-stupňová, po odpredaji auta s motorom 1.6 HDi. Radenie bez chrumkania, spojka sa predáva zvlášť.",
+6:"Zadné dvere ľavé v pôvodnej farbe, bez hrdze. Vrátane zámku a okennej mechaniky.",
+7:"Sedadlo vodiča, čierna koža, elektrické nastavenie. Bez rozpárania, mierne sedenie na boku.",
+8:"Turbodúchadlo 1.6 TDCi z auta s nájazdom 160 000 km. Bez vôle na hriadeli.",
+9:"Kapota Passat B7, bez promáčknutí, pôvodný lak. Osobný odber, dá sa aj dovoz.",
+10:"Zadné svetlo ľavé LED, plne funkčné, bez vlhkosti. Z auta po náraze spredu.",
+11:"Kompletný motor 1.9 TDI 77 kW (BXE) bez príslušenstva. Počet kilometrov podľa predajcu 220 000. Možnosť prehliadky.",
+12:"Multifunkčný volant s ovládaním tempomatu a rádia. Koža v dobrom stave, bez airbagu."};
+var EXTRA={1:["Autovrakovisko Žilina","Firma",1,2,"3 mesiace","Zasielam kuriérom"],2:["Auto-diely Nitra","Firma",1,0,"14 dní","Zasielam kuriérom"],3:["Peter K.","Súkromná osoba",0,5,"Bez záruky","Len osobný odber"],4:["Rozoberačka Bratislava","Firma",1,1,"14 dní","Zasielam kuriérom"],5:["Martin H.","Súkromná osoba",0,9,"Bez záruky","Len osobný odber"],6:["Vrakovisko Prešov","Firma",0,3,"14 dní","Zasielam kuriérom"],7:["Auto Banská Bystrica","Firma",1,4,"3 mesiace","Zasielam kuriérom"],8:["Diely Poprad","Firma",0,7,"14 dní","Zasielam kuriérom"],9:["Autodiely Bratislava","Firma",1,0,"3 mesiace","Zasielam kuriérom"],10:["Autovrakovisko Žilina","Firma",1,1,"3 mesiace","Zasielam kuriérom"],11:["Motory Nitra","Firma",1,6,"3 mesiace","Len osobný odber"],12:["Rozoberačka Košice","Firma",0,2,"14 dní","Zasielam kuriérom"]};
+var NPH=[4,3,2,1,5,3,4,0,3,4,2,3];
+var ENG={1:"2.0 TDI 103 kW",3:"1.6 TDI 77 kW",5:"1.6 HDi 80 kW",8:"1.6 TDCi 80 kW",11:"1.9 TDI 77 kW"};
+seed.forEach(function(s){var e=EXTRA[s.id];s.eng=ENG[s.id]||"";s.desc=DESC[s.id];s.seller=e[0];s.stype=e[1];s.ver=e[2];s.ago=e[3];s.war=e[4];s.ship=e[5];s.photos=[];for(var k=0;k<NPH[s.id-1];k++)s.photos.push("ph")});
+var items=seed.slice(),shown=8,fo=false,favs=[],me=null,mode="in";
+try{var s0=localStorage.getItem(KEY);if(s0){var u0=JSON.parse(s0);if(Array.isArray(u0))items=u0.concat(seed)}}catch(e){}
+try{favs=JSON.parse(localStorage.getItem("rozoberacka-fav")||"[]")}catch(e){}
+try{me=JSON.parse(localStorage.getItem(SESS)||"null")}catch(e){}
+var $=function(i){return document.getElementById(i)};
+function esc(t){return String(t).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function icon(id){return '<svg viewBox="0 0 24 24"><use href="#'+id+'"/></svg>'}
+function catIcon(k){for(var i=0;i<CATS.length;i++)if(CATS[i][0]===k)return CATS[i][2];return"i-pr"}
+function catName(k){for(var i=0;i<CATS.length;i++)if(CATS[i][0]===k)return CATS[i][1];return""}
+function opts(ph,arr){return'<option value="">'+ph+'</option>'+arr.map(function(x){return'<option>'+esc(x)+'</option>'}).join("")}
+var catOpts=CATS.map(function(c){return'<option value="'+c[0]+'">'+c[1]+'</option>'}).join("");
+$("cat").innerHTML='<option value="">Všetky kategórie</option>'+catOpts;
+$("pcat").innerHTML='<option value="">Všetky diely</option>'+catOpts;
+$("f-cat").innerHTML=catOpts;
+
+function yrs(a,b){var to=b||new Date().getFullYear(),r=[];for(var y=to;y>=a;y--)r.push(y);return r}
+function brandsAll(){var b=Object.keys(CATALOG);items.forEach(function(i){if(b.indexOf(i.brand)<0)b.push(i.brand)});return b.sort(function(a,c){return a.localeCompare(c,"sk")})}
+function modOpts(ph,list){return '<option value="">'+ph+'</option>'+list.map(function(m){return '<option value="'+esc(m[0])+'">'+esc(m[0])+' ('+m[1]+'–'+(m[2]||"dnes")+')</option>'}).join("")}
+function fillAll(){
+  var br=$("brand").value,cm=$("vmodel").value,ce=$("veng").value,cy=$("vyear").value,ct=$("city").value,sb=$("subsel").value,cc=$("cat").value;
+  var C=[],S=[];
+  items.forEach(function(i){if(C.indexOf(i.city)<0)C.push(i.city);if(cc&&i.cat===cc&&i.sub&&S.indexOf(i.sub)<0)S.push(i.sub)});
+  C.sort();S.sort();
+  $("brand").innerHTML=opts("Všetky značky",brandsAll());$("brand").value=br;
+  var ms=br&&CATALOG[br]?CATALOG[br]:[];
+  $("vmodel").innerHTML=modOpts(br?"Všetky modely":"Najprv vyberte značku",ms);$("vmodel").value=cm;$("vmodel").disabled=!br;
+  var m=ms.filter(function(x){return x[0]===$("vmodel").value})[0];
+  $("veng").innerHTML=opts(m?"Všetky motorizácie":"Najprv vyberte model",m?m[3]:[]);$("veng").value=ce;$("veng").disabled=!m;
+  $("vyear").innerHTML=opts("Každý ročník",yrs(m?m[1]:1995,m?m[2]:0));$("vyear").value=cy;
+  $("city").innerHTML=opts("Celé Slovensko",C);$("city").value=ct;
+  $("subsel").innerHTML=opts(cc?"Všetky podkategórie":"Najprv vyberte kategóriu",S);$("subsel").value=sb;$("subsel").disabled=!cc;
+}
+function oemKey(o){return String(o||"").toUpperCase().replace(/[^A-Z0-9]/g,"")}
+function vehOf(i){
+  var v=[{b:i.brand,m:i.mod||"",e:i.eng||""}];
+  (i.fits||[]).forEach(function(f){var a=f.split("|");v.push({b:a[0],m:a[1]||"",e:a[2]||""})});
+  return v;
+}
+var oemIdx={};
+function buildIdx(){
+  oemIdx={};
+  items.forEach(function(i){
+    if(i.status&&i.status!=="active")return;
+    var k=oemKey(i.oem);if(k.length<4)return;
+    (oemIdx[k]=oemIdx[k]||[]).push(i);
+  });
+}
+function allVeh(i){
+  var out=vehOf(i),k=oemKey(i.oem);
+  if(k.length>=4&&oemIdx[k])oemIdx[k].forEach(function(x){if(x!==i)out=out.concat(vehOf(x))});
+  var seen={};return out.filter(function(v){var q=v.b+"|"+v.m+"|"+v.e;if(seen[q])return false;seen[q]=1;return true});
+}
+function fitsHtml(i){
+  var g={};
+  allVeh(i).forEach(function(v){var k=v.b+" "+(v.m||"(viac modelov)");(g[k]=g[k]||{all:false,e:[]});if(!v.e)g[k].all=true;else if(g[k].e.indexOf(v.e)<0)g[k].e.push(v.e)});
+  var ks=Object.keys(g);if(!ks.length)return"";
+  return '<h3 class="sh">Pasuje na</h3><ul class="fits">'+ks.map(function(k){return '<li><b>'+esc(k)+'</b><br><span class="mute">'+(g[k].all?'všetky motorizácie':esc(g[k].e.join(", ")))+'</span></li>'}).join("")+'</ul><p class="mute">Zoznam vychádza z údajov predajcov k tomuto OEM číslu. Pred nákupom ho vždy porovnajte s pôvodným dielom.</p>';
+}
+function render(){
+  buildIdx();
+  var q=$("q").value.trim().toLowerCase().replace(/\s/g,""),br=$("brand").value,vm=$("vmodel").value,cc=$("cat").value,sb=$("subsel").value,
+  vy=$("vyear").value,ve=$("veng").value,cd=$("cond").value,ct=$("city").value,px=parseFloat($("pmax").value),so=$("sort").value;
+  var noCat=false,flt=function(i){
+    if(i.status&&i.status!=="active")return false;
+    var own=(!br||i.brand===br)&&(!vm||i.mod===vm)&&(!ve||!i.eng||i.eng===ve);
+    if(!own){
+      var hit=allVeh(i).some(function(v){return (!br||v.b===br)&&(!vm||v.m===vm)&&(!ve||!v.e||v.e===ve)});
+      if(!hit)return false;
+    }
+    if(!noCat&&cc&&i.cat!==cc)return false;
+    if(!noCat&&sb&&i.sub!==sb)return false;
+    if(vy&&own&&String(i.year)!==vy)return false;
+    if(cd&&i.cond!==cd)return false;
+    if(ct&&i.city!==ct)return false;
+    if(!isNaN(px)&&i.price>px)return false;
+    if(fo&&favs.indexOf(i.id)<0)return false;
+    var h=(i.name+i.brand+i.model+i.oem+i.city+(i.sub||"")+(i.desc||"")).toLowerCase().replace(/\s/g,"");
+    return !q||h.indexOf(q)>-1;
+  };
+  var r=items.filter(flt);noCat=true;var base=items.filter(flt);noCat=false;drawFacets(base,cc,sb);
+  if(so==="asc")r.sort(function(a,b){return a.price-b.price});
+  else if(so==="desc")r.sort(function(a,b){return b.price-a.price});
+  else r.sort(function(a,b){return b.t-a.t});
+  var n=r.length;r=r.slice(0,shown);
+  $("cnt").textContent=n+" "+(n===1?"diel":n>=2&&n<=4?"diely":"dielov");
+  $("list").innerHTML=n?r.map(function(i){
+    var d=i.cond==="Na opravu"?"b":i.cond==="Dobrý"?"w":"";
+    return '<article class="card" data-id="'+i.id+'">'+photoBlock(i)+'<div class="cb"><h2>'+esc(i.name)+'</h2><p class="car">'+esc(i.brand)+' '+esc(i.model)+'</p>'+
+    '<div class="meta"><span class="cond"><i class="dot '+d+'"></i>'+esc(i.cond)+'</span><span>'+esc(i.city)+'</span>'+(i.war&&i.war!=="Bez záruky"?'<span>Záruka '+esc(i.war)+'</span>':'')+'</div></div>'+
+    '<div class="side"><span class="oem">'+esc(i.oem||"bez OEM")+'</span><span class="price">'+esc(i.price)+' €</span>'+contact(i)+'</div></article>';
+  }).join("")+(n>shown?'<button class="add" data-more="1" style="grid-column:1/-1">Zobraziť ďalšie ('+(n-shown)+')</button>':""):'<div class="empty">Nič sme nenašli. Skúste iné slovo, kategóriu alebo všetky značky.<br><button class="add" id="resetF">Zrušiť všetky filtre</button></div>';
+}
+function drawFacets(base,cc,sb){
+  var cnt={},subs={};
+  base.forEach(function(i){cnt[i.cat]=(cnt[i.cat]||0)+1;if(cc&&i.cat===cc&&i.sub)subs[i.sub]=(subs[i.sub]||0)+1});
+  var h='<button class="chip" data-fc="" aria-pressed="'+(!cc)+'">Všetky ('+base.length+')</button>';
+  CATS.forEach(function(c){if(cnt[c[0]]||cc===c[0])h+='<button class="chip" data-fc="'+c[0]+'" aria-pressed="'+(cc===c[0])+'">'+icon(c[2])+c[1]+' ('+(cnt[c[0]]||0)+')</button>'});
+  if(cc)Object.keys(subs).sort().forEach(function(k){h+='<button class="chip" data-fs="'+esc(k)+'" aria-pressed="'+(sb===k)+'">'+esc(k)+' ('+subs[k]+')</button>'});
+  $("facets").innerHTML=h;
+}
+function ren(){shown=8;fillAll();render()}
+function resetFilters(){["q","vmodel","veng","cat","subsel","vyear","pmax","cond","city"].forEach(function(k){if($(k))$(k).value=""});$("brand").value="";fo=false;$("favonly").setAttribute("aria-pressed","false");ren()}
+document.addEventListener("click",function(e){if(e.target.id==="resetF")resetFilters()});
+function drawQb(){
+  var top=["Škoda","Volkswagen","BMW","Audi","Ford","Peugeot","Citroën","Opel","Renault","Mercedes-Benz","Toyota","Hyundai","Kia","Seat"].filter(function(b){return CATALOG[b]});
+  $("qb").innerHTML=top.map(function(b){return '<button class="chip" data-qb="'+esc(b)+'">'+esc(b)+'</button>'}).join("");
+}
+$("qb").onclick=function(e){var b=e.target.closest("[data-qb]");if(!b)return;$("brand").value=b.getAttribute("data-qb");$("vmodel").value="";$("vyear").value="";ren();var p=document.querySelector(".panel");if(p)p.scrollIntoView({behavior:"smooth",block:"center"})};
+function toRes(){$("res").scrollIntoView({behavior:"smooth",block:"start"})}
+$("q").oninput=ren;$("q").onkeydown=function(e){if(e.key==="Enter")toRes()};
+$("go").onclick=function(){ren();toRes()};$("goF").onclick=function(){ren();toRes()};
+$("brand").onchange=function(){$("vmodel").value="";$("vyear").value="";ren()};
+$("vmodel").onchange=ren;$("cat").onchange=function(){$("subsel").value="";ren()};
+["subsel","veng","vyear","cond","city","sort"].forEach(function(i){$(i).onchange=ren});
+$("pmax").oninput=ren;
+$("advBtn").onclick=function(){var h=$("adv").hidden;$("adv").hidden=!h;this.setAttribute("aria-expanded",h)};
+$("favonly").onclick=function(){fo=!fo;this.setAttribute("aria-pressed",fo);ren()};
+$("add").onclick=function(){$("form").classList.toggle("open")};
+
+var WMI={TMB:"Škoda",WVW:"Volkswagen",WVG:"Volkswagen",WV1:"Volkswagen",WV2:"Volkswagen",VWV:"Volkswagen",WAU:"Audi",WUA:"Audi",TRU:"Audi",WBA:"BMW",WBS:"BMW",WBY:"BMW",WMW:"Mini",VSS:"Seat",VF3:"Peugeot",VR3:"Peugeot",VF7:"Citroën",VR7:"Citroën",VR1:"DS",VF1:"Renault",UU1:"Dacia",WF0:"Ford",WDB:"Mercedes-Benz",WDC:"Mercedes-Benz",WDD:"Mercedes-Benz",W1K:"Mercedes-Benz",W1N:"Mercedes-Benz",W0L:"Opel",W0V:"Opel",ZFA:"Fiat",ZAR:"Alfa Romeo",YV1:"Volvo",YV4:"Volvo",VNK:"Toyota",SB1:"Toyota",JTD:"Toyota",KMH:"Hyundai",TMA:"Hyundai",KNA:"Kia",KND:"Kia",U5Y:"Kia",JMZ:"Mazda",JHM:"Honda",SHH:"Honda",JN1:"Nissan",SJN:"Nissan",JS2:"Suzuki",TSM:"Suzuki",WP0:"Porsche",SAL:"Land Rover",SAJ:"Jaguar",JF1:"Subaru",JMB:"Mitsubishi","5YJ":"Tesla",XP7:"Tesla",LRW:"Tesla"};
+var YC="ABCDEFGHJKLMNPRSTVWXY";
+function vinYear(c){var k=YC.indexOf(c);if(k>-1)return 2010+k;if(/[1-9]/.test(c))return 2000+Number(c);return 0}
+$("vin").onkeydown=function(e){if(e.key==="Enter")$("vinGo").click()};
+$("vinGo").onclick=function(){
+  var v=$("vin").value.trim().toUpperCase().replace(/\s/g,""),m=$("vmsg");
+  if(!v){m.textContent="Zadajte VIN.";return}
+  if(!/^[A-HJ-NPR-Z0-9]{17}$/.test(v)){m.textContent="Neplatný VIN: musí mať 17 znakov a nesmie obsahovať písmená I, O, Q.";return}
+  var b=WMI[v.slice(0,3)],y=vinYear(v.charAt(9));
+  if(!b){m.textContent="VIN je platný, ale výrobcu v ukážke nepoznáme. Vyberte auto ručne v paneli vyššie.";return}
+  $("cat").value=$("pcat").value;$("subsel").value="";$("vmodel").value="";$("veng").value="";$("vyear").value="";
+  $("brand").value=b;fillAll();
+  if(y&&y<=new Date().getFullYear()+1)$("vyear").value=String(y);
+  m.textContent="Rozpoznané: "+b+(y?", ročník približne "+y:"")+". Model a motorizáciu v ukážke z VIN určiť nevieme, vyberte ich v paneli vyššie.";
+  ren();toRes();
+};
+
+function getU(){try{return JSON.parse(localStorage.getItem(USERS)||"[]")}catch(e){return[]}}
+function hash(p){try{return crypto.subtle.digest("SHA-256",new TextEncoder().encode(p)).then(function(b){return Array.from(new Uint8Array(b)).map(function(x){return x.toString(16).padStart(2,"0")}).join("")})}catch(e){return Promise.resolve(btoa(p))}}
+function contact(i){
+  if(me&&i.owner&&i.owner===me.email)return '<button class="call" data-edit="'+i.id+'">Upraviť</button>';
+  return i.tel?'<button class="call" data-tel="'+i.id+'">Zobraziť telefón</button>':'';
+}
+function paint(){
+  $("user").innerHTML=me?(view==="seller"?'<button class="ubtn" id="ubp">← Inzeráty</button> ':'<button class="ubtn" id="ubs">Portál predajcu</button> ')+'<button class="ubtn" id="ub">Odhlásiť</button>':'<button class="ubtn" id="ub">Pre predajcov</button>';
+  $("add").hidden=true;
+  render();
+}
+function openAuth(){$("auth").classList.add("open");$("a-msg").textContent=""}
+function setMode(m){mode=m;$("t-in").setAttribute("aria-pressed",m==="in");$("t-up").setAttribute("aria-pressed",m==="up");$("a-up").style.display=m==="up"?"grid":"none";$("a-go").textContent=m==="in"?"Prihlásiť sa":"Vytvoriť účet"}
+$("user").onclick=function(e){
+  var b=e.target.closest("button");if(!b)return;
+  if(b.id==="ubs"){showView("seller");return}
+  if(b.id==="ubp"){showView("pub");return}
+  if(me){me=null;try{localStorage.removeItem(SESS)}catch(x){}editId=null;showView("pub")}else{setMode("in");openAuth()}
+};
+$("t-in").onclick=function(){setMode("in")};$("t-up").onclick=function(){setMode("up")};
+$("a-x").onclick=function(){$("auth").classList.remove("open")};
+function revealTel(t){var q=items.filter(function(x){return x.id===+t.getAttribute("data-tel")})[0];if(q){var a=document.createElement("a");a.className="call";a.href="tel:"+q.tel.replace(/\s/g,"");a.textContent=q.tel;t.replaceWith(a);if(q.owner&&!(me&&q.owner===me.email)){q.calls=(q.calls||0)+1;saveMine()}}}
+function toggleFav(fv){var fid=+fv.getAttribute("data-fav"),k=favs.indexOf(fid);if(k<0)favs.push(fid);else favs.splice(k,1);try{localStorage.setItem("rozoberacka-fav",JSON.stringify(favs))}catch(x){}return k<0}
+$("list").onclick=function(e){
+  var t=e.target.closest("[data-tel]");if(t){revealTel(t);return}
+  var ed=e.target.closest("[data-edit]");if(ed){showView("seller");startEdit(Number(ed.getAttribute("data-edit")));return}
+  if(e.target.closest("[data-more]")){shown+=8;render();return}
+  var fv=e.target.closest("[data-fav]");if(fv){toggleFav(fv);render();return}
+  var d=e.target.closest(".del");
+  if(d&&confirm("Zmazať tento inzerát?")){var id=+d.getAttribute("data-id");items=items.filter(function(i){return i.id!==id});try{localStorage.setItem(KEY,JSON.stringify(items.filter(function(i){return i.id>1000})))}catch(x){}ren();return}
+  var cd=e.target.closest(".card");
+  if(cd&&!e.target.closest("button,a"))openDet(+cd.getAttribute("data-id"));
+};
+$("a-eye").onclick=function(){var t=$("a-pw").type==="password";$("a-pw").type=t?"text":"password";this.textContent=t?"Skryť":"Zobraziť"};
+["a-email","a-pw","a-name"].forEach(function(k){$(k).addEventListener("keydown",function(e){if(e.key==="Enter")$("a-go").click()})});
+$("a-go").onclick=function(){
+  var em=$("a-email").value.trim().toLowerCase(),pw=$("a-pw").value,msg=$("a-msg");
+  if(!/^\S+@\S+\.\S+$/.test(em)){msg.textContent="Zadajte platný e-mail.";return}
+  if(pw.length<6){msg.textContent="Heslo musí mať aspoň 6 znakov.";return}
+  hash(pw).then(function(h){
+    var us=getU(),u=us.filter(function(x){return x.email===em})[0];
+    if(mode==="up"){
+      if(u){msg.textContent="Tento e-mail je už registrovaný. Prihláste sa.";return}
+      u={email:em,h:h,role:"seller",name:$("a-name").value.trim(),type:"Firma",city:"",tel:"",ico:""};
+      us.push(u);try{localStorage.setItem(USERS,JSON.stringify(us))}catch(x){}
+    }else if(!u||u.h!==h){msg.textContent="Nesprávny e-mail alebo heslo.";return}
+    me={email:u.email,role:u.role,name:u.name,type:u.type,city:u.city,tel:u.tel,ico:u.ico};
+    try{localStorage.setItem(SESS,JSON.stringify(me))}catch(x){}
+    $("auth").classList.remove("open");$("a-pw").value="";showView("seller");
+  });
+};
+var gi=0,gcur=null;
+function ft(n){return n+" "+(n===1?"fotka":n<5?"fotky":"fotiek")}
+function agoTxt(d){return d===0?"dnes":d===1?"včera":"pred "+d+" dňami"}
+function phSrc(it,k){
+  var p=it.photos&&it.photos[k];
+  if(p&&p.indexOf("data:")===0)return p;
+  var h=185+((it.id*13+k*9)%40),l=88-((it.id+k)%4)*2;
+  var svg='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="hsl('+h+',30%,'+(l+4)+'%)"/><stop offset="1" stop-color="hsl('+(h+12)+',32%,'+(l-8)+'%)"/></linearGradient></defs><rect width="400" height="300" fill="url(#g)"/><circle cx="200" cy="138" r="52" fill="none" stroke="hsl('+h+',40%,32%)" stroke-width="9" opacity=".8"/><circle cx="200" cy="138" r="16" fill="hsl('+h+',40%,32%)" opacity=".8"/><text x="200" y="244" text-anchor="middle" font-family="sans-serif" font-weight="600" font-size="17" fill="hsl('+h+',40%,24%)">Ukážková fotka '+(k+1)+'</text></svg>';
+  return "data:image/svg+xml;charset=utf-8,"+encodeURIComponent(svg);
+}
+function photoBlock(i){
+  var n=i.photos?i.photos.length:0;
+  var inner=n?'<img loading="lazy" alt="'+esc(i.name)+'" src="'+phSrc(i,0)+'">':'<div class="nop">'+icon(catIcon(i.cat))+'<span>Bez fotky</span></div>';
+  return '<div class="ph">'+inner+(n>1?'<span class="pc">'+ft(n)+'</span>':'')+'<button class="fav" data-fav="'+i.id+'" aria-label="Obľúbené">'+(favs.indexOf(i.id)>-1?"♥":"♡")+'</button></div>';
+}
+function galHtml(i){
+  var n=i.photos?i.photos.length:0;
+  if(!n)return '<div class="gal"><div class="main"><div class="nop">'+icon(catIcon(i.cat))+'<span>Predajca nepridal fotky</span></div></div></div>';
+  var th=n>1?'<div class="th">'+i.photos.map(function(_,k){return '<button data-g="'+k+'" aria-label="Fotka '+(k+1)+'" aria-current="'+(k===gi)+'"><img alt="" src="'+phSrc(i,k)+'"></button>'}).join("")+'</div>':'';
+  return '<div class="gal"><div class="main"><img id="gmain" alt="'+esc(i.name)+'" src="'+phSrc(i,gi)+'">'+(n>1?'<button class="gn l" data-gn="-1" aria-label="Predchádzajúca fotka">‹</button><button class="gn r" data-gn="1" aria-label="Ďalšia fotka">›</button>':'')+'<span class="gc" id="gcnt">'+(gi+1)+' / '+n+'</span></div>'+th+'</div>';
+}
+function setGal(k){
+  var n=gcur.photos.length;gi=(k+n)%n;
+  $("gmain").src=phSrc(gcur,gi);$("gcnt").textContent=(gi+1)+" / "+n;
+  Array.prototype.forEach.call(document.querySelectorAll(".th button"),function(b,j){b.setAttribute("aria-current",j===gi)});
+}
+function openDet(id){
+  var i=items.filter(function(x){return x.id===id})[0];if(!i)return;
+  buildIdx();gcur=i;gi=0;if(!(me&&i.owner===me.email)){i.views=(i.views||0)+1;if(i.owner)saveMine()}
+  var d=i.cond==="Na opravu"?"b":i.cond==="Dobrý"?"w":"";
+  var rows=[["Značka",i.brand],["Model",i.mod||i.model||"neuvedené"],["Motorizácia",i.eng||"Pasuje na všetky motorizácie"],["Ročník",i.year||"neuvedené"],["OEM číslo",i.oem||"neuvedené"],["Kategória",catName(i.cat)+(i.sub?" · "+i.sub:"")],["Stav",i.cond],["Záruka",i.war||"Bez záruky"],["Zasielanie",i.ship||"Len osobný odber"],["Mesto",i.city]];
+  var sim=items.filter(function(x){return x.id!==i.id&&(!x.status||x.status==="active")&&(x.cat===i.cat||x.brand===i.brand)}).slice(0,3);
+  $("det-b").innerHTML='<div class="dg"><div>'+galHtml(i)+'</div><div class="di"><h2>'+esc(i.name)+'</h2>'+
+  '<div class="dpr"><span class="price">'+esc(i.price)+' €</span><span class="cond"><i class="dot '+d+'"></i>'+esc(i.cond)+'</span></div>'+
+  '<p class="car">'+esc(i.brand)+' '+esc(i.model||"")+'</p>'+
+  '<div class="dacts">'+(i.tel?'<button class="call" data-tel="'+i.id+'">Zobraziť telefón</button>':'')+'<button class="fav" data-fav="'+i.id+'">'+(favs.indexOf(i.id)>-1?"♥":"♡")+' Obľúbené</button></div>'+
+  '<div class="seller"><b>'+esc(i.seller||"Predajca")+(i.ver?'<span class="bdg">Overený predajca</span>':'')+'</b><span class="mute">'+esc(i.stype||"Predajca")+' · '+esc(i.city)+'</span><span class="mute">Inzerát pridaný '+agoTxt(i.ago||0)+'</span></div></div></div>'+
+  '<h3 class="sh">Popis</h3><p class="desc">'+(i.desc?esc(i.desc):'Predajca nepridal popis.')+'</p>'+
+  '<h3 class="sh">Parametre</h3><dl class="dl">'+rows.map(function(r){return'<dt>'+r[0]+'</dt><dd>'+esc(r[1])+'</dd>'}).join("")+'</dl>'+fitsHtml(i)+
+  '<div class="warn">Pred nákupom porovnajte OEM číslo so starým dielom a vyžiadajte si od predajcu ďalšie fotky.</div>'+
+  (sim.length?'<h3 class="sh">Podobné inzeráty</h3><div class="sim">'+sim.map(function(x){return '<button class="simc" data-sim="'+x.id+'"><div class="ph">'+((x.photos&&x.photos.length)?'<img alt="" src="'+phSrc(x,0)+'">':'<div class="nop">'+icon(catIcon(x.cat))+'</div>')+'</div><span>'+esc(x.name)+'</span><b>'+esc(x.price)+' €</b></button>'}).join("")+'</div>':'');
+  $("det").classList.add("open");
+  var bx=$("det").querySelector(".box");if(bx)bx.scrollTop=0;
+}
+$("det").onclick=function(e){
+  if(e.target.id==="det"||e.target.closest("#det-x")){$("det").classList.remove("open");return}
+  var t=e.target.closest("[data-tel]");if(t){revealTel(t);return}
+  var gn=e.target.closest("[data-gn]");if(gn){setGal(gi+Number(gn.getAttribute("data-gn")));return}
+  var g=e.target.closest("[data-g]");if(g){setGal(Number(g.getAttribute("data-g")));return}
+  var sm=e.target.closest("[data-sim]");if(sm){openDet(Number(sm.getAttribute("data-sim")));return}
+  var fv=e.target.closest("[data-fav]");if(fv){fv.textContent=(toggleFav(fv)?"♥":"♡")+" Obľúbené";render()}
+};
+document.addEventListener("keydown",function(e){
+  if(!$("det").classList.contains("open"))return;
+  if(e.key==="Escape"){$("det").classList.remove("open");return}
+  if(gcur&&gcur.photos&&gcur.photos.length>1&&$("gmain")){if(e.key==="ArrowLeft")setGal(gi-1);if(e.key==="ArrowRight")setGal(gi+1)}
+});
+var upl=[];
+function drawPv(){$("pv").innerHTML=upl.map(function(x,k){return '<div><img alt="" src="'+x+'">'+(k===0?'<b>Hlavná</b>':'')+'<button data-rm="'+k+'" aria-label="Odstrániť fotku">×</button></div>'}).join("")}
+$("pv").onclick=function(e){var b=e.target.closest("[data-rm]");if(b){upl.splice(Number(b.getAttribute("data-rm")),1);drawPv()}};
+function shrink(file){return new Promise(function(res){var r=new FileReader();r.onload=function(){var im=new Image();im.onload=function(){var sc=Math.min(1,900/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=Math.round(im.width*sc);c.height=Math.round(im.height*sc);c.getContext("2d").drawImage(im,0,0,c.width,c.height);res(c.toDataURL("image/jpeg",.72))};im.onerror=function(){res(null)};im.src=r.result};r.onerror=function(){res(null)};r.readAsDataURL(file)})}
+$("f-ph").onchange=function(){var inp=this,fs=Array.prototype.slice.call(inp.files).slice(0,8-upl.length);Promise.all(fs.map(shrink)).then(function(a){a.forEach(function(x){if(x&&upl.length<8)upl.push(x)});drawPv();inp.value=""})};
+$("f-desc").oninput=function(){$("dcnt").textContent=this.value.length+" / 1000"};
+var CATRAW=`Alfa Romeo
+  147|2000|2010|1.6 77 kW;1.6 88 kW;2.0 110 kW;3.2 GTA 184 kW;1.9 JTD 74 kW;1.9 JTD 85 kW;1.9 JTD 110 kW
+  156|1997|2007|1.6 88 kW;1.8 107 kW;2.0 114 kW;2.5 V6 140 kW;1.9 JTD 77 kW;2.4 JTD 110 kW
+  159|2005|2011|1.8 103 kW;1.9 JTS 118 kW;2.2 JTS 136 kW;1.9 JTDM 88 kW;1.9 JTDM 110 kW;2.0 JTDM 125 kW
+  MiTo|2008|2018|1.4 57 kW;1.4 T 99 kW;1.3 JTDM 62 kW;1.6 JTDM 88 kW
+  Giulietta|2010|2020|1.4 TB 88 kW;1.4 TB 125 kW;1.75 TBi 173 kW;1.6 JTDM 77 kW;2.0 JTDM 103 kW;2.0 JTDM 129 kW
+  Giulia|2016|0|2.0 Turbo 147 kW;2.0 Turbo 206 kW;2.2 D 110 kW;2.2 D 140 kW
+  Stelvio|2017|0|2.0 Turbo 147 kW;2.0 Turbo 206 kW;2.2 D 118 kW;2.2 D 154 kW
+Audi
+  A1 (8X)|2010|2018|1.0 TFSI 70 kW;1.2 TFSI 63 kW;1.4 TFSI 90 kW;1.4 TFSI 103 kW;1.6 TDI 66 kW;1.6 TDI 77 kW;2.0 TFSI S1 170 kW
+  A3 (8L)|1996|2003|1.6 74 kW;1.8 92 kW;1.8 T 110 kW;1.8 T 132 kW;1.9 TDI 66 kW;1.9 TDI 81 kW;1.9 TDI 96 kW
+  A3 (8P)|2003|2012|1.2 TFSI 77 kW;1.4 TFSI 92 kW;1.6 75 kW;1.8 TFSI 118 kW;2.0 FSI 110 kW;2.0 TFSI 147 kW;1.6 TDI 77 kW;1.9 TDI 77 kW;2.0 TDI 103 kW;2.0 TDI 125 kW
+  A3 (8V)|2012|2020|1.0 TFSI 85 kW;1.2 TFSI 63 kW;1.4 TFSI 90 kW;1.4 TFSI 103 kW;1.8 TFSI 132 kW;2.0 TFSI 140 kW;2.0 TFSI S3 213 kW;1.6 TDI 81 kW;2.0 TDI 110 kW;2.0 TDI 135 kW
+  A4 B6|2000|2004|1.6 75 kW;1.8 T 110 kW;1.8 T 120 kW;2.0 96 kW;2.4 V6 125 kW;3.0 V6 162 kW;1.9 TDI 74 kW;1.9 TDI 96 kW;2.5 TDI 120 kW
+  A4 B7|2004|2008|1.6 75 kW;1.8 T 120 kW;2.0 96 kW;2.0 TFSI 147 kW;3.2 FSI 188 kW;1.9 TDI 85 kW;2.0 TDI 103 kW;2.0 TDI 125 kW;2.5 TDI 120 kW;3.0 TDI 171 kW
+  A4 B8|2007|2015|1.8 TFSI 88 kW;1.8 TFSI 118 kW;2.0 TFSI 132 kW;2.0 TFSI 155 kW;3.2 FSI 195 kW;2.0 TDI 88 kW;2.0 TDI 105 kW;2.0 TDI 130 kW;2.7 TDI 140 kW;3.0 TDI 176 kW
+  A4 B9|2015|0|1.4 TFSI 110 kW;2.0 TFSI 140 kW;2.0 TFSI 185 kW;2.0 TDI 90 kW;2.0 TDI 110 kW;2.0 TDI 140 kW;3.0 TDI 160 kW;3.0 TDI 200 kW
+  A5 (8T)|2007|2016|1.8 TFSI 125 kW;2.0 TFSI 155 kW;2.0 TDI 130 kW;3.0 TDI 176 kW
+  A6 C5|1997|2005|1.8 T 110 kW;2.4 120 kW;1.9 TDI 85 kW;2.5 TDI 110 kW
+  A6 C6|2004|2011|2.0 TFSI 125 kW;2.4 130 kW;2.8 FSI 154 kW;3.0 TFSI 213 kW;3.2 FSI 188 kW;2.0 TDI 103 kW;2.7 TDI 132 kW;3.0 TDI 176 kW
+  A6 C7|2011|2018|1.8 TFSI 140 kW;2.0 TFSI 132 kW;2.8 FSI 150 kW;3.0 TFSI 220 kW;2.0 TDI 130 kW;2.0 TDI 140 kW;3.0 TDI 150 kW;3.0 TDI 180 kW;3.0 TDI 200 kW
+  Q3 (8U)|2011|2018|1.4 TFSI 110 kW;2.0 TFSI 125 kW;2.0 TFSI 155 kW;2.0 TDI 103 kW;2.0 TDI 110 kW;2.0 TDI 130 kW
+  Q5 (8R)|2008|2017|2.0 TFSI 155 kW;2.0 TFSI 165 kW;3.2 FSI 199 kW;2.0 TDI 105 kW;2.0 TDI 130 kW;3.0 TDI 176 kW
+  Q7 (4L)|2005|2015|3.6 FSI 206 kW;4.2 FSI 253 kW;3.0 TDI 171 kW;3.0 TDI 176 kW;4.2 TDI 240 kW
+  TT (8J)|2006|2014|1.8 TFSI 118 kW;2.0 TFSI 147 kW;2.0 TFSI TTS 200 kW;3.2 184 kW;2.0 TDI 125 kW
+BMW
+  1 (E87)|2004|2011|116i 85 kW;118i 95 kW;120i 110 kW;130i 195 kW;116d 85 kW;118d 90 kW;118d 105 kW;120d 120 kW;123d 150 kW
+  1 (F20)|2011|2019|114i 75 kW;116i 100 kW;118i 125 kW;120i 135 kW;125i 160 kW;M135i 235 kW;114d 70 kW;116d 85 kW;118d 105 kW;120d 130 kW;125d 160 kW
+  3 (E46)|1998|2007|316i 77 kW;318i 87 kW;320i 125 kW;325i 141 kW;330i 170 kW;318d 85 kW;320d 100 kW;320d 110 kW;330d 150 kW
+  3 (E90)|2005|2012|316i 90 kW;318i 95 kW;320i 110 kW;325i 160 kW;330i 200 kW;335i 225 kW;316d 85 kW;318d 105 kW;320d 120 kW;320d 130 kW;325d 145 kW;330d 180 kW;335d 210 kW
+  3 (F30)|2011|2019|316i 80 kW;318i 100 kW;320i 135 kW;328i 180 kW;335i 225 kW;316d 85 kW;318d 100 kW;320d 120 kW;320d 135 kW;325d 160 kW;330d 190 kW
+  3 (G20)|2018|0|318i 115 kW;320i 135 kW;330i 190 kW;M340i 285 kW;318d 110 kW;320d 140 kW;330d 210 kW;330e 215 kW
+  5 (E39)|1995|2003|520i 110 kW;523i 125 kW;525i 141 kW;528i 142 kW;530i 170 kW;520d 100 kW;525d 120 kW;530d 142 kW
+  5 (E60)|2003|2010|520i 110 kW;523i 130 kW;525i 160 kW;530i 190 kW;520d 120 kW;525d 130 kW;530d 173 kW;535d 200 kW
+  5 (F10)|2010|2017|520i 135 kW;523i 150 kW;528i 180 kW;535i 225 kW;518d 105 kW;520d 120 kW;520d 135 kW;525d 160 kW;530d 190 kW;535d 230 kW
+  5 (G30)|2016|0|520i 135 kW;530i 185 kW;540i 250 kW;520d 140 kW;530d 195 kW;530e 185 kW
+  X1 (E84)|2009|2015|sDrive18i 110 kW;xDrive20i 135 kW;xDrive28i 180 kW;sDrive16d 85 kW;sDrive18d 105 kW;xDrive20d 130 kW
+  X3 (E83)|2003|2010|2.0i 110 kW;2.5i 141 kW;3.0i 170 kW;2.0d 110 kW;3.0d 160 kW
+  X3 (F25)|2010|2017|xDrive20i 135 kW;xDrive28i 180 kW;xDrive20d 135 kW;xDrive30d 190 kW;xDrive35d 230 kW
+  X5 (E53)|2000|2006|3.0i 170 kW;4.4i 210 kW;3.0d 160 kW
+Chevrolet
+  Matiz|2005|2010|0.8 38 kW;1.0 49 kW
+  Spark|2010|2015|1.0 50 kW;1.2 60 kW
+  Aveo (T250)|2006|2011|1.2 62 kW;1.4 74 kW
+  Lacetti|2004|2011|1.4 70 kW;1.6 80 kW;1.8 90 kW;2.0 D 90 kW
+  Cruze|2009|2015|1.6 83 kW;1.8 104 kW;2.0 VCDi 110 kW
+  Captiva|2006|2015|2.0 VCDi 110 kW;2.2 VCDi 135 kW
+Chrysler
+  PT Cruiser|2000|2010|2.0 105 kW;2.2 CRD 89 kW
+  300C|2004|2012|2.7 V6 135 kW;3.5 V6 183 kW;5.7 HEMI 250 kW;3.0 CRD 160 kW
+  Voyager|2001|2008|2.8 CRD 110 kW;3.3 V6 125 kW
+Citroën
+  C1|2005|2014|1.0 50 kW;1.4 HDi 40 kW
+  C1 II|2014|2022|1.0 53 kW;1.2 PureTech 60 kW
+  C2|2003|2009|1.1 44 kW;1.4 54 kW;1.6 80 kW;1.4 HDi 50 kW
+  C3 I|2002|2009|1.1 44 kW;1.4 54 kW;1.4 16V 66 kW;1.6 80 kW;1.4 HDi 50 kW;1.6 HDi 66 kW
+  C3 II|2009|2016|1.0 VTi 50 kW;1.2 VTi 60 kW;1.4 VTi 70 kW;1.6 VTi 88 kW;1.4 HDi 50 kW;1.6 HDi 68 kW
+  C3 III|2016|0|1.2 PureTech 60 kW;1.2 PureTech 81 kW;1.2 PureTech 96 kW;1.5 BlueHDi 55 kW;1.5 BlueHDi 75 kW
+  C4 I|2004|2010|1.4 66 kW;1.6 80 kW;2.0 103 kW;1.6 HDi 66 kW;1.6 HDi 80 kW;2.0 HDi 100 kW
+  C4 II|2010|2018|1.2 PureTech 81 kW;1.6 VTi 88 kW;1.6 THP 115 kW;1.6 HDi 68 kW;1.6 BlueHDi 88 kW;2.0 HDi 100 kW
+  C4 Picasso I|2006|2013|1.6 VTi 88 kW;1.6 THP 110 kW;1.8 92 kW;1.6 HDi 80 kW;2.0 HDi 100 kW;2.0 HDi 110 kW
+  C4 Picasso II|2013|2022|1.2 PureTech 96 kW;1.6 THP 121 kW;1.6 BlueHDi 73 kW;1.6 BlueHDi 88 kW;2.0 BlueHDi 110 kW;2.0 BlueHDi 133 kW
+  C5 I|2001|2008|1.8 85 kW;2.0 103 kW;2.0 HDi 80 kW;2.0 HDi 100 kW;2.2 HDi 125 kW
+  C5 II|2008|2017|1.6 THP 115 kW;1.6 HDi 80 kW;2.0 HDi 100 kW;2.2 HDi 125 kW;2.7 HDi 150 kW
+  Xsara|1997|2005|1.4 55 kW;1.6 80 kW;1.8 85 kW;2.0 100 kW;1.4 HDi 50 kW;2.0 HDi 66 kW
+  Xsara Picasso|1999|2012|1.6 70 kW;1.8 85 kW;2.0 100 kW;1.6 HDi 80 kW;2.0 HDi 66 kW
+  DS3|2010|2016|1.4 VTi 70 kW;1.6 VTi 88 kW;1.6 THP 115 kW;1.6 HDi 80 kW;1.6 e-HDi 68 kW
+  Berlingo|1996|2018|1.4 55 kW;1.6 80 kW;1.6 HDi 55 kW;1.6 HDi 66 kW;1.6 HDi 80 kW;1.9 D 51 kW
+Cupra
+  Formentor|2020|0|1.5 TSI 110 kW;2.0 TSI 140 kW;2.0 TSI VZ 228 kW;2.0 TDI 110 kW;1.4 e-Hybrid 180 kW
+  Leon|2020|0|1.4 e-Hybrid 150 kW;1.4 e-Hybrid 180 kW;2.0 TSI 180 kW;2.0 TSI 221 kW;2.0 TSI 228 kW
+  Ateca|2018|0|2.0 TSI 221 kW
+  Born|2021|0|58 kWh 150 kW;77 kWh 170 kW
+Dacia
+  Logan I|2004|2012|1.4 55 kW;1.6 64 kW;1.6 16V 77 kW;1.5 dCi 50 kW;1.5 dCi 63 kW
+  Logan II|2012|2020|0.9 TCe 66 kW;1.0 54 kW;1.2 54 kW;1.5 dCi 55 kW;1.5 dCi 66 kW
+  Sandero I|2008|2012|1.2 55 kW;1.4 55 kW;1.6 64 kW;1.5 dCi 50 kW;1.5 dCi 63 kW
+  Sandero II|2012|2020|0.9 TCe 66 kW;1.0 54 kW;1.2 54 kW;1.5 dCi 55 kW;1.5 dCi 66 kW
+  Duster I|2010|2017|1.2 TCe 92 kW;1.6 77 kW;1.5 dCi 66 kW;1.5 dCi 80 kW;1.5 dCi 81 kW
+  Duster II|2017|0|1.0 TCe 74 kW;1.3 TCe 96 kW;1.5 Blue dCi 85 kW
+  Dokker|2012|2021|1.2 TCe 85 kW;1.6 75 kW;1.5 dCi 55 kW;1.5 dCi 66 kW;1.5 dCi 80 kW
+  Lodgy|2012|2022|1.2 TCe 85 kW;1.5 dCi 66 kW;1.5 dCi 80 kW
+  Spring|2021|0|33 kW;48 kW
+Daewoo
+  Matiz|1998|2005|0.8 38 kW;1.0 49 kW
+  Lanos|1997|2002|1.5 62 kW;1.6 78 kW
+  Nubira|1997|2003|1.6 78 kW
+  Kalos|2002|2008|1.2 53 kW;1.4 61 kW
+Dodge
+  Caliber|2006|2012|1.8 110 kW;2.0 115 kW;2.0 CRD 103 kW
+  Nitro|2007|2011|2.8 CRD 130 kW
+  Journey|2008|2018|2.0 CRD 103 kW;2.7 V6 136 kW
+DS
+  DS 3|2016|0|1.2 PureTech 81 kW;1.2 PureTech 96 kW;1.6 THP 121 kW;1.6 BlueHDi 73 kW
+  DS 4|2011|2018|1.6 THP 115 kW;1.6 BlueHDi 88 kW;2.0 BlueHDi 110 kW
+  DS 5|2011|2018|1.6 THP 115 kW;2.0 BlueHDi 110 kW
+  DS 7 Crossback|2017|0|1.2 PureTech 96 kW;1.6 PureTech 133 kW;1.5 BlueHDi 96 kW;2.0 BlueHDi 130 kW
+Fiat
+  Panda II|2003|2012|1.1 40 kW;1.2 44 kW;1.2 51 kW;1.4 73 kW;1.3 JTD 51 kW
+  Panda III|2012|0|0.9 TwinAir 55 kW;1.2 51 kW;1.3 Multijet 55 kW
+  Punto II|1999|2010|1.2 44 kW;1.2 59 kW;1.4 57 kW;1.9 JTD 59 kW;1.3 JTD 51 kW
+  Grande Punto|2005|2012|1.2 48 kW;1.4 57 kW;1.4 T-Jet Abarth 114 kW;1.3 Multijet 55 kW;1.3 Multijet 66 kW;1.9 Multijet 88 kW
+  Bravo II|2007|2014|1.4 66 kW;1.4 T-Jet 110 kW;1.6 Multijet 77 kW;1.9 Multijet 88 kW;2.0 Multijet 121 kW
+  Stilo|2001|2008|1.2 59 kW;1.4 70 kW;1.6 76 kW;1.9 JTD 85 kW;1.9 JTD 103 kW
+  Doblò I|2000|2010|1.2 48 kW;1.4 57 kW;1.3 Multijet 55 kW;1.9 JTD 74 kW
+  Doblò II|2010|2022|1.4 70 kW;1.6 Multijet 77 kW;2.0 Multijet 99 kW
+  500|2007|0|0.9 TwinAir 63 kW;1.2 51 kW;1.4 74 kW;1.3 Multijet 55 kW
+  Tipo|2016|0|1.4 70 kW;1.0 T3 74 kW;1.6 Multijet 88 kW
+  Ducato|2006|2014|2.0 Multijet 85 kW;2.2 Multijet 74 kW;2.3 Multijet 110 kW;3.0 Multijet 130 kW
+  Seicento|1998|2010|1.1 40 kW
+Ford
+  Ka I|1996|2008|1.3 44 kW;1.3 51 kW
+  Ka II|2008|2016|1.2 51 kW;1.3 TDCi 55 kW
+  Fiesta V|2001|2008|1.25 55 kW;1.3 51 kW;1.4 59 kW;1.6 74 kW;1.4 TDCi 50 kW;1.6 TDCi 66 kW
+  Fiesta VI|2008|2017|1.25 44 kW;1.25 60 kW;1.4 71 kW;1.6 88 kW;1.0 EcoBoost 74 kW;1.0 EcoBoost 92 kW;1.4 TDCi 50 kW;1.6 TDCi 70 kW
+  Focus I|1998|2004|1.4 55 kW;1.6 74 kW;1.8 85 kW;2.0 96 kW;1.8 TDDi 55 kW;1.8 TDCi 74 kW;1.8 TDCi 85 kW
+  Focus II|2004|2011|1.4 59 kW;1.6 74 kW;1.6 Ti-VCT 85 kW;1.8 92 kW;2.0 107 kW;2.5 ST 166 kW;1.6 TDCi 66 kW;1.6 TDCi 80 kW;1.8 TDCi 85 kW;2.0 TDCi 100 kW
+  Focus III|2010|2018|1.0 EcoBoost 74 kW;1.0 EcoBoost 92 kW;1.5 EcoBoost 110 kW;1.6 77 kW;1.6 Ti-VCT 92 kW;2.0 ST 184 kW;2.3 RS 257 kW;1.5 TDCi 70 kW;1.5 TDCi 88 kW;1.6 TDCi 85 kW;2.0 TDCi 110 kW;2.0 TDCi 120 kW
+  C-Max I|2003|2010|1.6 74 kW;1.6 Ti-VCT 85 kW;1.8 92 kW;2.0 107 kW;1.6 TDCi 80 kW;1.8 TDCi 85 kW;2.0 TDCi 100 kW
+  Mondeo III|2000|2007|1.8 81 kW;2.0 107 kW;2.5 125 kW;3.0 V6 164 kW;2.0 TDCi 85 kW;2.0 TDCi 96 kW;2.2 TDCi 114 kW
+  Mondeo IV|2007|2014|1.6 92 kW;1.8 92 kW;2.0 107 kW;2.0 EcoBoost 149 kW;2.5 162 kW;1.6 TDCi 85 kW;1.8 TDCi 92 kW;2.0 TDCi 103 kW;2.0 TDCi 120 kW;2.2 TDCi 129 kW
+  S-Max|2006|2015|1.8 TDCi 92 kW;2.0 TDCi 103 kW;2.0 TDCi 120 kW;2.2 TDCi 129 kW;2.0 EcoBoost 149 kW;2.5 162 kW
+  Kuga I|2008|2012|2.0 TDCi 100 kW;2.0 TDCi 103 kW;2.5 T 147 kW
+  Kuga II|2012|2019|1.5 EcoBoost 110 kW;1.6 EcoBoost 110 kW;1.6 EcoBoost 134 kW;1.5 TDCi 88 kW;2.0 TDCi 88 kW;2.0 TDCi 110 kW;2.0 TDCi 132 kW
+  Transit|2006|2013|2.2 TDCi 63 kW;2.2 TDCi 85 kW;2.2 TDCi 103 kW;2.4 TDCi 85 kW;2.4 TDCi 103 kW
+Honda
+  Jazz II|2002|2008|1.2 57 kW;1.4 61 kW
+  Jazz III|2008|2015|1.2 66 kW;1.4 73 kW
+  Civic VIII|2005|2011|1.4 61 kW;1.8 103 kW;2.0 Type R 148 kW;2.2 i-CTDi 103 kW
+  Civic IX|2012|2017|1.4 73 kW;1.8 104 kW;1.6 i-DTEC 88 kW
+  Civic X|2017|0|1.0 VTEC Turbo 95 kW;1.5 VTEC Turbo 134 kW;1.6 i-DTEC 88 kW
+  Accord VII|2003|2008|2.0 114 kW;2.4 140 kW;2.2 i-CTDi 103 kW
+  Accord VIII|2008|2015|2.0 115 kW;2.4 148 kW;2.2 i-DTEC 110 kW
+  CR-V III|2006|2012|2.0 110 kW;2.2 i-CTDi 103 kW
+  CR-V IV|2012|2018|2.0 114 kW;1.6 i-DTEC 88 kW;2.2 i-DTEC 110 kW
+  HR-V II|2015|2021|1.5 96 kW;1.6 i-DTEC 88 kW
+Hyundai
+  Getz|2002|2011|1.1 48 kW;1.3 62 kW;1.4 71 kW;1.5 CRDi 60 kW
+  i10 I|2007|2013|1.1 49 kW;1.2 57 kW
+  i10 II|2013|2019|1.0 49 kW;1.2 64 kW
+  i20 I|2008|2014|1.2 57 kW;1.4 74 kW;1.1 CRDi 55 kW;1.4 CRDi 66 kW
+  i20 II|2014|2020|1.2 55 kW;1.25 62 kW;1.4 74 kW;1.0 T-GDI 74 kW;1.1 CRDi 55 kW;1.4 CRDi 66 kW
+  i30 I|2007|2011|1.4 80 kW;1.6 91 kW;2.0 105 kW;1.6 CRDi 66 kW;1.6 CRDi 85 kW
+  i30 II|2012|2017|1.4 74 kW;1.6 99 kW;1.4 CRDi 66 kW;1.6 CRDi 81 kW;1.6 CRDi 94 kW
+  i30 III|2017|0|1.0 T-GDI 88 kW;1.4 T-GDI 103 kW;1.6 CRDi 85 kW
+  ix35|2010|2015|1.6 GDI 99 kW;2.0 120 kW;1.7 CRDi 85 kW;2.0 CRDi 100 kW;2.0 CRDi 135 kW
+  Tucson I|2004|2010|2.0 104 kW;2.0 CRDi 83 kW;2.0 CRDi 103 kW
+  Tucson III|2015|2020|1.6 GDI 97 kW;1.6 T-GDI 130 kW;1.7 CRDi 85 kW;2.0 CRDi 100 kW;2.0 CRDi 136 kW
+  Santa Fe II|2006|2012|2.2 CRDi 114 kW;2.2 CRDi 145 kW;2.4 126 kW
+  Kona|2017|0|1.0 T-GDI 88 kW;1.6 T-GDI 130 kW;1.6 CRDi 85 kW;Electric 100 kW;Electric 150 kW
+Infiniti
+  Q30|2015|2019|1.6 T 115 kW;2.0 T 155 kW;1.5 d 80 kW;2.2 d 125 kW
+  Q50|2013|0|2.0 T 155 kW;2.2 d 125 kW;3.5 Hybrid 268 kW
+Jaguar
+  X-Type|2001|2009|2.0 114 kW;2.5 144 kW;3.0 172 kW;2.0 D 96 kW;2.2 D 114 kW
+  XF|2008|2015|2.2 D 140 kW;3.0 D 177 kW
+  XE|2015|0|2.0 D 120 kW;2.0 D 132 kW
+  F-Pace|2016|0|2.0 D 132 kW;2.0 D 177 kW;3.0 D 221 kW
+Jeep
+  Grand Cherokee (WK)|2005|2010|3.0 CRD 160 kW
+  Wrangler (JK)|2007|2018|2.8 CRD 130 kW;3.6 V6 209 kW
+  Compass|2006|2016|2.0 CRD 103 kW
+  Renegade|2014|0|1.0 T3 88 kW;1.4 MultiAir 103 kW;1.6 MultiJet 88 kW;2.0 MultiJet 103 kW
+Kia
+  Picanto I|2004|2011|1.0 46 kW;1.1 48 kW
+  Picanto II|2011|2017|1.0 51 kW;1.2 63 kW
+  Rio II|2005|2011|1.4 71 kW;1.6 82 kW
+  Rio III|2011|2017|1.2 62 kW;1.4 74 kW;1.1 CRDi 55 kW;1.4 CRDi 66 kW
+  Ceed I|2006|2012|1.4 80 kW;1.6 91 kW;2.0 105 kW;1.6 CRDi 66 kW;1.6 CRDi 85 kW
+  Ceed II|2012|2018|1.4 73 kW;1.6 99 kW;1.6 T-GDI 150 kW;1.4 CRDi 66 kW;1.6 CRDi 81 kW;1.6 CRDi 94 kW
+  Venga|2010|2019|1.4 66 kW;1.6 92 kW;1.4 CRDi 66 kW;1.6 CRDi 85 kW
+  Sportage III|2010|2015|1.6 GDI 99 kW;2.0 122 kW;1.7 CRDi 85 kW;2.0 CRDi 100 kW;2.0 CRDi 135 kW
+  Sportage IV|2015|2021|1.6 GDI 97 kW;1.6 T-GDI 130 kW;1.7 CRDi 85 kW;2.0 CRDi 100 kW;2.0 CRDi 136 kW
+  Sorento II|2009|2014|2.2 CRDi 145 kW;2.4 128 kW
+  Stonic|2017|0|1.0 T-GDI 88 kW;1.4 74 kW;1.6 CRDi 85 kW
+  Niro|2016|0|1.6 GDI Hybrid 104 kW;e-Niro 150 kW
+Lancia
+  Ypsilon|2003|2011|1.2 51 kW;1.4 70 kW;1.3 MJT 51 kW;1.3 MJT 66 kW
+  Musa|2004|2012|1.4 70 kW;1.3 MJT 51 kW
+  Delta III|2008|2014|1.6 MJT 88 kW;1.9 MJT 110 kW
+Land Rover
+  Freelander 2|2006|2014|2.2 TD4 112 kW;2.2 SD4 140 kW;3.2 i6 171 kW
+  Discovery 3|2004|2009|2.7 TDV6 140 kW;4.0 V6 160 kW;4.4 V8 220 kW
+  Discovery 4|2009|2017|3.0 TDV6 155 kW;3.0 SDV6 183 kW;5.0 V8 276 kW
+  Range Rover Sport I|2005|2013|2.7 TDV6 140 kW;3.0 TDV6 180 kW;4.4 TDV8 200 kW;5.0 V8 276 kW
+  Range Rover Evoque I|2011|2018|2.0 Si4 177 kW;2.2 eD4 110 kW;2.2 SD4 140 kW
+  Defender|2007|2016|2.4 TDCi 90 kW;2.2 TDCi 90 kW
+Lexus
+  IS II|2005|2013|220d 130 kW;250 153 kW;350 232 kW
+  IS III|2013|0|200t 180 kW;300h 164 kW
+  CT 200h|2011|0|1.8 Hybrid 100 kW
+  RX III|2008|2015|350 204 kW;450h 220 kW
+  NX|2014|0|200t 175 kW;300h 145 kW
+Mazda
+  2 (DE)|2007|2014|1.3 55 kW;1.5 76 kW;1.4 CD 50 kW
+  3 (BK)|2003|2009|1.4 62 kW;1.6 77 kW;2.0 107 kW;1.6 CD 80 kW;2.0 MZR-CD 105 kW
+  3 (BL)|2009|2013|1.6 77 kW;2.0 110 kW;1.6 MZR-CD 84 kW;2.2 MZR-CD 110 kW
+  3 (BM)|2013|2019|2.0 SkyActiv-G 88 kW;2.0 SkyActiv-G 121 kW;2.2 SkyActiv-D 110 kW
+  5|2005|2010|1.8 85 kW;2.0 107 kW;2.0 CD 105 kW
+  6 (GG)|2002|2008|1.8 88 kW;2.0 108 kW;2.0 CD 89 kW
+  6 (GH)|2007|2012|1.8 88 kW;2.0 114 kW;2.5 125 kW;2.2 MZR-CD 120 kW
+  6 (GJ)|2012|2018|2.0 SkyActiv-G 107 kW;2.5 SkyActiv-G 141 kW;2.2 SkyActiv-D 110 kW;2.2 SkyActiv-D 129 kW
+  CX-3|2015|0|2.0 SkyActiv-G 88 kW;1.5 SkyActiv-D 77 kW
+  CX-5 (KE)|2011|2017|2.0 SkyActiv-G 118 kW;2.5 SkyActiv-G 143 kW;2.2 SkyActiv-D 110 kW;2.2 SkyActiv-D 129 kW
+  CX-5 (KF)|2017|0|2.0 SkyActiv-G 121 kW;2.5 SkyActiv-G 143 kW;2.2 SkyActiv-D 110 kW
+  MX-5 (NC)|2005|2015|1.8 93 kW;2.0 118 kW
+Mercedes-Benz
+  A (W169)|2004|2012|A150 70 kW;A170 85 kW;A200 100 kW;A160 CDI 60 kW;A180 CDI 80 kW;A200 CDI 103 kW
+  A (W176)|2012|2018|A160 75 kW;A180 90 kW;A200 115 kW;A250 155 kW;A180 CDI 80 kW;A200 CDI 100 kW;A220 CDI 125 kW
+  B (W245)|2005|2011|B150 70 kW;B170 85 kW;B200 100 kW;B180 CDI 80 kW;B200 CDI 103 kW
+  C (W203)|2000|2007|C200 Kompressor 120 kW;C230 Kompressor 141 kW;C200 CDI 85 kW;C220 CDI 105 kW;C270 CDI 125 kW
+  C (W204)|2007|2014|C180 115 kW;C200 135 kW;C250 150 kW;C300 170 kW;C180 CDI 88 kW;C200 CDI 100 kW;C220 CDI 125 kW;C250 CDI 150 kW;C350 CDI 195 kW
+  C (W205)|2014|2021|C160 95 kW;C180 115 kW;C200 135 kW;C250 155 kW;C180 d 90 kW;C200 d 100 kW;C220 d 125 kW;C250 d 150 kW
+  E (W211)|2002|2009|E200 Kompressor 120 kW;E240 130 kW;E280 170 kW;E200 CDI 90 kW;E220 CDI 110 kW;E270 CDI 130 kW;E320 CDI 165 kW
+  E (W212)|2009|2016|E200 135 kW;E250 150 kW;E350 215 kW;E200 CDI 100 kW;E220 CDI 125 kW;E250 CDI 150 kW;E350 CDI 195 kW
+  GLK (X204)|2008|2015|200 CDI 100 kW;220 CDI 125 kW;250 CDI 150 kW;350 CDI 195 kW
+  Vito (W639)|2003|2014|109 CDI 70 kW;111 CDI 80 kW;113 CDI 100 kW;115 CDI 110 kW;120 CDI 150 kW
+MG
+  MG3|2011|0|1.5 82 kW
+  ZS|2017|0|1.0 T-GDI 82 kW;ZS EV 105 kW
+  HS|2019|0|1.5 T 119 kW;PHEV 189 kW
+  MG4|2022|0|Standard 125 kW;Long Range 150 kW
+Mini
+  One / Cooper (R50)|2001|2006|1.4 D 55 kW;1.6 66 kW;1.6 85 kW;1.6 S 120 kW
+  Mini (R56)|2006|2013|One 72 kW;Cooper 90 kW;Cooper S 135 kW;JCW 155 kW;One D 66 kW;Cooper D 80 kW;Cooper SD 105 kW
+  Mini (F56)|2013|0|One 75 kW;Cooper 100 kW;Cooper S 141 kW;JCW 170 kW;One D 70 kW;Cooper D 85 kW;Cooper SD 125 kW
+  Countryman (R60)|2010|2016|Cooper 90 kW;Cooper S 135 kW;Cooper D 82 kW
+Mitsubishi
+  Colt VI|2004|2012|1.1 55 kW;1.3 70 kW;1.5 80 kW
+  Lancer VIII|2007|2017|1.5 80 kW;1.8 105 kW;2.0 DI-D 103 kW
+  Outlander II|2006|2012|2.0 106 kW;2.4 125 kW;2.0 DI-D 103 kW
+  Outlander III|2012|0|2.0 110 kW;2.2 DI-D 110 kW;PHEV 2.0 100 kW
+  ASX|2010|0|1.6 86 kW;1.8 DI-D 85 kW;1.8 DI-D 110 kW
+  Pajero IV|2006|2021|3.2 DI-D 118 kW;3.8 V6 184 kW
+  L200|2006|2015|2.5 DI-D 100 kW;2.5 DI-D 131 kW
+  Space Star|2012|0|1.0 52 kW;1.2 59 kW
+Nissan
+  Micra K12|2002|2010|1.0 48 kW;1.2 59 kW;1.4 65 kW;1.5 dCi 48 kW
+  Micra K13|2010|2017|1.2 59 kW;1.2 DIG-S 72 kW
+  Note|2006|2013|1.4 65 kW;1.6 81 kW;1.5 dCi 63 kW
+  Almera N16|2000|2006|1.5 72 kW;1.8 84 kW
+  Primera P12|2002|2008|1.6 80 kW;1.8 85 kW;2.0 103 kW
+  Qashqai J10|2007|2013|1.6 84 kW;2.0 104 kW;1.5 dCi 78 kW;1.6 dCi 96 kW;2.0 dCi 110 kW
+  Qashqai J11|2013|2021|1.2 DIG-T 85 kW;1.6 DIG-T 120 kW;1.5 dCi 81 kW;1.6 dCi 96 kW
+  Juke|2010|2019|1.6 86 kW;1.6 DIG-T 140 kW;1.5 dCi 81 kW
+  X-Trail T31|2007|2014|2.0 104 kW;2.0 dCi 110 kW;2.0 dCi 127 kW
+  Navara D40|2005|2015|2.5 dCi 126 kW
+  Leaf ZE0|2010|2017|24 kWh 80 kW;30 kWh 80 kW
+  Leaf ZE1|2017|0|40 kWh 110 kW;62 kWh 160 kW
+Opel
+  Corsa C|2000|2006|1.0 43 kW;1.2 55 kW;1.4 66 kW;1.8 92 kW;1.3 CDTI 51 kW;1.3 CDTI 55 kW;1.7 CDTI 74 kW
+  Corsa D|2006|2014|1.0 44 kW;1.2 59 kW;1.4 66 kW;1.4 74 kW;1.6 Turbo OPC 141 kW;1.3 CDTI 55 kW;1.3 CDTI 66 kW;1.3 CDTI 70 kW;1.7 CDTI 92 kW
+  Adam|2013|2019|1.0 Turbo 85 kW;1.2 51 kW;1.4 74 kW
+  Astra G|1998|2004|1.4 66 kW;1.6 62 kW;1.6 74 kW;1.8 92 kW;2.0 Turbo 147 kW;1.7 DTI 55 kW;2.0 DTI 74 kW
+  Astra H|2004|2014|1.4 66 kW;1.6 85 kW;1.6 Turbo 132 kW;1.8 103 kW;2.0 Turbo 147 kW;1.3 CDTI 66 kW;1.7 CDTI 74 kW;1.7 CDTI 92 kW;1.9 CDTI 88 kW;1.9 CDTI 110 kW
+  Astra J|2009|2015|1.4 74 kW;1.4 Turbo 103 kW;1.6 85 kW;1.6 Turbo 132 kW;1.3 CDTI 70 kW;1.7 CDTI 81 kW;1.7 CDTI 96 kW;2.0 CDTI 121 kW
+  Vectra C|2002|2008|1.6 77 kW;1.8 90 kW;2.2 114 kW;1.9 CDTI 88 kW;1.9 CDTI 110 kW;3.0 V6 CDTI 135 kW
+  Insignia A|2008|2017|1.6 85 kW;1.6 Turbo 132 kW;1.8 103 kW;2.0 Turbo 162 kW;2.0 CDTI 96 kW;2.0 CDTI 118 kW;2.0 CDTI 143 kW
+  Zafira B|2005|2014|1.6 77 kW;1.8 103 kW;2.0 Turbo 147 kW;1.7 CDTI 74 kW;1.9 CDTI 88 kW;1.9 CDTI 110 kW
+  Meriva|2003|2017|1.4 66 kW;1.4 Turbo 88 kW;1.7 CDTI 74 kW;1.7 CDTI 81 kW
+  Mokka|2012|2019|1.4 Turbo 103 kW;1.6 85 kW;1.6 CDTI 81 kW;1.7 CDTI 96 kW
+  Vivaro|2001|2014|1.9 DTI 74 kW;2.0 CDTI 66 kW;2.0 CDTI 84 kW;2.5 CDTI 107 kW
+Peugeot
+  206|1998|2009|1.1 44 kW;1.4 55 kW;1.6 80 kW;2.0 100 kW;1.4 HDi 50 kW;1.6 HDi 66 kW;2.0 HDi 66 kW
+  207|2006|2014|1.4 54 kW;1.4 16V 70 kW;1.6 88 kW;1.6 THP 110 kW;1.4 HDi 50 kW;1.6 HDi 66 kW;1.6 HDi 80 kW
+  208 I|2012|2019|1.0 VTi 50 kW;1.2 VTi 60 kW;1.2 PureTech 81 kW;1.6 VTi 88 kW;1.6 THP GTi 147 kW;1.6 BlueHDi 55 kW;1.6 BlueHDi 73 kW;1.6 BlueHDi 88 kW
+  307|2000|2008|1.4 65 kW;1.6 80 kW;2.0 100 kW;1.4 HDi 50 kW;1.6 HDi 66 kW;1.6 HDi 80 kW;2.0 HDi 66 kW;2.0 HDi 79 kW;2.0 HDi 100 kW
+  308 I|2007|2013|1.4 VTi 70 kW;1.6 VTi 88 kW;1.6 THP 103 kW;1.6 THP 115 kW;1.6 HDi 66 kW;1.6 HDi 80 kW;2.0 HDi 100 kW
+  308 II|2013|2021|1.2 PureTech 81 kW;1.2 PureTech 96 kW;1.6 BlueHDi 73 kW;1.6 BlueHDi 88 kW;2.0 BlueHDi 110 kW;2.0 BlueHDi 133 kW
+  407|2004|2011|1.8 85 kW;2.0 100 kW;2.2 116 kW;1.6 HDi 80 kW;2.0 HDi 100 kW;2.2 HDi 125 kW;2.7 HDi 150 kW
+  508|2010|2018|1.6 THP 115 kW;1.6 HDi 82 kW;2.0 HDi 103 kW;2.0 HDi 120 kW;2.2 HDi 150 kW
+  3008 I|2009|2016|1.6 THP 115 kW;1.6 HDi 80 kW;2.0 HDi 110 kW
+  Partner|1996|2018|1.4 55 kW;1.6 80 kW;1.6 HDi 55 kW;1.6 HDi 66 kW;1.6 HDi 80 kW;1.9 D 51 kW;2.0 HDi 66 kW
+Porsche
+  911 (997)|2004|2012|3.6 Carrera 239 kW;3.8 Carrera S 261 kW
+  Boxster (987)|2004|2012|2.7 180 kW;3.4 S 217 kW
+  Cayenne (955)|2002|2010|3.2 184 kW;3.6 213 kW;4.5 250 kW
+  Cayenne (958)|2010|2017|3.6 220 kW;4.8 294 kW;3.0 D 180 kW;4.2 D 281 kW
+  Panamera|2009|2016|3.6 220 kW;4.8 294 kW;3.0 D 184 kW
+  Macan|2014|0|2.0 T 185 kW;3.0 T 250 kW;3.0 D 190 kW
+Renault
+  Twingo II|2007|2014|1.2 43 kW;1.2 55 kW;1.2 TCe 74 kW;1.5 dCi 63 kW
+  Clio II|1998|2005|1.2 43 kW;1.2 55 kW;1.4 70 kW;1.6 79 kW;2.0 RS 126 kW;1.5 dCi 48 kW;1.5 dCi 63 kW
+  Clio III|2005|2014|1.2 55 kW;1.2 TCe 74 kW;1.4 73 kW;1.6 82 kW;2.0 RS 148 kW;1.5 dCi 50 kW;1.5 dCi 63 kW;1.5 dCi 78 kW
+  Clio IV|2012|2019|0.9 TCe 66 kW;1.2 54 kW;1.2 TCe 88 kW;1.6 RS 147 kW;1.5 dCi 55 kW;1.5 dCi 66 kW
+  Captur|2013|2019|0.9 TCe 66 kW;1.2 TCe 88 kW;1.5 dCi 66 kW;1.5 dCi 81 kW
+  Megane II|2002|2009|1.4 72 kW;1.6 83 kW;2.0 99 kW;2.0 T RS 165 kW;1.5 dCi 60 kW;1.5 dCi 78 kW;1.9 dCi 96 kW
+  Megane III|2008|2016|1.2 TCe 85 kW;1.4 TCe 96 kW;1.6 82 kW;2.0 103 kW;2.0 T RS 195 kW;1.5 dCi 63 kW;1.5 dCi 81 kW;1.9 dCi 96 kW;2.0 dCi 110 kW
+  Megane IV|2015|0|1.2 TCe 97 kW;1.3 TCe 103 kW;1.5 dCi 66 kW;1.5 dCi 81 kW;1.6 dCi 96 kW
+  Laguna II|2001|2007|1.6 79 kW;1.8 88 kW;2.0 99 kW;1.9 dCi 74 kW;1.9 dCi 88 kW;2.2 dCi 110 kW
+  Laguna III|2007|2015|1.6 82 kW;2.0 103 kW;1.5 dCi 81 kW;2.0 dCi 110 kW
+  Scenic II|2003|2009|1.6 83 kW;2.0 99 kW;1.5 dCi 78 kW;1.9 dCi 96 kW
+  Scenic III|2009|2016|1.4 TCe 96 kW;1.6 81 kW;1.5 dCi 81 kW;2.0 dCi 110 kW
+  Kangoo I|1997|2008|1.2 43 kW;1.4 55 kW;1.6 70 kW;1.5 dCi 48 kW;1.5 dCi 63 kW;1.9 D 47 kW
+  Kangoo II|2008|2021|1.6 78 kW;1.5 dCi 55 kW;1.5 dCi 66 kW;1.5 dCi 80 kW
+  Trafic II|2001|2014|1.9 dCi 74 kW;2.0 dCi 66 kW;2.5 dCi 107 kW
+Rover
+  25|1999|2005|1.4 76 kW;1.6 83 kW
+  45|2000|2005|1.4 76 kW;1.6 81 kW;1.8 92 kW;2.0 iDT 74 kW
+  75|1999|2005|1.8 88 kW;2.0 V6 114 kW;2.5 V6 130 kW;2.0 CDT 85 kW
+Saab
+  9-3 I|1998|2002|2.0 t 110 kW;2.0 T 136 kW;2.2 TiD 85 kW
+  9-3 II|2002|2012|1.8 t 110 kW;2.0 t 129 kW;2.0 T 154 kW;2.8 V6 184 kW;1.9 TiD 88 kW;1.9 TiD 110 kW
+  9-5|1997|2010|2.0 t 110 kW;2.3 t 136 kW;3.0 TiD 130 kW
+Seat
+  Mii|2011|2021|1.0 44 kW;1.0 55 kW
+  Ibiza III|2002|2008|1.2 47 kW;1.4 55 kW;1.4 16V 74 kW;1.6 77 kW;1.9 SDI 47 kW;1.9 TDI 74 kW;1.4 TDI 51 kW;1.4 TDI 59 kW
+  Ibiza IV|2008|2017|1.2 44 kW;1.2 TSI 63 kW;1.2 TSI 77 kW;1.4 63 kW;1.4 TSI FR 132 kW;1.6 77 kW;1.2 TDI 55 kW;1.4 TDI 59 kW;1.6 TDI 66 kW;1.6 TDI 77 kW
+  Ibiza V|2017|0|1.0 55 kW;1.0 TSI 70 kW;1.0 TSI 85 kW;1.5 TSI 110 kW;1.6 TDI 59 kW;1.6 TDI 70 kW
+  Leon II|2005|2012|1.4 63 kW;1.4 TSI 92 kW;1.6 75 kW;1.8 TSI 118 kW;2.0 TFSI 147 kW;1.6 TDI 77 kW;1.9 TDI 77 kW;2.0 TDI 103 kW
+  Leon III|2012|2020|1.2 TSI 63 kW;1.2 TSI 81 kW;1.4 TSI 92 kW;1.4 TSI 103 kW;1.8 TSI 132 kW;2.0 TSI Cupra 206 kW;1.6 TDI 66 kW;1.6 TDI 81 kW;2.0 TDI 110 kW;2.0 TDI 135 kW
+  Leon IV|2020|0|1.0 TSI 81 kW;1.5 TSI 96 kW;1.5 TSI 110 kW;2.0 TDI 85 kW;2.0 TDI 110 kW
+  Altea|2004|2015|1.2 TSI 77 kW;1.4 63 kW;1.6 75 kW;1.8 TSI 118 kW;2.0 TFSI 147 kW;1.6 TDI 77 kW;1.9 TDI 77 kW;2.0 TDI 103 kW
+  Toledo III|2004|2009|1.6 75 kW;2.0 FSI 110 kW;1.9 TDI 77 kW;2.0 TDI 103 kW
+  Toledo IV|2012|2019|1.2 TSI 66 kW;1.2 TSI 81 kW;1.4 TSI 92 kW;1.6 TDI 66 kW;1.6 TDI 77 kW
+  Alhambra II|2010|2020|1.4 TSI 110 kW;2.0 TSI 147 kW;2.0 TDI 85 kW;2.0 TDI 103 kW;2.0 TDI 130 kW
+  Arona|2017|0|1.0 TSI 70 kW;1.0 TSI 85 kW;1.5 TSI 110 kW;1.6 TDI 70 kW
+  Ateca|2016|0|1.0 TSI 85 kW;1.4 TSI 110 kW;1.5 TSI 110 kW;2.0 TSI 140 kW;1.6 TDI 85 kW;2.0 TDI 110 kW;2.0 TDI 140 kW
+Smart
+  Fortwo (450)|1998|2007|0.6 40 kW;0.7 45 kW;0.8 CDI 30 kW
+  Fortwo (451)|2007|2014|1.0 52 kW;1.0 62 kW;1.0 Turbo 75 kW;0.8 CDI 33 kW
+  Forfour (454)|2004|2006|1.1 55 kW;1.3 70 kW;1.5 80 kW;1.5 CDI 50 kW
+  Fortwo (453)|2014|0|1.0 52 kW;0.9 Turbo 66 kW;0.9 Turbo 80 kW
+SsangYong
+  Actyon|2006|2012|2.0 Xdi 104 kW
+  Kyron|2005|2014|2.0 XDi 104 kW;2.7 XDi 120 kW
+  Rexton|2002|2012|2.7 XDi 120 kW
+  Korando|2011|0|2.0 e-XDi 108 kW;2.0 e-XDi 129 kW
+Subaru
+  Impreza (GE/GH)|2007|2014|1.5 80 kW;2.0 110 kW;2.5 WRX STI 221 kW
+  Forester (SH)|2008|2013|2.0 108 kW;2.0 D 108 kW
+  Forester (SJ)|2013|2018|2.0 110 kW;2.0 XT 177 kW;2.0 D 108 kW
+  XV|2012|2017|1.6 84 kW;2.0 110 kW;2.0 D 108 kW
+  Outback (BR)|2009|2014|2.0 D 110 kW
+Suzuki
+  Alto|2009|2014|1.0 50 kW
+  Splash|2008|2015|1.0 48 kW;1.2 63 kW;1.3 DDiS 55 kW
+  Swift III|2005|2010|1.3 68 kW;1.5 74 kW;1.6 Sport 92 kW;1.3 DDiS 55 kW
+  Swift IV|2010|2017|1.2 69 kW;1.6 Sport 100 kW;1.3 DDiS 55 kW
+  SX4 I|2006|2014|1.5 76 kW;1.6 88 kW;1.9 DDiS 88 kW;2.0 DDiS 88 kW
+  Grand Vitara II|2005|2015|1.6 78 kW;2.0 103 kW;2.4 123 kW
+  Jimny|1998|2018|1.3 63 kW
+  Vitara II|2015|0|1.6 88 kW;1.4 Boosterjet 103 kW;1.6 DDiS 88 kW
+  S-Cross|2013|0|1.6 88 kW;1.4 Boosterjet 103 kW;1.6 DDiS 88 kW
+  Baleno|2016|0|1.0 Boosterjet 82 kW;1.2 Dualjet 66 kW
+Škoda
+  Fabia I|1999|2007|1.0 37 kW;1.2 40 kW;1.2 47 kW;1.4 44 kW;1.4 55 kW;1.4 74 kW;1.9 SDI 47 kW;1.9 TDI 74 kW;1.9 TDI 96 kW
+  Fabia II|2007|2014|1.2 44 kW;1.2 51 kW;1.2 TSI 63 kW;1.2 TSI 77 kW;1.4 63 kW;1.6 77 kW;1.2 TDI 55 kW;1.4 TDI 51 kW;1.4 TDI 59 kW;1.6 TDI 55 kW;1.6 TDI 66 kW;1.6 TDI 77 kW
+  Fabia III|2014|2021|1.0 44 kW;1.0 55 kW;1.0 TSI 70 kW;1.0 TSI 81 kW;1.2 TSI 66 kW;1.2 TSI 81 kW;1.4 TDI 55 kW;1.4 TDI 66 kW;1.4 TDI 77 kW
+  Fabia IV|2021|0|1.0 59 kW;1.0 TSI 70 kW;1.0 TSI 81 kW;1.5 TSI 110 kW
+  Citigo|2011|2019|1.0 44 kW;1.0 55 kW;1.0 G-TEC 50 kW
+  Rapid|2012|2019|1.2 55 kW;1.6 77 kW;1.0 TSI 70 kW;1.2 TSI 63 kW;1.2 TSI 77 kW;1.2 TSI 81 kW;1.4 TSI 92 kW;1.4 TDI 55 kW;1.4 TDI 66 kW;1.4 TDI 77 kW;1.6 TDI 66 kW;1.6 TDI 77 kW
+  Roomster|2006|2015|1.2 51 kW;1.2 TSI 63 kW;1.4 63 kW;1.6 77 kW;1.4 TDI 51 kW;1.4 TDI 59 kW;1.6 TDI 55 kW;1.6 TDI 66 kW;1.9 TDI 77 kW
+  Octavia I|1996|2010|1.4 44 kW;1.4 55 kW;1.6 74 kW;1.8 92 kW;1.8 T 110 kW;1.8 T RS 132 kW;2.0 85 kW;1.9 SDI 50 kW;1.9 TDI 66 kW;1.9 TDI 81 kW;1.9 TDI 96 kW
+  Octavia II|2004|2013|1.2 TSI 77 kW;1.4 59 kW;1.4 TSI 90 kW;1.6 75 kW;1.6 FSI 85 kW;1.8 TSI 118 kW;2.0 FSI 110 kW;2.0 TFSI RS 147 kW;1.6 TDI 77 kW;1.9 TDI 77 kW;2.0 TDI 81 kW;2.0 TDI 103 kW;2.0 TDI RS 125 kW
+  Octavia III|2012|2020|1.0 TSI 85 kW;1.2 TSI 63 kW;1.2 TSI 77 kW;1.2 TSI 81 kW;1.4 TSI 103 kW;1.4 TSI 110 kW;1.5 TSI 110 kW;1.8 TSI 132 kW;2.0 TSI RS 162 kW;2.0 TSI RS 180 kW;1.6 TDI 77 kW;1.6 TDI 81 kW;2.0 TDI 110 kW;2.0 TDI 135 kW
+  Octavia IV|2019|0|1.0 TSI 81 kW;1.5 TSI 110 kW;2.0 TSI 140 kW;2.0 TSI RS 180 kW;1.4 TSI iV 150 kW;2.0 TDI 85 kW;2.0 TDI 110 kW;2.0 TDI RS 147 kW
+  Superb II|2008|2015|1.4 TSI 92 kW;1.8 TSI 118 kW;2.0 TSI 147 kW;3.6 FSI 191 kW;1.6 TDI 77 kW;2.0 TDI 81 kW;2.0 TDI 103 kW;2.0 TDI 125 kW
+  Superb III|2015|0|1.4 TSI 92 kW;1.4 TSI 110 kW;1.5 TSI 110 kW;1.8 TSI 132 kW;2.0 TSI 162 kW;2.0 TSI 206 kW;1.6 TDI 88 kW;2.0 TDI 110 kW;2.0 TDI 140 kW;2.0 TDI 176 kW;1.4 TSI iV 160 kW
+  Yeti|2009|2017|1.2 TSI 77 kW;1.2 TSI 81 kW;1.4 TSI 92 kW;1.8 TSI 112 kW;1.6 TDI 77 kW;2.0 TDI 81 kW;2.0 TDI 103 kW;2.0 TDI 125 kW
+  Kodiaq|2016|0|1.4 TSI 92 kW;1.4 TSI 110 kW;1.5 TSI 110 kW;2.0 TSI 132 kW;2.0 TSI 180 kW;2.0 TDI 110 kW;2.0 TDI 140 kW;2.0 TDI 176 kW
+  Karoq|2017|0|1.0 TSI 81 kW;1.4 TSI 110 kW;1.5 TSI 110 kW;2.0 TSI 140 kW;1.6 TDI 85 kW;2.0 TDI 85 kW;2.0 TDI 110 kW;2.0 TDI 140 kW
+  Scala|2019|0|1.0 TSI 70 kW;1.0 TSI 81 kW;1.5 TSI 110 kW;1.6 TDI 85 kW
+  Kamiq|2019|0|1.0 TSI 70 kW;1.0 TSI 81 kW;1.5 TSI 110 kW;1.6 TDI 85 kW
+  Enyaq iV|2020|0|iV 60 132 kW;iV 80 150 kW;iV 80x 195 kW;RS 220 kW
+Tesla
+  Model S|2012|0|Standard Range;Long Range;Performance
+  Model 3|2017|0|Standard Range;Long Range;Performance
+  Model X|2015|0|Long Range;Performance
+  Model Y|2020|0|RWD;Long Range;Performance
+Toyota
+  Aygo I|2005|2014|1.0 50 kW;1.4 HDi 40 kW
+  Aygo II|2014|2021|1.0 51 kW
+  Yaris I|1999|2005|1.0 48 kW;1.3 63 kW;1.4 D-4D 55 kW
+  Yaris II|2005|2011|1.0 51 kW;1.3 64 kW;1.33 74 kW;1.4 D-4D 66 kW
+  Yaris III|2011|2020|1.0 51 kW;1.33 73 kW;1.5 Hybrid 55 kW;1.4 D-4D 66 kW
+  Yaris IV|2020|0|1.0 53 kW;1.5 92 kW;1.5 Hybrid 85 kW
+  Corolla E12|2001|2007|1.4 71 kW;1.6 81 kW;1.4 D-4D 66 kW;2.0 D-4D 66 kW;2.0 D-4D 85 kW
+  Corolla E15|2007|2013|1.33 73 kW;1.6 90 kW;1.4 D-4D 66 kW;2.0 D-4D 93 kW
+  Corolla E18|2013|2019|1.33 73 kW;1.6 97 kW;1.2 T 85 kW;1.8 Hybrid 100 kW;1.4 D-4D 66 kW
+  Corolla E21|2018|0|1.2 T 85 kW;1.8 Hybrid 90 kW;2.0 Hybrid 112 kW
+  Auris I|2006|2012|1.33 74 kW;1.6 91 kW;1.4 D-4D 66 kW;2.0 D-4D 93 kW
+  Auris II|2012|2018|1.33 73 kW;1.6 97 kW;1.2 T 85 kW;1.8 Hybrid 100 kW;1.4 D-4D 66 kW
+  Avensis T25|2003|2008|1.8 95 kW;2.0 108 kW;2.0 D-4D 85 kW;2.2 D-4D 110 kW
+  Avensis T27|2008|2018|1.6 97 kW;1.8 108 kW;2.0 112 kW;2.0 D-4D 93 kW;2.2 D-4D 110 kW;2.2 D-CAT 130 kW
+  Verso|2009|2018|1.6 97 kW;1.8 108 kW;2.0 D-4D 93 kW
+  RAV4 III|2005|2012|2.0 112 kW;2.2 D-4D 100 kW;2.2 D-CAT 130 kW
+  RAV4 IV|2013|2018|2.0 D-4D 91 kW;2.2 D-4D 110 kW;2.5 Hybrid 145 kW
+  RAV4 V|2018|0|2.0 129 kW;2.5 Hybrid 160 kW
+  C-HR|2016|0|1.2 T 85 kW;1.8 Hybrid 90 kW;2.0 Hybrid 112 kW
+  Hilux VII|2005|2015|2.5 D-4D 75 kW;2.5 D-4D 106 kW;3.0 D-4D 126 kW
+  Land Cruiser 150|2009|0|2.8 D-4D 130 kW;3.0 D-4D 127 kW
+Volkswagen
+  Up!|2011|2023|1.0 44 kW;1.0 55 kW;1.0 TSI 66 kW;1.0 TSI GTI 85 kW;1.0 EcoFuel 50 kW;e-up! 60 kW
+  Polo IV (9N)|2001|2009|1.2 40 kW;1.2 47 kW;1.4 16V 55 kW;1.4 16V 59 kW;1.6 16V 77 kW;1.4 TDI 51 kW;1.4 TDI 59 kW;1.9 SDI 47 kW;1.9 TDI 74 kW
+  Polo V (6R)|2009|2017|1.0 44 kW;1.0 55 kW;1.2 44 kW;1.2 51 kW;1.2 TSI 66 kW;1.2 TSI 77 kW;1.4 63 kW;1.4 TSI GTI 132 kW;1.6 77 kW;1.2 TDI 55 kW;1.4 TDI 66 kW;1.6 TDI 55 kW;1.6 TDI 66 kW;1.6 TDI 77 kW
+  Polo VI (AW)|2017|0|1.0 48 kW;1.0 59 kW;1.0 TSI 70 kW;1.0 TSI 85 kW;1.5 TSI 110 kW;2.0 TSI GTI 147 kW;1.6 TDI 59 kW;1.6 TDI 70 kW
+  Golf IV|1997|2006|1.4 55 kW;1.6 74 kW;1.6 77 kW;1.8 92 kW;1.8 T 110 kW;1.8 T GTI 132 kW;2.0 85 kW;2.3 V5 110 kW;2.8 VR6 150 kW;1.9 SDI 50 kW;1.9 TDI 66 kW;1.9 TDI 74 kW;1.9 TDI 81 kW;1.9 TDI 85 kW;1.9 TDI 96 kW
+  Golf V|2003|2009|1.4 55 kW;1.4 59 kW;1.4 FSI 66 kW;1.4 TSI 103 kW;1.4 TSI 125 kW;1.6 75 kW;1.6 FSI 85 kW;2.0 FSI 110 kW;2.0 TFSI GTI 147 kW;3.2 R32 184 kW;1.9 TDI 66 kW;1.9 TDI 77 kW;2.0 TDI 103 kW;2.0 TDI 125 kW
+  Golf VI|2008|2013|1.2 TSI 63 kW;1.2 TSI 77 kW;1.4 59 kW;1.4 TSI 90 kW;1.4 TSI 118 kW;1.6 75 kW;2.0 TSI GTI 155 kW;2.0 TSI R 188 kW;1.6 TDI 66 kW;1.6 TDI 77 kW;2.0 TDI 81 kW;2.0 TDI 103 kW;2.0 TDI GTD 125 kW
+  Golf VII|2012|2020|1.0 TSI 63 kW;1.0 TSI 85 kW;1.2 TSI 63 kW;1.2 TSI 77 kW;1.2 TSI 81 kW;1.4 TSI 90 kW;1.4 TSI 103 kW;1.4 TSI 110 kW;1.5 TSI 96 kW;1.5 TSI 110 kW;2.0 TSI GTI 162 kW;2.0 TSI R 221 kW;1.6 TDI 66 kW;1.6 TDI 81 kW;2.0 TDI 110 kW;2.0 TDI 135 kW;e-Golf 100 kW
+  Golf VIII|2019|0|1.0 TSI 66 kW;1.0 TSI 81 kW;1.5 TSI 96 kW;1.5 TSI 110 kW;2.0 TSI GTI 180 kW;2.0 TSI R 235 kW;2.0 TDI 85 kW;2.0 TDI 110 kW
+  Passat B5|1996|2005|1.6 75 kW;1.8 92 kW;1.8 T 110 kW;2.0 85 kW;2.8 V6 142 kW;1.9 TDI 66 kW;1.9 TDI 85 kW;1.9 TDI 96 kW;2.5 TDI 110 kW
+  Passat B6|2005|2010|1.4 TSI 90 kW;1.6 75 kW;1.6 FSI 85 kW;1.8 TSI 118 kW;2.0 FSI 110 kW;2.0 TFSI 147 kW;3.2 V6 184 kW;1.6 TDI 77 kW;1.9 TDI 77 kW;2.0 TDI 81 kW;2.0 TDI 103 kW;2.0 TDI 125 kW
+  Passat B7|2010|2014|1.4 TSI 90 kW;1.8 TSI 118 kW;3.6 V6 220 kW;1.6 TDI 77 kW;2.0 TDI 81 kW;2.0 TDI 103 kW;2.0 TDI 125 kW
+  Passat B8|2014|0|1.4 TSI 92 kW;1.4 TSI 110 kW;1.5 TSI 110 kW;1.8 TSI 132 kW;2.0 TSI 162 kW;2.0 TSI 206 kW;1.6 TDI 88 kW;2.0 TDI 110 kW;2.0 TDI 140 kW;2.0 TDI 176 kW;1.4 TSI GTE 160 kW
+  Arteon|2017|0|1.5 TSI 110 kW;2.0 TSI 140 kW;2.0 TSI 206 kW;2.0 TDI 110 kW;2.0 TDI 140 kW;2.0 TDI 176 kW
+  Touran I|2003|2015|1.4 TSI 103 kW;1.4 TSI 125 kW;1.6 75 kW;1.6 FSI 85 kW;2.0 FSI 110 kW;1.6 TDI 66 kW;1.6 TDI 77 kW;1.9 TDI 66 kW;1.9 TDI 77 kW;2.0 TDI 81 kW;2.0 TDI 103 kW
+  Touran II (5T)|2015|0|1.2 TSI 81 kW;1.4 TSI 103 kW;1.5 TSI 110 kW;1.6 TDI 85 kW;2.0 TDI 90 kW;2.0 TDI 110 kW;2.0 TDI 135 kW
+  Tiguan I (5N)|2007|2016|1.4 TSI 110 kW;2.0 TSI 125 kW;2.0 TSI 132 kW;2.0 TSI 155 kW;2.0 TDI 81 kW;2.0 TDI 103 kW;2.0 TDI 110 kW;2.0 TDI 130 kW
+  Tiguan II (AD)|2016|0|1.4 TSI 92 kW;1.4 TSI 110 kW;1.5 TSI 96 kW;1.5 TSI 110 kW;2.0 TSI 132 kW;2.0 TSI 180 kW;2.0 TDI 85 kW;2.0 TDI 110 kW;2.0 TDI 140 kW;2.0 TDI 176 kW
+  T-Roc|2017|0|1.0 TSI 85 kW;1.5 TSI 110 kW;2.0 TSI 140 kW;2.0 TSI R 221 kW;1.6 TDI 85 kW;2.0 TDI 110 kW;2.0 TDI 140 kW
+  Caddy III|2004|2015|1.2 TSI 63 kW;1.4 59 kW;1.6 75 kW;1.6 TDI 55 kW;1.6 TDI 75 kW;1.9 SDI 51 kW;1.9 TDI 77 kW;2.0 TDI 81 kW;2.0 TDI 103 kW
+  Caddy IV|2015|2020|1.0 TSI 75 kW;1.4 TSI 92 kW;1.6 TDI 55 kW;1.6 TDI 75 kW;2.0 TDI 90 kW;2.0 TDI 110 kW
+  Transporter T5|2003|2015|2.0 85 kW;1.9 TDI 63 kW;1.9 TDI 77 kW;2.0 TDI 62 kW;2.0 TDI 75 kW;2.0 TDI 103 kW;2.0 BiTDI 132 kW;2.5 TDI 96 kW;2.5 TDI 128 kW
+  ID.3|2019|0|Pure 110 kW;Pro 150 kW;Pro S 150 kW;GTX 240 kW
+  ID.4|2020|0|Pure 109 kW;Pro 150 kW;GTX 220 kW
+Volvo
+  S40 II / V50|2004|2012|1.6 74 kW;1.8 92 kW;2.0 107 kW;2.4i 125 kW;T5 162 kW;1.6 D 80 kW;2.0 D 100 kW;D5 132 kW
+  S60 I|2000|2009|2.0 T 132 kW;2.4 103 kW;2.4 T5 191 kW;2.4 D5 120 kW
+  S60 II / V60|2010|2018|T3 112 kW;T5 180 kW;D2 84 kW;D4 120 kW
+  S80 II|2006|2016|2.5 T 147 kW;3.2 175 kW;D4 120 kW;D5 136 kW
+  V70 II|2000|2007|2.4 103 kW;2.4 T 147 kW;2.4 D5 120 kW
+  V70 III / XC70|2007|2016|T4 132 kW;D3 120 kW;D4 120 kW;D5 136 kW
+  V40|2012|2019|T2 90 kW;T3 112 kW;T4 132 kW;T5 187 kW;D2 84 kW;D3 110 kW
+  XC60 I|2008|2017|T5 180 kW;T6 224 kW;D3 120 kW;D4 133 kW;D5 158 kW
+  XC90 I|2002|2014|2.5 T 154 kW;3.2 175 kW;D5 136 kW`;
+var CATALOG={};
+(function(){var cur=null;CATRAW.split("\n").forEach(function(l){if(!l.trim())return;if(l.charAt(0)!==" "){cur=l.trim();CATALOG[cur]=[]}else{var p=l.trim().split("|");CATALOG[cur].push([p[0],Number(p[1]),Number(p[2]),p[3]?p[3].split(";"):[]])}})})();
+function fillForm(){
+  var br=$("f-brand").value,cm=$("f-model").value,ce=$("f-eng").value,cy=$("f-year").value;
+  var bl=Object.keys(CATALOG).sort(function(a,c){return a.localeCompare(c,"sk")});
+  $("f-brand").innerHTML='<option value="">Vyberte značku</option>'+bl.map(function(x){return'<option>'+esc(x)+'</option>'}).join("")+'<option value="Iná">Iná značka</option>';
+  $("f-brand").value=br;
+  var ms=CATALOG[br]||[];
+  $("f-model").innerHTML=modOpts("Neuvedený / viac modelov",ms);$("f-model").value=cm;$("f-model").disabled=!ms.length;
+  var m=ms.filter(function(x){return x[0]===$("f-model").value})[0];
+  $("f-eng").innerHTML=opts("Pasuje na všetky motorizácie",m?m[3]:[]);$("f-eng").value=ce;$("f-eng").disabled=!m;
+  $("f-year").innerHTML=opts("Neuvedený",yrs(m?m[1]:1995,m?m[2]:0));$("f-year").value=cy;
+}
+$("f-brand").onchange=fillForm;$("f-model").onchange=fillForm;
+$("facets").onclick=function(e){
+  var b=e.target.closest(".chip");if(!b)return;
+  if(b.hasAttribute("data-fc")){$("cat").value=b.getAttribute("data-fc");$("subsel").value=""}
+  else if(b.hasAttribute("data-fs")){var v=b.getAttribute("data-fs");$("subsel").value=$("subsel").value===v?"":v}
+  ren();
+};
+var view="pub",editId=null,sTab="over",csvItems=[];
+function mine(){return me?items.filter(function(i){return i.owner===me.email}):[]}
+function saveMine(){try{localStorage.setItem(KEY,JSON.stringify(items.filter(function(i){return i.owner})));return true}catch(e){return false}}
+function toast(t){var el=$("toast");el.textContent=t;el.classList.add("show");clearTimeout(window.__tt);window.__tt=setTimeout(function(){el.classList.remove("show")},3000)}
+function nz(s){return String(s==null?"":s).normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().trim()}
+function stLabel(s){return s==="sold"?"Predaný":s==="paused"?"Pozastavený":"Aktívny"}
+function stCls(s){return s==="sold"?"s":s==="paused"?"p":"a"}
+function showView(v){
+  if(v==="seller"&&(!me||me.role!=="seller"))v="pub";
+  view=v;$("pub").hidden=v!=="pub";$("sell").hidden=v!=="seller";
+  document.querySelector(".gs").style.display=v==="seller"?"none":"";
+  if(v==="seller"){$("sellHi").textContent="Prihlásený ako "+(me.name||me.email);setTab(editId!==null?"add":sTab)}
+  paint();window.scrollTo(0,0);
+}
+function setTab(t){
+  sTab=t;
+  ["over","list","add","csv","prof"].forEach(function(k){$("tab-"+k).hidden=k!==t});
+  Array.prototype.forEach.call(document.querySelectorAll("#stabs button"),function(b){b.setAttribute("aria-selected",b.getAttribute("data-tab")===t)});
+  if(!me)return;
+  if(t==="over")drawOver();
+  if(t==="list")drawMine();
+  if(t==="prof")fillProf();
+  if(t==="add"&&editId===null)prefillNew();
+}
+$("stabs").onclick=function(e){var b=e.target.closest("[data-tab]");if(!b)return;if(b.getAttribute("data-tab")!=="add"&&editId!==null){editId=null;resetForm()}setTab(b.getAttribute("data-tab"))};
+
+function drawOver(){
+  var m=mine(),st=function(i){return i.status||"active"};
+  var act=m.filter(function(i){return st(i)==="active"}).length,sold=m.filter(function(i){return st(i)==="sold"}).length,v=0,c=0;
+  m.forEach(function(i){v+=i.views||0;c+=i.calls||0});
+  $("tiles").innerHTML=[["Aktívne inzeráty",act],["Predané",sold],["Zobrazenia",v],["Odkryté telefóny",c]].map(function(t){return '<div class="tile"><span class="mute">'+t[0]+'</span><b>'+t[1]+'</b></div>'}).join("");
+  var nf=m.filter(function(i){return st(i)==="active"&&!(i.photos&&i.photos.length)}).length,al="";
+  if(!me.city||!me.tel)al+='<div class="warn">Doplňte v profile mesto a telefón, predvyplnia sa pri každom novom inzeráte. <button class="lnk2" data-go="prof">Otvoriť profil</button></div>';
+  if(nf)al+='<div class="warn">'+nf+' aktívnych inzerátov nemá fotky. <button class="lnk2" data-go="nofoto">Zobraziť</button></div>';
+  if(!m.length)al+='<div class="warn">Zatiaľ nemáte žiadne inzeráty. <button class="lnk2" data-go="add">Pridať prvý inzerát</button> alebo <button class="lnk2" data-go="csv">importovať CSV</button>. Chcete si portál len vyskúšať? <button class="lnk2" data-go="demo">Načítať ukážkové inzeráty</button>.</div>';
+  $("alerts").innerHTML=al;
+}
+$("alerts").onclick=function(e){var b=e.target.closest("[data-go]");if(!b)return;var g=b.getAttribute("data-go");if(g==="demo"){var seedItems=items.filter(function(x){return !x.owner}).slice(0,4),n0=Date.now();seedItems.forEach(function(x,k){items.unshift(Object.assign({},x,{owner:me.email,id:n0+k,t:n0+k,ago:0,views:0,calls:0,status:"active",seller:me.name||"Predajca",stype:me.type||"Predajca"}))});saveMine();fillAll();toast("Pridané ukážkové inzeráty. Môžete ich upraviť alebo zmazať.");setTab("list");return}
+  if(g==="nofoto"){$("sfilter").value="nofoto";setTab("list")}else setTab(g)};
+
+function mrow(i){
+  var s=i.status||"active",n=i.photos?i.photos.length:0,id=i.id;
+  var th=n?'<img alt="" src="'+phSrc(i,0)+'">':'<div class="nop">'+icon(catIcon(i.cat))+'</div>';
+  var acts='<button class="chip" data-act="edit" data-id="'+id+'">Upraviť</button>'+
+    (s==="active"?'<button class="chip" data-act="sold" data-id="'+id+'">Predané</button><button class="chip" data-act="pause" data-id="'+id+'">Pozastaviť</button>':'<button class="chip" data-act="act" data-id="'+id+'">Aktivovať</button>')+
+    '<button class="chip" data-act="dup" data-id="'+id+'">Duplikovať</button><button class="chip dgr" data-act="del" data-id="'+id+'">Zmazať</button>';
+  return '<article class="mrow"><div class="mth">'+th+'</div><div class="mb"><b>'+esc(i.name)+'</b><span class="mute">'+esc(i.brand+" "+(i.model||""))+(i.oem?" · OEM "+esc(i.oem):"")+'</span><span><span class="st '+stCls(s)+'">'+stLabel(s)+'</span> <span class="mute">'+(i.views||0)+' zobrazení · '+(i.calls||0)+' telefón</span></span></div><div class="mp">'+esc(i.price)+' €</div><div class="macts">'+acts+'</div></article>';
+}
+function drawMine(){
+  var q=nz($("sq").value),f=$("sfilter").value;
+  var m=mine().filter(function(i){
+    var s=i.status||"active";
+    if(f==="active"&&s!=="active")return false;
+    if(f==="paused"&&s!=="paused")return false;
+    if(f==="sold"&&s!=="sold")return false;
+    if(f==="nofoto"&&i.photos&&i.photos.length)return false;
+    return !q||nz(i.name+" "+i.brand+" "+i.model+" "+i.oem).indexOf(q)>-1;
+  }).sort(function(a,b){return b.t-a.t});
+  $("mlist").innerHTML=m.length?m.map(mrow).join(""):'<div class="empty">Nič sme nenašli. Pridajte inzerát alebo zmeňte filter.</div>';
+}
+$("sq").oninput=drawMine;$("sfilter").onchange=drawMine;
+$("mlist").onclick=function(e){
+  var b=e.target.closest("[data-act]");if(!b)return;
+  var id=Number(b.getAttribute("data-id")),a=b.getAttribute("data-act"),it=mine().filter(function(x){return x.id===id})[0];if(!it)return;
+  if(a==="edit"){startEdit(id);return}
+  if(a==="del"){if(!confirm("Zmazať inzerát „"+it.name+"“?"))return;items=items.filter(function(x){return x.id!==id});toast("Inzerát bol zmazaný.")}
+  else if(a==="dup"){var c=Object.assign({},it,{id:Date.now(),t:Date.now(),views:0,calls:0,status:"active",ago:0});items.unshift(c);toast("Inzerát bol duplikovaný. Upravte ho podľa potreby.")}
+  else{it.status=a==="sold"?"sold":a==="pause"?"paused":"active";toast("Stav inzerátu: "+stLabel(it.status)+".")}
+  saveMine();fillAll();drawMine();
+};
+
+function prefillNew(){if(!me)return;if(!$("f-city").value)$("f-city").value=me.city||"";if(!$("f-tel").value)$("f-tel").value=me.tel||""}
+function resetForm(){
+  editId=null;
+  ["f-name","f-oem","f-price","f-sub","f-desc","f-city","f-tel"].forEach(function(i){$(i).value=""});
+  $("f-brand").value="";$("f-model").value="";$("f-eng").value="";$("f-year").value="";
+  fits=[];upl=[];drawPv();drawFits();$("dcnt").textContent="0 / 1000";fillForm();prefillNew();
+  $("fh").textContent="Nový inzerát";$("save").textContent="Zverejniť inzerát";$("cancelEdit").hidden=true;$("msg").textContent="";
+}
+function startEdit(id){
+  var i=mine().filter(function(x){return x.id===id})[0];if(!i)return;
+  editId=id;
+  $("f-name").value=i.name;$("f-brand").value=i.brand;fillForm();$("f-model").value=i.mod||"";fillForm();$("f-eng").value=i.eng||"";$("f-year").value=i.year?String(i.year):"";
+  $("f-cat").value=i.cat;$("f-sub").value=i.sub||"";$("f-oem").value=i.oem||"";$("f-price").value=i.price;$("f-city").value=i.city||"";$("f-cond").value=i.cond;$("f-tel").value=i.tel||"";
+  $("f-desc").value=i.desc||"";$("dcnt").textContent=$("f-desc").value.length+" / 1000";$("f-war").value=i.war||"Bez záruky";$("f-ship").value=i.ship||"Len osobný odber";
+  upl=(i.photos||[]).slice();drawPv();fits=(i.fits||[]).slice();drawFits();
+  $("fh").textContent="Upraviť inzerát";$("save").textContent="Uložiť zmeny";$("cancelEdit").hidden=false;$("msg").textContent="";
+  setTab("add");window.scrollTo(0,0);
+}
+$("cancelEdit").onclick=function(){resetForm();setTab("list")};
+$("save").onclick=function(){
+  var n=$("f-name").value.trim(),b=$("f-brand").value.trim(),p=parseFloat($("f-price").value),msg=$("msg");
+  if(!n||!b||isNaN(p)||p<0){msg.textContent="Vyplňte názov dielu, značku a cenu.";return}
+  if(!me||me.role!=="seller"){msg.textContent="Inzeráty môžu pridávať len predajcovia.";return}
+  var md=$("f-model").value,yr=parseInt($("f-year").value)||0,en=$("f-eng").value;
+  var data={fits:fits.slice(),sub:$("f-sub").value.trim(),cat:$("f-cat").value,name:n,brand:b,mod:md,eng:en,year:yr,model:md+(en?" "+en:"")+(yr?", "+yr:""),oem:$("f-oem").value.trim(),price:p,city:$("f-city").value.trim()||me.city||"Slovensko",cond:$("f-cond").value,tel:$("f-tel").value.trim(),desc:$("f-desc").value.trim(),war:$("f-war").value,ship:$("f-ship").value,photos:upl.slice(),seller:me.name||me.email.split("@")[0],stype:me.type||"Predajca"};
+  var ok;
+  if(editId!==null){
+    var it=mine().filter(function(x){return x.id===editId})[0];if(!it)return;
+    for(var k in data)it[k]=data[k];
+    ok=saveMine();toast(ok?"Zmeny sú uložené.":"Zmeny sú uložené, ale fotky sa nezmestili do pamäte prehliadača.");
+  }else{
+    var ni=Object.assign({owner:me.email,id:Date.now(),t:Date.now(),ago:0,ver:0,status:"active",views:0,calls:0},data);
+    items.unshift(ni);ok=saveMine();
+    toast(ok?"Inzerát je zverejnený.":"Inzerát je zverejnený, ale fotky sa nezmestili do pamäte prehliadača a po obnovení zmiznú.");
+  }
+  resetForm();fillAll();setTab("list");
+};
+
+var SAMPLE="nazov;znacka;model;motorizacia;rocnik;oem;cena;kategoria;podkategoria;stav;zaruka;popis\nPredný nárazník;Škoda;Octavia III;;2016;5E0807221;90;Karoséria;Nárazníky;Veľmi dobrý;14 dní;Bez prasklín\nAlternátor 140A;Škoda;Octavia II;2.0 TDI 103 kW;2009;03G903023;55;Elektro;Alternátory;Dobrý;3 mesiace;Odskúšaný";
+$("csvPre").textContent=SAMPLE;
+function parseCSV(text){
+  text=text.replace(/^﻿/,"");
+  var first=text.split("\n")[0]||"",d=first.split(";").length>first.split(",").length?";":",";
+  var rows=[],row=[],f="",q=false;
+  for(var i=0;i<text.length;i++){
+    var c=text.charAt(i);
+    if(q){if(c==='"'){if(text.charAt(i+1)==='"'){f+='"';i++}else q=false}else f+=c}
+    else if(c==='"')q=true;
+    else if(c===d){row.push(f);f=""}
+    else if(c==="\n"){row.push(f);rows.push(row);row=[];f=""}
+    else if(c!=="\r")f+=c;
+  }
+  if(f!==""||row.length){row.push(f);rows.push(row)}
+  return rows.filter(function(r){return r.some(function(x){return x.trim()})});
+}
+function matchBrand(x){return Object.keys(CATALOG).filter(function(b){return nz(b)===nz(x)})[0]||""}
+function matchCat(x){var z=nz(x);for(var i=0;i<CATS.length;i++)if(nz(CATS[i][1])===z||CATS[i][0]===z)return CATS[i][0];return""}
+function csvPreview(text){
+  var rows=parseCSV(text),out=$("csvOut");csvItems=[];
+  if(rows.length<2){out.innerHTML='<div class="warn">Súbor je prázdny alebo nemá dátové riadky.</div>';return}
+  if(rows.length>501){out.innerHTML='<div class="warn">Súbor má viac ako 500 riadkov. Rozdeľte ho na menšie časti.</div>';return}
+  var head=rows[0].map(nz),C={};
+  ["nazov","znacka","model","motorizacia","rocnik","oem","cena","kategoria","podkategoria","stav","zaruka","popis","mesto","telefon"].forEach(function(k){C[k]=head.indexOf(k)});
+  if(C.nazov<0||C.znacka<0||C.cena<0||C.kategoria<0){out.innerHTML='<div class="warn">Chýbajú povinné stĺpce: nazov, znacka, cena, kategoria.</div>';return}
+  var errs=[],warns=0,now=Date.now();
+  rows.slice(1).forEach(function(r,k){
+    var g=function(key){return C[key]>-1?String(r[C[key]]||"").trim():""},e=[];
+    var name=g("nazov"),bIn=g("znacka"),price=parseFloat(g("cena").replace(",",".").replace(/[^\d.]/g,"")),cat=matchCat(g("kategoria"));
+    if(!name)e.push("chýba názov");
+    if(!bIn)e.push("chýba značka");
+    if(isNaN(price))e.push("neplatná cena");
+    if(!cat)e.push("neznáma kategória „"+g("kategoria")+"“");
+    if(e.length){errs.push("Riadok "+(k+2)+": "+e.join(", "));return}
+    var brand=matchBrand(bIn),w=false;if(!brand){brand=bIn;w=true}
+    var mIn=g("model"),m=(CATALOG[brand]||[]).filter(function(x){return nz(x[0])===nz(mIn)})[0],mod=m?m[0]:mIn;if(mIn&&!m)w=true;
+    var eIn=g("motorizacia"),en=eIn;if(m&&eIn){var ee=m[3].filter(function(x){return nz(x)===nz(eIn)})[0];if(ee)en=ee;else w=true}
+    var yr=parseInt(g("rocnik"))||0;if(m&&yr&&(yr<m[1]||yr>(m[2]||2026)))w=true;
+    var sv=nz(g("stav")),cond=sv.indexOf("oprav")>-1?"Na opravu":(sv.indexOf("ve")===0&&sv.indexOf("dobry")>-1)?"Veľmi dobrý":"Dobrý";
+    var zr=nz(g("zaruka")),war=zr.indexOf("3")>-1?"3 mesiace":zr.indexOf("14")>-1?"14 dní":"Bez záruky";
+    if(w)warns++;
+    csvItems.push({owner:me.email,id:now+k,t:now+k,ago:0,ver:0,status:"active",views:0,calls:0,cat:cat,sub:g("podkategoria"),name:name,brand:brand,mod:mod,eng:en,year:yr,model:mod+(en?" "+en:"")+(yr?", "+yr:""),oem:g("oem"),price:price,city:g("mesto")||me.city||"Slovensko",cond:cond,tel:g("telefon")||me.tel||"",desc:g("popis"),war:war,ship:"Len osobný odber",photos:[],seller:me.name||me.email.split("@")[0],stype:me.type||"Predajca"});
+  });
+  out.innerHTML='<div class="warn"><b>'+csvItems.length+' riadkov je pripravených na import</b>'+(errs.length?', '+errs.length+' s chybou sa neimportuje':'')+(warns?'. '+warns+' riadkov má značku, model, motorizáciu alebo ročník mimo katalógu. Importujú sa, ale nemusia sa nájsť pri hľadaní podľa auta':'')+'.</div>'+
+    (errs.length?'<ul class="errl">'+errs.slice(0,8).map(function(x){return '<li>'+esc(x)+'</li>'}).join("")+(errs.length>8?'<li>…a ďalších '+(errs.length-8)+'</li>':'')+'</ul>':'')+
+    (csvItems.length?'<button class="save" id="csvGo">Importovať '+csvItems.length+' inzerátov</button>':'');
+}
+$("csvFile").onchange=function(){var f=this.files[0];if(!f)return;var r=new FileReader();r.onload=function(){csvPreview(String(r.result))};r.readAsText(f,"utf-8")};
+$("csvOut").onclick=function(e){
+  if(!e.target.closest("#csvGo"))return;
+  var n=csvItems.length;items.unshift.apply(items,csvItems);
+  var ok=saveMine();csvItems=[];$("csvOut").innerHTML="";$("csvFile").value="";
+  toast(ok?"Importovaných inzerátov: "+n+".":"Importovaných inzerátov: "+n+". Nezmestili sa do pamäte prehliadača a po obnovení zmiznú.");
+  fillAll();setTab("list");
+};
+
+function fillProf(){$("p-mail").value=me.email;$("p-name").value=me.name||"";$("p-type").value=me.type||"Firma";$("p-city").value=me.city||"";$("p-tel").value=me.tel||"";$("p-ico").value=me.ico||"";$("p-msg").textContent=""}
+$("p-save").onclick=function(){
+  me.name=$("p-name").value.trim();me.type=$("p-type").value;me.city=$("p-city").value.trim();me.tel=$("p-tel").value.trim();me.ico=$("p-ico").value.trim();
+  try{localStorage.setItem(SESS,JSON.stringify(me));var us=getU();us.forEach(function(u){if(u.email===me.email){u.name=me.name;u.type=me.type;u.city=me.city;u.tel=me.tel;u.ico=me.ico}});localStorage.setItem(USERS,JSON.stringify(us))}catch(x){}
+  mine().forEach(function(i){i.seller=me.name||me.email.split("@")[0];i.stype=me.type});saveMine();
+  $("sellHi").textContent="Prihlásený ako "+(me.name||me.email);paint();toast("Profil je uložený.");
+};
+
+var fits=[];
+function drawFits(){$("fitList").innerHTML=fits.map(function(f,k){var a=f.split("|");return '<span class="chip">'+esc(a[0]+" "+a[1]+(a[2]?" · "+a[2]:" · všetky motory"))+'<button type="button" data-fx="'+k+'" aria-label="Odstrániť">×</button></span>'}).join("")}
+function fillFits(){
+  var b=$("f-fb").value,m=$("f-fm").value;
+  var bl=Object.keys(CATALOG).sort(function(a,c){return a.localeCompare(c,"sk")});
+  $("f-fb").innerHTML='<option value="">Značka</option>'+bl.map(function(x){return '<option>'+esc(x)+'</option>'}).join("");$("f-fb").value=b;
+  var ms=CATALOG[$("f-fb").value]||[];
+  $("f-fm").innerHTML=modOpts("Model",ms);$("f-fm").value=m;$("f-fm").disabled=!ms.length;
+  var mm=ms.filter(function(x){return x[0]===$("f-fm").value})[0];
+  $("f-fe").innerHTML=opts("Všetky motorizácie",mm?mm[3]:[]);$("f-fe").disabled=!mm;
+}
+$("f-fb").onchange=function(){$("f-fm").value="";fillFits()};
+$("f-fm").onchange=fillFits;
+$("f-fadd").onclick=function(){
+  if(!$("f-fb").value||!$("f-fm").value){toast("Vyberte značku a model.");return}
+  var v=$("f-fb").value+"|"+$("f-fm").value+"|"+$("f-fe").value;
+  if(fits.indexOf(v)<0)fits.push(v);drawFits();
+};
+$("fitList").onclick=function(e){var b=e.target.closest("[data-fx]");if(!b)return;fits.splice(Number(b.getAttribute("data-fx")),1);drawFits()};
+fillFits();
+$("addSlot").appendChild($("form"));$("form").classList.add("open");
+fillForm();fillAll();drawQb();paint();
+</script>
+</body>
+</html>
