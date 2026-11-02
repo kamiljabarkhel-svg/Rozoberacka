@@ -3,6 +3,7 @@
 Hlavná verzia denníka je v Claude Docs „Rozoberačka – denník stavby“. Tento súbor je jeho pracovná kópia pre agenta Dirigent.
 
 ## Otvorené úlohy
+- [ ] P2 Web: funkcie podľa konkurencie a formulár/nástenka predajcu (CLAUDE.md) – zatiaľ len v prototype
 - [ ] P2 Doplniť do databázy stĺpce a tabuľku `messages` pre nové funkcie (CLAUDE.md, sekcia Funkcie podľa konkurencie)
 - [ ] P3 Neskôr zvážiť: online platby a doručenie cez portál, platforma pre servisy, blog s radami k modelom, newsletter
 - [ ] P1 Po založení Supabase: doplniť `web/.env.local` a overiť web so skutočnou databázou (zatiaľ vyskúšaný len ukážkový režim)
@@ -32,6 +33,7 @@ Hlavná verzia denníka je v Claude Docs „Rozoberačka – denník stavby“. 
 ## Denník
 | Kedy | Čo sme urobili | Čo to znamená |
 | --- | --- | --- |
+| 2. 11. 2026, 21:02 | Web v `web/` upravený podľa „Tvar dizajnu“ (rovnako ako prototyp): rohy najviac 6 px (karty a panely 6 px, tlačidlá, polia, chipy, štítky 3–4 px), žiadne pilulky okrem bodiek stavu, karty bez tieňa a bez dvíhania (pri prejdení myšou sa zmení len farba okraja), úvodný pás jednofarebný bez farebných škvŕn. Zmenený len `web/app/globals.css`. Build, tsc, eslint bez chýb; kontrola v prehliadači (svetlý aj tmavý režim, mobil 390 px): žiadny roh nad 6 px okrem bodiek stavu, karty bez tieňa, karta pri prejdení myšou bez posunu. Statický náhľad znova vyrobený | Ostrý web vyzerá rovnako „hranato“ ako prototyp |
 | 2. 11. 2026, 18:09 | Dizajn menej zaoblený: rohy najviac 6 px, bez tieňov pod kartami, bez dvíhania kariet, rovný úvodný pás | Platí pre ostrý web (CLAUDE.md, Tvar dizajnu) |
 | 2. 11. 2026, 18:01 | Prototyp: oprava TOP inzerátov prilepených pri scrollovaní, povinné polia vo formulári predajcu (OEM, značka, model, ročník, fotka, popis…), nová nástenka predajcu s číslami, grafom a úlohami, hromadné akcie v Mojich inzerátoch | Ostrá verzia podľa CLAUDE.md, sekcia Formulár predajcu a nástenka |
 | 2. 11. 2026, 17:46 | Analýza konkurencie (RRR.lt/Ovoko, Opisto, Autobazar.sk) a 9 nových funkcií v prototype: OEM hľadanie, najhľadanejšie diely, počítadlo, nové polia (strana, km, odskúšané, vrátenie), uložené hľadanie, správa predajcovi, zdieľanie odkazu, TOP, bezpečné mazanie | Ostrá verzia má podľa CLAUDE.md tieto funkcie mať tiež |
