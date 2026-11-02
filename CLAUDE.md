@@ -113,3 +113,10 @@ Vzor je v `prototyp.html`.
 - **Moje inzeráty**: hromadný výber a akcie (aktivovať, pozastaviť, predané, zmazať s potvrdením), triedenie (najnovšie, zobrazenia, telefóny, cena), filtre aj „bez OEM“ a „bez popisu“.
 - Na počítači má portál bočné menu, na mobile záložky hore. Vstup: tlačidlo „Prihlásenie predajcu“ v hlavičke a odkaz „Vytvorte si účet predajcu zadarmo“ na úvode.
 - Chyba z prototypu, nesmie sa zopakovať: CSS trieda `top` bola použitá aj pre hlavičku aj pre TOP inzerát, takže TOP inzeráty ostávali prilepené pri scrollovaní. Používať jednoznačné názvy tried (napr. `is-top`).
+
+## Tvar dizajnu (2. 11. 2026, 18:09)
+Majiteľ nechce zaoblený „AI“ vzhľad. Platí pre celý web:
+- Zaoblenie rohov najviac 6 px: karty a panely 6 px, tlačidlá, polia a štítky 3 až 4 px. Žiadne pilulky (border-radius 99px) okrem bodiek stavu.
+- Karty bez tieňov, len tenký okraj; pri prejdení myšou sa zmení farba okraja, karta sa nedvíha.
+- Úvodný pás jednofarebný (tmavá modrozelená, jemný prechod zhora nadol), bez farebných škvŕn.
+- Vzor je v `prototyp.html`.
