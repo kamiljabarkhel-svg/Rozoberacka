@@ -25,7 +25,7 @@ Hlavná verzia denníka je v Claude Docs „Rozoberačka – denník stavby“. 
 - [ ] P2 Vyskúšať nahrávanie fotiek, import CSV a tmavý režim
 - [x] P2 Overiť vzhľad so skutočnými písmami (Sora, Manrope) – web ich má v sebe (@fontsource)
 - [ ] P2 Ochrana proti spamu, nahlasovanie inzerátov
-- [ ] P3 CSV import: stĺpec „pasuje na“
+- [x] P3 CSV import: stĺpec „pasuje na“ (hotové 22:00)
 - [ ] P3 Zarábanie: zvýraznenie inzerátov, predplatné pre firmy (TOP inzerát vo webe: trieda `is-top`, nie `top` – hlavička je už `site-header`)
 - [ ] P3 Hodnotenie predajcov
 - [ ] P3 Plné dekódovanie VIN (platená služba)
@@ -33,6 +33,7 @@ Hlavná verzia denníka je v Claude Docs „Rozoberačka – denník stavby“. 
 ## Denník
 | Kedy | Čo sme urobili | Čo to znamená |
 | --- | --- | --- |
+| 2. 11. 2026, 22:00 | Supabase nasadená a overená: katalóg 6 značiek / 98 modelov / 706 motorizácií, 11 kategórií, `04_funkcie.sql` (nové stĺpce strana, prevodovka, km, odskúšaný, vrátenie, TOP, výrobca dielu; povinné polia aj v databáze; tabuľka `messages`; funkcie `send_message` a `public_stats`). RLS zapnuté na všetkých 12 tabuľkách, bucket `listing-photos` verejný na čítanie. Test cez verejný kľúč: katalóg sa číta, telefóny, správy a súkromné údaje predajcov sa nedajú prečítať, zápis bez prihlásenia zamietnutý. Web: portál predajcu (`/pre-predajcov` prihlásenie a registrácia, `/predajca` Nástenka, Moje inzeráty s hromadnými akciami, formulár v 5 krokoch s povinnými poľami a fotkami do Storage, Import CSV so stĺpcom `pasuje`, Správy, Profil, TOP na 30 dní), na verejnej časti správa predajcovi, zdieľanie, štítky a filtre strana/odskúšané/vrátenie, OEM hľadanie, najhľadanejšie diely, počítadlo. Build, tsc, eslint bez chýb | Web je pripravený na zverejnenie na Verceli; ostáva nasadenie a skúška celého postupu predajcu a kupujúceho |
 | 2. 11. 2026, 21:16 | Web: hlavička premenovaná z CSS triedy `top` na `site-header` (`web/components/Header.tsx`, `web/app/globals.css`). Overené: build, tsc, eslint bez chýb; v prehliadači na 1280 a 390 px je hlavička `header.site-header`, prilepená hore (sticky), vyzerá rovnako, žiadny prvok s triedou `top`, konzola bez chýb | Rovnaká chyba ako v prototype sa nezopakuje: budúci TOP inzerát použije triedu `is-top` (CLAUDE.md, pravidlo o názvoch tried) |
 | 2. 11. 2026, 21:02 | Web v `web/` upravený podľa „Tvar dizajnu“ (rovnako ako prototyp): rohy najviac 6 px (karty a panely 6 px, tlačidlá, polia, chipy, štítky 3–4 px), žiadne pilulky okrem bodiek stavu, karty bez tieňa a bez dvíhania (pri prejdení myšou sa zmení len farba okraja), úvodný pás jednofarebný bez farebných škvŕn. Zmenený len `web/app/globals.css`. Build, tsc, eslint bez chýb; kontrola v prehliadači (svetlý aj tmavý režim, mobil 390 px): žiadny roh nad 6 px okrem bodiek stavu, karty bez tieňa, karta pri prejdení myšou bez posunu. Statický náhľad znova vyrobený | Ostrý web vyzerá rovnako „hranato“ ako prototyp |
 | 2. 11. 2026, 18:09 | Dizajn menej zaoblený: rohy najviac 6 px, bez tieňov pod kartami, bez dvíhania kariet, rovný úvodný pás | Platí pre ostrý web (CLAUDE.md, Tvar dizajnu) |

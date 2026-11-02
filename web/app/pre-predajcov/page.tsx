@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import SellersSoon from "@/components/SellersSoon";
+import Auth from "@/components/seller/Auth";
 
-export const metadata: Metadata = { title: "Pre predajcov – Rozoberačka" };
+export const metadata: Metadata = { title: "Prihlásenie predajcu – Rozoberačka" };
 
 export default function Page() {
-  return <main id="main"><SellersSoon /></main>;
+  return <main id="main" className="main"><Auth /></main>;
 }

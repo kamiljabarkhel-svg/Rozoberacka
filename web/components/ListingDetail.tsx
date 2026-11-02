@@ -11,6 +11,8 @@ import { Icon, catIcon } from "./Icons";
 import PhoneButton from "./PhoneButton";
 import ListingLink from "./ListingLink";
 import Link from "next/link";
+import Tags from "./Tags";
+import ContactBox from "./ContactBox";
 
 type State =
   | { st: "loading" }
@@ -78,6 +80,12 @@ export default function ListingDetail({ id, onClose }: { id: number; onClose?: (
     ["Ročník", l.year ? String(l.year) : "neuvedené"], ["OEM číslo", l.oem || "neuvedené"], ["Kategória", cName + (sName ? " · " + sName : "")],
     ["Stav", l.condition], ["Záruka", l.warranty || "Bez záruky"], ["Zasielanie", l.shipping || "Len osobný odber"], ["Mesto", l.city || "neuvedené"],
   ];
+  if (l.side) rows.splice(5, 0, ["Strana auta", l.side]);
+  if (l.partMaker) rows.splice(5, 0, ["Výrobca dielu", l.partMaker]);
+  if (l.gearbox) rows.push(["Prevodovka auta", l.gearbox]);
+  if (l.km) rows.push(["Najazdené km auta", l.km.toLocaleString("sk-SK") + " km"]);
+  rows.push(["Odskúšaný", l.tested ? "Áno, podľa predajcu" : "Neuvedené"]);
+  rows.push(["Vrátenie", l.returns14 ? "Do 14 dní, ak diel nepasuje" : "Podľa dohody s predajcom"]);
   const groups = groupVehicles(vehicles, cat);
 
   return (
@@ -113,6 +121,8 @@ export default function ListingDetail({ id, onClose }: { id: number; onClose?: (
             <PhoneButton id={l.id} />
             <button className="fav" aria-pressed={fav} onClick={() => toggle(l.id)}>{fav ? "♥" : "♡"} Obľúbené</button>
           </div>
+          <ContactBox id={l.id} name={l.name} seller={l.seller.name} />
+          <Tags l={l} />
           <div className="seller">
             <b>{l.seller.name}{l.seller.verified && <span className="bdg">Overený predajca</span>}</b>
             <span className="mute">{l.seller.type} · {l.seller.city || l.city}</span>

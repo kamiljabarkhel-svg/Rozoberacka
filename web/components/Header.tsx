@@ -4,6 +4,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Icon } from "./Icons";
 import { STATIC_PREVIEW, homeHref, sellersHref } from "@/lib/paths";
+import { getSession, onAuthChange } from "@/lib/seller";
 
 /** Hlavička: logo, hľadanie (na úvode filtruje hneď), „Pre predajcov“. */
 export default function Header() {
@@ -11,6 +12,8 @@ export default function Header() {
   const router = useRouter();
   const onHome = STATIC_PREVIEW || path === "/";
   const [q, setQ] = useState("");
+  const [logged, setLogged] = useState(false);
+  useEffect(() => { getSession().then((x) => setLogged(!!x)).catch(() => {}); return onAuthChange((x) => setLogged(!!x)); }, []);
 
   useEffect(() => {
     try { setQ(new URLSearchParams(window.location.search).get("q") || ""); } catch {}
@@ -35,7 +38,7 @@ export default function Header() {
           <button type="submit" aria-label="Hľadať"><Icon id="i-q" /></button>
         </form>
         <div id="user">
-          {STATIC_PREVIEW ? <a className="ubtn" href={sellersHref}>Pre predajcov</a> : <Link className="ubtn" href={sellersHref}>Pre predajcov</Link>}
+          {STATIC_PREVIEW ? <a className="ubtn" href={sellersHref}>Prihlásenie predajcu</a> : <Link className="ubtn" href={logged ? "/predajca" : sellersHref}>{logged ? "Portál predajcu" : "Prihlásenie predajcu"}</Link>}
         </div>
       </div>
     </header>

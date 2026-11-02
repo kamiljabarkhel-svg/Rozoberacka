@@ -4,21 +4,22 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { Catalog, Filters, Listing } from "@/lib/types";
 import { emptyFilters } from "@/lib/types";
-import { getActiveListings, getCatalog, initialData } from "@/lib/data";
+import { getActiveListings, getCatalog, getStats, initialData } from "@/lib/data";
 import { search } from "@/lib/search";
 import { decodeVin } from "@/lib/vin";
 import { pieces, sk } from "@/lib/format";
 import { useFavs } from "@/lib/favs";
-import { STATIC_PREVIEW } from "@/lib/paths";
+import { STATIC_PREVIEW, sellersHref } from "@/lib/paths";
 import { Icon, catIcon } from "./Icons";
 import ListingCard from "./ListingCard";
 import ListingDetail from "./ListingDetail";
 import SellersSoon from "./SellersSoon";
 
 const PAGE = 8;
+const POP = ["Predné svetlo", "Zadné svetlo", "Nárazník", "Kapota", "Zrkadlo", "Dvere", "Riadiaca jednotka", "Alternátor", "Turbo", "Motor", "Prevodovka", "Volant"];
 
 // Krátke názvy parametrov v adrese
-const P = { q: "q", brand: "znacka", model: "model", engine: "motor", year: "rok", cat: "kat", sub: "pod", max: "cena", cond: "stav", city: "mesto", sort: "zoradit", fav: "oblubene" } as const;
+const P = { q: "q", brand: "znacka", model: "model", engine: "motor", year: "rok", cat: "kat", sub: "pod", max: "cena", cond: "stav", city: "mesto", sort: "zoradit", fav: "oblubene", side: "strana", tested: "odskusane", ret: "vratenie" } as const;
 
 function readUrl(): Filters {
   const f = { ...emptyFilters };
@@ -31,6 +32,8 @@ function readUrl(): Filters {
   f.cond = s.get(P.cond) || ""; f.city = s.get(P.city) || "";
   const so = s.get(P.sort); f.sort = so === "asc" || so === "desc" ? so : "new";
   f.fav = s.get(P.fav) === "1";
+  const sd = s.get(P.side); f.side = sd === "Ľavá" || sd === "Pravá" ? sd : "";
+  f.tested = s.get(P.tested) === "1"; f.ret = s.get(P.ret) === "1";
   return f;
 }
 
@@ -41,7 +44,7 @@ function writeUrl(f: Filters) {
   put(P.q, f.q.trim()); put(P.brand, f.brand); put(P.model, f.model); put(P.engine, f.engine); put(P.year, f.year);
   put(P.cat, f.cat); put(P.sub, f.sub); put(P.max, f.max); put(P.cond, f.cond); put(P.city, f.city);
   if (f.sort !== "new") put(P.sort, f.sort);
-  put(P.fav, f.fav);
+  put(P.fav, f.fav); put(P.side, f.side); put(P.tested, f.tested); put(P.ret, f.ret);
   const qs = s.toString();
   const url = window.location.pathname + (qs ? "?" + qs : "") + window.location.hash;
   window.history.replaceState(window.history.state, "", url);
@@ -59,6 +62,8 @@ export default function Home() {
   const [vinCat, setVinCat] = useState("");
   const [vinMsg, setVinMsg] = useState("");
   const [hash, setHash] = useState("");
+  const [stats, setStats] = useState<{ parts: number; sellers: number } | null>(null);
+  const [oemQ, setOemQ] = useState("");
   const { favs, toggle } = useFavs();
   const ready = useRef(false);
   const resRef = useRef<HTMLDivElement>(null);
@@ -74,11 +79,16 @@ export default function Home() {
     return () => { off = true; };
   }, [init]);
 
+  useEffect(() => {
+    if (!listings.length && !init) return;
+    getStats(listings).then(setStats).catch(() => setStats(null));
+  }, [listings, init]);
+
   // Filtre z adresy pri otvorení
   useEffect(() => {
     const u = readUrl();
     setF(u);
-    if (u.sub != null || u.year != null || u.max != null || u.cond || u.city || u.sort !== "new") setAdv(true);
+    if (u.sub != null || u.year != null || u.max != null || u.cond || u.city || u.sort !== "new" || u.side || u.tested || u.ret) setAdv(true);
     ready.current = true;
     if (window.location.hash === "#vysledky") setTimeout(() => resRef.current?.scrollIntoView({ block: "start" }), 50);
   }, []);
@@ -153,11 +163,13 @@ export default function Home() {
       <section className="hero"><div className="in"><span id="main" />
         <h1>Použité autodiely presne na vaše auto</h1>
         <p className="sub">Vyberte značku, model a motorizáciu a uvidíte len diely, ktoré naň pasujú. Predajcov kontaktujete bez registrácie.</p>
+        {stats && <p className="stats"><b>{stats.parts.toLocaleString("sk-SK")}</b> {stats.parts === 1 ? "diel" : stats.parts >= 2 && stats.parts <= 4 ? "diely" : "dielov"} od <b>{stats.sellers}</b> {stats.sellers === 1 ? "predajcu" : "predajcov"} na jednom mieste</p>}
         <div className="qb" aria-label="Najčastejšie značky">
           {quick.map((b) => (
             <button key={b.id} className="chip" onClick={() => { set({ brand: b.id, model: null, engine: null, year: null }); panelRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }); }}>{b.name}</button>
           ))}
         </div>
+        <p className="sellcta">Predávate diely z vrakoviska alebo servisu? <a href={STATIC_PREVIEW ? sellersHref : "/pre-predajcov?registracia=1"}>Vytvorte si účet predajcu zadarmo</a></p>
       </div></section>
 
       <div className="wrap">
@@ -218,7 +230,18 @@ export default function Home() {
                 {opt("new", "Najnovšie")}{opt("asc", "Najlacnejšie")}{opt("desc", "Najdrahšie")}
               </select>
             </label>
+            <label>Strana
+              <select value={f.side} onChange={(e) => set({ side: e.target.value })}>
+                {opt("", "Ľavá aj pravá")}{opt("Ľavá", "Ľavá")}{opt("Pravá", "Pravá")}
+              </select>
+            </label>
+            <label className="chk"><input type="checkbox" checked={f.tested} onChange={(e) => set({ tested: e.target.checked })} /> Len odskúšané diely</label>
+            <label className="chk"><input type="checkbox" checked={f.ret} onChange={(e) => set({ ret: e.target.checked })} /> Len s možnosťou vrátenia</label>
           </div>
+          <form className="oemrow" onSubmit={(e) => { e.preventDefault(); if (!oemQ.trim()) return; set({ q: oemQ.trim() }); window.dispatchEvent(new CustomEvent("rz-q-set", { detail: oemQ.trim() })); setTimeout(toRes, 30); }}>
+            <label>Číslo dielu (OEM)<input value={oemQ} onChange={(e) => setOemQ(e.target.value)} placeholder="napr. 03G903023 alebo 5E0 807 221" autoComplete="off" /></label>
+            <button className="btn2" type="submit">Hľadať podľa čísla</button>
+          </form>
           <div className="pa">
             <button className="lnk" aria-expanded={adv} onClick={() => setAdv(!adv)}>Rozšírené hľadanie</button>
             <button className="btn" onClick={toRes}>Hľadať</button>
@@ -241,6 +264,10 @@ export default function Home() {
           <p>VIN nájdete v osvedčení o evidencii (časť I, pole E) a na štítku pri čelnom skle. Z VIN prečítame značku a približný ročník. Model a motorizáciu vyberte v paneli vyššie. Podľa ŠPZ nehľadáme.</p>
           <p className="vmsg" role="status">{vinMsg}</p>
         </section>
+
+        <div className="pop"><h2 className="sh">Najhľadanejšie diely</h2><div className="chips">
+          {POP.map((p) => <button key={p} className="chip" onClick={() => { set({ q: p }); window.dispatchEvent(new CustomEvent("rz-q-set", { detail: p })); setTimeout(toRes, 30); }}>{p}</button>)}
+        </div></div>
 
         <div id="vysledky" ref={resRef} className="head">
           <span className="cnt" aria-live="polite">{res ? pieces(res.total) : "Načítavam…"}</span>

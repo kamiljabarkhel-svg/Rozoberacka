@@ -66,6 +66,7 @@ function photoUrl(path: string): string {
 
 const LISTING_COLS =
   "id,name,brand_id,model_id,engine_id,year,category_id,subcategory_id,oem,price,city,condition,description,warranty,shipping,created_at," +
+  "side,donor_gearbox,donor_km,tested,returns_14d,top_until,part_maker," +
   "sellers(name,seller_type,city,verified),listing_photos(path,position),listing_fits(brand_id,model_id,engine_id)";
 
 function toListing(r: Row): Listing {
@@ -81,6 +82,9 @@ function toListing(r: Row): Listing {
     photos: photos.map((p) => photoUrl(String(p.path))),
     fits: ((r.listing_fits || []) as Row[]).map((f) => ({ brandId: f.brand_id as number, modelId: (f.model_id as number) ?? null, engineId: (f.engine_id as number) ?? null })),
     seller: { name: String(s.name || "Predajca"), type: String(s.seller_type || "Firma"), city: (s.city as string) ?? null, verified: Boolean(s.verified) },
+    side: (r.side as Listing["side"]) ?? null, gearbox: (r.donor_gearbox as string) ?? null, km: (r.donor_km as number) ?? null,
+    tested: Boolean(r.tested), returns14: Boolean(r.returns_14d),
+    top: !!r.top_until && Date.parse(String(r.top_until)) > Date.now(), partMaker: (r.part_maker as string) ?? null,
   };
 }
 
@@ -152,6 +156,22 @@ export async function logView(id: number): Promise<void> {
   if (IS_DEMO) return;
   const { error } = await client().rpc("log_view", { p_listing: id });
   if (error) console.warn("log_view:", error.message);
+}
+
+/** Počet aktívnych dielov a predajcov (číslo na úvode). */
+export async function getStats(listings: Listing[]): Promise<{ parts: number; sellers: number }> {
+  if (IS_DEMO) return { parts: listings.length, sellers: new Set(listings.map((l) => l.seller.name)).size };
+  const { data, error } = await client().rpc("public_stats");
+  if (error) throw new Error("public_stats: " + error.message);
+  const r = ((data || []) as Row[])[0] || {};
+  return { parts: Number(r.parts || 0), sellers: Number(r.sellers || 0) };
+}
+
+/** Správa predajcovi od kupujúceho (bez účtu). V databáze cez funkciu send_message s obmedzením počtu. */
+export async function sendMessage(id: number, name: string, contact: string, body: string): Promise<void> {
+  if (IS_DEMO) return;
+  const { error } = await client().rpc("send_message", { p_listing: id, p_name: name, p_contact: contact, p_body: body });
+  if (error) throw new Error(error.message);
 }
 
 /** Id ukážkových inzerátov (pre statické stránky detailu). */

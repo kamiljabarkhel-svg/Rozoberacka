@@ -72,10 +72,13 @@ export function search(listings: Listing[], f: Filters, cat: Catalog, favs: numb
     if (f.city && l.city !== f.city) return false;
     if (f.max != null && l.price > f.max) return false;
     if (f.fav && !favs.includes(l.id)) return false;
+    if (f.side && l.side && l.side !== f.side) return false;
+    if (f.tested && !l.tested) return false;
+    if (f.ret && !l.returns14) return false;
     if (q) {
       const h = norm([l.name, brandName.get(l.brandId ?? -1) || "", modelName.get(l.modelId ?? -1) || "", l.oem || "", l.city || "",
         subName.get(l.subcategoryId ?? -1) || "", l.description || ""].join(" "));
-      if (!h.includes(q) && !(oemKey(f.q).length >= OEM_MIN && oemKey(l.oem) === oemKey(f.q))) return false;
+      if (!h.includes(q) && !(oemKey(f.q).length >= OEM_MIN && oemKey(l.oem).includes(oemKey(f.q)))) return false;
     }
     return true;
   };
@@ -90,7 +93,7 @@ export function search(listings: Listing[], f: Filters, cat: Catalog, favs: numb
   }
   if (f.sort === "asc") items.sort((a, b) => a.price - b.price);
   else if (f.sort === "desc") items.sort((a, b) => b.price - a.price);
-  else items.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+  else items.sort((a, b) => Number(b.top) - Number(a.top) || b.createdAt.localeCompare(a.createdAt));
   return { items, total: items.length, facets: { cat: catCount, sub: subCount, base: base.length } };
 }
 

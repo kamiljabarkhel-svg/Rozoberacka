@@ -41,6 +41,13 @@ export type Listing = {
   photos: string[]; // úplné adresy obrázkov, prvá je hlavná
   fits: Vehicle[]; // „Pasuje aj na“ zadané predajcom
   seller: Seller;
+  side: "Ľavá" | "Pravá" | null;
+  gearbox: string | null;   // prevodovka auta, z ktorého je diel
+  km: number | null;        // najazdené km auta
+  tested: boolean;          // odskúšaný podľa predajcu
+  returns14: boolean;       // vrátenie do 14 dní
+  top: boolean;             // zvýraznený (TOP) inzerát
+  partMaker: string | null; // výrobca dielu (Bosch, Valeo…)
 };
 
 export type Filters = {
@@ -56,9 +63,12 @@ export type Filters = {
   city: string;
   sort: "new" | "asc" | "desc";
   fav: boolean;
+  side: string;
+  tested: boolean;
+  ret: boolean;
 };
 
 export const emptyFilters: Filters = {
   q: "", brand: null, model: null, engine: null, year: null, cat: "", sub: null,
-  max: null, cond: "", city: "", sort: "new", fav: false,
+  max: null, cond: "", city: "", sort: "new", fav: false, side: "", tested: false, ret: false,
 };

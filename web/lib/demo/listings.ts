@@ -39,6 +39,13 @@ const RAW: Raw[] = [
     desc: "Ukážkový inzerát bez OEM čísla a bez fotky." },
 ];
 
+// Doplnkové údaje ako v prototype (strana, prevodovka, km, odskúšané, vrátenie, TOP).
+const EXTRA: Record<number, Partial<Pick<Listing, "side" | "gearbox" | "km" | "tested" | "returns14" | "top">>> = {
+  1: { tested: true, gearbox: "Manuálna", km: 212000, returns14: true }, 2: { top: true, returns14: true }, 3: { tested: true, gearbox: "Manuálna", km: 168000 },
+  4: { side: "Pravá" }, 9: { top: true }, 10: { side: "Ľavá", tested: true, returns14: true }, 11: { tested: true, gearbox: "Manuálna", km: 231000, returns14: true },
+  12: { tested: true }, 13: { side: "Pravá" }, 14: { side: "Pravá" }, 15: { side: "Ľavá" },
+};
+
 /** Náhradná ukážková fotka (SVG), rovnaká ako v prototype. */
 export function demoPhoto(id: number, k: number): string {
   const h = 185 + ((id * 13 + k * 9) % 40), l = 88 - ((id + k) % 4) * 2;
@@ -86,6 +93,8 @@ export function buildDemoListings(cat: Catalog): { listings: Listing[]; phones: 
       createdAt: new Date(BASE - r.ago * 86400000 - r.id * 60000).toISOString(),
       photos: Array.from({ length: r.photos }, (_, k) => demoPhoto(r.id, k)),
       fits, seller: { name: r.seller[0], type: r.seller[1], city: r.city, verified: r.seller[2] },
+      side: EXTRA[r.id]?.side ?? null, gearbox: EXTRA[r.id]?.gearbox ?? null, km: EXTRA[r.id]?.km ?? null,
+      tested: !!EXTRA[r.id]?.tested, returns14: !!EXTRA[r.id]?.returns14, top: !!EXTRA[r.id]?.top, partMaker: null,
     };
   });
   return { listings, phones };
