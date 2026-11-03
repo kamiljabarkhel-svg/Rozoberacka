@@ -134,6 +134,27 @@ const errs = [];
     await pg.goto(B + "/predajca#list"); await pg.waitForSelector(".pp-st.blocked");
   });
   await step("odhlasenie", async () => { await pg.click("text=Odhlásiť sa"); await pg.waitForURL("**/pre-predajcov"); });
+  await step("pravne stranky z paticky", async () => {
+    for (const [t, h] of [["Obchodné podmienky", "/obchodne-podmienky"], ["Ochrana osobných údajov", "/ochrana-osobnych-udajov"], ["Cookies", "/cookies"]]) {
+      await b2.goto(B + "/"); await b2.click(`.foot-l >> text=${t}`); await b2.waitForURL("**" + h); await b2.waitForSelector("h1:has-text('" + t.split(" ")[0] + "')");
+    }
+    await b2.waitForSelector("text=KJ Trade s.r.o.");
+  });
+  await step("export mojich udajov", async () => {
+    await pg.goto(B + "/pre-predajcov"); await pg.fill("input[type=email]", "test@rz.sk"); await pg.fill("input[type=password]", "heslo1234"); await pg.click("form button.btn"); await pg.waitForSelector(".pp-dash");
+    await pg.click(".pp-nav >> text=Profil");
+    const [dl] = await Promise.all([pg.waitForEvent("download"), pg.click("text=Stiahnuť moje údaje")]);
+    const j = JSON.parse(require("fs").readFileSync(await dl.path(), "utf8"));
+    if (!j.profil || j.profil.terms_version !== "2026-11-03" || !Array.isArray(j.inzeraty) || !j.inzeraty.length) throw new Error(JSON.stringify(j).slice(0, 200));
+  });
+  await step("zrusenie uctu", async () => {
+    await pg.click("button.del:has-text('Zrušiť účet')"); await pg.fill(".pp-gdpr input", "zrušiť"); await pg.click("text=Natrvalo zrušiť účet");
+    await pg.waitForURL("**/?ucet=zruseny", { timeout: 20000 });
+    const n = require("child_process").execSync(`psql -h /tmp/pgt -p 5499 -U postgres -d e2e -tAc "select (select count(*) from auth.users)+(select count(*) from sellers)+(select count(*) from listings)+(select count(*) from messages)"`).toString().trim();
+    if (n !== "0") throw new Error("zostali riadky: " + n);
+    const files = require("child_process").execSync("find /tmp/claude-0/e2e/files -type f | wc -l").toString().trim();
+    if (files !== "0") throw new Error("zostali subory: " + files);
+  });
   console.log("ERRORS:", errs.length ? "\n" + [...new Set(errs)].join("\n") : "none");
   await br.close();
 })();

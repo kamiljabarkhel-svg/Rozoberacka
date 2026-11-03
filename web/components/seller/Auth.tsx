@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { IS_DEMO } from "@/lib/data";
 import { getSession, resetPassword, signIn, signUp } from "@/lib/seller";
+import { OPERATOR } from "@/lib/operator";
 
 type Mode = "in" | "up" | "reset";
 
@@ -24,7 +25,7 @@ export default function Auth() {
     if (!/^\S+@\S+\.\S+$/.test(email.trim())) return setErr("Zadajte platný e-mail.");
     if (mode !== "reset" && pw.length < 8) return setErr("Heslo musí mať aspoň 8 znakov.");
     if (mode === "up" && name.trim().length < 2) return setErr("Zadajte názov firmy alebo meno.");
-    if (mode === "up" && !agree) return setErr("Na registráciu treba súhlasiť s podmienkami a spracovaním osobných údajov.");
+    if (mode === "up" && !agree) return setErr("Na registráciu treba súhlasiť s obchodnými podmienkami.");
     setBusy(true);
     try {
       if (mode === "in") { await signIn(email, pw); router.replace("/predajca"); }
@@ -54,7 +55,7 @@ export default function Auth() {
         {mode === "up" && <label>Názov firmy alebo meno<input value={name} onChange={(e) => setName(e.target.value)} autoComplete="organization" maxLength={120} /></label>}
         <label>E-mail<input type="email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" /></label>
         {mode !== "reset" && <label>Heslo{mode === "up" && <small className="mute"> (aspoň 8 znakov)</small>}<input type="password" value={pw} onChange={(e) => setPw(e.target.value)} autoComplete={mode === "up" ? "new-password" : "current-password"} /></label>}
-        {mode === "up" && <label className="pp-chk"><input type="checkbox" checked={agree} onChange={(e) => setAgree(e.target.checked)} /> <span>Súhlasím s obchodnými podmienkami a so spracovaním osobných údajov (názov, mesto a telefón sa zobrazia pri mojich inzerátoch).</span></label>}
+        {mode === "up" && <label className="pp-chk"><input type="checkbox" checked={agree} onChange={(e) => setAgree(e.target.checked)} /> <span>Súhlasím s <a href="/obchodne-podmienky" target="_blank">obchodnými podmienkami</a>. Beriem na vedomie, že {OPERATOR.name} spracúva moje údaje podľa <a href="/ochrana-osobnych-udajov" target="_blank">zásad ochrany osobných údajov</a> a že názov, mesto a telefón z inzerátu budú verejné.</span></label>}
         {err && <p className="pp-err" role="alert">{err}</p>}
         {ok && <p className="pp-ok" role="status">{ok}</p>}
         <button className="btn" disabled={busy}>{busy ? "Čakajte…" : mode === "up" ? "Vytvoriť účet" : mode === "reset" ? "Poslať odkaz" : "Prihlásiť sa"}</button>

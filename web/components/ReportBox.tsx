@@ -25,6 +25,7 @@ export default function ReportBox({ id }: { id: number }) {
       <label>Váš kontakt, ak chcete odpoveď (nepovinné)<input value={contact} maxLength={120} onChange={(e) => setContact(e.target.value)} /></label>
       <div className="rep-a"><button className="call" disabled={st.busy} onClick={send}>{st.busy ? "Odosielam…" : "Odoslať nahlásenie"}</button><button className="lnk" onClick={() => setOpen(false)}>Zrušiť</button></div>
       {st.err && <p className="ferr2" role="alert">{st.err}</p>}
+      <p className="mute">Nahlásenie vidí len správca portálu, predajca nie. Uchováme ho 12 mesiacov po vybavení. <a href="/ochrana-osobnych-udajov" target="_blank">Ochrana osobných údajov</a></p>
       {IS_DEMO && <p className="mute">Ukážkový režim: nahlásenie sa nikam neodošle.</p>}
     </div>
   );

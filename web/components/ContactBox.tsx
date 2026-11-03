@@ -36,7 +36,7 @@ export default function ContactBox({ id, name, seller }: { id: number; name: str
           <button className="call" disabled={st.busy} onClick={send}>{st.busy ? "Odosielam…" : "Odoslať správu"}</button>
           {st.err && <p className="ferr2" role="alert">{st.err}</p>}
           {IS_DEMO && <p className="mute">Ukážkový režim: správa sa nikam neodošle.</p>}
-          <p className="mute">Vaše meno a kontakt uvidí len tento predajca.</p>
+          <p className="mute">Meno, kontakt a správu dostane len tento predajca. Správu uchováme 12 mesiacov. <a href="/ochrana-osobnych-udajov" target="_blank">Ochrana osobných údajov</a></p>
         </div>
       ))}
       {mode === "share" && (

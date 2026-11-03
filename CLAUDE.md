@@ -127,3 +127,9 @@ Audit a návrh priorít: Claude Docs „Rozoberačka – audit a návrh priorít
 - Etapy: 1 Bezpečný základ (hotové) → 2 Spustenie (SEO, právne stránky, Vercel, doména, e-maily, katalóg) → 3 Odlíšenie (dopyt na diel, darcovské auto, uložené hľadanie s e-mailom, našeptávanie, export) → 4 Rast.
 - Záruka: firma pri použitom diele najmenej 12 mesiacov (možnosti 12/24 mesiacov), súkromná osoba môže „Bez záruky“. Pri firme sa zobrazuje zákonné odstúpenie do 14 dní pri kúpe na diaľku. Overiť s právnikom.
 - Hľadanie beží v databáze (`search_listings`), nie v prehliadači. Ukážkový režim bez Supabase hľadá lokálne.
+
+## GDPR (3. 11. 2026, 22:40)
+- Prevádzkovateľ: KJ Trade s.r.o., IČO 57598142. Údaje v `web/lib/operator.ts` (sídlo, zápis v OR a e-mail treba doplniť). Pri zmene textov podmienok zvýšiť `TERMS_VERSION`.
+- Žiadne analytické ani reklamné cookies bez súhlasu. Ak sa pridajú, najprv cookie lišta so súhlasom.
+- Doby uchovávania: správy 12 mesiacov, nahlásenia 12 mesiacov po vybavení, odtlačok IP 3 dni (pri nahlásení 30), záznam správcu 3 roky. Mazanie: `purge_old_data()` denne cez pg_cron.
+- Nové osobné údaje (napr. VIN darcovského auta, e-mail kupujúceho pre strážcu) doplniť do zásad a do záznamov o spracovateľských činnostiach skôr, než sa začnú zbierať.

@@ -13,6 +13,7 @@ import "./globals.css";
 import Header from "@/components/Header";
 import { IconSprite } from "@/components/Icons";
 import { IS_DEMO } from "@/lib/data";
+import { OPERATOR } from "@/lib/operator";
 
 
 export const metadata: Metadata = {
@@ -34,6 +35,11 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           <b>Rozoberačka</b>
           <span>Inzertný portál na použité autodiely. Portál sprostredkúva inzerciu a nie je účastníkom predaja. Za správnosť údajov a zhodu dielu s vozidlom zodpovedá predajca, pred nákupom preto vždy porovnajte OEM číslo.</span>
           <span>Katalóg áut je zatiaľ predbežný (6 značiek) a môže obsahovať chyby.</span>
+          <nav className="foot-l" aria-label="Právne informácie">
+            <a href="/obchodne-podmienky">Obchodné podmienky</a><a href="/ochrana-osobnych-udajov">Ochrana osobných údajov</a><a href="/cookies">Cookies</a>
+            {OPERATOR.email && <a href={"mailto:" + OPERATOR.email}>Kontakt</a>}
+          </nav>
+          <span>Prevádzkovateľ: {OPERATOR.name}, IČO {OPERATOR.ico}{OPERATOR.address ? ", " + OPERATOR.address : ""}</span>
         </footer>
       </body>
     </html>

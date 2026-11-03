@@ -8,7 +8,7 @@ import type { Catalog } from "@/lib/types";
 import { listingHref } from "@/lib/paths";
 import { price as fmtPrice } from "@/lib/format";
 import {
-  changePassword, deleteListings, duplicate, ensureProfile, getSession, markRead, myListings, myMessages, onAuthChange,
+  changePassword, deleteAccount, deleteListings, exportMyData, duplicate, ensureProfile, getSession, markRead, myListings, myMessages, onAuthChange,
   saveProfile, setStatus, setTop, signOut, skError, type Message, type MyListing, type Profile, type Status,
 } from "@/lib/seller";
 import ListingForm from "./ListingForm";
@@ -107,7 +107,7 @@ export default function Portal() {
           onSaved={async (id) => { await reload(session); setEdit(null); go("list"); flash(edit ? "Zmeny uložené" : `Inzerát #${id} je zverejnený`); }} />}
         {tab === "csv" && cat && <CsvImport uid={session.user.id} cat={cat} prof={prof} onDone={async (n) => { await reload(session); flash(`Importované: ${n}`); go("list"); }} />}
         {tab === "msg" && <Messages msgs={msgs} onRead={(ids) => act(() => markRead(ids), "Označené ako prečítané")} />}
-        {tab === "prof" && prof && <ProfileTab prof={prof} onSave={async (p) => { await saveProfile(p); setProf(p); flash("Profil uložený"); }} onPw={() => setPwMode(true)} />}
+        {tab === "prof" && prof && <><ProfileTab prof={prof} onSave={async (p) => { await saveProfile(p); setProf(p); flash("Profil uložený"); }} onPw={() => setPwMode(true)} /><MyData uid={session.user.id} /></>}
       </section>
       {toast && <div className="pp-toast" role="status">{toast}</div>}
     </div>
@@ -232,7 +232,7 @@ function MyList({ items, cat, onEdit, onStatus, onTop, onDup, onDelete }: {
                 <span className="pp-meta"><span className={"pp-st " + l.status}>{ST[l.status]}</span>{l.top && <span className="toptag">TOP</span>}<b>{fmtPrice(l.price)}</b><span className="mute">{l.views} zobrazení · {l.calls} telefónov</span></span>
               </div>
               <div className="pp-ra">
-                {l.status === "blocked" ? <span className="mute pp-blk">Inzerát skryl správca portálu. Upravte ho a napíšte nám.</span> : null}
+                {l.status === "blocked" ? <span className="mute pp-blk">Inzerát skryl správca portálu{l.moderationNote ? ": " + l.moderationNote : ""}. Upravte ho a napíšte nám.</span> : null}
                 <button className="ubtn" onClick={() => onEdit(l)}>Upraviť</button>
                 {l.status !== "blocked" && <>
                 {l.status === "active" ? <button className="ubtn" onClick={() => onStatus([l.id], "paused")}>Pozastaviť</button> : <button className="ubtn" onClick={() => onStatus([l.id], "active")}>Aktivovať</button>}
@@ -310,5 +310,30 @@ function NewPassword({ onDone }: { onDone: () => void }) {
       {err && <p className="pp-err">{err}</p>}
       <button className="btn">Uložiť heslo</button>
     </form>
+  );
+}
+
+// ---------- MOJE ÚDAJE (GDPR) ----------
+function MyData({ uid }: { uid: string }) {
+  const [step, setStep] = useState(0), [word, setWord] = useState(""), [busy, setBusy] = useState(""), [err, setErr] = useState("");
+  return (
+    <div className="pp-box pp-gdpr">
+      <h2>Moje údaje</h2>
+      <p className="mute">Stiahnite si všetko, čo o vás evidujeme (profil, súkromné údaje, inzeráty, telefóny, správy), ako súbor JSON. <a href="/ochrana-osobnych-udajov" target="_blank">Ochrana osobných údajov</a></p>
+      <button className="ubtn" disabled={!!busy} onClick={async () => { setErr(""); setBusy("exp"); try { await exportMyData(); } catch (e) { setErr(skError(e)); } finally { setBusy(""); } }}>{busy === "exp" ? "Pripravujem…" : "Stiahnuť moje údaje"}</button>
+      <h2>Zrušiť účet</h2>
+      <p className="mute">Natrvalo zmaže účet, profil, všetky inzeráty, fotky a správy. Nedá sa vrátiť späť.</p>
+      {step === 0 && <button className="del" onClick={() => setStep(1)}>Zrušiť účet</button>}
+      {step === 1 && <div className="pp-form">
+        <label>Pre potvrdenie napíšte ZRUŠIŤ<input value={word} onChange={(e) => setWord(e.target.value)} autoComplete="off" /></label>
+        <div className="pp-actions" style={{ justifyContent: "flex-start" }}>
+          <button className="del" disabled={word.trim().toUpperCase() !== "ZRUŠIŤ" || !!busy} onClick={async () => {
+            setErr(""); setBusy("del");
+            try { await deleteAccount(uid); window.location.href = "/?ucet=zruseny"; } catch (e) { setErr(skError(e)); setBusy(""); }
+          }}>{busy === "del" ? "Mažem…" : "Natrvalo zrušiť účet"}</button>
+          <button className="lnk" onClick={() => { setStep(0); setWord(""); }}>Nie, ponechať</button>
+        </div></div>}
+      {err && <p className="pp-err">{err}</p>}
+    </div>
   );
 }

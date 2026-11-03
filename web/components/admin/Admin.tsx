@@ -96,12 +96,13 @@ function Sellers({ run }: { run: Run }) {
 }
 
 function Listings({ run }: { run: Run }) {
-  const [q, setQ] = useState(""), [st, setSt] = useState(""), [qq, setQq] = useState("");
+  const [q, setQ] = useState(""), [st, setSt] = useState(""), [qq, setQq] = useState(""), [why, setWhy] = useState("");
   const [rows, reload, e] = useLoad(() => A.listings(qq, st), [qq, st]);
   return <div><header className="pp-h"><h1>Inzeráty</h1></header>
     <form className="pp-tools" onSubmit={(x) => { x.preventDefault(); setQq(q); }}>
       <input type="search" placeholder="Číslo inzerátu alebo názov (Enter)" value={q} onChange={(x) => setQ(x.target.value)} />
       <select value={st} onChange={(x) => setSt(x.target.value)}><option value="">Všetky stavy</option>{["active", "paused", "sold", "blocked"].map((s) => <option key={s} value={s}>{ST[s]}</option>)}</select></form>
+    <div className="pp-tools"><input placeholder="Dôvod skrytia – uvidí ho predajca (povinné, aspoň 5 znakov)" value={why} onChange={(x) => setWhy(x.target.value)} maxLength={300} /></div>
     {e && <p className="pp-err">{e}</p>}
     {rows && !rows.length && <div className="empty">Nič sa nenašlo.</div>}
     <ul className="pp-rows">{rows?.map((l) => <li key={l.id} className={"pp-row ad-row st-" + l.status}>
@@ -109,7 +110,7 @@ function Listings({ run }: { run: Run }) {
         <span className="mute">{l.seller} · OEM {l.oem || "—"} · {price(l.price)} · {d(l.createdAt)}</span><span className={"pp-st " + l.status}>{ST[l.status]}</span></div>
       <div className="pp-ra">{l.status === "blocked"
         ? <button className="ubtn" onClick={async () => { await run(() => A.setListing(l.id, false, "obnovené"), "Obnovený ako pozastavený"); reload(); }}>Obnoviť</button>
-        : <button className="del" onClick={async () => { await run(() => A.setListing(l.id, true, "ručne"), "Inzerát skrytý"); reload(); }}>Skryť</button>}</div>
+        : <button className="del" disabled={why.trim().length < 5} title="Najprv napíšte dôvod skrytia" onClick={async () => { await run(() => A.setListing(l.id, true, why.trim()), "Inzerát skrytý"); reload(); }}>Skryť</button>}</div>
     </li>)}</ul></div>;
 }
 

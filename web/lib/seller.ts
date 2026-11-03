@@ -5,6 +5,7 @@
 import { createClient, type Session, type SupabaseClient } from "@supabase/supabase-js";
 import { IS_DEMO, PHOTO_BUCKET } from "./data";
 import type { Condition } from "./types";
+import { TERMS_VERSION } from "./operator";
 
 const URL_ = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
 const KEY_ = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
@@ -22,10 +23,10 @@ export type MyListing = {
   categoryId: string; subcategoryId: number | null; oem: string; partMaker: string; price: number; city: string;
   condition: Condition; description: string; warranty: string; shipping: string; status: Status;
   views: number; calls: number; createdAt: string; phone: string;
-  side: string; gearbox: string; km: number | null; tested: boolean; returns14: boolean; top: boolean;
+  side: string; gearbox: string; km: number | null; tested: boolean; returns14: boolean; top: boolean; moderationNote: string;
   photos: { path: string; url: string }[]; fits: { brandId: number; modelId: number | null; engineId: number | null }[];
 };
-export type ListingInput = Omit<MyListing, "id" | "status" | "views" | "calls" | "createdAt" | "top" | "photos">;
+export type ListingInput = Omit<MyListing, "id" | "status" | "views" | "calls" | "createdAt" | "top" | "photos" | "moderationNote">;
 export type Message = { id: number; listingId: number; listingName: string; name: string; contact: string; body: string; createdAt: string; read: boolean };
 
 const SKMSG: [RegExp, string][] = [
@@ -65,7 +66,7 @@ export async function signIn(email: string, password: string) {
 export async function signUp(email: string, password: string, name: string): Promise<boolean> {
   const { data, error } = await sellerClient().auth.signUp({
     email: email.trim(), password,
-    options: { data: { name: name.trim() }, emailRedirectTo: window.location.origin + "/predajca" },
+    options: { data: { name: name.trim(), terms_version: TERMS_VERSION, terms_accepted_at: new Date().toISOString() }, emailRedirectTo: window.location.origin + "/predajca" },
   });
   if (error) throw new Error(skError(error));
   return !data.session;
@@ -88,7 +89,10 @@ export async function ensureProfile(s: Session): Promise<Profile> {
   if (!sel) {
     const raw = String(s.user.user_metadata?.name || s.user.email?.split("@")[0] || "").trim().slice(0, 120);
     // upsert + ignoreDuplicates: dve otvorené karty naraz nespôsobia chybu „duplicate key“
-    const ins = await c.from("sellers").upsert({ id: uid, name: raw.length >= 2 ? raw : "Predajca" }, { onConflict: "id", ignoreDuplicates: true });
+    const md = s.user.user_metadata || {};
+    const ins = await c.from("sellers").upsert({ id: uid, name: raw.length >= 2 ? raw : "Predajca",
+      terms_version: String(md.terms_version || TERMS_VERSION), terms_accepted_at: String(md.terms_accepted_at || s.user.created_at || new Date().toISOString()) },
+      { onConflict: "id", ignoreDuplicates: true });
     if (ins.error) throw new Error(skError(ins.error));
     const again = await c.from("sellers").select(cols).eq("id", uid).single();
     if (again.error) throw new Error(skError(again.error));
@@ -106,7 +110,7 @@ export async function saveProfile(p: Profile) {
 }
 
 // ---------- INZERÁTY ----------
-const COLS = "id,name,brand_id,model_id,engine_id,year,category_id,subcategory_id,oem,part_maker,price,city,condition,description,warranty,shipping,status,views,calls,created_at," +
+const COLS = "id,name,brand_id,model_id,engine_id,year,category_id,subcategory_id,oem,part_maker,price,city,condition,description,warranty,shipping,status,views,calls,created_at,moderation_note," +
   "side,donor_gearbox,donor_km,tested,returns_14d,top_until,listing_contacts(phone),listing_photos(path,position),listing_fits(brand_id,model_id,engine_id)";
 
 type Row = Record<string, unknown>;
@@ -124,7 +128,7 @@ function toMine(r: Row): MyListing {
     description: String(r.description || ""), warranty: String(r.warranty), shipping: String(r.shipping), status: r.status as Status,
     views: Number(r.views || 0), calls: Number(r.calls || 0), createdAt: String(r.created_at), phone,
     side: String(r.side || ""), gearbox: String(r.donor_gearbox || ""), km: (r.donor_km as number) ?? null, tested: !!r.tested, returns14: !!r.returns_14d,
-    top: !!r.top_until && Date.parse(String(r.top_until)) > Date.now(),
+    top: !!r.top_until && Date.parse(String(r.top_until)) > Date.now(), moderationNote: String(r.moderation_note || ""),
     photos: ph.map((p) => ({ path: String(p.path), url: photoUrl(String(p.path)) })),
     fits: ((r.listing_fits || []) as Row[]).map((f) => ({ brandId: Number(f.brand_id), modelId: (f.model_id as number) ?? null, engineId: (f.engine_id as number) ?? null })),
   };
@@ -254,4 +258,35 @@ export async function markRead(ids: number[]) {
   if (!ids.length) return;
   const { error } = await sellerClient().from("messages").update({ read_at: new Date().toISOString() }).in("id", ids);
   if (error) throw new Error(skError(error));
+}
+
+// ---------- MOJE ÚDAJE (GDPR) ----------
+/** Všetky údaje predajcu ako súbor JSON (právo na prístup a prenosnosť). */
+export async function exportMyData(): Promise<void> {
+  const { data, error } = await sellerClient().rpc("export_my_data");
+  if (error) throw new Error(skError(error));
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = `rozoberacka-moje-udaje-${new Date().toISOString().slice(0, 10)}.json`;
+  document.body.appendChild(a); a.click(); a.remove();
+  window.setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+}
+
+/** Zruší účet: najprv zmaže súbory fotiek v úložisku, potom účet a všetky údaje v databáze. */
+export async function deleteAccount(uid: string): Promise<void> {
+  const c = sellerClient();
+  const files = new Set<string>();
+  for (const l of await myListings(uid)) for (const p of l.photos) { files.add(p.path); files.add(thumbOf(p.path)); }
+  try { // aj súbory, ktoré už nie sú priradené k inzerátu
+    const top = await c.storage.from(PHOTO_BUCKET).list(uid, { limit: 1000 });
+    for (const d of top.data || []) {
+      const sub = await c.storage.from(PHOTO_BUCKET).list(`${uid}/${d.name}`, { limit: 1000 });
+      for (const f of sub.data || []) files.add(`${uid}/${d.name}/${f.name}`);
+    }
+  } catch { /* zoznam nie je nevyhnutný */ }
+  const all = [...files];
+  for (let i = 0; i < all.length; i += 100) await c.storage.from(PHOTO_BUCKET).remove(all.slice(i, i + 100));
+  const { error } = await c.rpc("delete_my_account");
+  if (error) throw new Error(skError(error));
+  await c.auth.signOut().catch(() => {});
 }

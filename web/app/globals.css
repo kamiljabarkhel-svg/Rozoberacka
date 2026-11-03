@@ -423,3 +423,14 @@ button:disabled{opacity:.55;cursor:default}
 @media(max-width:760px){.ad-row{grid-template-columns:1fr}}
 .ad-a{justify-content:flex-start;max-width:none;margin-top:8px}
 .ad-sel{background:var(--chip);color:var(--ink);border:0;border-radius:4px;padding:9px 12px;font-weight:600}
+.foot-l{display:flex;flex-wrap:wrap;gap:6px 16px}.foot-l a{color:var(--link);font-weight:700}
+.legal{max-width:880px;line-height:1.6}
+.legal h1{font:800 clamp(1.6rem,4vw,2.2rem)/1.15 var(--f-d);margin:0 0 6px}
+.legal h2{font:800 1.2rem var(--f-d);margin:28px 0 8px}
+.legal a{color:var(--link)}
+.legal ul{padding-left:20px}.legal li{margin:4px 0}
+.legal-op{max-width:560px}
+.legal-t{width:100%;border-collapse:collapse;font-size:.88rem;display:block;overflow-x:auto}
+.legal-t th,.legal-t td{border:1px solid var(--line);padding:8px;text-align:left;vertical-align:top;min-width:120px}
+.legal-t th{background:var(--chip)}
+.pp-gdpr{display:grid;gap:10px;justify-items:start;margin-top:16px}.pp-gdpr h2{margin:6px 0 0}.pp-chk a{color:var(--link)}
