@@ -70,13 +70,17 @@ export default function ListingForm({ uid, cat, prof, edit, onSaved }: { uid: st
   function next() {
     const b = check(); const mine = new Set([...b].filter((k) => STEP_OF[k] === step));
     setBad((o) => new Set([...[...o].filter((k) => STEP_OF[k] !== step), ...mine]));
-    if (!mine.size) goStep(step + 1);
+    if (!mine.size) goStep(step + 1); else focusBad();
   }
+  const focusBad = () => window.setTimeout(() => {
+    const el = document.querySelector<HTMLElement>(".pp-form label.bad input, .pp-form label.bad select, .pp-form label.bad textarea, .pp-photos.bad .pp-add");
+    el?.scrollIntoView({ behavior: "smooth", block: "center" }); if (el && el.tagName !== "LABEL") el.focus({ preventScroll: true });
+  }, 60);
 
   async function save() {
     setErr("");
     const b = check(); setBad(b);
-    if (b.size) { const first = Math.min(...[...b].map((k) => STEP_OF[k])); setErr(`Doplňte povinné polia (${b.size}). Sú označené červenou.`); goStep(first); return; }
+    if (b.size) { const first = Math.min(...[...b].map((k) => STEP_OF[k])); setErr(`Doplňte povinné polia (${b.size}). Sú označené červenou.`); setStep(first); focusBad(); return; }
     const x: ListingInput = {
       name: v.name, brandId: v.brandId, modelId: v.modelId, engineId: v.engineId, year: v.year, categoryId: v.categoryId,
       subcategoryId: v.subcategoryId, oem: v.oem, partMaker: v.partMaker, price: Math.round(Number(v.price.replace(",", ".")) * 100) / 100,

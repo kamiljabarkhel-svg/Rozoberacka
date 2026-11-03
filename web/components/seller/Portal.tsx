@@ -54,10 +54,21 @@ export default function Portal() {
     return onAuthChange((s) => { if (!s) router.replace("/pre-predajcov"); });
   }, [router, reload]);
 
+  // záložka podľa adresy (#list, #msg…) aj pri tlačidle Späť
   useEffect(() => {
-    const h = window.location.hash.replace("#", "") as Tab;
-    if (TABS.some(([t]) => t === h)) setTab(h);
+    const read = () => { const h = window.location.hash.replace("#", "") as Tab; if (TABS.some(([t]) => t === h)) setTab(h); };
+    read(); window.addEventListener("hashchange", read);
+    return () => window.removeEventListener("hashchange", read);
   }, []);
+  // čerstvé čísla a správy, keď sa predajca vráti na kartu (najviac raz za 15 s)
+  useEffect(() => {
+    if (!session) return;
+    let last = Date.now();
+    const h = () => { if (document.visibilityState === "visible" && Date.now() - last > 15000) { last = Date.now(); reload(session); } };
+    document.addEventListener("visibilitychange", h); window.addEventListener("focus", h);
+    const t = window.setInterval(() => { if (document.visibilityState === "visible") { last = Date.now(); reload(session); } }, 120000);
+    return () => { document.removeEventListener("visibilitychange", h); window.removeEventListener("focus", h); window.clearInterval(t); };
+  }, [session, reload]);
   const go = (t: Tab) => { setTab(t); if (t !== "form") setEdit(null); history.replaceState(null, "", "#" + t); window.scrollTo({ top: 0 }); };
 
   if (IS_DEMO) return <div className="pp-auth"><h1>Portál predajcu</h1><p className="mute">V ukážkovej verzii bez databázy portál nefunguje. Pripojte Supabase.</p></div>;
@@ -82,14 +93,15 @@ export default function Portal() {
         <button type="button" className="lnk pp-out" onClick={() => signOut()}>Odhlásiť sa</button>
       </aside>
       <section className="pp-body">
-        {err && <p className="pp-err">{err}</p>}
+        {err && <div className="pp-box pp-errbox"><p className="pp-err">Niečo sa nenačítalo: {err}</p><button className="ubtn" onClick={() => window.location.reload()}>Skúsiť znova</button></div>}
+        {(tab === "form" || tab === "csv") && !cat && !err && <p className="mute">Načítavam katalóg áut…</p>}
         {pwMode && <NewPassword onDone={() => { setPwMode(false); flash("Heslo je zmenené."); }} />}
         {tab === "home" && <Dashboard cat={cat} prof={prof} items={items} msgs={msgs} go={go} />}
         {tab === "list" && <MyList items={items} cat={cat}
           onEdit={(l) => { setEdit(l); setTab("form"); window.scrollTo({ top: 0 }); }}
           onStatus={(ids, s) => act(() => setStatus(ids, s), ids.length > 1 ? `Zmenené: ${ids.length}` : "Uložené")}
           onTop={(l) => act(() => setTop(l.id, !l.top), l.top ? "TOP zrušené" : "Inzerát je TOP na 30 dní")}
-          onDup={(l) => act(() => duplicate(session.user.id, l), "Kópia vytvorená (pozastavte alebo doplňte fotky)")}
+          onDup={(l) => act(() => duplicate(session.user.id, l), "Kópia je pozastavená – upravte ju, pridajte fotky a aktivujte")}
           onDelete={(ls) => act(() => deleteListings(ls), ls.length > 1 ? `Zmazané: ${ls.length}` : "Inzerát zmazaný")} />}
         {tab === "form" && cat && <ListingForm key={edit?.id ?? "new"} uid={session.user.id} cat={cat} prof={prof} edit={edit}
           onSaved={async (id) => { await reload(session); setEdit(null); go("list"); flash(edit ? "Zmeny uložené" : `Inzerát #${id} je zverejnený`); }} />}
@@ -214,7 +226,7 @@ function MyList({ items, cat, onEdit, onStatus, onTop, onDup, onDelete }: {
               <label className="pp-cb"><input type="checkbox" checked={sel.has(l.id)} onChange={() => toggle(l.id)} aria-label={"Vybrať " + l.name} /></label>
               <div className="pp-th">{l.photos[0] ? <img src={l.photos[0].url} alt="" loading="lazy" /> : <span>bez fotky</span>}</div>
               <div className="pp-ri">
-                <a href={listingHref(l.id)} target="_blank" rel="noreferrer"><b>{l.name}</b></a>
+                {l.status === "active" ? <a href={listingHref(l.id)} target="_blank" rel="noreferrer" title="Otvoriť, ako ho vidia kupujúci"><b>{l.name}</b></a> : <b>{l.name}</b>}
                 <span className="mute">{vehicle(l)} · {catName(l.categoryId)} · OEM {l.oem || "—"}</span>
                 <span className="pp-meta"><span className={"pp-st " + l.status}>{ST[l.status]}</span>{l.top && <span className="toptag">TOP</span>}<b>{fmtPrice(l.price)}</b><span className="mute">{l.views} zobrazení · {l.calls} telefónov</span></span>
               </div>

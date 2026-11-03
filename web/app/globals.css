@@ -412,3 +412,5 @@ a.ubtn{text-decoration:none;display:inline-block}
 .pp-pre li.err{border-color:color-mix(in srgb,var(--bad) 50%,var(--line))}
 .pp-toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--ink);color:var(--card);padding:12px 18px;border-radius:4px;font-weight:700;z-index:40;max-width:calc(100vw - 32px)}
 button:disabled{opacity:.55;cursor:default}
+.pp-errbox{display:flex;gap:12px;align-items:center;flex-wrap:wrap;border-color:var(--bad)}
+.pp-form label,.pp-photos,.pp-steps{scroll-margin-top:120px}

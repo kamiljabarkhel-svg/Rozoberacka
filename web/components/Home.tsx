@@ -238,14 +238,14 @@ export default function Home() {
             <label className="chk"><input type="checkbox" checked={f.tested} onChange={(e) => set({ tested: e.target.checked })} /> Len odskúšané diely</label>
             <label className="chk"><input type="checkbox" checked={f.ret} onChange={(e) => set({ ret: e.target.checked })} /> Len s možnosťou vrátenia</label>
           </div>
-          <form className="oemrow" onSubmit={(e) => { e.preventDefault(); if (!oemQ.trim()) return; set({ q: oemQ.trim() }); window.dispatchEvent(new CustomEvent("rz-q-set", { detail: oemQ.trim() })); setTimeout(toRes, 30); }}>
-            <label>Číslo dielu (OEM)<input value={oemQ} onChange={(e) => setOemQ(e.target.value)} placeholder="napr. 03G903023 alebo 5E0 807 221" autoComplete="off" /></label>
-            <button className="btn2" type="submit">Hľadať podľa čísla</button>
-          </form>
           <div className="pa">
             <button className="lnk" aria-expanded={adv} onClick={() => setAdv(!adv)}>Rozšírené hľadanie</button>
             <button className="btn" onClick={toRes}>Hľadať</button>
           </div>
+          <form className="oemrow" onSubmit={(e) => { e.preventDefault(); if (!oemQ.trim()) return; set({ q: oemQ.trim() }); window.dispatchEvent(new CustomEvent("rz-q-set", { detail: oemQ.trim() })); setTimeout(toRes, 30); }}>
+            <label>Číslo dielu (OEM)<input value={oemQ} onChange={(e) => setOemQ(e.target.value)} placeholder="napr. 03G903023 alebo 5E0 807 221" autoComplete="off" /></label>
+            <button className="btn2" type="submit">Hľadať podľa čísla</button>
+          </form>
         </section>
 
         <section className="plate" aria-label="Hľadanie podľa VIN">

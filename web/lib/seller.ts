@@ -81,12 +81,16 @@ export async function signOut() { await sellerClient().auth.signOut(); }
 // ---------- PROFIL ----------
 export async function ensureProfile(s: Session): Promise<Profile> {
   const c = sellerClient(), uid = s.user.id;
-  let { data: sel } = await c.from("sellers").select("id,name,seller_type,city,verified").eq("id", uid).maybeSingle();
+  const cols = "id,name,seller_type,city,verified";
+  let { data: sel } = await c.from("sellers").select(cols).eq("id", uid).maybeSingle();
   if (!sel) {
-    const name = String(s.user.user_metadata?.name || s.user.email?.split("@")[0] || "Predajca").slice(0, 120);
-    const ins = await c.from("sellers").insert({ id: uid, name: name.length >= 2 ? name : "Predajca" }).select("id,name,seller_type,city,verified").single();
+    const raw = String(s.user.user_metadata?.name || s.user.email?.split("@")[0] || "").trim().slice(0, 120);
+    // upsert + ignoreDuplicates: dve otvorené karty naraz nespôsobia chybu „duplicate key“
+    const ins = await c.from("sellers").upsert({ id: uid, name: raw.length >= 2 ? raw : "Predajca" }, { onConflict: "id", ignoreDuplicates: true });
     if (ins.error) throw new Error(skError(ins.error));
-    sel = ins.data;
+    const again = await c.from("sellers").select(cols).eq("id", uid).single();
+    if (again.error) throw new Error(skError(again.error));
+    sel = again.data;
   }
   const { data: pr } = await c.from("seller_private").select("phone,ico").eq("seller_id", uid).maybeSingle();
   return { id: uid, email: s.user.email || "", name: sel.name, type: sel.seller_type, city: sel.city || "", phone: pr?.phone || "", ico: pr?.ico || "", verified: !!sel.verified };
@@ -215,7 +219,9 @@ export async function deleteListings(items: MyListing[]) {
 /** Kópia inzerátu bez fotiek (fotky sa pridajú pri úprave). */
 export async function duplicate(uid: string, l: MyListing): Promise<number> {
   const x: ListingInput = { ...l };
-  return saveListing(uid, null, x, [], []);
+  const id = await saveListing(uid, null, x, [], []);
+  await setStatus([id], "paused"); // kópia bez fotiek sa kupujúcim neukáže, kým ju predajca nedoplní
+  return id;
 }
 
 // ---------- IMPORT ----------
