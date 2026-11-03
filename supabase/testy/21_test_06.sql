@@ -56,5 +56,5 @@ select pg_temp.ok(not exists (select 1 from auth.users where id='33333333-3333-3
   and not exists (select 1 from sellers where id='33333333-3333-3333-3333-333333333333')
   and not exists (select 1 from seller_private where seller_id='33333333-3333-3333-3333-333333333333')
   and not exists (select 1 from listings where name='Kapota')
-  and not exists (select 1 from listing_contacts), 'zrušenie účtu zmaže prihlásenie, profil, súkromné údaje, inzeráty a telefóny');
+  and not exists (select 1 from listing_contacts where phone = '0905 000 111'), 'zrušenie účtu zmaže prihlásenie, profil, súkromné údaje, inzeráty a telefóny');
 \echo HOTOVO

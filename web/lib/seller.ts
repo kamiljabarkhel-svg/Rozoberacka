@@ -35,6 +35,8 @@ const SKMSG: [RegExp, string][] = [
   [/User already registered/i, "Tento e-mail je už zaregistrovaný. Prihláste sa."],
   [/Password should be at least/i, "Heslo musí mať aspoň 8 znakov."],
   [/rate limit/i, "Príliš veľa pokusov. Skúste to o chvíľu."],
+  [/Email address not authorized|not authorized/i, "E-maily z portálu sa ešte nedajú posielať (chýba nastavenie odosielania e-mailov). Skúste to neskôr."],
+  [/weak|Password should contain/i, "Heslo je príliš slabé. Použite aspoň 8 znakov."],
   [/listings_oem_required/i, "Zadajte OEM číslo dielu (aspoň 4 písmená alebo číslice)."],
   [/listings_desc_required/i, "Popis musí mať aspoň 20 znakov."],
   [/contacts_phone_digits/i, "Telefón musí mať aspoň 9 číslic."],

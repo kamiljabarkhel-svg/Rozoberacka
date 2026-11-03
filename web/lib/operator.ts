@@ -4,7 +4,7 @@ export const OPERATOR = {
   name: "KJ Trade s.r.o.",
   ico: "57598142",
   dic: "",
-  address: "",          // sídlo podľa obchodného registra
+  address: "Kvetná 1505/4D, 900 41 Rovinka",
   register: "",         // napr. „Obchodný register Mestského súdu Bratislava III, oddiel Sro, vložka č. …“
   email: "",            // kontakt pre ochranu osobných údajov a nahlásenia
 };

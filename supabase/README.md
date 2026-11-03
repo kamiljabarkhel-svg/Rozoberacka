@@ -108,3 +108,11 @@ Na ostrej Supabase sú spustené súbory 01 → 02 → 03 → 04 → 05.
   OEM, auto vrátane „pasuje aj na“ a rovnakého OEM), limit fotiek 5 MB (JPEG, WebP, PNG).
 - Testy: `testy/20_test_05.sql` (35 kontrol). `testy/10_test_bezpecnosti.sql` je starší a po súbore 04 už nesedí (chýbajú povinné polia), nahrádza ho 20.
 - Správcu pridáte v SQL Editore: `insert into public.admins select id from auth.users where email = 'VAS@EMAIL';`
+
+## Doplnky (3. 11. 2026, večer)
+Na ostrej Supabase sú spustené aj `06_gdpr.sql` a `07_optimalizacia.sql`.
+- `07`: pravidlá RLS volajú `(select auth.uid())` raz na dotaz, jedno pravidlo na akciu, indexy pre cudzie kľúče, pevná search_path, katalóg len na čítanie.
+- Testy na ostrej databáze: `testy/20` + `testy/21` spojené do jednej transakcie, ktorá sa na konci zruší (48/48, databáza ostala prázdna).
+- Security Advisor: zostávajú len upozornenia „SECURITY DEFINER funkciu môže volať verejnosť/prihlásený“. Sú zámerné: tieto funkcie sú API portálu (telefón, správa, nahlásenie, hľadanie, export, zrušenie účtu, funkcie správcu) a každá si sama kontroluje oprávnenie a limity.
+- Auth: potvrdenie e-mailu zapnuté, minimálna dĺžka hesla 8, anonymné prihlásenie vypnuté.
+- CHÝBA: vlastné SMTP (bez neho Supabase posiela e-maily len členom tímu, registrácia predajcov nefunguje), Site URL a Redirect URLs (po nasadení na Vercel).
