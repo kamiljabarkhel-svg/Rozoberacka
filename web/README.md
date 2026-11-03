@@ -58,5 +58,21 @@ Vercel je služba, ktorá web zverejní na internete. Plán **Hobby** je zadarmo
 Poznámky:
 - Prihlásenie berie spiatočnú adresu z adresy, na ktorej web práve beží (`window.location.origin` v `lib/seller.ts`), takže v kóde netreba nič meniť. Supabase ju však pustí len vtedy, keď je v **Redirect URLs**; inak pošle človeka na **Site URL**.
 - Každý nový commit do vetvy `main` Vercel nasadí sám.
-- Vstavané e-maily Supabase majú na pláne Free nízky hodinový limit (presné číslo neoverené). Na skúšku stačí, pred pilotom treba vlastný SMTP.
+- Vstavané e-maily Supabase majú na pláne Free nízky hodinový limit (presné číslo neoverené). Na skúšku stačí, pred pilotom treba vlastný SMTP (sekcia nižšie).
 - Názvy tlačidiel (Sign Up, Hobby, Add New…, Import, Adjust GitHub App Permissions, Root Directory/Edit, Environment Variables, Deploy, Project Settings → API / Data API, URL Configuration, Redirect URLs, Add URL, Save) sú podľa dokumentácie a pamäte k 2. 11. 2026, **neoverené klikaním** – Vercel a Supabase ich občas premenujú. Ak sa tlačidlo volá inak, hľadajte podobné.
+
+## Vlastné SMTP (neskôr, pred pilotom)
+Prečo: vstavané e-maily Supabase (potvrdenie registrácie, obnova hesla) sú len na skúšanie. Majú prísny limit počtu e-mailov za hodinu (presné číslo neoverené) a môžu chodiť len na obmedzené adresy (neoverené). Pre skutočných predajcov treba vlastnú službu na odosielanie e-mailov (SMTP).
+
+Kde sa nastavuje: Supabase → váš projekt → **Authentication** → **Emails** → záložka **SMTP Settings** → zapnúť **Enable Custom SMTP** → **Save**. (Názvy podľa pamäte k 3. 11. 2026, **neoverené klikaním**.)
+
+Aké údaje treba (dá ich poskytovateľ e-mailov):
+- **Host** (adresa SMTP servera) a **Port** (zvyčajne 465 alebo 587)
+- **Username** (používateľ) a **Password** (heslo alebo API kľúč)
+- **Sender email** (odosielateľ, napr. `noreply@vasa-domena.sk`) a **Sender name** (napr. Rozoberačka)
+
+Príklady poskytovateľov (bez odporúčania, ceny a bezplatné limity si overte na ich stránke): Resend, Brevo, Postmark, Amazon SES.
+
+Doména: odosielať treba z vlastnej domény. Poskytovateľ vám dá DNS záznamy **SPF** a **DKIM** (často aj **DMARC**), ktoré sa vložia u registrátora domény. Bez nich e-maily často padajú do spamu. Preto SMTP rieši až po kúpe domény.
+
+Bezpečnosť: heslo SMTP patrí **len** do Supabase (políčko Password). Nikdy ho nedávajte do repozitára, do `.env` súborov webu ani do Vercelu.
