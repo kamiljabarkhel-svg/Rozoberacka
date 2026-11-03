@@ -120,3 +120,10 @@ Majiteľ nechce zaoblený „AI“ vzhľad. Platí pre celý web:
 - Karty bez tieňov, len tenký okraj; pri prejdení myšou sa zmení farba okraja, karta sa nedvíha.
 - Úvodný pás jednofarebný (tmavá modrozelená, jemný prechod zhora nadol), bez farebných škvŕn.
 - Vzor je v `prototyp.html`.
+
+## Audit a etapy (3. 11. 2026, 21:30)
+Audit a návrh priorít: Claude Docs „Rozoberačka – audit a návrh priorít“. Majiteľ schválil všetko.
+- Online košík ani platby NEBUDÚ – portál je inzercia (kontakt telefón/správa).
+- Etapy: 1 Bezpečný základ (hotové) → 2 Spustenie (SEO, právne stránky, Vercel, doména, e-maily, katalóg) → 3 Odlíšenie (dopyt na diel, darcovské auto, uložené hľadanie s e-mailom, našeptávanie, export) → 4 Rast.
+- Záruka: firma pri použitom diele najmenej 12 mesiacov (možnosti 12/24 mesiacov), súkromná osoba môže „Bez záruky“. Pri firme sa zobrazuje zákonné odstúpenie do 14 dní pri kúpe na diaľku. Overiť s právnikom.
+- Hľadanie beží v databáze (`search_listings`), nie v prehliadači. Ukážkový režim bez Supabase hľadá lokálne.

@@ -65,7 +65,10 @@ export default function CsvImport({ uid, cat, prof, onDone }: { uid: string; cat
       const conds: Condition[] = ["Veľmi dobrý", "Dobrý", "Na opravu"];
       const condition = conds.find((x) => norm(x) === norm(g("stav"))) || "Dobrý";
       if (g("stav") && norm(condition) !== norm(g("stav"))) warns.push("stav nerozpoznaný – nastavený Dobrý");
-      const warranty = ["Bez záruky", "14 dní", "3 mesiace"].find((x) => norm(x) === norm(g("zaruka"))) || "Bez záruky";
+      const firm = (prof?.type || "Firma") === "Firma";
+      let warranty = ["Bez záruky", "12 mesiacov", "24 mesiacov"].find((x) => norm(x) === norm(g("zaruka"))) || (firm ? "12 mesiacov" : "Bez záruky");
+      if (firm && warranty === "Bez záruky") { warranty = "12 mesiacov"; warns.push("firma: záruka nastavená na 12 mesiacov (zákon)"); }
+      if (g("zaruka") && !["Bez záruky", "12 mesiacov", "24 mesiacov"].some((x) => norm(x) === norm(g("zaruka")))) warns.push(`záruka „${g("zaruka")}“ nerozpoznaná – nastavená ${warranty}`);
       const description = g("popis"); if (description.length < 20) errors.push("popis má menej ako 20 znakov");
       const city = g("mesto") || prof?.city || ""; if (city.length < 2) errors.push("chýba mesto (stĺpec mesto alebo profil)");
       const phone = g("telefon") || prof?.phone || ""; if (phone.replace(/\D/g, "").length < 9) errors.push("chýba telefón (stĺpec telefon alebo profil)");
@@ -98,7 +101,7 @@ export default function CsvImport({ uid, cat, prof, onDone }: { uid: string; cat
     if (r.ok) onDone(r.ok);
   }
   const sample = "nazov;znacka;model;motorizacia;rocnik;oem;cena;kategoria;podkategoria;stav;zaruka;popis;mesto;telefon;pasuje\n" +
-    "Predné ľavé svetlo;Škoda;Octavia III;;2015;5E1941015;120;Svetlá;Predné svetlá;Dobrý;14 dní;Funkčné, bez prasklín, úchyty celé.;Žilina;0900123456;Škoda Octavia III Combi\n";
+    "Predné ľavé svetlo;Škoda;Octavia III;;2015;5E1941015;120;Svetlá;Predné svetlá;Dobrý;12 mesiacov;Funkčné, bez prasklín, úchyty celé.;Žilina;0900123456;Škoda Octavia III Combi\n";
   const sampleHref = "data:text/csv;charset=utf-8," + encodeURIComponent("﻿" + sample);
 
   return (

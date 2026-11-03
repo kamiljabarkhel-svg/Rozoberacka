@@ -23,7 +23,7 @@ export default function ListingForm({ uid, cat, prof, edit, onSaved }: { uid: st
     oem: edit?.oem || "", partMaker: edit?.partMaker || "",
     brandId: edit?.brandId ?? 0, modelId: edit?.modelId ?? 0, engineId: edit?.engineId ?? null as number | null, year: edit?.year ?? 0,
     gearbox: edit?.gearbox || "", km: edit?.km != null ? String(edit.km) : "", side: edit?.side || "",
-    condition: (edit?.condition || "") as Condition | "", price: edit ? String(edit.price) : "", warranty: edit?.warranty || "Bez záruky",
+    condition: (edit?.condition || "") as Condition | "", price: edit ? String(edit.price) : "", warranty: edit?.warranty || (prof?.type === "Súkromná osoba" ? "Bez záruky" : "12 mesiacov"),
     shipping: edit?.shipping || "Len osobný odber", tested: edit?.tested ?? false, returns14: edit?.returns14 ?? false,
     description: edit?.description || "", city: edit?.city || prof?.city || "", phone: edit?.phone || prof?.phone || "",
   });
@@ -32,6 +32,7 @@ export default function ListingForm({ uid, cat, prof, edit, onSaved }: { uid: st
   const [bad, setBad] = useState<Set<Key>>(new Set());
   const [busy, setBusy] = useState(false), [err, setErr] = useState("");
   const top = useRef<HTMLDivElement>(null);
+  const firm = (prof?.type || "Firma") === "Firma";
   const set = <K extends keyof typeof v>(k: K, val: (typeof v)[K]) => { setV((o) => ({ ...o, [k]: val })); };
 
   const models = cat.models.filter((m) => m.brandId === v.brandId);
@@ -149,10 +150,12 @@ export default function ListingForm({ uid, cat, prof, edit, onSaved }: { uid: st
         {step === 2 && <>
           {L({ k: "cond", t: "Stav", children: <select value={v.condition} onChange={(e) => { set("condition", e.target.value as Condition); clear("cond"); }}><option value="">Vyberte…</option><option>Veľmi dobrý</option><option>Dobrý</option><option>Na opravu</option></select> })}
           {L({ k: "price", t: "Cena (€)", children: <input value={v.price} inputMode="decimal" placeholder="napr. 120" onChange={(e) => { set("price", e.target.value); clear("price"); }} /> })}
-          {L({ k: "war", t: "Záruka", children: <select value={v.warranty} onChange={(e) => set("warranty", e.target.value)}><option>Bez záruky</option><option>14 dní</option><option>3 mesiace</option></select> })}
+          {L({ k: "war", t: "Záruka", children: <select value={v.warranty} onChange={(e) => set("warranty", e.target.value)}>{!firm && <option>Bez záruky</option>}<option>12 mesiacov</option><option>24 mesiacov</option></select> })}
           {L({ k: "ship", t: "Odovzdanie", children: <select value={v.shipping} onChange={(e) => set("shipping", e.target.value)}><option>Len osobný odber</option><option>Zasielam kuriérom</option></select> })}
           <label className="pp-chk"><input type="checkbox" checked={v.tested} onChange={(e) => set("tested", e.target.checked)} /><span>Diel je odskúšaný</span></label>
-          <label className="pp-chk"><input type="checkbox" checked={v.returns14} onChange={(e) => set("returns14", e.target.checked)} /><span>Možnosť vrátenia do 14 dní</span></label>
+          {firm
+            ? <p className="full mute pp-hint">Ako firma dávate spotrebiteľovi pri použitom diele záruku aspoň 12 mesiacov. Pri predaji na diaľku (kuriér) môže kupujúci odstúpiť od zmluvy do 14 dní – na webe sa to zobrazí automaticky. Vady, ktoré opíšete v popise, nie sú predmetom reklamácie. Toto nie je právna rada.</p>
+            : <label className="pp-chk"><input type="checkbox" checked={v.returns14} onChange={(e) => set("returns14", e.target.checked)} /><span>Ponúkam vrátenie do 14 dní, ak diel nepasuje</span></label>}
         </>}
         {step === 3 && <>
           <div className={"full pp-photos" + (bad.has("photos") ? " bad" : "")}>

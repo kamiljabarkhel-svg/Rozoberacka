@@ -97,3 +97,14 @@ Test: `testy/` (napodobenina Supabase + 11 kontrol). Na skutočnom Supabase sa t
 
 ## Pozor
 Katalóg je z prototypu, písaný z pamäte. Pred ostrou prevádzkou ho treba nahradiť overeným zdrojom.
+
+## Doplnky (stav 3. 11. 2026)
+Na ostrej Supabase sú spustené súbory 01 → 02 → 03 → 04 → 05.
+- `04_funkcie.sql`: nové polia inzerátu, povinné polia v databáze, správy predajcovi, počítadlo na úvode.
+- `05_bezpecnost_hladanie.sql`: limity podľa IP (telefón 40/h, správy 5/h, zobrazenie 1× na IP a deň, nahlásenie 5/h),
+  stĺpcové práva (predajca nemení zobrazenia, TOP, overenie ani správy kupujúcich), TOP cez funkciu (max 3, 30 dní),
+  záruka podľa zákona (firma min. 12 mesiacov, odstúpenie do 14 dní automaticky), nahlásenia, správcovia (`admins`),
+  záznam akcií správcu (`admin_log`), hľadanie na serveri `search_listings` (bez diakritiky, tvary slov, preklepy, synonymá,
+  OEM, auto vrátane „pasuje aj na“ a rovnakého OEM), limit fotiek 5 MB (JPEG, WebP, PNG).
+- Testy: `testy/20_test_05.sql` (35 kontrol). `testy/10_test_bezpecnosti.sql` je starší a po súbore 04 už nesedí (chýbajú povinné polia), nahrádza ho 20.
+- Správcu pridáte v SQL Editore: `insert into public.admins select id from auth.users where email = 'VAS@EMAIL';`

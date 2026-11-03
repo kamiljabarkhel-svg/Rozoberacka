@@ -16,7 +16,7 @@ import CsvImport from "./CsvImport";
 
 type Tab = "home" | "list" | "form" | "csv" | "msg" | "prof";
 const TABS: [Tab, string][] = [["home", "Nástenka"], ["list", "Moje inzeráty"], ["form", "Pridať inzerát"], ["csv", "Import CSV"], ["msg", "Správy"], ["prof", "Profil"]];
-const ST: Record<Status, string> = { active: "Aktívny", paused: "Pozastavený", sold: "Predaný" };
+const ST: Record<Status, string> = { active: "Aktívny", paused: "Pozastavený", sold: "Predaný", blocked: "Skrytý správcom" };
 
 export default function Portal() {
   const router = useRouter();
@@ -126,6 +126,7 @@ function Dashboard({ cat, prof, items, msgs, go }: { cat: Catalog | null; prof: 
     ["Inzeráty bez fotky", items.filter((i) => !i.photos.length && i.status !== "sold").length, "list"],
     ["Inzeráty bez popisu", items.filter((i) => i.description.length < 20).length, "list"],
     ["Pozastavené inzeráty", p.length, "list"],
+    ["Inzeráty skryté správcom", items.filter((i) => i.status === "blocked").length, "list"],
   ];
   const profMissing = !prof?.city || !prof?.phone;
   const byCat = new Map<string, number>();
@@ -231,10 +232,13 @@ function MyList({ items, cat, onEdit, onStatus, onTop, onDup, onDelete }: {
                 <span className="pp-meta"><span className={"pp-st " + l.status}>{ST[l.status]}</span>{l.top && <span className="toptag">TOP</span>}<b>{fmtPrice(l.price)}</b><span className="mute">{l.views} zobrazení · {l.calls} telefónov</span></span>
               </div>
               <div className="pp-ra">
+                {l.status === "blocked" ? <span className="mute pp-blk">Inzerát skryl správca portálu. Upravte ho a napíšte nám.</span> : null}
                 <button className="ubtn" onClick={() => onEdit(l)}>Upraviť</button>
+                {l.status !== "blocked" && <>
                 {l.status === "active" ? <button className="ubtn" onClick={() => onStatus([l.id], "paused")}>Pozastaviť</button> : <button className="ubtn" onClick={() => onStatus([l.id], "active")}>Aktivovať</button>}
                 {l.status !== "sold" && <button className="ubtn" onClick={() => onStatus([l.id], "sold")}>Predané</button>}
                 <button className="ubtn" onClick={() => onTop(l)}>{l.top ? "Zrušiť TOP" : "TOP"}</button>
+                </>}
                 <button className="ubtn" onClick={() => onDup(l)}>Duplikovať</button>
                 {confirm?.length === 1 && confirm[0] === l.id
                   ? <><button className="del" onClick={() => { onDelete([l]); setConfirm(null); }}>Naozaj zmazať?</button><button className="lnk" onClick={() => setConfirm(null)}>Nie</button></>

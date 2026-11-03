@@ -2,7 +2,7 @@
 // Detail inzerátu: galéria, cena, telefón, predajca, popis, parametre, „Pasuje na“, podobné inzeráty.
 import { Fragment, useCallback, useEffect, useState } from "react";
 import type { Catalog, Listing, Vehicle } from "@/lib/types";
-import { getActiveListings, getCatalog, getListing, getListingVehicles, logView } from "@/lib/data";
+import { getCatalog, getListing, getListingVehicles, getSimilar, logView } from "@/lib/data";
 import { groupVehicles } from "@/lib/search";
 import { agoText, condDot, price } from "@/lib/format";
 import { useFavs } from "@/lib/favs";
@@ -13,6 +13,7 @@ import ListingLink from "./ListingLink";
 import Link from "next/link";
 import Tags from "./Tags";
 import ContactBox from "./ContactBox";
+import ReportBox from "./ReportBox";
 
 type State =
   | { st: "loading" }
@@ -30,13 +31,10 @@ export default function ListingDetail({ id, onClose }: { id: number; onClose?: (
     setS({ st: "loading" }); setGi(0);
     (async () => {
       try {
-        const [cat, l, all] = await Promise.all([getCatalog(), getListing(id), getActiveListings()]);
+        const [cat, l] = await Promise.all([getCatalog(), getListing(id)]);
         if (off) return;
         if (!l) { setS({ st: "missing" }); return; }
-        const vehicles = await getListingVehicles(l, all);
-        const similar = all.filter((x) => x.id !== l.id && (x.categoryId === l.categoryId || x.brandId === l.brandId))
-          .sort((a, b) => Number(b.categoryId === l.categoryId && b.brandId === l.brandId) - Number(a.categoryId === l.categoryId && a.brandId === l.brandId))
-          .slice(0, 3);
+        const [vehicles, similar] = await Promise.all([getListingVehicles(l), getSimilar(l).catch(() => [])]);
         if (off) return;
         setS({ st: "ok", l, cat, vehicles, similar });
         if (!onClose) document.title = `${l.name} – Rozoberačka`;
@@ -78,14 +76,16 @@ export default function ListingDetail({ id, onClose }: { id: number; onClose?: (
   const rows: [string, string][] = [
     ["Značka", bName || "neuvedené"], ["Model", mName || "neuvedené"], ["Motorizácia", eName || "Pasuje na všetky motorizácie"],
     ["Ročník", l.year ? String(l.year) : "neuvedené"], ["OEM číslo", l.oem || "neuvedené"], ["Kategória", cName + (sName ? " · " + sName : "")],
-    ["Stav", l.condition], ["Záruka", l.warranty || "Bez záruky"], ["Zasielanie", l.shipping || "Len osobný odber"], ["Mesto", l.city || "neuvedené"],
+    ["Stav", l.condition], ["Záruka", l.warranty === "Bez záruky" ? "Bez záruky (predáva súkromná osoba)" : l.warranty], ["Zasielanie", l.shipping || "Len osobný odber"], ["Mesto", l.city || "neuvedené"],
   ];
   if (l.side) rows.splice(5, 0, ["Strana auta", l.side]);
   if (l.partMaker) rows.splice(5, 0, ["Výrobca dielu", l.partMaker]);
   if (l.gearbox) rows.push(["Prevodovka auta", l.gearbox]);
   if (l.km) rows.push(["Najazdené km auta", l.km.toLocaleString("sk-SK") + " km"]);
   rows.push(["Odskúšaný", l.tested ? "Áno, podľa predajcu" : "Neuvedené"]);
-  rows.push(["Vrátenie", l.returns14 ? "Do 14 dní, ak diel nepasuje" : "Podľa dohody s predajcom"]);
+  rows.push(["Vrátenie", l.seller.type === "Firma"
+    ? "Pri kúpe na diaľku (kuriér) môžete od zmluvy odstúpiť do 14 dní"
+    : l.returns14 ? "Do 14 dní, ak diel nepasuje (ponuka predajcu)" : "Podľa dohody s predajcom"]);
   const groups = groupVehicles(vehicles, cat);
 
   return (
@@ -126,7 +126,7 @@ export default function ListingDetail({ id, onClose }: { id: number; onClose?: (
           <div className="seller">
             <b>{l.seller.name}{l.seller.verified && <span className="bdg">Overený predajca</span>}</b>
             <span className="mute">{l.seller.type} · {l.seller.city || l.city}</span>
-            <span className="mute">Inzerát pridaný {agoText(l.createdAt)}</span>
+            <span className="mute">Inzerát pridaný {agoText(l.createdAt)}{l.updatedAt && Date.parse(l.updatedAt) - Date.parse(l.createdAt) > 3600000 ? ` · upravený ${agoText(l.updatedAt)}` : ""}</span>
           </div>
         </div>
       </div>
@@ -145,14 +145,15 @@ export default function ListingDetail({ id, onClose }: { id: number; onClose?: (
         <p className="mute fits-note">Zoznam skladáme z údajov predajcov (vlastné auto, „pasuje aj na“ a inzeráty s rovnakým OEM číslom). Nie je to overený katalóg. Pred nákupom porovnajte OEM číslo s pôvodným dielom.</p>
       </>}
 
-      <div className="warn">Pred nákupom porovnajte OEM číslo so starým dielom a vyžiadajte si od predajcu ďalšie fotky.</div>
+      <div className="warn">Pred nákupom porovnajte OEM číslo so starým dielom a vyžiadajte si od predajcu ďalšie fotky. Neposielajte zálohy vopred neznámym predajcom.</div>
+      <ReportBox id={l.id} />
 
       {similar.length > 0 && <>
         <h2 className="sh">Podobné inzeráty</h2>
         <div className="sim">
           {similar.map((x) => (
             <ListingLink key={x.id} id={x.id} className="simc">
-              <div className="ph">{x.photos.length ? <img alt="" src={x.photos[0]} /> : <div className="nop"><Icon id={catIcon(x.categoryId)} /></div>}</div>
+              <div className="ph">{x.photos.length ? <img alt="" loading="lazy" src={x.thumbs[0]} onError={(e) => { e.currentTarget.src = x.photos[0]; }} /> : <div className="nop"><Icon id={catIcon(x.categoryId)} /></div>}</div>
               <span>{x.name}</span><b>{price(x.price)}</b>
             </ListingLink>
           ))}

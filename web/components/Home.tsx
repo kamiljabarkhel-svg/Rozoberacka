@@ -2,10 +2,9 @@
 // Úvodná stránka: hrdina, panel hľadania podľa auta, VIN, výsledky s facetami a kartami.
 // Správanie podľa prototyp.html. Filtre sa ukladajú do adresy (?znacka=…), dá sa ich poslať ďalej.
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { Catalog, Filters, Listing } from "@/lib/types";
+import type { Catalog, Filters } from "@/lib/types";
 import { emptyFilters } from "@/lib/types";
-import { getActiveListings, getCatalog, getStats, initialData } from "@/lib/data";
-import { search } from "@/lib/search";
+import { getCatalog, getCities, getStats, initialData, searchListings, type SearchPage } from "@/lib/data";
 import { decodeVin } from "@/lib/vin";
 import { pieces, sk } from "@/lib/format";
 import { useFavs } from "@/lib/favs";
@@ -15,7 +14,7 @@ import ListingCard from "./ListingCard";
 import ListingDetail from "./ListingDetail";
 import SellersSoon from "./SellersSoon";
 
-const PAGE = 8;
+const PAGE = 12;
 const POP = ["Predné svetlo", "Zadné svetlo", "Nárazník", "Kapota", "Zrkadlo", "Dvere", "Riadiaca jednotka", "Alternátor", "Turbo", "Motor", "Prevodovka", "Volant"];
 
 // Krátke názvy parametrov v adrese
@@ -53,10 +52,11 @@ function writeUrl(f: Filters) {
 export default function Home() {
   const init = useMemo(() => initialData(), []);
   const [catalog, setCatalog] = useState<Catalog | null>(init?.catalog || null);
-  const [listings, setListings] = useState<Listing[]>(init?.listings || []);
+  const [res, setRes] = useState<SearchPage | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [cities, setCities] = useState<string[]>([]);
   const [loadErr, setLoadErr] = useState("");
   const [f, setF] = useState<Filters>(emptyFilters);
-  const [shown, setShown] = useState(PAGE);
   const [adv, setAdv] = useState(false);
   const [vin, setVin] = useState("");
   const [vinCat, setVinCat] = useState("");
@@ -69,20 +69,14 @@ export default function Home() {
   const resRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLElement>(null);
 
-  // Načítanie údajov (v demo režime sú už pripravené)
+  // Katalóg áut, mestá a počítadlo (v demo režime je katalóg už pripravený)
   useEffect(() => {
-    if (init) return;
     let off = false;
-    Promise.all([getCatalog(), getActiveListings()])
-      .then(([c, l]) => { if (!off) { setCatalog(c); setListings(l); } })
-      .catch((e) => { if (!off) setLoadErr(String(e?.message || e)); });
+    if (!init) getCatalog().then((c) => { if (!off) setCatalog(c); }).catch((e) => { if (!off) setLoadErr(String(e?.message || e)); });
+    getCities().then((c) => { if (!off) setCities(c); }).catch(() => {});
+    getStats().then((x) => { if (!off) setStats(x); }).catch(() => {});
     return () => { off = true; };
   }, [init]);
-
-  useEffect(() => {
-    if (!listings.length && !init) return;
-    getStats(listings).then(setStats).catch(() => setStats(null));
-  }, [listings, init]);
 
   // Filtre z adresy pri otvorení
   useEffect(() => {
@@ -99,7 +93,7 @@ export default function Home() {
   useEffect(() => {
     const h = (e: Event) => {
       const d = (e as CustomEvent<{ q: string; scroll: boolean }>).detail;
-      setF((x) => ({ ...x, q: d.q })); setShown(PAGE);
+      setF((x) => ({ ...x, q: d.q }));
       if (d.scroll) setTimeout(toRes, 30);
     };
     window.addEventListener("rz-q", h);
@@ -115,7 +109,32 @@ export default function Home() {
     return () => window.removeEventListener("hashchange", h);
   }, []);
 
-  const set = (patch: Partial<Filters>) => { setF((x) => ({ ...x, ...patch })); setShown(PAGE); };
+  const set = (patch: Partial<Filters>) => { setF((x) => ({ ...x, ...patch })); };
+
+  // Hľadanie v databáze: pri písaní s krátkym oneskorením, staršie odpovede sa zahodia
+  const seq = useRef(0);
+  const favKey = f.fav ? favs.join(",") : "";
+  useEffect(() => {
+    if (!ready.current) return;
+    const my = ++seq.current;
+    setBusy(true);
+    const t = window.setTimeout(() => {
+      searchListings(f, favs, 0, PAGE)
+        .then((r) => { if (my === seq.current) { setRes(r); setLoadErr(""); } })
+        .catch((e) => { if (my === seq.current) setLoadErr(String(e?.message || e)); })
+        .finally(() => { if (my === seq.current) setBusy(false); });
+    }, f.q ? 250 : 0);
+    return () => window.clearTimeout(t);
+  }, [f, favKey]); // eslint-disable-line react-hooks/exhaustive-deps
+  const more = () => {
+    if (!res) return;
+    const my = ++seq.current;
+    setBusy(true);
+    searchListings(f, favs, res.items.length, PAGE)
+      .then((r) => { if (my === seq.current) setRes({ ...r, items: res.items.concat(r.items.filter((x) => !res.items.some((y) => y.id === x.id))) }); })
+      .catch((e) => { if (my === seq.current) setLoadErr(String(e?.message || e)); })
+      .finally(() => { if (my === seq.current) setBusy(false); });
+  };
 
   const brands = useMemo(() => (catalog ? [...catalog.brands].sort((a, b) => sk(a.name, b.name)) : []), [catalog]);
   // Rýchle značky v poradí ako v prototype (najčastejšie na SK), potom ostatné obľúbené
@@ -129,16 +148,13 @@ export default function Home() {
   const engines = useMemo(() => (catalog && model ? catalog.engines.filter((e) => e.modelId === model.id) : []), [catalog, model]);
   const cats = useMemo(() => (catalog ? [...catalog.categories].sort((a, b) => a.sort - b.sort) : []), [catalog]);
   const subs = useMemo(() => (catalog && f.cat ? catalog.subcategories.filter((s) => s.categoryId === f.cat).sort((a, b) => a.sort - b.sort) : []), [catalog, f.cat]);
-  const cities = useMemo(() => [...new Set(listings.map((l) => l.city).filter((c): c is string => !!c))].sort(sk), [listings]);
   const years = useMemo(() => {
     const to = model?.yearTo || new Date().getFullYear(), from = model?.yearFrom || 1995, r: number[] = [];
     for (let y = to; y >= from; y--) r.push(y);
     return r;
   }, [model]);
 
-  const res = useMemo(() => (catalog ? search(listings, f, catalog, favs) : null), [catalog, listings, f, favs]);
-
-  const reset = () => { setF({ ...emptyFilters }); setShown(PAGE); window.dispatchEvent(new CustomEvent("rz-q-set", { detail: "" })); };
+  const reset = () => { setF({ ...emptyFilters }); window.dispatchEvent(new CustomEvent("rz-q-set", { detail: "" })); };
 
   const onVin = () => {
     const r = decodeVin(vin);
@@ -276,14 +292,14 @@ export default function Home() {
 
         {res && catalog && (
           <div className="chips" aria-label="Kategórie nájdených dielov">
-            <button className="chip" aria-pressed={!f.cat} onClick={() => set({ cat: "", sub: null })}>Všetky ({res.facets.base})</button>
-            {cats.filter((c) => res.facets.cat.get(c.id) || f.cat === c.id).map((c) => (
+            <button className="chip" aria-pressed={!f.cat} onClick={() => set({ cat: "", sub: null })}>Všetky ({res.base})</button>
+            {cats.filter((c) => res.cats.get(c.id) || f.cat === c.id).map((c) => (
               <button key={c.id} className="chip" aria-pressed={f.cat === c.id} onClick={() => set({ cat: f.cat === c.id ? "" : c.id, sub: null })}>
-                <Icon id={catIcon(c.id)} />{c.name} ({res.facets.cat.get(c.id) || 0})
+                <Icon id={catIcon(c.id)} />{c.name} ({res.cats.get(c.id) || 0})
               </button>
             ))}
-            {f.cat && subs.filter((s) => res.facets.sub.get(s.id) || f.sub === s.id).map((s) => (
-              <button key={s.id} className="chip" aria-pressed={f.sub === s.id} onClick={() => set({ sub: f.sub === s.id ? null : s.id })}>{s.name} ({res.facets.sub.get(s.id) || 0})</button>
+            {f.cat && subs.filter((s) => res.subs.get(s.id) || f.sub === s.id).map((s) => (
+              <button key={s.id} className="chip" aria-pressed={f.sub === s.id} onClick={() => set({ sub: f.sub === s.id ? null : s.id })}>{s.name} ({res.subs.get(s.id) || 0})</button>
             ))}
           </div>
         )}
@@ -292,11 +308,11 @@ export default function Home() {
 
         <div className="grid">
           {!res && !loadErr && <div className="loading">Načítavam inzeráty…</div>}
-          {res && catalog && res.total > 0 && res.items.slice(0, shown).map((l) => (
+          {res && catalog && res.total > 0 && res.items.map((l) => (
             <ListingCard key={l.id} l={l} cat={catalog} fav={favs.includes(l.id)} onFav={toggle} />
           ))}
-          {res && res.total > shown && (
-            <button className="add more" onClick={() => setShown(shown + PAGE)}>Načítať viac ({res.total - shown})</button>
+          {res && res.total > res.items.length && (
+            <button className="add more" disabled={busy} onClick={more}>{busy ? "Načítavam…" : `Načítať viac (${res.total - res.items.length})`}</button>
           )}
           {res && res.total === 0 && (
             <div className="empty">Nič sme nenašli. Skúste iné slovo, kategóriu alebo všetky značky.<br />

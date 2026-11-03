@@ -105,6 +105,34 @@ const errs = [];
     await pg.waitForSelector(".pp-pre li.err"); const okc = await pg.locator(".pp-pre li.ok").count(); if (okc !== 1) throw new Error("ok rows " + okc + " :: " + (await pg.locator(".pp-pre").innerText()));
     await pg.click("text=Importovať 1"); await pg.waitForSelector(".pp-toast:has-text('Importované: 1')", { timeout: 15000 });
   });
+  await step("hladanie s preklepom (server)", async () => {
+    await b2.goto(B + "/?q=alternatr"); await b2.waitForSelector(".card:has-text('Alternátor 140A')");
+    await b2.goto(B + "/?q=dynamo"); await b2.waitForSelector(".card:has-text('Alternátor 140A')");
+  });
+  await step("karta pouziva nahlad fotky", async () => {
+    await b2.goto(B + "/?q=octavia"); await b2.waitForSelector(".card img");
+    const src = await b2.locator(".card img").first().getAttribute("src"); if (!/_t\.jpg/.test(src)) throw new Error(src);
+    await b2.waitForFunction(() => { const i = document.querySelector(".card img"); return i.complete && i.naturalWidth > 0 && i.naturalWidth <= 480; });
+  });
+  await step("nahlasenie inzeratu", async () => {
+    await b2.click(".card:has-text('LED Octavia') h2 a"); await b2.waitForURL("**/inzerat/**");
+    await b2.click("text=Nahlásiť inzerát"); await b2.selectOption(".rep select", "Podvod"); await b2.fill(".rep textarea", "Chce zálohu vopred.");
+    await b2.click("text=Odoslať nahlásenie"); await b2.waitForSelector("text=nahlásenie sme prijali");
+  });
+  await step("zaruka firmy bez moznosti Bez zaruky", async () => {
+    await pg.click(".pp-nav >> text=Pridať inzerát"); await pg.click(".pp-steps >> text=Stav, cena");
+    const o = await pg.locator("label:has-text('Záruka') select option").allTextContents(); if (o.includes("Bez záruky")) throw new Error(o.join("|"));
+  });
+  await step("admin: nahlasenie -> skryt inzerat", async () => {
+    require("child_process").execSync(`psql -h /tmp/pgt -p 5499 -U postgres -d e2e -qc "insert into admins select id from auth.users where email='test@rz.sk' on conflict do nothing"`);
+    await pg.goto(B + "/admin"); await pg.waitForSelector(".pp-tile");
+    await pg.click(".pp-nav >> text=Nahlásenia"); await pg.waitForSelector(".pp-msgs li:has-text('Podvod')");
+    await pg.click("text=Skryť inzerát a vybaviť"); await pg.waitForSelector(".pp-toast");
+    await pg.click(".pp-nav >> text=Záznam akcií"); await pg.waitForSelector(".pp-row:has-text('skryť inzerát')");
+    await b2.goto(B + "/?q=octavia"); await b2.waitForSelector(".cnt"); await b2.waitForTimeout(800);
+    if (await b2.locator(".card:has-text('LED Octavia')").count()) throw new Error("still public");
+    await pg.goto(B + "/predajca#list"); await pg.waitForSelector(".pp-st.blocked");
+  });
   await step("odhlasenie", async () => { await pg.click("text=Odhlásiť sa"); await pg.waitForURL("**/pre-predajcov"); });
   console.log("ERRORS:", errs.length ? "\n" + [...new Set(errs)].join("\n") : "none");
   await br.close();

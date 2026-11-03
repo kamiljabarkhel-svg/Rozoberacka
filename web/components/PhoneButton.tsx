@@ -14,11 +14,12 @@ export default function PhoneButton({ id }: { id: number }) {
         try {
           const p = await revealPhone(id);
           setSt(p ? { phone: p } : { err: "Telefón nie je dostupný." });
-        } catch {
-          setSt({ err: "Telefón sa nepodarilo načítať. Skúste znova." });
+        } catch (x) {
+          const m = String((x as Error)?.message || "");
+          setSt({ err: /Príliš veľa/.test(m) ? m.replace(/^reveal_phone: /, "") : "Telefón sa nepodarilo načítať. Skúste znova." });
         }
       }}>
-      {st.busy ? "Načítavam…" : st.err ? "Skúsiť znova" : "Zobraziť telefón"}
+      {st.busy ? "Načítavam…" : st.err ? (/Príliš veľa/.test(st.err) ? "Skúste neskôr" : "Skúsiť znova") : "Zobraziť telefón"}
     </button>
   );
 }

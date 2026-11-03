@@ -26,6 +26,7 @@ http.createServer(async (req, res) => {
       const body = await readBody(req);
       const h = { ...req.headers }; delete h.host; delete h["content-length"];
       if (!/^Bearer /.test(h.authorization || "")) h.authorization = "Bearer " + h.apikey;
+      h["x-forwarded-for"] = String(req.headers["x-test-ip"] || req.socket.remoteAddress);
       const pr = http.request({ host: "127.0.0.1", port: 3001, path: p.slice(8) + u.search, method: req.method, headers: h }, (r) => { const hh = { ...cors }; for (const [k, v] of Object.entries(r.headers)) if (!k.startsWith("access-control-")) hh[k] = v; res.writeHead(r.statusCode, hh); r.pipe(res); });
       pr.on("error", (e) => send(res, 502, { message: String(e) })); pr.end(body); return;
     }

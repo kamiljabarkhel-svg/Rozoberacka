@@ -86,15 +86,19 @@ export function buildDemoListings(cat: Catalog): { listings: Listing[]; phones: 
       const bb = brandId(fb), mm = modelId(bb, fm);
       return { brandId: bb, modelId: mm, engineId: engineId(mm, fe) };
     });
+    const firm = r.seller[1] === "Firma";
+    const created = new Date(BASE - r.ago * 86400000 - r.id * 60000).toISOString();
+    const photos = Array.from({ length: r.photos }, (_, k) => demoPhoto(r.id, k));
     return {
       id: r.id, name: r.name, brandId: b, modelId: m, engineId: engineId(m, r.engine), year: r.year,
       categoryId: r.cat, subcategoryId: subId(r.cat, r.sub), oem: r.oem || null, price: r.price, city: r.city,
-      condition: r.cond, description: r.desc, warranty: r.warranty, shipping: r.shipping,
-      createdAt: new Date(BASE - r.ago * 86400000 - r.id * 60000).toISOString(),
-      photos: Array.from({ length: r.photos }, (_, k) => demoPhoto(r.id, k)),
+      condition: r.cond, description: r.desc,
+      // záruka podľa zákona: firma pri použitom diele najmenej 12 mesiacov (pôvodné hodnoty z prototypu sa prepočítajú)
+      warranty: firm ? "12 mesiacov" : "Bez záruky", shipping: r.shipping,
+      createdAt: created, updatedAt: created, photos, thumbs: photos,
       fits, seller: { name: r.seller[0], type: r.seller[1], city: r.city, verified: r.seller[2] },
       side: EXTRA[r.id]?.side ?? null, gearbox: EXTRA[r.id]?.gearbox ?? null, km: EXTRA[r.id]?.km ?? null,
-      tested: !!EXTRA[r.id]?.tested, returns14: !!EXTRA[r.id]?.returns14, top: !!EXTRA[r.id]?.top, partMaker: null,
+      tested: !!EXTRA[r.id]?.tested, returns14: firm || !!EXTRA[r.id]?.returns14, top: !!EXTRA[r.id]?.top, partMaker: null,
     };
   });
   return { listings, phones };

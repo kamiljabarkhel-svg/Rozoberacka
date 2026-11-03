@@ -16,7 +16,7 @@ export function sellerClient(): SupabaseClient {
 }
 
 export type Profile = { id: string; email: string; name: string; type: string; city: string; phone: string; ico: string; verified: boolean };
-export type Status = "active" | "paused" | "sold";
+export type Status = "active" | "paused" | "sold" | "blocked";
 export type MyListing = {
   id: number; name: string; brandId: number; modelId: number; engineId: number | null; year: number;
   categoryId: string; subcategoryId: number | null; oem: string; partMaker: string; price: number; city: string;
@@ -37,6 +37,8 @@ const SKMSG: [RegExp, string][] = [
   [/listings_oem_required/i, "Zadajte OEM číslo dielu (aspoň 4 písmená alebo číslice)."],
   [/listings_desc_required/i, "Popis musí mať aspoň 20 znakov."],
   [/contacts_phone_digits/i, "Telefón musí mať aspoň 9 číslic."],
+  [/permission denied/i, "Na túto zmenu nemáte oprávnenie."],
+  [/listings_warranty_check/i, "Vyberte platnú záruku."],
 ];
 export function skError(e: unknown): string {
   const m = String((e as Error)?.message || e);
@@ -133,27 +135,31 @@ export async function myListings(uid: string): Promise<MyListing[]> {
   return ((data || []) as unknown as Row[]).map(toMine);
 }
 
-function dbRow(uid: string, x: ListingInput) {
+function dbRow(x: ListingInput) {
   return {
-    seller_id: uid, name: x.name.trim(), brand_id: x.brandId, model_id: x.modelId, engine_id: x.engineId, year: x.year,
+    name: x.name.trim(), brand_id: x.brandId, model_id: x.modelId, engine_id: x.engineId, year: x.year,
     category_id: x.categoryId, subcategory_id: x.subcategoryId, oem: x.oem.trim(), part_maker: x.partMaker.trim() || null,
     price: x.price, city: x.city.trim(), condition: x.condition, description: x.description.trim(), warranty: x.warranty, shipping: x.shipping,
     side: x.side || null, donor_gearbox: x.gearbox || null, donor_km: x.km, tested: x.tested, returns_14d: x.returns14,
   };
 }
 
-/** Zmenší fotku na najviac 1600 px a uloží ako JPEG (menej dát, rýchlejšie načítanie). */
-export async function shrink(file: File): Promise<Blob> {
+/** Zmenší fotku: veľká najviac 1600 px (detail) a náhľad 480 px (karty). JPEG = menej dát na mobile. */
+export async function shrink(file: File): Promise<{ big: Blob; thumb: Blob }> {
   const url = URL.createObjectURL(file);
   try {
-    const img = await new Promise<HTMLImageElement>((ok, bad) => { const i = new Image(); i.onload = () => ok(i); i.onerror = bad; i.src = url; });
-    const k = Math.min(1, 1600 / Math.max(img.naturalWidth, img.naturalHeight));
-    const cv = document.createElement("canvas");
-    cv.width = Math.round(img.naturalWidth * k); cv.height = Math.round(img.naturalHeight * k);
-    cv.getContext("2d")!.drawImage(img, 0, 0, cv.width, cv.height);
-    return await new Promise<Blob>((ok, bad) => cv.toBlob((b) => (b ? ok(b) : bad(new Error("Fotku sa nepodarilo spracovať."))), "image/jpeg", 0.82));
+    const img = await new Promise<HTMLImageElement>((ok, bad) => { const i = new Image(); i.onload = () => ok(i); i.onerror = () => bad(new Error("Súbor nie je fotka alebo je poškodený.")); i.src = url; });
+    const draw = (max: number, q: number) => {
+      const k = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
+      const cv = document.createElement("canvas");
+      cv.width = Math.round(img.naturalWidth * k); cv.height = Math.round(img.naturalHeight * k);
+      cv.getContext("2d")!.drawImage(img, 0, 0, cv.width, cv.height);
+      return new Promise<Blob>((ok, bad) => cv.toBlob((b) => (b ? ok(b) : bad(new Error("Fotku sa nepodarilo spracovať."))), "image/jpeg", q));
+    };
+    return { big: await draw(1600, 0.82), thumb: await draw(480, 0.78) };
   } finally { URL.revokeObjectURL(url); }
 }
+const thumbOf = (path: string) => path.replace(/\.jpg$/, "_t.jpg");
 
 export type PhotoItem = { path?: string; url: string; file?: File };
 
@@ -162,11 +168,11 @@ export async function saveListing(uid: string, id: number | null, x: ListingInpu
   const c = sellerClient();
   let lid = id;
   if (lid == null) {
-    const r = await c.from("listings").insert(dbRow(uid, x)).select("id").single();
+    const r = await c.from("listings").insert({ seller_id: uid, ...dbRow(x) }).select("id").single();
     if (r.error) throw new Error(skError(r.error));
     lid = Number(r.data.id);
   } else {
-    const r = await c.from("listings").update(dbRow(uid, x)).eq("id", lid);
+    const r = await c.from("listings").update(dbRow(x)).eq("id", lid);
     if (r.error) throw new Error(skError(r.error));
   }
   const ct = await c.from("listing_contacts").upsert({ listing_id: lid, phone: x.phone.trim() });
@@ -183,14 +189,15 @@ export async function saveListing(uid: string, id: number | null, x: ListingInpu
     const p = photos[k];
     if (p.path) { paths.push(p.path); continue; }
     if (!p.file) continue;
-    const blob = await shrink(p.file);
+    const { big, thumb } = await shrink(p.file);
     const path = `${uid}/${lid}/${Date.now()}-${k}.jpg`;
-    const up = await c.storage.from(PHOTO_BUCKET).upload(path, blob, { contentType: "image/jpeg", upsert: false });
+    const up = await c.storage.from(PHOTO_BUCKET).upload(path, big, { contentType: "image/jpeg", upsert: false });
     if (up.error) throw new Error("Fotku sa nepodarilo nahrať: " + up.error.message);
+    await c.storage.from(PHOTO_BUCKET).upload(thumbOf(path), thumb, { contentType: "image/jpeg", upsert: false }); // náhľad; ak zlyhá, karta použije veľkú
     paths.push(path);
   }
   const gone = oldPaths.filter((p) => !paths.includes(p));
-  if (gone.length) await c.storage.from(PHOTO_BUCKET).remove(gone);
+  if (gone.length) await c.storage.from(PHOTO_BUCKET).remove(gone.flatMap((g) => [g, thumbOf(g)]));
   const dp = await c.from("listing_photos").delete().eq("listing_id", lid);
   if (dp.error) throw new Error(skError(dp.error));
   if (paths.length) {
@@ -201,17 +208,17 @@ export async function saveListing(uid: string, id: number | null, x: ListingInpu
 }
 
 export async function setStatus(ids: number[], status: Status) {
-  const { error } = await sellerClient().from("listings").update({ status }).in("id", ids);
+  const { error } = await sellerClient().from("listings").update({ status }).in("id", ids).neq("status", "blocked");
   if (error) throw new Error(skError(error));
 }
+/** TOP na 30 dní (zatiaľ zadarmo, najviac 3 naraz). V databáze funkcia toggle_top. */
 export async function setTop(id: number, on: boolean) {
-  const until = on ? new Date(Date.now() + 30 * 86400000).toISOString() : null;
-  const { error } = await sellerClient().from("listings").update({ top_until: until }).eq("id", id);
+  const { error } = await sellerClient().rpc("toggle_top", { p_listing: id, p_on: on });
   if (error) throw new Error(skError(error));
 }
 export async function deleteListings(items: MyListing[]) {
   const c = sellerClient();
-  const files = items.flatMap((i) => i.photos.map((p) => p.path));
+  const files = items.flatMap((i) => i.photos.flatMap((p) => [p.path, thumbOf(p.path)]));
   if (files.length) await c.storage.from(PHOTO_BUCKET).remove(files);
   const { error } = await c.from("listings").delete().in("id", items.map((i) => i.id));
   if (error) throw new Error(skError(error));
