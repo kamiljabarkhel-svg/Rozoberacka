@@ -6,7 +6,7 @@ export const OPERATOR = {
   dic: "",
   address: "Kvetná 1505/4D, 900 41 Rovinka",
   register: "",         // napr. „Obchodný register Mestského súdu Bratislava III, oddiel Sro, vložka č. …“
-  email: "",            // kontakt pre ochranu osobných údajov a nahlásenia
+  email: "autosuciastky24@gmail.com",
 };
 /** Verzia podmienok a zásad. Pri zmene textov zvýšiť – uloží sa pri registrácii predajcu. */
 export const TERMS_VERSION = "2026-11-03";
