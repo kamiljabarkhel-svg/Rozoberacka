@@ -7,8 +7,8 @@ import { listingHref } from "@/lib/paths";
 import { price } from "@/lib/format";
 import * as A from "@/lib/admin";
 
-type Tab = "home" | "rep" | "sel" | "lst" | "log";
-const TABS: [Tab, string][] = [["home", "Prehľad"], ["rep", "Nahlásenia"], ["sel", "Predajcovia"], ["lst", "Inzeráty"], ["log", "Záznam akcií"]];
+type Tab = "home" | "rep" | "sel" | "lst" | "req" | "log";
+const TABS: [Tab, string][] = [["home", "Prehľad"], ["rep", "Nahlásenia"], ["sel", "Predajcovia"], ["lst", "Inzeráty"], ["req", "Dopyty"], ["log", "Záznam akcií"]];
 const ST: Record<string, string> = { active: "Aktívny", paused: "Pozastavený", sold: "Predaný", blocked: "Skrytý", open: "Otvorené", resolved: "Vybavené", rejected: "Zamietnuté" };
 const d = (s: string) => new Date(s).toLocaleString("sk-SK", { day: "numeric", month: "numeric", year: "numeric", hour: "2-digit", minute: "2-digit" });
 
@@ -36,6 +36,7 @@ export default function Admin() {
         {tab === "rep" && <Reports run={run} />}
         {tab === "sel" && <Sellers run={run} />}
         {tab === "lst" && <Listings run={run} />}
+        {tab === "req" && <Reqs run={run} />}
         {tab === "log" && <Log />}
       </section>
       {toast && <div className="pp-toast" role="status">{toast}</div>}
@@ -53,7 +54,7 @@ function useLoad<T>(fn: () => Promise<T>, deps: unknown[]): [T | null, () => voi
 function Home() {
   const [s, , e] = useLoad(A.adminStats, []);
   const L: [string, string][] = [["sellers", "Predajcovia"], ["sellers_new_7d", "Noví predajcovia (7 dní)"], ["active", "Aktívne inzeráty"], ["blocked", "Skryté inzeráty"],
-    ["reports_open", "Otvorené nahlásenia"], ["messages_7d", "Správy (7 dní)"], ["phones_7d", "Odkryté telefóny (7 dní)"], ["views_7d", "Zobrazenia (7 dní)"]];
+    ["reports_open", "Otvorené nahlásenia"], ["requests_open", "Otvorené dopyty"], ["messages_7d", "Správy (7 dní)"], ["phones_7d", "Odkryté telefóny (7 dní)"], ["views_7d", "Zobrazenia (7 dní)"]];
   return <div><header className="pp-h"><h1>Prehľad portálu</h1></header>{e && <p className="pp-err">{e}</p>}
     <div className="pp-tiles">{L.map(([k, l]) => <div key={k} className="pp-tile"><b>{s ? Number(s[k] || 0).toLocaleString("sk-SK") : "…"}</b><span>{l}</span></div>)}</div></div>;
 }
@@ -118,4 +119,14 @@ function Log() {
   const [rows, , e] = useLoad(A.log, []);
   return <div><header className="pp-h"><h1>Záznam akcií správcu</h1></header>{e && <p className="pp-err">{e}</p>}
     <ul className="pp-rows">{rows?.map((r) => <li key={r.id} className="pp-row ad-row"><div className="pp-ri"><b>{r.action}</b><span className="mute">{d(r.createdAt)} · {r.target} · {r.detail}</span></div></li>)}</ul></div>;
+}
+
+function Reqs({ run }: { run: Run }) {
+  const [rows, reload, e] = useLoad(A.requests, []);
+  return <div><header className="pp-h"><h1>Dopyty kupujúcich</h1></header>{e && <p className="pp-err">{e}</p>}
+    {rows && !rows.length && <div className="empty">Žiadne dopyty.</div>}
+    <ul className="pp-rows">{rows?.map((r) => <li key={r.id} className="pp-row ad-row">
+      <div className="pp-ri"><b>#{r.id} {r.part}</b><span className="mute">{r.name} · {r.contact} · {d(r.createdAt)} · {r.status === "open" ? (new Date(r.expiresAt) > new Date() ? "otvorený" : "vypršal") : "uzavretý"}</span></div>
+      <div className="pp-ra">{r.status === "open" && <button className="del" onClick={async () => { await run(() => A.closeRequestAdmin(r.id), "Dopyt uzavretý"); reload(); }}>Uzavrieť (spam)</button>}</div>
+    </li>)}</ul></div>;
 }

@@ -51,12 +51,14 @@ function writeUrl(f: Filters) {
   window.history.replaceState(window.history.state, "", url);
 }
 
-export default function Home() {
-  const init = useMemo(() => initialData(), []);
+export type HomeSsr = { catalog: Catalog; res: SearchPage; stats: { parts: number; sellers: number }; cities: string[] };
+
+export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
+  const init = useMemo(() => (ssr ? { catalog: ssr.catalog } : initialData()), [ssr]);
   const [catalog, setCatalog] = useState<Catalog | null>(init?.catalog || null);
-  const [res, setRes] = useState<SearchPage | null>(null);
+  const [res, setRes] = useState<SearchPage | null>(ssr?.res || null);
   const [busy, setBusy] = useState(false);
-  const [cities, setCities] = useState<string[]>([]);
+  const [cities, setCities] = useState<string[]>(ssr?.cities || []);
   const [loadErr, setLoadErr] = useState("");
   const [f, setF] = useState<Filters>(emptyFilters);
   const [adv, setAdv] = useState(false);
@@ -64,7 +66,7 @@ export default function Home() {
   const [vinCat, setVinCat] = useState("");
   const [vinMsg, setVinMsg] = useState("");
   const [hash, setHash] = useState("");
-  const [stats, setStats] = useState<{ parts: number; sellers: number } | null>(null);
+  const [stats, setStats] = useState<{ parts: number; sellers: number } | null>(ssr?.stats || null);
   const [oemQ, setOemQ] = useState("");
   const { favs, toggle } = useFavs();
   const saved = useSaved();
@@ -334,6 +336,11 @@ export default function Home() {
               : <div className="empty">Na portáli zatiaľ nie sú žiadne inzeráty.<br />Predávate diely? <a href={STATIC_PREVIEW ? sellersHref : "/pre-predajcov?registracia=1"}>Pridajte prvý diel zadarmo</a>.</div>
           )}
         </div>
+
+        {!STATIC_PREVIEW && res && (
+          <div className="rq-cta"><p><b>Nenašli ste svoj diel?</b> Zadajte dopyt – vrakoviská vám pošlú ponuku. Bez registrácie.</p>
+            <a className="btn2" href={`/dopyt?${new URLSearchParams({ ...(f.brand ? { znacka: String(f.brand) } : {}), ...(f.model ? { model: String(f.model) } : {}), ...(f.q.trim() ? { q: f.q.trim() } : {}) }).toString()}`}>Zadať dopyt na diel</a></div>
+        )}
 
         <section className="how" aria-label="Ako to funguje">
           <div><b>1</b><h3>Vyberte svoje auto</h3><p>Značka, model a motorizácia, alebo VIN číslo. Diely, ktoré naň pasujú, uvidíte hneď.</p></div>

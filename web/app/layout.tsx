@@ -14,11 +14,16 @@ import Header from "@/components/Header";
 import { IconSprite } from "@/components/Icons";
 import { IS_DEMO } from "@/lib/data";
 import { OPERATOR } from "@/lib/operator";
+import { SITE_URL } from "@/lib/seo";
 
 
 export const metadata: Metadata = {
-  title: "Rozoberačka – použité autodiely",
+  metadataBase: new URL(SITE_URL),
+  title: { default: "Rozoberačka – použité autodiely", template: "%s | Rozoberačka" },
   description: "Použité autodiely presne na vaše auto. Hľadajte podľa značky, modelu a motorizácie, predajcovi zavoláte bez registrácie.",
+  applicationName: "Rozoberačka",
+  openGraph: { siteName: "Rozoberačka", locale: "sk_SK", type: "website" },
+  formatDetection: { telephone: false },
 };
 export const viewport: Viewport = { width: "device-width", initialScale: 1, viewportFit: "cover" };
 

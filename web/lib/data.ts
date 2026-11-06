@@ -58,6 +58,19 @@ async function selectAll<T>(table: string, cols: string, order: string): Promise
 
 type Row = Record<string, unknown>;
 
+/** Ako selectAll, ale len riadky so zadanými hodnotami stĺpcov. */
+async function selectAllWhere<T>(table: string, cols: string, order: string, eq: Record<string, string>): Promise<T[]> {
+  const out: T[] = [];
+  for (let from = 0; ; from += 1000) {
+    let q = client().from(table).select(cols);
+    for (const [k, v] of Object.entries(eq)) q = q.eq(k, v);
+    const { data, error } = await q.order(order).range(from, from + 999);
+    if (error) throw new Error(`${table}: ${error.message}`);
+    out.push(...((data || []) as T[]));
+    if (!data || data.length < 1000) return out;
+  }
+}
+
 function photoUrl(path: string): string {
   if (/^https?:|^data:/.test(path)) return path;
   return `${URL_}/storage/v1/object/public/${PHOTO_BUCKET}/${path.split("/").map(encodeURIComponent).join("/")}`;
@@ -68,7 +81,7 @@ export function thumbPath(path: string): string {
 }
 
 const LISTING_COLS =
-  "id,name,brand_id,model_id,engine_id,year,category_id,subcategory_id,oem,price,city,condition,description,warranty,shipping,created_at,updated_at,seller_id," +
+  "id,name,brand_id,model_id,engine_id,year,category_id,subcategory_id,oem,price,city,condition,description,warranty,shipping,created_at,updated_at,seller_id,donor_id," +
   "side,donor_gearbox,donor_km,tested,returns_14d,top_until,part_maker," +
   "sellers(name,seller_type,city,verified),listing_photos(path,position),listing_fits(brand_id,model_id,engine_id)";
 
@@ -86,7 +99,7 @@ function toListing(r: Row): Listing {
     thumbs: photos.map((p) => photoUrl(thumbPath(String(p.path)))),
     updatedAt: String(r.updated_at || r.created_at),
     fits: ((r.listing_fits || []) as Row[]).map((f) => ({ brandId: f.brand_id as number, modelId: (f.model_id as number) ?? null, engineId: (f.engine_id as number) ?? null })),
-    sellerId: String(r.seller_id || ""),
+    sellerId: String(r.seller_id || ""), donorId: (r.donor_id as number) ?? null,
     seller: { name: String(s.name || "Predajca"), type: String(s.seller_type || "Firma"), city: (s.city as string) ?? null, verified: Boolean(s.verified) },
     side: (r.side as Listing["side"]) ?? null, gearbox: (r.donor_gearbox as string) ?? null, km: (r.donor_km as number) ?? null,
     tested: Boolean(r.tested), returns14: Boolean(r.returns_14d),
@@ -118,11 +131,12 @@ export async function getCatalog(): Promise<Catalog> {
 export type SearchPage = { items: Listing[]; total: number; base: number; cats: Map<string, number>; subs: Map<number, number> };
 
 /** Hľadanie inzerátov. So Supabase beží v databáze (funkcia search_listings), v ukážke v prehliadači. */
-export async function searchListings(f: Filters, favs: number[], offset: number, limit: number, extra: { exclude?: number; seller?: string } = {}): Promise<SearchPage> {
+export async function searchListings(f: Filters, favs: number[], offset: number, limit: number, extra: { exclude?: number; seller?: string; donor?: number } = {}): Promise<SearchPage> {
   if (IS_DEMO) {
     let all = demo().listings;
     if (extra.exclude != null) all = all.filter((l) => l.id !== extra.exclude);
     if (extra.seller) all = all.filter((l) => l.sellerId === extra.seller);
+    if (extra.donor != null) all = all.filter((l) => l.donorId === extra.donor);
     const r = localSearch(all, f, demoCatalog, favs);
     return { items: r.items.slice(offset, offset + limit), total: r.total, base: r.facets.base, cats: r.facets.cat, subs: r.facets.sub };
   }
@@ -230,4 +244,73 @@ export async function sendMessage(id: number, name: string, contact: string, bod
 /** Id ukážkových inzerátov (pre statické stránky detailu). */
 export function demoListingIds(): number[] {
   return demo().listings.map((l) => l.id);
+}
+
+/** Všetko pre detail inzerátu naraz (používa server aj prehliadač). null = inzerát nie je aktívny. */
+export type DetailData = { l: Listing; cat: Catalog; vehicles: Vehicle[]; similar: Listing[]; more: { items: Listing[]; total: number }; sameCar: Listing[] };
+export async function loadDetail(id: number): Promise<DetailData | null> {
+  const [cat, l] = await Promise.all([getCatalog(), getListing(id)]);
+  if (!l) return null;
+  const [vehicles, more] = await Promise.all([getListingVehicles(l), getSellerListings(l).catch(() => ({ items: [] as Listing[], total: 0 }))]);
+  const sameCar = l.donorId != null ? (await searchListings({ ...emptyFilters }, [], 0, 7, { exclude: l.id, donor: l.donorId }).catch(() => null))?.items || [] : [];
+  const seen = new Set([...more.items, ...sameCar].map((x) => x.id));
+  const similar = (await getSimilar(l).catch(() => [] as Listing[])).filter((x) => !seen.has(x.id));
+  return { l, cat, vehicles, similar, more: { ...more, items: more.items.filter((x) => !sameCar.some((y) => y.id === x.id)) }, sameCar };
+}
+
+/** Počty aktívnych inzerátov podľa auta a kategórie – pre stránky značiek a modelov, interné odkazy a sitemap. */
+export type SeoCount = { brandId: number; modelId: number; categoryId: string; subcategoryId: number | null; n: number };
+export async function getSeoCounts(): Promise<SeoCount[]> {
+  if (IS_DEMO) {
+    const m = new Map<string, SeoCount>();
+    for (const l of demo().listings) {
+      if (l.brandId == null || l.modelId == null) continue;
+      const k = `${l.brandId}|${l.modelId}|${l.categoryId}|${l.subcategoryId}`;
+      const c = m.get(k) || { brandId: l.brandId, modelId: l.modelId, categoryId: l.categoryId, subcategoryId: l.subcategoryId, n: 0 };
+      c.n++; m.set(k, c);
+    }
+    return [...m.values()];
+  }
+  const { data, error } = await client().rpc("seo_counts");
+  if (error) throw new Error("seo_counts: " + error.message);
+  return ((data || []) as Row[]).map((r) => ({ brandId: Number(r.brand_id), modelId: Number(r.model_id), categoryId: String(r.category_id), subcategoryId: (r.subcategory_id as number) ?? null, n: Number(r.n) }));
+}
+
+/** Aktívne inzeráty pre sitemap (id, názov, auto, posledná zmena). */
+export async function getSitemapListings(): Promise<{ id: number; name: string; brandId: number | null; modelId: number | null; engineId: number | null; updatedAt: string }[]> {
+  if (IS_DEMO) return demo().listings.map((l) => ({ id: l.id, name: l.name, brandId: l.brandId, modelId: l.modelId, engineId: l.engineId, updatedAt: l.updatedAt }));
+  const rows = await selectAllWhere<Row>("listings", "id,name,brand_id,model_id,updated_at", "id", { status: "active" });
+  return rows.map((r) => ({ id: Number(r.id), name: String(r.name), brandId: (r.brand_id as number) ?? null, modelId: (r.model_id as number) ?? null, engineId: null, updatedAt: String(r.updated_at) }));
+}
+
+// ---------- DOPYT NA DIEL (kupujúci bez účtu) ----------
+export type RequestInput = { brand: number; model: number | null; engine: number | null; year: number | null; vin: string; cat: string; part: string; note: string; name: string; contact: string; city: string };
+export type RequestView = {
+  id: number; status: "open" | "closed" | "expired"; brandId: number; modelId: number | null; engineId: number | null; year: number | null; categoryId: string | null;
+  partName: string; note: string; city: string; createdAt: string; expiresAt: string;
+  offers: { price: number; phone: string; note: string; listingId: number | null; listingName: string; createdAt: string; seller: string; sellerType: string; sellerCity: string; verified: boolean }[];
+};
+export async function createRequest(x: RequestInput): Promise<string> {
+  if (IS_DEMO) throw new Error("V ukážkovom režime sa dopyt nedá odoslať.");
+  const { data, error } = await client().rpc("create_part_request", { p: x });
+  if (error) throw new Error(error.message);
+  return String(data);
+}
+export async function getRequest(token: string): Promise<RequestView | null> {
+  if (IS_DEMO || !/^[0-9a-f-]{36}$/i.test(token)) return null;
+  const { data, error } = await client().rpc("get_part_request", { p_token: token });
+  if (error) throw new Error(error.message);
+  if (!data) return null;
+  const r = data as Row;
+  return {
+    id: Number(r.id), status: r.status as RequestView["status"], brandId: Number(r.brand_id), modelId: (r.model_id as number) ?? null, engineId: (r.engine_id as number) ?? null,
+    year: (r.year as number) ?? null, categoryId: (r.category_id as string) ?? null, partName: String(r.part_name), note: String(r.note || ""), city: String(r.city || ""),
+    createdAt: String(r.created_at), expiresAt: String(r.expires_at),
+    offers: ((r.offers || []) as Row[]).map((o) => ({ price: Number(o.price), phone: String(o.phone), note: String(o.note || ""), listingId: (o.listing_id as number) ?? null,
+      listingName: String(o.listing_name || ""), createdAt: String(o.created_at), seller: String(o.seller), sellerType: String(o.seller_type), sellerCity: String(o.seller_city || ""), verified: !!o.verified })),
+  };
+}
+export async function closeRequest(token: string): Promise<void> {
+  const { error } = await client().rpc("close_part_request", { p_token: token });
+  if (error) throw new Error(error.message);
 }

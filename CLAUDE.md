@@ -129,7 +129,14 @@ Audit a návrh priorít: Claude Docs „Rozoberačka – audit a návrh priorít
 - Hľadanie beží v databáze (`search_listings`), nie v prehliadači. Ukážkový režim bez Supabase hľadá lokálne.
 
 ## GDPR (3. 11. 2026, 22:40)
-- Prevádzkovateľ: KJ Trade s.r.o., IČO 57598142. Údaje v `web/lib/operator.ts` (sídlo, zápis v OR a e-mail treba doplniť). Pri zmene textov podmienok zvýšiť `TERMS_VERSION`.
+- Prevádzkovateľ: KJ Trade s.r.o., IČO 57598142. Údaje v `web/lib/operator.ts` (sídlo Kvetná 1505/4D, 900 41 Rovinka, e-mail autosuciastky24@gmail.com; zápis v OR doplniť). Pri zmene textov podmienok zvýšiť `TERMS_VERSION`.
 - Žiadne analytické ani reklamné cookies bez súhlasu. Ak sa pridajú, najprv cookie lišta so súhlasom.
-- Doby uchovávania: správy 12 mesiacov, nahlásenia 12 mesiacov po vybavení, odtlačok IP 3 dni (pri nahlásení 30), záznam správcu 3 roky. Mazanie: `purge_old_data()` denne cez pg_cron.
+- Doby uchovávania: správy 12 mesiacov, nahlásenia 12 mesiacov po vybavení, odtlačok IP 3 dni (pri nahlásení 30), záznam správcu 3 roky, dopyty kupujúcich 60 dní od zadania (platnosť 30 dní). Mazanie: `purge_old_data()` denne cez pg_cron.
 - Nové osobné údaje (napr. VIN darcovského auta, e-mail kupujúceho pre strážcu) doplniť do zásad a do záznamov o spracovateľských činnostiach skôr, než sa začnú zbierať.
+
+## SEO, darcovské autá, dopyty (6. 11. 2026, 22:20)
+- SEO: stránky sa pripravujú na serveri. Detail má adresu `/diel/<id>-<nazov-a-auto>` (staré `/inzerat/<id>` presmeruje), vstupné stránky `/diely/<znacka>/<model>/<kategoria>` a `/kategoria/<kategoria>/<podkategoria>`, `sitemap.xml`, `robots.txt`, štruktúrované dáta (Product, BreadcrumbList), obrázok pre zdieľanie. Po kúpe domény nastaviť `NEXT_PUBLIC_SITE_URL`.
+- Darcovské auto: predajca zapíše rozobraté auto a pridá z neho viac dielov naraz (tabuľka `donor_cars`, `listings.donor_id`). VIN je nepovinný a nezobrazuje sa verejne.
+- Dopyt na diel: kupujúci bez účtu (`/dopyt`), predajcovia odpovedajú ponukou v záložke „Dopyty“, kupujúci vidí ponuky na tajnej adrese. Kontakt kupujúceho vidia len prihlásení predajcovia.
+- Predajca: export inzerátov do CSV (rovnaké stĺpce ako import) a hromadná zmena ceny (o € alebo %).
+- Katalóg: `supabase/09_katalog_opravy.sql` (115 modelov). Stále z pamäte, nahradiť TecDoc.

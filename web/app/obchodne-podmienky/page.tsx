@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { LegalPage, OperatorBox } from "@/components/Legal";
 import { OPERATOR, fill } from "@/lib/operator";
 
-export const metadata: Metadata = { title: "Obchodné podmienky – Rozoberačka" };
+export const metadata: Metadata = { title: "Obchodné podmienky", alternates: { canonical: "/obchodne-podmienky" } };
 
 export default function Page() {
   return (
@@ -27,7 +27,8 @@ export default function Page() {
         <li>Predáva len diely, ktoré vlastní alebo s ktorými smie nakladať. Zakázané sú kradnuté diely, diely s pozmeneným identifikačným číslom a veci, ktorých predaj zakazuje zákon.</li>
         <li>Firma predávajúca spotrebiteľovi dodržiava zákony na ochranu spotrebiteľa, najmä zodpovednosť za vady použitého tovaru najmenej 12 mesiacov a pri predaji na diaľku právo spotrebiteľa odstúpiť od zmluvy do 14 dní.</li>
         <li>Predajca zodpovedá za obsah inzerátu, fotky (musia byť jeho alebo ich smie použiť) a za vybavenie reklamácie.</li>
-        <li>Predajca neposiela kupujúcim nevyžiadanú reklamu a kontakty kupujúcich používa len na dohodu o danom diele.</li>
+        <li>Predajca neposiela kupujúcim nevyžiadanú reklamu a kontakty kupujúcich (zo správ aj z dopytov na diely) používa len na ponuku a dohodu o danom diele.</li>
+        <li>VIN darcovského auta, ktorý predajca zadá v portáli, je neverejný a predajca ho smie zadať len pre svoju evidenciu.</li>
         <li>Prístup k účtu chráni heslom a nezdieľa ho.</li>
       </ul>
 

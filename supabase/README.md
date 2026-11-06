@@ -116,3 +116,13 @@ Na ostrej Supabase sú spustené aj `06_gdpr.sql` a `07_optimalizacia.sql`.
 - Security Advisor: zostávajú len upozornenia „SECURITY DEFINER funkciu môže volať verejnosť/prihlásený“. Sú zámerné: tieto funkcie sú API portálu (telefón, správa, nahlásenie, hľadanie, export, zrušenie účtu, funkcie správcu) a každá si sama kontroluje oprávnenie a limity.
 - Auth: potvrdenie e-mailu zapnuté, minimálna dĺžka hesla 8, anonymné prihlásenie vypnuté.
 - CHÝBA: vlastné SMTP (bez neho Supabase posiela e-maily len členom tímu, registrácia predajcov nefunguje), Site URL a Redirect URLs (po nasadení na Vercel).
+
+## Doplnky (6. 11. 2026)
+Na ostrej Supabase sú spustené aj `08` a `09` (6. 11. 2026, 22:40; obsah overený odtlačkom SHA-256). Nové nasadenie: v SQL Editore v poradí `08` → `09`, každý ako novú query, **Run** (upozornenie „destructive operations“ je kvôli príkazom `revoke`, nič sa nemaže).
+- `08_darcovske_auta_dopyty_seo.sql`:
+  - **Darcovské autá** (`donor_cars`): predajca si zapíše rozobraté auto (značka, model, motor, ročník, km, farba, voliteľne VIN) a z neho rýchlo pridá diely. Vidí ich len vlastník; inzerát môže odkazovať len na vlastné auto (`listings.donor_id`).
+  - **Dopyt na diel** (`part_requests`, `part_offers`): kupujúci bez účtu zadá, čo hľadá; prihlásení predajcovia dopyt vidia a pošlú ponuku; kupujúci ju vidí na tajnej adrese `/dopyt/<kód>`. Limit 3 dopyty za hodinu a 10 za deň z jednej IP, platnosť 30 dní, zmazanie po 60 dňoch (`purge_old_data`).
+  - `search_listings` vie filtrovať podľa darcovského auta, `seo_counts()` dáva počty pre SEO stránky a mapu webu, `export_my_data` obsahuje autá a ponuky.
+- `09_katalog_opravy.sql`: opravené roky konca výroby (Superb III, Passat B8, BMW 5 G30, Kona, Kodiaq, Tiguan II) a 17 nových generácií (napr. Superb IV, Kodiaq II, Passat B9, Tiguan III, BMW 5 G60, Audi A3 8Y, A6 C8, Q5 FY, Kia Ceed III, Sportage V, Hyundai Tucson IV, i20 III) – zatiaľ bez motorizácií. Katalóg je stále z pamäte, overiť s TecDoc.
+- Kontrola po spustení: `select count(*) from public.models;` má vyjsť **115**.
+- Testy: `testy/22_test_08.sql` (19 kontrol). Na ostrej databáze prešiel v transakcii, ktorá sa na konci zrušila: 19/19, po teste 0 testovacích účtov, inzerátov, áut aj dopytov.

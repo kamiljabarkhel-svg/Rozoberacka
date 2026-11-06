@@ -6,16 +6,20 @@ import type { Session } from "@supabase/supabase-js";
 import { getCatalog, IS_DEMO } from "@/lib/data";
 import type { Catalog } from "@/lib/types";
 import { listingHref } from "@/lib/paths";
+import { carName } from "@/lib/seo";
+import { download, listingsCsv } from "@/lib/csvExport";
 import { price as fmtPrice } from "@/lib/format";
 import {
-  changePassword, confirmFresh, deleteAccount, deleteListings, exportMyData, duplicate, ensureProfile, getSession, markRead, myListings, myMessages, onAuthChange,
-  saveProfile, setStatus, setTop, signOut, skError, type Message, type MyListing, type Profile, type Status,
+  changePassword, confirmFresh, setPrices, deleteAccount, deleteListings, exportMyData, duplicate, ensureProfile, getSession, markRead, myListings, myMessages, onAuthChange,
+  saveProfile, setStatus, setTop, signOut, skError, type Donor, type Message, type MyListing, type Profile, type Status,
 } from "@/lib/seller";
 import ListingForm from "./ListingForm";
+import Donors from "./Donors";
+import Requests from "./Requests";
 import CsvImport from "./CsvImport";
 
-type Tab = "home" | "list" | "form" | "csv" | "msg" | "prof";
-const TABS: [Tab, string][] = [["home", "Nástenka"], ["list", "Moje inzeráty"], ["form", "Pridať inzerát"], ["csv", "Import CSV"], ["msg", "Správy"], ["prof", "Profil"]];
+type Tab = "home" | "list" | "donor" | "form" | "csv" | "req" | "msg" | "prof";
+const TABS: [Tab, string][] = [["home", "Nástenka"], ["list", "Moje inzeráty"], ["donor", "Darcovské autá"], ["form", "Pridať inzerát"], ["csv", "Import CSV"], ["req", "Dopyty"], ["msg", "Správy"], ["prof", "Profil"]];
 const ST: Record<Status, string> = { active: "Aktívny", paused: "Pozastavený", sold: "Predaný", blocked: "Skrytý správcom" };
 
 export default function Portal() {
@@ -28,6 +32,7 @@ export default function Portal() {
   const [msgs, setMsgs] = useState<Message[]>([]);
   const [tab, setTab] = useState<Tab>("home");
   const [edit, setEdit] = useState<MyListing | null>(null);
+  const [donor, setDonor] = useState<Donor | null>(null);
   const [listF, setListF] = useState<{ f: F; n: number }>({ f: "all", n: 0 });
   const [toast, setToast] = useState("");
   const [err, setErr] = useState("");
@@ -70,7 +75,7 @@ export default function Portal() {
     const t = window.setInterval(() => { if (document.visibilityState === "visible") { last = Date.now(); reload(session); } }, 120000);
     return () => { document.removeEventListener("visibilitychange", h); window.removeEventListener("focus", h); window.clearInterval(t); };
   }, [session, reload]);
-  const go = (t: Tab, lf?: F) => { if (t === "list") setListF((o) => ({ f: lf || "all", n: o.n + 1 })); setTab(t); if (t !== "form") setEdit(null); history.replaceState(null, "", "#" + t); window.scrollTo({ top: 0 }); };
+  const go = (t: Tab, lf?: F) => { if (t === "list") setListF((o) => ({ f: lf || "all", n: o.n + 1 })); setTab(t); if (t !== "form") { setEdit(null); setDonor(null); } history.replaceState(null, "", "#" + t); window.scrollTo({ top: 0 }); };
 
   if (IS_DEMO) return <div className="pp-auth"><h1>Portál predajcu</h1><p className="mute">V ukážkovej verzii bez databázy portál nefunguje. Pripojte Supabase.</p></div>;
   if (!ready || !session) return <div className="pp-auth"><p className="mute">Načítavam portál…</p>{err && <p className="pp-err">{err}</p>}</div>;
@@ -99,13 +104,18 @@ export default function Portal() {
         {pwMode && <NewPassword onDone={() => { setPwMode(false); flash("Heslo je zmenené."); }} />}
         {tab === "home" && <Dashboard cat={cat} prof={prof} items={items} msgs={msgs} go={go} />}
         {tab === "list" && <MyList key={listF.n} initial={listF.f} items={items} cat={cat}
+          onPrices={(rows) => act(() => setPrices(rows), `Ceny zmenené: ${rows.length}`)}
           onFresh={(ids) => act(() => confirmFresh(ids), ids.length > 1 ? `Potvrdené ako aktuálne: ${ids.length}` : "Potvrdené ako aktuálne")}
           onEdit={(l) => { setEdit(l); setTab("form"); window.scrollTo({ top: 0 }); }}
           onStatus={(ids, s) => act(() => setStatus(ids, s), ids.length > 1 ? `Zmenené: ${ids.length}` : "Uložené")}
           onTop={(l) => act(() => setTop(l.id, !l.top), l.top ? "TOP zrušené" : "Inzerát je TOP na 30 dní")}
           onDup={(l) => act(() => duplicate(session.user.id, l), "Kópia je pozastavená – upravte ju, pridajte fotky a aktivujte")}
           onDelete={(ls) => act(() => deleteListings(ls), ls.length > 1 ? `Zmazané: ${ls.length}` : "Inzerát zmazaný")} />}
-        {tab === "form" && cat && <ListingForm key={edit?.id ?? "new"} uid={session.user.id} cat={cat} prof={prof} edit={edit}
+        {tab === "req" && cat && <Requests uid={session.user.id} cat={cat} prof={prof} items={items} onSent={flash} />}
+        {tab === "donor" && cat && <Donors uid={session.user.id} cat={cat} prof={prof} items={items}
+          onAddOne={(d) => { setEdit(null); setDonor(d); setTab("form"); window.scrollTo({ top: 0 }); }}
+          onDone={async (m) => { await reload(session); flash(m); }} />}
+        {tab === "form" && cat && <ListingForm key={edit?.id ?? "new-" + (donor?.id ?? "")} uid={session.user.id} cat={cat} prof={prof} edit={edit} donor={donor}
           onSaved={async (id) => { await reload(session); setEdit(null); go("list"); flash(edit ? "Zmeny uložené" : `Inzerát #${id} je zverejnený`); }} />}
         {tab === "csv" && cat && <CsvImport uid={session.user.id} cat={cat} prof={prof} onDone={async (n) => { await reload(session); flash(`Importované: ${n}`); go("list"); }} />}
         {tab === "msg" && <Messages msgs={msgs} onRead={(ids) => act(() => markRead(ids), "Označené ako prečítané")} />}
@@ -172,8 +182,8 @@ function Tile({ n, l, s }: { n: number; l: string; s: string }) {
 type F = "all" | Status | "nophoto" | "nooem" | "nodesc" | "stale";
 const STALE_DAYS = 60;
 const isStale = (i: MyListing) => i.status === "active" && Date.now() - Date.parse(i.updatedAt) > STALE_DAYS * 86400000;
-function MyList({ initial, items, cat, onEdit, onStatus, onTop, onDup, onDelete, onFresh }: {
-  initial: F; onFresh: (ids: number[]) => void; items: MyListing[]; cat: Catalog | null; onEdit: (l: MyListing) => void; onStatus: (ids: number[], s: Status) => void;
+function MyList({ initial, items, cat, onEdit, onStatus, onTop, onDup, onDelete, onFresh, onPrices }: {
+  initial: F; onFresh: (ids: number[]) => void; onPrices: (rows: { id: number; price: number }[]) => void; items: MyListing[]; cat: Catalog | null; onEdit: (l: MyListing) => void; onStatus: (ids: number[], s: Status) => void;
   onTop: (l: MyListing) => void; onDup: (l: MyListing) => void; onDelete: (l: MyListing[]) => void;
 }) {
   const [q, setQ] = useState(""), [f, setF] = useState<F>(initial), [sort, setSort] = useState("new");
@@ -207,7 +217,8 @@ function MyList({ initial, items, cat, onEdit, onStatus, onTop, onDup, onDelete,
     ...(items.some((i) => i.status === "blocked") ? [["blocked", "Skryté správcom"] as [F, string]] : [])];
   return (
     <div>
-      <header className="pp-h"><h1>Moje inzeráty</h1><span className="mute">{items.length} spolu</span></header>
+      <header className="pp-h"><h1>Moje inzeráty</h1><span className="pp-quick"><span className="mute">{items.length} spolu</span>
+        <button className="ubtn" disabled={!items.length} title="Stiahne inzeráty (aktuálny výber filtra) v rovnakom formáte, aký prijíma import" onClick={() => download(`rozoberacka-inzeraty-${new Date().toISOString().slice(0, 10)}.csv`, listingsCsv(shown, cat))}>Export CSV</button></span></header>
       <div className="pp-tools">
         <input type="search" placeholder="Hľadať v mojich inzerátoch (názov, OEM)" value={q} onChange={(e) => setQ(e.target.value)} aria-label="Hľadať" />
         <select value={sort} onChange={(e) => setSort(e.target.value)} aria-label="Zoradiť">
@@ -221,6 +232,7 @@ function MyList({ initial, items, cat, onEdit, onStatus, onTop, onDup, onDelete,
           <button className="ubtn" onClick={() => { onStatus(ids, "paused"); setSel(new Set()); }}>Pozastaviť</button>
           <button className="ubtn" onClick={() => { onStatus(ids, "sold"); setSel(new Set()); }}>Predané</button>
           <button className="ubtn" title="Potvrdí, že diely stále máte (obnoví dátum aktualizácie)" onClick={() => { onFresh(ids); setSel(new Set()); }}>Stále aktuálne</button>
+          <PriceBulk n={ids.length} onApply={(fn) => { onPrices(items.filter((i) => ids.includes(i.id)).map((i) => ({ id: i.id, price: fn(i.price) }))); setSel(new Set()); }} />
           {confirm ? <><button className="del" onClick={() => { onDelete(items.filter((i) => confirm.includes(i.id))); setConfirm(null); setSel(new Set()); }}>Naozaj zmazať {confirm.length}?</button><button className="lnk" onClick={() => setConfirm(null)}>Nie</button></>
             : <button className="del" onClick={() => setConfirm(ids)}>Zmazať</button>}
           <button className="lnk" onClick={() => setSel(new Set())}>Zrušiť výber</button>
@@ -234,7 +246,7 @@ function MyList({ initial, items, cat, onEdit, onStatus, onTop, onDup, onDelete,
               <label className="pp-cb"><input type="checkbox" checked={sel.has(l.id)} onChange={() => toggle(l.id)} aria-label={"Vybrať " + l.name} /></label>
               <div className="pp-th">{l.photos[0] ? <img src={l.photos[0].url} alt="" loading="lazy" /> : <span>bez fotky</span>}</div>
               <div className="pp-ri">
-                {l.status === "active" ? <a href={listingHref(l.id)} target="_blank" rel="noreferrer" title="Otvoriť, ako ho vidia kupujúci"><b>{l.name}</b></a> : <b>{l.name}</b>}
+                {l.status === "active" ? <a href={listingHref(l.id, l.name, carName(l, cat))} target="_blank" rel="noreferrer" title="Otvoriť, ako ho vidia kupujúci"><b>{l.name}</b></a> : <b>{l.name}</b>}
                 <span className="mute">{vehicle(l)} · {catName(l.categoryId)} · OEM {l.oem || "—"}</span>
                 <span className="pp-meta"><span className={"pp-st " + l.status}>{ST[l.status]}</span>{l.top && <span className="toptag">TOP</span>}<b>{fmtPrice(l.price)}</b><span className="mute">{l.views} zobrazení · {l.calls} telefónov</span>{isStale(l) && <span className="pp-stale">neaktualizované {Math.floor((Date.now() - Date.parse(l.updatedAt)) / 86400000)} dní · <button className="lnk" onClick={() => onFresh([l.id])}>Stále aktuálne</button></span>}</span>
               </div>
@@ -343,5 +355,25 @@ function MyData({ uid }: { uid: string }) {
         </div></div>}
       {err && <p className="pp-err">{err}</p>}
     </div>
+  );
+}
+
+// Hromadná zmena ceny: o percento (zľava/zdraženie) alebo na pevnú sumu.
+function PriceBulk({ n, onApply }: { n: number; onApply: (fn: (p: number) => number) => void }) {
+  const [open, setOpen] = useState(false), [mode, setMode] = useState("pct"), [val, setVal] = useState(""), [err, setErr] = useState("");
+  if (!open) return <button className="ubtn" onClick={() => setOpen(true)}>Zmeniť cenu</button>;
+  const apply = () => {
+    const x = Number(val.replace(",", "."));
+    if (!Number.isFinite(x) || (mode === "set" && x <= 0) || (mode === "pct" && (x <= -95 || x >= 500 || x === 0))) return setErr(mode === "pct" ? "Zadajte percento, napr. -10 (zľava) alebo 5 (zdraženie)." : "Zadajte cenu väčšiu ako 0.");
+    onApply(mode === "pct" ? (p) => Math.max(1, Math.round(p * (1 + x / 100))) : () => Math.round(x * 100) / 100);
+    setOpen(false); setVal(""); setErr("");
+  };
+  return (
+    <span className="pp-price">
+      <select value={mode} onChange={(e) => setMode(e.target.value)} aria-label="Spôsob zmeny"><option value="pct">o percento</option><option value="set">na sumu €</option></select>
+      <input value={val} onChange={(e) => setVal(e.target.value)} inputMode="decimal" placeholder={mode === "pct" ? "-10" : "50"} aria-label="Hodnota" />
+      <button className="ubtn" onClick={apply}>Použiť na {n}</button><button className="lnk" onClick={() => setOpen(false)}>Zrušiť</button>
+      {err && <span className="pp-ferr">{err}</span>}
+    </span>
   );
 }

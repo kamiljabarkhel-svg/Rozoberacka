@@ -3,7 +3,8 @@
 // Povinné polia podľa CLAUDE.md; tie isté pravidlá stráži aj databáza (04_funkcie.sql).
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { Catalog, Condition } from "@/lib/types";
-import { saveListing, skError, type ListingInput, type MyListing, type PhotoItem, type Profile } from "@/lib/seller";
+import { carName } from "@/lib/seo";
+import { saveListing, skError, type Donor, type ListingInput, type MyListing, type PhotoItem, type Profile } from "@/lib/seller";
 
 const STEPS = ["Diel", "Auto", "Stav, cena a podmienky", "Fotky a popis", "Kontakt"];
 const MAX_PHOTOS = 8;
@@ -16,13 +17,13 @@ const MSG: Record<Key, string> = {
   city: "Zadajte mesto.", phone: "Telefón musí mať aspoň 9 číslic.",
 };
 
-export default function ListingForm({ uid, cat, prof, edit, onSaved }: { uid: string; cat: Catalog; prof: Profile | null; edit: MyListing | null; onSaved: (id: number) => void }) {
+export default function ListingForm({ uid, cat, prof, edit, donor, onSaved }: { uid: string; cat: Catalog; prof: Profile | null; edit: MyListing | null; donor?: Donor | null; onSaved: (id: number) => void }) {
   const [step, setStep] = useState(0);
   const [v, setV] = useState({
     name: edit?.name || "", categoryId: edit?.categoryId || "", subcategoryId: edit?.subcategoryId ?? null as number | null,
     oem: edit?.oem || "", partMaker: edit?.partMaker || "",
-    brandId: edit?.brandId ?? 0, modelId: edit?.modelId ?? 0, engineId: edit?.engineId ?? null as number | null, year: edit?.year ?? 0,
-    gearbox: edit?.gearbox || "", km: edit?.km != null ? String(edit.km) : "", side: edit?.side || "",
+    brandId: edit?.brandId ?? donor?.brandId ?? 0, modelId: edit?.modelId ?? donor?.modelId ?? 0, engineId: edit ? edit.engineId : donor?.engineId ?? null as number | null, year: edit?.year ?? donor?.year ?? 0,
+    gearbox: edit?.gearbox || donor?.gearbox || "", km: edit?.km != null ? String(edit.km) : donor?.km != null ? String(donor.km) : "", side: edit?.side || "",
     condition: (edit?.condition || "") as Condition | "", price: edit ? String(edit.price) : "", warranty: edit?.warranty || (prof?.type === "Súkromná osoba" ? "Bez záruky" : "12 mesiacov"),
     shipping: edit?.shipping || "Len osobný odber", tested: edit?.tested ?? false, returns14: edit?.returns14 ?? false,
     description: edit?.description || "", city: edit?.city || prof?.city || "", phone: edit?.phone || prof?.phone || "",
@@ -88,7 +89,7 @@ export default function ListingForm({ uid, cat, prof, edit, onSaved }: { uid: st
       subcategoryId: v.subcategoryId, oem: v.oem, partMaker: v.partMaker, price: Math.round(Number(v.price.replace(",", ".")) * 100) / 100,
       city: v.city, condition: v.condition as Condition, description: v.description, warranty: v.warranty, shipping: v.shipping,
       phone: v.phone, side: v.side, gearbox: v.gearbox, km: v.km ? Math.max(0, parseInt(v.km.replace(/\D/g, ""), 10) || 0) : null,
-      tested: v.tested, returns14: v.returns14, fits,
+      tested: v.tested, returns14: v.returns14, fits, donorId: edit ? edit.donorId : donor?.id ?? null,
     };
     setBusy(true);
     try { onSaved(await saveListing(uid, edit?.id ?? null, x, photos, edit?.photos.map((p) => p.path) || [])); }
@@ -114,6 +115,7 @@ export default function ListingForm({ uid, cat, prof, edit, onSaved }: { uid: st
   return (
     <div ref={top}>
       <header className="pp-h"><h1>{edit ? "Upraviť inzerát" : "Pridať inzerát"}</h1><span className="mute">Polia s <em className="req">*</em> sú povinné.</span></header>
+      {donor && !edit && <p className="pp-donor-note">Diel z darcovského auta <b>{carName(donor, cat, true)}, {donor.year}{donor.km != null ? `, ${donor.km.toLocaleString("sk-SK")} km` : ""}</b>. Údaje o aute sú predvyplnené.</p>}
       <ol className="pp-steps">{STEPS.map((s, i) => (
         <li key={s}><button type="button" aria-current={i === step ? "step" : undefined} className={(i !== step && i < step && !stepBad(i, cur) ? "done " : "") + (stepBad(i) ? "bad" : "")} onClick={() => goStep(i)}><span>{i + 1}</span>{s}</button></li>
       ))}</ol>

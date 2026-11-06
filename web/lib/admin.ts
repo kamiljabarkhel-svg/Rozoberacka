@@ -45,3 +45,12 @@ export async function log(): Promise<LogRow[]> {
     id: Number(r.id), action: String(r.action), target: String(r.target), detail: JSON.stringify(r.detail), createdAt: String(r.created_at),
   }));
 }
+
+export type AdminRequest = { id: number; part: string; contact: string; name: string; status: string; createdAt: string; expiresAt: string; brandId: number; modelId: number | null };
+export async function requests(): Promise<AdminRequest[]> {
+  return (must(await c().from("part_requests").select("id,part_name,contact,contact_name,status,created_at,expires_at,brand_id,model_id").order("created_at", { ascending: false }).limit(200)) as Row[]).map((r) => ({
+    id: Number(r.id), part: String(r.part_name), contact: String(r.contact), name: String(r.contact_name), status: String(r.status), createdAt: String(r.created_at), expiresAt: String(r.expires_at),
+    brandId: Number(r.brand_id), modelId: (r.model_id as number) ?? null,
+  }));
+}
+export async function closeRequestAdmin(id: number) { must(await c().rpc("admin_close_request", { p_id: id })); }

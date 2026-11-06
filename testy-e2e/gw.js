@@ -64,6 +64,13 @@ http.createServer(async (req, res) => {
       if (!b.rows[0]?.public || !fs.existsSync(f)) return send(res, 404, { message: "Object not found" });
       res.writeHead(200, { ...cors, "Content-Type": "image/jpeg" }); return fs.createReadStream(f).pipe(res);
     }
+    if (p.startsWith("/storage/v1/object/list/") && req.method === "POST") { // ako Supabase: jedna úroveň pod prefixom, podľa RLS
+      const bucket = p.slice(24); const body = JSON.parse((await readBody(req)).toString() || "{}"); const pre = String(body.prefix || "").replace(/\/$/, "");
+      const r = await asUser(claims(req), (c) => c.query("select name from storage.objects where bucket_id=$1 and name like $2", [bucket, pre + "/%"]));
+      const seen = new Map(); for (const x of r.rows) { const rest = x.name.slice(pre.length + 1); const k = rest.split("/")[0];
+        if (!seen.has(k)) seen.set(k, rest.includes("/") ? { name: k, id: null } : { name: k, id: crypto.randomUUID() }); }
+      return send(res, 200, [...seen.values()]);
+    }
     if (p.startsWith("/storage/v1/object/")) {
       const [bucket, ...rest] = p.slice(19).split("/"); const name = decodeURIComponent(rest.join("/")); const cl = claims(req);
       if (req.method === "POST" && name) {

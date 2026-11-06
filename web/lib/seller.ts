@@ -23,7 +23,7 @@ export type MyListing = {
   categoryId: string; subcategoryId: number | null; oem: string; partMaker: string; price: number; city: string;
   condition: Condition; description: string; warranty: string; shipping: string; status: Status;
   views: number; calls: number; createdAt: string; updatedAt: string; phone: string;
-  side: string; gearbox: string; km: number | null; tested: boolean; returns14: boolean; top: boolean; moderationNote: string;
+  side: string; gearbox: string; km: number | null; tested: boolean; returns14: boolean; top: boolean; moderationNote: string; donorId: number | null;
   photos: { path: string; url: string }[]; fits: { brandId: number; modelId: number | null; engineId: number | null }[];
 };
 export type ListingInput = Omit<MyListing, "id" | "status" | "views" | "calls" | "createdAt" | "updatedAt" | "top" | "photos" | "moderationNote">;
@@ -112,7 +112,7 @@ export async function saveProfile(p: Profile) {
 }
 
 // ---------- INZERÁTY ----------
-const COLS = "id,name,brand_id,model_id,engine_id,year,category_id,subcategory_id,oem,part_maker,price,city,condition,description,warranty,shipping,status,views,calls,created_at,updated_at,moderation_note," +
+const COLS = "id,name,brand_id,model_id,engine_id,year,category_id,subcategory_id,oem,part_maker,price,city,condition,description,warranty,shipping,status,views,calls,created_at,updated_at,moderation_note,donor_id," +
   "side,donor_gearbox,donor_km,tested,returns_14d,top_until,listing_contacts(phone),listing_photos(path,position),listing_fits(brand_id,model_id,engine_id)";
 
 type Row = Record<string, unknown>;
@@ -130,7 +130,7 @@ function toMine(r: Row): MyListing {
     description: String(r.description || ""), warranty: String(r.warranty), shipping: String(r.shipping), status: r.status as Status,
     views: Number(r.views || 0), calls: Number(r.calls || 0), createdAt: String(r.created_at), updatedAt: String(r.updated_at || r.created_at), phone,
     side: String(r.side || ""), gearbox: String(r.donor_gearbox || ""), km: (r.donor_km as number) ?? null, tested: !!r.tested, returns14: !!r.returns_14d,
-    top: !!r.top_until && Date.parse(String(r.top_until)) > Date.now(), moderationNote: String(r.moderation_note || ""),
+    top: !!r.top_until && Date.parse(String(r.top_until)) > Date.now(), moderationNote: String(r.moderation_note || ""), donorId: (r.donor_id as number) ?? null,
     photos: ph.map((p) => ({ path: String(p.path), url: photoUrl(String(p.path)) })),
     fits: ((r.listing_fits || []) as Row[]).map((f) => ({ brandId: Number(f.brand_id), modelId: (f.model_id as number) ?? null, engineId: (f.engine_id as number) ?? null })),
   };
@@ -146,7 +146,7 @@ function dbRow(x: ListingInput) {
     name: x.name.trim(), brand_id: x.brandId, model_id: x.modelId, engine_id: x.engineId, year: x.year,
     category_id: x.categoryId, subcategory_id: x.subcategoryId, oem: x.oem.trim(), part_maker: x.partMaker.trim() || null,
     price: x.price, city: x.city.trim(), condition: x.condition, description: x.description.trim(), warranty: x.warranty, shipping: x.shipping,
-    side: x.side || null, donor_gearbox: x.gearbox || null, donor_km: x.km, tested: x.tested, returns_14d: x.returns14,
+    side: x.side || null, donor_gearbox: x.gearbox || null, donor_km: x.km, tested: x.tested, returns_14d: x.returns14, donor_id: x.donorId ?? null,
   };
 }
 
@@ -297,4 +297,71 @@ export async function deleteAccount(uid: string): Promise<void> {
   const { error } = await c.rpc("delete_my_account");
   if (error) throw new Error(skError(error));
   await c.auth.signOut().catch(() => {});
+}
+
+// ---------- DARCOVSKÉ AUTÁ ----------
+export type Donor = { id: number; brandId: number; modelId: number; engineId: number | null; year: number; km: number | null; gearbox: string;
+  color: string; vin: string; dismantledAt: string; note: string; createdAt: string };
+const toDonor = (r: Row): Donor => ({
+  id: Number(r.id), brandId: Number(r.brand_id), modelId: Number(r.model_id), engineId: (r.engine_id as number) ?? null, year: Number(r.year),
+  km: (r.km as number) ?? null, gearbox: String(r.gearbox || ""), color: String(r.color || ""), vin: String(r.vin || ""),
+  dismantledAt: String(r.dismantled_at || ""), note: String(r.note || ""), createdAt: String(r.created_at),
+});
+export async function myDonors(): Promise<Donor[]> {
+  const { data, error } = await sellerClient().from("donor_cars").select("*").order("created_at", { ascending: false });
+  if (error) throw new Error(skError(error));
+  return ((data || []) as Row[]).map(toDonor);
+}
+export async function saveDonor(uid: string, d: Omit<Donor, "id" | "createdAt">, id: number | null): Promise<number> {
+  const row = { brand_id: d.brandId, model_id: d.modelId, engine_id: d.engineId, year: d.year, km: d.km, gearbox: d.gearbox || null,
+    color: d.color.trim() || null, vin: d.vin.trim().toUpperCase() || null, dismantled_at: d.dismantledAt || null, note: d.note.trim() || null };
+  const c = sellerClient();
+  const r = id == null ? await c.from("donor_cars").insert({ seller_id: uid, ...row }).select("id").single() : await c.from("donor_cars").update(row).eq("id", id).select("id").single();
+  if (r.error) throw new Error(skError(r.error));
+  return Number(r.data.id);
+}
+export async function deleteDonor(id: number) {
+  const { error } = await sellerClient().from("donor_cars").delete().eq("id", id);
+  if (error) throw new Error(skError(error));
+}
+/** Viac dielov z jedného auta naraz. Vzniknú pozastavené (bez fotiek) – predajca doplní fotky a aktivuje. */
+export async function createFromDonor(uid: string, rows: ListingInput[]): Promise<{ ok: number; errors: string[] }> {
+  const errors: string[] = []; let ok = 0;
+  for (const x of rows) {
+    try { const id = await saveListing(uid, null, x, [], []); await setStatus([id], "paused"); ok++; }
+    catch (e) { errors.push(`${x.name}: ${skError(e)}`); }
+  }
+  return { ok, errors };
+}
+
+// ---------- EXPORT A HROMADNÉ CENY ----------
+/** Nové ceny pre viac inzerátov naraz. */
+export async function setPrices(rows: { id: number; price: number }[]) {
+  const c = sellerClient();
+  for (const r of rows) {
+    const { error } = await c.from("listings").update({ price: r.price }).eq("id", r.id);
+    if (error) throw new Error(skError(error));
+  }
+}
+
+// ---------- DOPYTY NA DIELY ----------
+export type PartRequest = { id: number; brandId: number; modelId: number | null; engineId: number | null; year: number | null; vin: string; categoryId: string | null;
+  partName: string; note: string; contactName: string; contact: string; city: string; createdAt: string; expiresAt: string };
+export type MyOffer = { id: number; requestId: number; price: number; phone: string; listingId: number | null; note: string; createdAt: string };
+export async function openRequests(): Promise<PartRequest[]> {
+  const { data, error } = await sellerClient().from("part_requests").select("id,brand_id,model_id,engine_id,year,vin,category_id,part_name,note,contact_name,contact,city,created_at,expires_at")
+    .eq("status", "open").gt("expires_at", new Date().toISOString()).order("created_at", { ascending: false }).limit(300);
+  if (error) throw new Error(skError(error));
+  return ((data || []) as Row[]).map((r) => ({ id: Number(r.id), brandId: Number(r.brand_id), modelId: (r.model_id as number) ?? null, engineId: (r.engine_id as number) ?? null,
+    year: (r.year as number) ?? null, vin: String(r.vin || ""), categoryId: (r.category_id as string) ?? null, partName: String(r.part_name), note: String(r.note || ""),
+    contactName: String(r.contact_name), contact: String(r.contact), city: String(r.city || ""), createdAt: String(r.created_at), expiresAt: String(r.expires_at) }));
+}
+export async function myOffers(): Promise<MyOffer[]> {
+  const { data, error } = await sellerClient().from("part_offers").select("id,request_id,price,phone,listing_id,note,created_at");
+  if (error) throw new Error(skError(error));
+  return ((data || []) as Row[]).map((r) => ({ id: Number(r.id), requestId: Number(r.request_id), price: Number(r.price), phone: String(r.phone), listingId: (r.listing_id as number) ?? null, note: String(r.note || ""), createdAt: String(r.created_at) }));
+}
+export async function sendOffer(uid: string, requestId: number, o: { price: number; phone: string; listingId: number | null; note: string }) {
+  const { error } = await sellerClient().from("part_offers").insert({ request_id: requestId, seller_id: uid, price: o.price, phone: o.phone.trim(), listing_id: o.listingId, note: o.note.trim() || null });
+  if (error) throw new Error(/duplicate|unique/i.test(error.message) ? "Na tento dopyt ste už ponuku poslali." : skError(error));
 }

@@ -7,7 +7,7 @@ import { dirname, join } from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const kat = readFileSync(join(root, "supabase", "02_kategorie.sql"), "utf8");
-const cat = readFileSync(join(root, "supabase", "03_katalog.sql"), "utf8");
+const cat = readFileSync(join(root, "supabase", "03_katalog.sql"), "utf8") + "\n" + readFileSync(join(root, "supabase", "09_katalog_opravy.sql"), "utf8");
 
 const categories = [];
 const subcategories = [];
@@ -30,6 +30,12 @@ for (const line of cat.split("\n")) {
     if (!b) throw new Error("Neznáma značka " + m[4]);
     models.push({ id: models.length + 1, brandId: b.id, name: m[1], yearFrom: Number(m[2]), yearTo: m[3] === "null" ? null : Number(m[3]) });
     continue;
+  }
+  m = line.match(/update public\.models set year_to = (\d+) where name = '([^']+)' and brand_id = \(select id from public\.brands where name = '([^']+)'\)/);
+  if (m) {
+    const b = brands.find((x) => x.name === m[3]); const mo = models.find((x) => x.brandId === b?.id && x.name === m[2]);
+    if (!mo) throw new Error("Neznámy model " + m[2]);
+    mo.yearTo = Number(m[1]); continue;
   }
   m = line.match(/cross join \(values (.*)\) as v\(n\) where b\.name = '([^']+)' and m\.name = '([^']+)'/);
   if (m) {

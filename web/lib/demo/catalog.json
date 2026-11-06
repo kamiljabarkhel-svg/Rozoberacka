@@ -499,7 +499,7 @@
    "brandId": 1,
    "name": "Superb III",
    "yearFrom": 2015,
-   "yearTo": null
+   "yearTo": 2023
   },
   {
    "id": 14,
@@ -513,7 +513,7 @@
    "brandId": 1,
    "name": "Kodiaq",
    "yearFrom": 2016,
-   "yearTo": null
+   "yearTo": 2024
   },
   {
    "id": 16,
@@ -632,7 +632,7 @@
    "brandId": 2,
    "name": "Passat B8",
    "yearFrom": 2014,
-   "yearTo": null
+   "yearTo": 2023
   },
   {
    "id": 33,
@@ -667,7 +667,7 @@
    "brandId": 2,
    "name": "Tiguan II (AD)",
    "yearFrom": 2016,
-   "yearTo": null
+   "yearTo": 2024
   },
   {
    "id": 38,
@@ -891,7 +891,7 @@
    "brandId": 4,
    "name": "5 (G30)",
    "yearFrom": 2016,
-   "yearTo": null
+   "yearTo": 2023
   },
   {
    "id": 70,
@@ -1093,6 +1093,125 @@
    "id": 98,
    "brandId": 6,
    "name": "Kona",
+   "yearFrom": 2017,
+   "yearTo": 2023
+  },
+  {
+   "id": 99,
+   "brandId": 1,
+   "name": "Superb I",
+   "yearFrom": 2001,
+   "yearTo": 2008
+  },
+  {
+   "id": 100,
+   "brandId": 1,
+   "name": "Superb IV",
+   "yearFrom": 2024,
+   "yearTo": null
+  },
+  {
+   "id": 101,
+   "brandId": 1,
+   "name": "Kodiaq II",
+   "yearFrom": 2024,
+   "yearTo": null
+  },
+  {
+   "id": 102,
+   "brandId": 2,
+   "name": "Passat B9",
+   "yearFrom": 2024,
+   "yearTo": null
+  },
+  {
+   "id": 103,
+   "brandId": 2,
+   "name": "Tiguan III",
+   "yearFrom": 2024,
+   "yearTo": null
+  },
+  {
+   "id": 104,
+   "brandId": 4,
+   "name": "5 (G60)",
+   "yearFrom": 2023,
+   "yearTo": null
+  },
+  {
+   "id": 105,
+   "brandId": 3,
+   "name": "A3 (8Y)",
+   "yearFrom": 2020,
+   "yearTo": null
+  },
+  {
+   "id": 106,
+   "brandId": 3,
+   "name": "A6 C8",
+   "yearFrom": 2018,
+   "yearTo": null
+  },
+  {
+   "id": 107,
+   "brandId": 3,
+   "name": "Q5 (FY)",
+   "yearFrom": 2017,
+   "yearTo": null
+  },
+  {
+   "id": 108,
+   "brandId": 6,
+   "name": "Kona II",
+   "yearFrom": 2023,
+   "yearTo": null
+  },
+  {
+   "id": 109,
+   "brandId": 6,
+   "name": "Tucson IV",
+   "yearFrom": 2020,
+   "yearTo": null
+  },
+  {
+   "id": 110,
+   "brandId": 6,
+   "name": "i10 III",
+   "yearFrom": 2019,
+   "yearTo": null
+  },
+  {
+   "id": 111,
+   "brandId": 6,
+   "name": "i20 III",
+   "yearFrom": 2020,
+   "yearTo": null
+  },
+  {
+   "id": 112,
+   "brandId": 5,
+   "name": "Ceed III",
+   "yearFrom": 2018,
+   "yearTo": null
+  },
+  {
+   "id": 113,
+   "brandId": 5,
+   "name": "Sportage V",
+   "yearFrom": 2021,
+   "yearTo": null
+  },
+  {
+   "id": 114,
+   "brandId": 5,
+   "name": "Picanto III",
+   "yearFrom": 2017,
+   "yearTo": null
+  },
+  {
+   "id": 115,
+   "brandId": 5,
+   "name": "Rio IV",
    "yearFrom": 2017,
    "yearTo": null
   }

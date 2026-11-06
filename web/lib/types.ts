@@ -44,6 +44,7 @@ export type Listing = {
   fits: Vehicle[]; // „Pasuje aj na“ zadané predajcom
   seller: Seller;
   sellerId: string;
+  donorId: number | null;   // darcovské auto, z ktorého je diel
   side: "Ľavá" | "Pravá" | null;
   gearbox: string | null;   // prevodovka auta, z ktorého je diel
   km: number | null;        // najazdené km auta

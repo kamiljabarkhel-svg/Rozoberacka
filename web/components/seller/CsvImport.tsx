@@ -88,7 +88,7 @@ export default function CsvImport({ uid, cat, prof, onDone }: { uid: string; cat
         row: k + 2, name: name || "(bez názvu)", ok, errors, warns,
         data: ok ? { name, brandId: brand!.id, modelId: model!.id, engineId: engine?.id ?? null, year, categoryId: c!.id, subcategoryId: sub?.id ?? null,
           oem, partMaker: g("vyrobca"), price, city, condition, description, warranty, shipping: "Len osobný odber", phone,
-          side, gearbox: "", km: Number.isFinite(km) ? km : null, tested: yes(g("odskusany")), returns14: yes(g("vratenie")), fits } : undefined,
+          side, gearbox: "", km: Number.isFinite(km) ? km : null, tested: yes(g("odskusany")), returns14: yes(g("vratenie")), fits, donorId: null } : undefined,
       };
     }));
   }
