@@ -3,18 +3,19 @@
 Hlavná verzia denníka je v Claude Docs „Rozoberačka – denník stavby“. Tento súbor je jeho pracovná kópia pre agenta Dirigent.
 
 ## Otvorené úlohy
-- [ ] P2 Web: funkcie podľa konkurencie a formulár/nástenka predajcu (CLAUDE.md) – zatiaľ len v prototype
-- [ ] P2 Doplniť do databázy stĺpce a tabuľku `messages` pre nové funkcie (CLAUDE.md, sekcia Funkcie podľa konkurencie)
+- [x] P2 Web: funkcie podľa konkurencie a formulár/nástenka predajcu (CLAUDE.md) – zatiaľ len v prototype (hotové 2. 11. 2026: portál predajcu s nástenkou a formulárom v 5 krokoch, OEM hľadanie, správa predajcovi, TOP – commit af9fb53)
+- [x] P2 Doplniť do databázy stĺpce a tabuľku `messages` pre nové funkcie (CLAUDE.md, sekcia Funkcie podľa konkurencie) (hotové 2. 11. 2026: `supabase/04_funkcie.sql`, nasadené v ostrej Supabase – commit af9fb53)
 - [ ] P3 Neskôr zvážiť: online platby a doručenie cez portál, platforma pre servisy, blog s radami k modelom, newsletter
-- [ ] P1 Po založení Supabase: doplniť `web/.env.local` a overiť web so skutočnou databázou (zatiaľ vyskúšaný len ukážkový režim)
+- [x] P1 Po založení Supabase: doplniť `web/.env.local` a overiť web so skutočnou databázou (zatiaľ vyskúšaný len ukážkový režim) (hotové 3. 11. 2026: test priamo na ostrej databáze 48/48 v zrušenej transakcii, `testy-e2e` – commit fbd8472; 6. 11. znova 31/31)
 - [ ] P1 Nasadiť web na Vercel (Root Directory web, NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY) – návod vo `web/README.md`
 - [ ] P1 Supabase → Authentication → URL Configuration: Site URL = adresa z Vercelu (+ Redirect URLs `https://<nazov>.vercel.app/**` – pokrýva aj `/predajca` a `/predajca?heslo=1`, `http://localhost:3000/**`)
 - [ ] P1 Po nasadení otestovať celý postup na Vercel adrese: registrácia predajcu, potvrdzovací e-mail vedie na `https://<nazov>.vercel.app/predajca` (nie localhost), pridanie inzerátu, zobrazenie na úvode (lokálny test `testy-e2e/`, 22 krokov, hotový 3. 11. 2026 – na Vercel adrese zopakovať ručne)
-- [ ] P2 `npm audit`: hlásené zraniteľnosti v balíkoch postcss a sharp (cez Next.js) – zvážiť aktualizáciu Next.js, len so súhlasom
+- [ ] P2 `npm audit`: hlásené zraniteľnosti v balíkoch postcss a sharp (cez Next.js) – zvážiť aktualizáciu Next.js, len so súhlasom (6. 11. 2026: `npm audit fix` bez --force – sharp opravený na 0.35.5; ostáva postcss 8.4.31 vnútri Next.js 15.5.28 – oprava len cez Next.js 16, a minimatch 10.2.6 vo vývojových nástrojoch ESLint – oprava ešte neexistuje pre verziu, ktorú ESLint vyžaduje)
 - [ ] P2 Vlastné SMTP pre e-maily (vstavané e-maily Supabase majú nízky limit) – pred pilotom, po kúpe domény (SPF/DKIM); návod `web/README.md`, sekcia Vlastné SMTP
-- [ ] P2 Hľadanie beží v prehliadači nad max. 1000 aktívnymi inzerátmi – pri väčšom počte presunúť do databázy (funkcia na serveri)
-- [ ] P2 Odkrytie telefónu: CAPTCHA a limit na serveri (teraz len 1× za reláciu prehliadača)
-- [ ] P2 Detail inzerátu sa načítava v prehliadači – pre Google (SEO) vykresľovať na serveri
+- [x] P2 Hľadanie beží v prehliadači nad max. 1000 aktívnymi inzerátmi – pri väčšom počte presunúť do databázy (funkcia na serveri) (hotové 3. 11. 2026: funkcia `search_listings` v `supabase/05_bezpecnost_hladanie.sql`, rozšírená v `08` – commit eb28319)
+- [x] P2 Odkrytie telefónu: limit na serveri (hotové 3. 11. 2026: počítadlo `rate_events` a limity v `supabase/05_bezpecnost_hladanie.sql` – commit eb28319; úloha rozdelená 6. 11. 2026)
+- [ ] P2 Odkrytie telefónu: CAPTCHA (teraz len 1× za reláciu prehliadača; podľa CLAUDE.md aj pri registrácii predajcu)
+- [x] P2 Detail inzerátu sa načítava v prehliadači – pre Google (SEO) vykresľovať na serveri (hotové 6. 11. 2026: `web/app/diel/[slug]/page.tsx` na serveri, mapa webu, štruktúrované dáta – commit bd4369b)
 - [ ] P3 Ikony pre kategórie Kolesá, Podvozok, Brzdy, Chladenie, Palivo (teraz náhradná ikona)
 - [x] P1 Prepnúť repozitár na Private (Settings → Danger Zone → Change visibility)
 - [ ] P3 Rozhovory s 10 vrakoviskami – odložené
@@ -23,20 +24,23 @@ Hlavná verzia denníka je v Claude Docs „Rozoberačka – denník stavby“. 
 - [x] P1 PRIORITA: nasadiť `supabase/` do Supabase a napojiť web (hotové 22:00: 01–04 nasadené, RLS overené, portál predajcu af9fb53)
 - [x] P1 GitHub: repozitár `rozoberacka` a pripojenie ku Claude
 - [ ] P1 Katalóg áut z overeného zdroja (napr. licencovaný TecDoc); súčasný je z pamäte
-- [ ] P1 Právny základ: GDPR, obchodné podmienky, forma podnikania
+- [x] P1 Právne stránky GDPR: Ochrana osobných údajov, Obchodné podmienky, Cookies, súhlas pri registrácii (hotové 3. 11. 2026: `web/app/ochrana-osobnych-udajov`, `web/app/obchodne-podmienky`, `web/app/cookies`, `supabase/06_gdpr.sql` – commit 9c61c60; doplnené 6. 11.; prevádzkovateľ KJ Trade s.r.o.)
+- [ ] P1 Právny základ: GDPR, obchodné podmienky, forma podnikania – ostáva kontrola právnikom (stránky hotové, pozri riadok vyššie; úloha rozdelená 6. 11. 2026)
 - [ ] P1 Doména a hosting
-- [ ] P2 Doplniť chýbajúce modely (Superb I, Felicia, Sharan, Sprinter, Jumper…) – čaká na rozhodnutie
+- [x] P2 Doplnený model Superb I (hotové 6. 11. 2026: `supabase/09_katalog_opravy.sql`, nasadené v ostrej Supabase – commit bd4369b)
+- [ ] P2 Doplniť chýbajúce modely (Felicia, Sharan, Sprinter, Jumper…) – čaká na rozhodnutie (Superb I hotový, pozri riadok vyššie; úloha rozdelená 6. 11. 2026)
 - [ ] P2 Vyskúšať nahrávanie fotiek, import CSV a tmavý režim
 - [x] P2 Overiť vzhľad so skutočnými písmami (Sora, Manrope) – web ich má v sebe (@fontsource)
-- [ ] P2 Ochrana proti spamu, nahlasovanie inzerátov
+- [x] P2 Ochrana proti spamu, nahlasovanie inzerátov (hotové 3. 11. 2026: limity proti robotom, „Nahlásiť inzerát“ a administrácia `/admin` – `supabase/05_bezpecnost_hladanie.sql`, commit eb28319; CAPTCHA ostáva ako samostatná úloha vyššie)
 - [x] P3 CSV import: stĺpec „pasuje na“ (hotové 22:00)
 - [ ] P3 Zarábanie: zvýraznenie inzerátov, predplatné pre firmy (TOP inzerát vo webe: trieda `is-top`, nie `top` – hlavička je už `site-header`)
-- [ ] P3 Hodnotenie predajcov
+- [x] P3 Hodnotenie predajcov (hotové 6. 11. 2026: hodnotenie overené cez dopyt, aj v administrácii – `supabase/10_predane_navrhy_hodnotenia_strazca.sql`, commit 9ef2c82)
 - [ ] P3 Plné dekódovanie VIN (platená služba)
 
 ## Denník
 | Kedy | Čo sme urobili | Čo to znamená |
 | --- | --- | --- |
+| 6. 11. 2026, 23:39 | Otvorené úlohy aktualizované podľa skutočného stavu: hotové [x] web s funkciami podľa konkurencie, stĺpce a tabuľka `messages`, overenie so skutočnou databázou, hľadanie v databáze (`search_listings`), detail na serveri pre Google, nahlasovanie a limity proti spamu, limit pri odkrytí telefónu, hodnotenie predajcov, Superb I, právne stránky GDPR. Rozdelené (nič nezmazané): telefón → limit hotový / CAPTCHA otvorená; právny základ → stránky hotové / kontrola právnikom otvorená; chýbajúce modely → Superb I hotový / Felicia, Sharan, Sprinter, Jumper otvorené. `npm audit fix` bez --force v `web/`: zmenil sa len `package-lock.json` (sharp 0.34.5 → 0.35.5), Next.js ostal 15.5.28. Pred: 9 slabých miest (7 stredných, 2 vysoké), po: 8 (7 stredných, 1 vysoká); v produkcii pred 3, po 2 (postcss vnútri Next.js). Build, tsc, eslint bez chýb | Zoznam úloh zodpovedá stavu webu. Ostáva postcss (len pri spracovaní CSS počas buildu, opraví až Next.js 16 – len so súhlasom) a minimatch (len vo vývojových nástrojoch, na web nemá vplyv) |
 | 6. 11. 2026, 23:30 | SEO a zážitok kupujúceho: predaný diel ostáva s náhradami (noindex), stránky miest, verejná stránka predajcu, 3 návody (OEM, VIN, bezpečný nákup), fotky WebP v 3 veľkostiach, mapa webu rozšírená. Našepkávanie v hlavičke, „Moje auto“, odfotenie OEM/VIN priamo v telefóne, pridanie na plochu. Hodnotenie predajcov overené cez dopyt (aj v administrácii), strážca e-mailom s dvojitým potvrdením (funkcia pre Brevo, zatiaľ vypnutý). Zásady, cookies a obchodné podmienky doplnené. `supabase/10` v ostrej Supabase; testy: databáza 38 + 10 + 19 + 31, ostrá databáza 31/31 v zrušenej transakcii, strážca 7/7, celý postup 45/45; build bez chýb | Na zapnutie strážcu treba Brevo a doménu; ďalej Vercel |
 | 6. 11. 2026, 22:20 | Všetkých 5 bodov: (1) SEO – stránky pripravené na serveri, adresy `/diel/<id>-nazov`, vstupné stránky podľa auta a kategórie, mapa webu, robots, štruktúrované dáta, ikony a obrázok pre zdieľanie; (2) darcovské autá s rýchlym pridaním dielov; (3) kontrola katalógu – 6 opravených rokov a 17 nových generácií (`supabase/09`); (4) export CSV a hromadná zmena ceny; (5) dopyt na diel od kupujúceho bez účtu a ponuky predajcov. `supabase/08` a `09`: lokálne testy 20 (38/38), 21 (10/10), 22 (19/19); test celého postupu 37/37; tsc, eslint, build bez chýb. Zásady ochrany údajov a cookies doplnené o dopyty a VIN, `TERMS_VERSION` 2026-11-06 | Ostrá Supabase: 08 a 09 spustené (22:40), test 22 priamo na nej v zrušenej transakcii 19/19, databáza ostala čistá (115 modelov). Ďalej Vercel, Brevo, doména |
 | 6. 11. 2026, 10:30 | Prechod webom očami kupujúceho a predajcu (počítač aj mobil, s ukážkovými dátami). Doplnené: kupujúci si uloží hľadanie (strážca dielov, v prehliadači) a pri návrate vidí počet nových dielov; v detaile „Ďalšie diely od predajcu“; prázdny web ukazuje výzvu pre predajcov namiesto „0 dielov“; nenájdený inzerát ponúkne hľadanie. Predajca: „Treba vybaviť“ otvára rovno filtrované inzeráty, upozornenie na inzeráty neaktualizované 60+ dní s tlačidlom „Stále aktuálne“, kroky formulára sú zelené len keď sú vyplnené, pri type Firma/Súkromná osoba vysvetlenie záruky. Test celého postupu 31/31 | Web je logickejší pre obe strany; čaká sa na Vercel, Brevo a doménu |
