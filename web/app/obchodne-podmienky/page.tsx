@@ -37,7 +37,14 @@ export default function Page() {
         <li>Ktokoľvek môže nahlásiť inzerát tlačidlom „Nahlásiť inzerát“ v detaile. Nahlásenie posúdime bez zbytočného odkladu, nestranne a starostlivo.</li>
         <li>Inzerát, ktorý porušuje zákon alebo tieto podmienky, môžeme skryť. Predajca v portáli uvidí, že inzerát skryl správca, a dôvod. Proti rozhodnutiu sa môže ohradiť e-mailom; jeho podnet znova posúdime.</li>
         <li>Pri opakovanom alebo závažnom porušení (podvod, kradnuté diely) môžeme účet zablokovať. Zablokovaný predajca nemôže zverejňovať inzeráty.</li>
-        <li>Na ochranu pred robotmi obmedzujeme počet odkrytí telefónu, správ a nahlásení z jedného pripojenia.</li>
+        <li>Na ochranu pred robotmi obmedzujeme počet odkrytí telefónu, správ, dopytov a nahlásení z jedného pripojenia.</li>
+      </ul>
+
+      <h2>4a. Hodnotenie predajcov</h2>
+      <ul>
+        <li>Predajcu môže ohodnotiť len kupujúci, ktorému predajca poslal ponuku na jeho dopyt na diel. Hodnotenie sa pridáva zo súkromnej stránky dopytu a zobrazí sa s krstným menom kupujúceho.</li>
+        <li>Hodnotenie musí byť pravdivé a vecné, bez urážok a osobných údajov. Hodnotenia vopred nekontrolujeme a nepredávame; poradie ani priemer neovplyvňuje platba.</li>
+        <li>Hodnotenie, ktoré porušuje tieto pravidlá, môže správca skryť. Skryté hodnotenie sa nezapočíta do priemeru. Predajca nám môže nevhodné hodnotenie oznámiť e-mailom.</li>
       </ul>
 
       <h2>5. Poplatky</h2>

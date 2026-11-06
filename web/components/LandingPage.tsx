@@ -1,7 +1,7 @@
 // Stránka pre vyhľadávače: „Použité svetlá Škoda Octavia III“ – zoznam dielov, súvisiace odkazy, štruktúrované údaje.
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getCatalog, getSeoCounts, searchListings } from "@/lib/data";
+import { getCatalog, getCities, getSeoCounts, searchListings } from "@/lib/data";
 import { emptyFilters, type Catalog } from "@/lib/types";
 import { pieces, sk } from "@/lib/format";
 import { JsonLd, SITE_NAME, SITE_URL, breadcrumbLd, carName, landingCrumbs, landingPath, landingTitle, listingPath, type Landing } from "@/lib/seo";
@@ -12,9 +12,9 @@ const LIMIT = 24;
 
 async function load(x: Landing) {
   const cat = await getCatalog();
-  const f = { ...emptyFilters, brand: x.brandId, model: x.modelId, cat: x.cat, sub: x.sub };
-  const [res, counts] = await Promise.all([searchListings(f, [], 0, LIMIT), getSeoCounts().catch(() => [])]);
-  return { cat, res, counts };
+  const f = { ...emptyFilters, brand: x.brandId, model: x.modelId, cat: x.cat, sub: x.sub, city: x.city || "" };
+  const [res, counts, cities] = await Promise.all([searchListings(f, [], 0, LIMIT), getSeoCounts().catch(() => []), x.city ? getCities().catch(() => []) : Promise.resolve([] as string[])]);
+  return { cat, res, counts, cities };
 }
 
 export async function landingMetadata(x: Landing | null): Promise<Metadata> {
@@ -23,7 +23,9 @@ export async function landingMetadata(x: Landing | null): Promise<Metadata> {
   const title = landingTitle(x, cat);
   const path = landingPath(x, cat);
   const minP = res.items.length ? Math.min(...res.items.map((l) => l.price)) : 0;
-  const description = res.total
+  const description = res.total && x.city
+    ? `${title}: ${pieces(res.total)} od vrakovísk a predajcov z mesta ${x.city}${minP ? `, ceny od ${minP.toLocaleString("sk-SK")} €` : ""}. Osobný odber, predajcovi zavoláte bez registrácie.`
+    : res.total
     ? `${title} z vrakovísk a od predajcov z celého Slovenska: ${pieces(res.total)}${minP ? `, ceny od ${minP.toLocaleString("sk-SK")} €` : ""}. Predajcovi zavoláte bez registrácie, pred kúpou porovnajte OEM číslo.`
     : `${title}: zatiaľ tu nie sú ponuky. Uložte si hľadanie a pozrite sa neskôr.`;
   return {
@@ -33,7 +35,13 @@ export async function landingMetadata(x: Landing | null): Promise<Metadata> {
   };
 }
 
-function related(x: Landing, cat: Catalog, counts: Awaited<ReturnType<typeof getSeoCounts>>) {
+function related(x: Landing, cat: Catalog, counts: Awaited<ReturnType<typeof getSeoCounts>>, res: Awaited<ReturnType<typeof searchListings>>, cities: string[]) {
+  if (x.city) {
+    const g: { title: string; links: { name: string; href: string; n: number }[] }[] = [];
+    g.push({ title: `Kategórie dielov – ${x.city}`, links: [...res.cats].filter(([id]) => id !== x.cat).map(([id, n]) => ({ name: cat.categories.find((v) => v.id === id)?.name || id, href: landingPath({ ...x, cat: id, sub: null }, cat), n })) });
+    g.push({ title: "Ďalšie mestá", links: cities.filter((c) => c !== x.city).map((c) => ({ name: c, href: landingPath({ brandId: null, modelId: null, cat: "", sub: null, city: c }, cat), n: 0 })) });
+    return g.map((v) => ({ ...v, links: v.links.sort((a, b) => b.n - a.n || sk(a.name, b.name)) })).filter((v) => v.links.length);
+  }
   const sum = (keyOf: (c: (typeof counts)[number]) => string | null) => {
     const m = new Map<string, number>();
     for (const c of counts) { const k = keyOf(c); if (k) m.set(k, (m.get(k) || 0) + c.n); }
@@ -60,7 +68,7 @@ function related(x: Landing, cat: Catalog, counts: Awaited<ReturnType<typeof get
 }
 
 export default async function LandingPage({ x }: { x: Landing }) {
-  const { cat, res, counts } = await load(x);
+  const { cat, res, counts, cities } = await load(x);
   const title = landingTitle(x, cat);
   const crumbs = landingCrumbs(x, cat);
   const path = landingPath(x, cat);
@@ -69,7 +77,8 @@ export default async function LandingPage({ x }: { x: Landing }) {
   if (x.modelId != null) qs.set("model", String(x.modelId));
   if (x.cat) qs.set("kat", x.cat);
   if (x.sub != null) qs.set("pod", String(x.sub));
-  const groups = related(x, cat, counts);
+  if (x.city) qs.set("mesto", x.city);
+  const groups = related(x, cat, counts, res, cities);
   const car = [cat.brands.find((v) => v.id === x.brandId)?.name, cat.models.find((v) => v.id === x.modelId)?.name].filter(Boolean).join(" ");
   return (
     <main id="main" className="main landing">
@@ -79,7 +88,8 @@ export default async function LandingPage({ x }: { x: Landing }) {
       <Crumbs items={crumbs.slice(0, -1)} last={crumbs[crumbs.length - 1]?.name} />
       <h1>{title}</h1>
       <p className="landing-lead">
-        {res.total ? <>Na Rozoberačke je {pieces(res.total)}{car ? ` pre ${car}` : ""} od vrakovísk a predajcov z celého Slovenska. </> : <>Zatiaľ tu nie sú žiadne ponuky. </>}
+        {res.total ? (x.city ? <>V meste {x.city} je na Rozoberačke {pieces(res.total)} od miestnych vrakovísk a predajcov – diel si môžete prevziať osobne. </>
+          : <>Na Rozoberačke je {pieces(res.total)}{car ? ` pre ${car}` : ""} od vrakovísk a predajcov z celého Slovenska. </>) : <>Zatiaľ tu nie sú žiadne ponuky. </>}
         Zoznam zahŕňa aj diely, ktoré podľa predajcov pasujú cez rovnaké OEM číslo. Predajcovi zavoláte bez registrácie – pred kúpou porovnajte OEM číslo so starým dielom.
       </p>
       <p><Link className="btn2" href={`/?${qs.toString()}#vysledky`}>Filtrovať podľa ceny, stavu a mesta</Link></p>
@@ -89,7 +99,7 @@ export default async function LandingPage({ x }: { x: Landing }) {
         <Link className="btn2" href={`/dopyt?${new URLSearchParams({ ...(x.brandId != null ? { znacka: String(x.brandId) } : {}), ...(x.modelId != null ? { model: String(x.modelId) } : {}) }).toString()}`}>Zadať dopyt na diel</Link></div>
       {groups.map((g) => (
         <section key={g.title} className="landing-links"><h2>{g.title}</h2>
-          <ul>{g.links.map((l) => <li key={l.href}><Link href={l.href}>{l.name}</Link> <span className="mute">({l.n})</span></li>)}</ul>
+          <ul>{g.links.map((l) => <li key={l.href}><Link href={l.href}>{l.name}</Link>{l.n > 0 && <> <span className="mute">({l.n})</span></>}</li>)}</ul>
         </section>
       ))}
     </main>

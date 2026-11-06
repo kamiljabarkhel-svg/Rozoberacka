@@ -26,11 +26,13 @@ export function listingPath(id: number, name: string, car = ""): string {
 }
 
 // ---------- stránky podľa auta a kategórie ----------
-export type Landing = { brandId: number | null; modelId: number | null; cat: string; sub: number | null };
+/** city = stránka mesta („Autodiely Žilina“), voliteľne s kategóriou. */
+export type Landing = { brandId: number | null; modelId: number | null; cat: string; sub: number | null; city?: string | null };
 
 export function landingPath(x: Landing, cat: Catalog): string {
   const b = cat.brands.find((v) => v.id === x.brandId), m = cat.models.find((v) => v.id === x.modelId);
   const c = cat.categories.find((v) => v.id === x.cat), s = cat.subcategories.find((v) => v.id === x.sub);
+  if (x.city) return "/mesto/" + [slugify(x.city), c && slugify(c.name)].filter(Boolean).join("/");
   if (b) return "/diely/" + [slugify(b.name), m && slugify(m.name), c && slugify(c.name)].filter(Boolean).join("/");
   if (c) return "/kategoria/" + [slugify(c.name), s && slugify(s.name)].filter(Boolean).join("/");
   return "/";
@@ -62,11 +64,28 @@ export function resolveKategoria(parts: string[], cat: Catalog): Landing | null 
   return out;
 }
 
+/** /mesto/zilina/svetla → filtre (mesto musí mať aktívne inzeráty). */
+export function resolveMesto(parts: string[], cities: string[], cat: Catalog): Landing | null {
+  const [ms, cs] = parts;
+  const city = cities.find((v) => slugify(v) === ms);
+  if (!city || parts.length > 2) return null;
+  const out: Landing = { brandId: null, modelId: null, cat: "", sub: null, city };
+  if (cs) { const c = cat.categories.find((v) => slugify(v.name) === cs); if (!c) return null; out.cat = c.id; }
+  return out;
+}
+
+/** Verejná stránka predajcu: /predajci/<id>-vrakovisko-novak */
+export function sellerPath(id: string, name: string): string {
+  const s = slugify(name);
+  return `/predajci/${id}${s ? "-" + s : ""}`;
+}
+
 /** Nadpis stránky: „Použité svetlá Škoda Octavia III“, „Použité diely BMW“, „Predné svetlá – použité diely“. */
 export function landingTitle(x: Landing, cat: Catalog): string {
   const car = [cat.brands.find((v) => v.id === x.brandId)?.name, cat.models.find((v) => v.id === x.modelId)?.name].filter(Boolean).join(" ");
   const c = cat.categories.find((v) => v.id === x.cat)?.name, s = cat.subcategories.find((v) => v.id === x.sub)?.name;
   const what = (s || c || "diely").toLowerCase();
+  if (x.city) return c ? `Použité ${what} – ${x.city}` : `Použité autodiely ${x.city}`;
   return car ? `Použité ${what} ${car}` : `Použité ${what} na auto`;
 }
 
@@ -75,7 +94,10 @@ export function landingCrumbs(x: Landing, cat: Catalog): { name: string; href: s
   const out = [{ name: "Úvod", href: "/" }];
   const b = cat.brands.find((v) => v.id === x.brandId), m = cat.models.find((v) => v.id === x.modelId);
   const c = cat.categories.find((v) => v.id === x.cat), s = cat.subcategories.find((v) => v.id === x.sub);
-  if (b) {
+  if (x.city) {
+    out.push({ name: x.city, href: landingPath({ brandId: null, modelId: null, cat: "", sub: null, city: x.city }, cat) });
+    if (c) out.push({ name: c.name, href: landingPath({ ...x, cat: c.id }, cat) });
+  } else if (b) {
     out.push({ name: b.name, href: landingPath({ brandId: b.id, modelId: null, cat: "", sub: null }, cat) });
     if (m) out.push({ name: m.name, href: landingPath({ brandId: b.id, modelId: m.id, cat: "", sub: null }, cat) });
     if (c) out.push({ name: c.name, href: landingPath({ brandId: b.id, modelId: m?.id ?? null, cat: c.id, sub: null }, cat) });

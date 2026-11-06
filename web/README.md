@@ -76,3 +76,8 @@ Príklady poskytovateľov (bez odporúčania, ceny a bezplatné limity si overte
 Doména: odosielať treba z vlastnej domény. Poskytovateľ vám dá DNS záznamy **SPF** a **DKIM** (často aj **DMARC**), ktoré sa vložia u registrátora domény. Bez nich e-maily často padajú do spamu. Preto SMTP rieši až po kúpe domény.
 
 Bezpečnosť: heslo SMTP patrí **len** do Supabase (políčko Password). Nikdy ho nedávajte do repozitára, do `.env` súborov webu ani do Vercelu.
+
+## Novinky 6. 11. 2026 (večer)
+- **Čítanie čísla z fotky (OCR)**: knižnica tesseract.js beží v prehliadači. Jej súbory sa pred `dev` a `build` skopírujú do `public/ocr` (`scripts/copy-ocr.mjs`), takže sa nenačítavajú z cudzieho servera a fotka sa nikam neposiela. Na Verceli sa to stane samo pri zostavení.
+- **Aplikácia na plochu**: `app/manifest.ts`, ikony v `public/icons`, `public/sw.js` (neukladá žiadne údaje, len hlásenie bez internetu).
+- **Premenné na Verceli** (Settings → Environment Variables): okrem dvoch kľúčov Supabase aj `NEXT_PUBLIC_SITE_URL` (po kúpe domény) a `NEXT_PUBLIC_EMAIL_ALERTS=1` (až keď beží strážca e-mailom, návod v `supabase/README.md`).

@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import type { Catalog, Condition } from "@/lib/types";
 import { carName } from "@/lib/seo";
 import { createFromDonor, deleteDonor, myDonors, saveDonor, skError, type Donor, type ListingInput, type MyListing, type Profile } from "@/lib/seller";
+import ScanText from "../ScanText";
 
 type Part = { on: boolean; custom?: boolean; name: string; cat: string; sub: string; side: string; oem: string; price: string; cond: Condition };
 const COMMON: [string, string, string, string?][] = [
@@ -93,7 +94,8 @@ function CarForm({ cat, init, isNew, onSave, onCancel }: { cat: Catalog; init: O
         <label>Prevodovka<select value={v.gearbox} onChange={(e) => setV({ ...v, gearbox: e.target.value })}><option value="">—</option><option>Manuálna</option><option>Automatická</option></select></label>
         <label>Farba<input value={v.color} maxLength={40} onChange={(e) => setV({ ...v, color: e.target.value })} placeholder="napr. strieborná 8E" /></label>
         <label>Dátum demontáže<input type="date" value={v.dismantledAt} onChange={(e) => setV({ ...v, dismantledAt: e.target.value })} /></label>
-        <label className="full">VIN (vidíte len vy)<input value={v.vin} maxLength={20} onChange={(e) => setV({ ...v, vin: e.target.value.toUpperCase() })} placeholder="17 znakov" autoComplete="off" /></label>
+        <label className="full">VIN (vidíte len vy)<span className="oemin"><input value={v.vin} maxLength={20} onChange={(e) => setV({ ...v, vin: e.target.value.toUpperCase() })} placeholder="17 znakov" autoComplete="off" />
+          <ScanText kind="vin" onResult={(x) => setV({ ...v, vin: x })} /></span></label>
         <label className="full">Poznámka<textarea value={v.note} maxLength={500} rows={3} onChange={(e) => setV({ ...v, note: e.target.value })} placeholder="napr. havária zozadu, motor v poriadku" /></label>
         {err && <p className="full pp-err">{err}</p>}
         <div className="full pp-actions"><button className="ubtn" onClick={onCancel}>Zrušiť</button><button className="btn" disabled={busy} onClick={save}>{busy ? "Ukladám…" : isNew ? "Uložiť a pridať diely" : "Uložiť"}</button></div>

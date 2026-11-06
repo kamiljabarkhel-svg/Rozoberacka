@@ -131,7 +131,7 @@ Audit a návrh priorít: Claude Docs „Rozoberačka – audit a návrh priorít
 ## GDPR (3. 11. 2026, 22:40)
 - Prevádzkovateľ: KJ Trade s.r.o., IČO 57598142. Údaje v `web/lib/operator.ts` (sídlo Kvetná 1505/4D, 900 41 Rovinka, e-mail autosuciastky24@gmail.com; zápis v OR doplniť). Pri zmene textov podmienok zvýšiť `TERMS_VERSION`.
 - Žiadne analytické ani reklamné cookies bez súhlasu. Ak sa pridajú, najprv cookie lišta so súhlasom.
-- Doby uchovávania: správy 12 mesiacov, nahlásenia 12 mesiacov po vybavení, odtlačok IP 3 dni (pri nahlásení 30), záznam správcu 3 roky, dopyty kupujúcich 60 dní od zadania (platnosť 30 dní). Mazanie: `purge_old_data()` denne cez pg_cron.
+- Doby uchovávania: správy 12 mesiacov, nahlásenia 12 mesiacov po vybavení, odtlačok IP 3 dni (pri nahlásení 30), záznam správcu 3 roky, dopyty kupujúcich 60 dní od zadania (platnosť 30 dní), strážca e-mailom: nepotvrdený 3 dni, potvrdený najviac 6 mesiacov. Mazanie: `purge_old_data()` denne cez pg_cron.
 - Nové osobné údaje (napr. VIN darcovského auta, e-mail kupujúceho pre strážcu) doplniť do zásad a do záznamov o spracovateľských činnostiach skôr, než sa začnú zbierať.
 
 ## SEO, darcovské autá, dopyty (6. 11. 2026, 22:20)
@@ -140,3 +140,13 @@ Audit a návrh priorít: Claude Docs „Rozoberačka – audit a návrh priorít
 - Dopyt na diel: kupujúci bez účtu (`/dopyt`), predajcovia odpovedajú ponukou v záložke „Dopyty“, kupujúci vidí ponuky na tajnej adrese. Kontakt kupujúceho vidia len prihlásení predajcovia.
 - Predajca: export inzerátov do CSV (rovnaké stĺpce ako import) a hromadná zmena ceny (o € alebo %).
 - Katalóg: `supabase/09_katalog_opravy.sql` (115 modelov). Stále z pamäte, nahradiť TecDoc.
+
+## SEO a zážitok kupujúceho (6. 11. 2026, 23:30)
+- Predaný (do 180 dní) alebo pozastavený diel: stránka ostane s nápisom „Predané“ a náhradami (rovnaké OEM, auto, kategória), bez telefónu; pre Google `noindex`.
+- Stránky miest `/mesto/<mesto>` (aj s kategóriou), verejná stránka predajcu `/predajci/<id>-<nazov>`, návody `/navody/oem-cislo`, `/navody/vin`, `/navody/bezpecny-nakup` (stále stránky, nie blog). Všetko v mape webu.
+- Fotky: veľká vždy JPEG (zdieľanie), stredná 960 px a náhľad 480 px vo WebP (`X.w.jpg`, `X.w_m.webp`, `X.w_t.webp`; pomôcky v `web/lib/photos.ts`).
+- Našepkávanie v hlavičke (autá, kategórie, názvy dielov, OEM). „Moje auto“ v prehliadači: úvod ukáže diely naň, detail povie, či pasuje (ročník sa nefiltruje).
+- Odfotenie OEM/VIN: tesseract.js beží v prehliadači, súbory z vlastného webu `/ocr`, nič sa neukladá ani neposiela.
+- Aplikácia na plochu: manifest, ikony, `sw.js` bez ukladania údajov.
+- Hodnotenie predajcov len od kupujúceho, ktorému predajca poslal ponuku na dopyt; zobrazí sa krstné meno; správca môže skryť. Pravidlá v obchodných podmienkach (časť 4a).
+- Strážca e-mailom: hotový, ale vypnutý (`NEXT_PUBLIC_EMAIL_ALERTS`), kým nebeží Brevo a funkcia `strazca` (návod v `supabase/README.md`).

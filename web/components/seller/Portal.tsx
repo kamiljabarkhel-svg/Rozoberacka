@@ -6,7 +6,8 @@ import type { Session } from "@supabase/supabase-js";
 import { getCatalog, IS_DEMO } from "@/lib/data";
 import type { Catalog } from "@/lib/types";
 import { listingHref } from "@/lib/paths";
-import { carName } from "@/lib/seo";
+import { carName, sellerPath } from "@/lib/seo";
+import Stars from "../Stars";
 import { download, listingsCsv } from "@/lib/csvExport";
 import { price as fmtPrice } from "@/lib/format";
 import {
@@ -146,7 +147,9 @@ function Dashboard({ cat, prof, items, msgs, go }: { cat: Catalog | null; prof: 
   const d = new Date().toLocaleDateString("sk-SK", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
   return (
     <div className="pp-dash">
-      <header className="pp-h"><div><h1>Dobrý deň{prof?.name ? ", " + prof.name : ""}</h1><p className="mute">{d}</p></div>
+      <header className="pp-h"><div><h1>Dobrý deň{prof?.name ? ", " + prof.name : ""}</h1><p className="mute">{d}
+          {prof && <> · <a className="lnk" href={sellerPath(prof.id, prof.name)} target="_blank" rel="noopener">Moja verejná stránka</a></>}
+          {prof?.ratingCount ? <> · <Stars value={prof.ratingAvg ?? null} count={prof.ratingCount} small /></> : null}</p></div>
         <div className="pp-quick"><button className="btn" onClick={() => go("form")}>+ Pridať inzerát</button><button className="ubtn" onClick={() => go("csv")}>Import CSV</button><button className="ubtn" onClick={() => go("list")}>Všetky inzeráty</button></div></header>
       <div className="pp-tiles">
         <Tile n={a.length} l="Aktívne inzeráty" s={fmtPrice(a.reduce((x, i) => x + i.price, 0)) + " hodnota"} />

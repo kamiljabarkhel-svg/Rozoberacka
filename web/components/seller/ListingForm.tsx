@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { Catalog, Condition } from "@/lib/types";
 import { carName } from "@/lib/seo";
 import { saveListing, skError, type Donor, type ListingInput, type MyListing, type PhotoItem, type Profile } from "@/lib/seller";
+import ScanText from "../ScanText";
 
 const STEPS = ["Diel", "Auto", "Stav, cena a podmienky", "Fotky a popis", "Kontakt"];
 const MAX_PHOTOS = 8;
@@ -124,7 +125,8 @@ export default function ListingForm({ uid, cat, prof, edit, donor, onSaved }: { 
           <div className="full">{L({ k: "name", t: "Názov dielu", children: <input value={v.name} maxLength={120} placeholder="napr. Predné ľavé svetlo LED" onChange={(e) => { set("name", e.target.value); clear("name"); }} /> })}</div>
           {L({ k: "cat", t: "Kategória", children: <select value={v.categoryId} onChange={(e) => { set("categoryId", e.target.value); set("subcategoryId", null); clear("cat"); }}><option value="">Vyberte…</option>{cat.categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}</select> })}
           {L({ t: "Podkategória", req: false, children: <select value={v.subcategoryId ?? ""} disabled={!subs.length} onChange={(e) => set("subcategoryId", e.target.value ? Number(e.target.value) : null)}><option value="">—</option>{subs.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}</select> })}
-          {L({ k: "oem", t: "Kód súčiastky / OEM číslo", children: <input value={v.oem} maxLength={40} placeholder="napr. 5E1941015" onChange={(e) => { set("oem", e.target.value); clear("oem"); }} /> })}
+          {L({ k: "oem", t: "Kód súčiastky / OEM číslo", children: <span className="oemin"><input value={v.oem} maxLength={40} placeholder="napr. 5E1941015" onChange={(e) => { set("oem", e.target.value); clear("oem"); }} />
+            <ScanText kind="oem" onResult={(x) => { set("oem", x); clear("oem"); }} /></span> })}
           {L({ t: "Výrobca dielu", req: false, children: <input value={v.partMaker} maxLength={60} placeholder="Bosch, Valeo, Hella…" onChange={(e) => set("partMaker", e.target.value)} /> })}
           <p className="full mute pp-hint">OEM číslo nájdete na štítku dielu. Podľa neho kupujúci overia, že diel pasuje, a web ho spojí s rovnakými dielmi iných áut.</p>
         </>}

@@ -14,7 +14,9 @@ import Tags from "./Tags";
 import ContactBox from "./ContactBox";
 import ReportBox from "./ReportBox";
 import Crumbs from "./Crumbs";
-import { carName, landingCrumbs } from "@/lib/seo";
+import { carName, landingCrumbs, sellerPath } from "@/lib/seo";
+import Stars from "./Stars";
+import MyCarFit from "./MyCarFit";
 
 type State =
   | { st: "loading" }
@@ -96,7 +98,9 @@ export default function ListingDetail({ id, onClose, initial }: { id: number; on
           {n ? (
             <div className="gal">
               <div className="main">
-                <img alt={l.name} src={l.photos[gi]} />
+                <img key={gi} alt={l.name} src={l.photos[gi]} srcSet={l.mediums[gi] !== l.photos[gi] ? `${l.mediums[gi]} 960w, ${l.photos[gi]} 1600w` : undefined}
+                  sizes="(max-width: 900px) 100vw, 640px" fetchPriority={gi === 0 ? "high" : "auto"}
+                  onError={(e) => { const im = e.currentTarget; if (im.getAttribute("srcset")) { im.removeAttribute("srcset"); im.src = l.photos[gi]; } }} />
                 {n > 1 && <>
                   <button className="gn l" aria-label="Predchádzajúca fotka" onClick={() => go(gi - 1)}>‹</button>
                   <button className="gn r" aria-label="Ďalšia fotka" onClick={() => go(gi + 1)}>›</button>
@@ -105,7 +109,7 @@ export default function ListingDetail({ id, onClose, initial }: { id: number; on
               </div>
               {n > 1 && <div className="th">
                 {l.photos.map((p, k) => (
-                  <button key={k} aria-label={"Fotka " + (k + 1)} aria-current={k === gi} onClick={() => go(k)}><img alt="" src={p} /></button>
+                  <button key={k} aria-label={"Fotka " + (k + 1)} aria-current={k === gi} onClick={() => go(k)}><img alt="" loading="lazy" src={l.thumbs[k] || p} onError={(e) => { if (e.currentTarget.src !== p) e.currentTarget.src = p; }} /></button>
                 ))}
               </div>}
             </div>
@@ -123,9 +127,11 @@ export default function ListingDetail({ id, onClose, initial }: { id: number; on
           </div>
           <ContactBox id={l.id} name={l.name} seller={l.seller.name} />
           <Tags l={l} />
+          <MyCarFit vehicles={vehicles} cat={cat} />
           <div className="seller">
-            <b>{l.seller.name}{l.seller.verified && <span className="bdg">Overený predajca</span>}</b>
+            <b>{l.sellerId && !STATIC_PREVIEW ? <Link href={sellerPath(l.sellerId, l.seller.name)}>{l.seller.name}</Link> : l.seller.name}{l.seller.verified && <span className="bdg">Overený predajca</span>}</b>
             <span className="mute">{l.seller.type} · {l.seller.city || l.city}</span>
+            {s.seller && s.seller.ratingCount > 0 && <span><Stars value={s.seller.ratingAvg} count={s.seller.ratingCount} small /></span>}
             <span className="mute">Inzerát pridaný {agoText(l.createdAt)}{l.updatedAt && Date.parse(l.updatedAt) - Date.parse(l.createdAt) > 3600000 ? ` · upravený ${agoText(l.updatedAt)}` : ""}</span>
           </div>
         </div>
@@ -162,7 +168,8 @@ export default function ListingDetail({ id, onClose, initial }: { id: number; on
       </>}
 
       {more.items.length > 0 && <>
-        <h2 className="sh">Ďalšie diely od predajcu {l.seller.name}{more.total > more.items.length ? ` (${more.total})` : ""}</h2>
+        <h2 className="sh">Ďalšie diely od predajcu {l.seller.name}{more.total > more.items.length ? ` (${more.total})` : ""}
+          {l.sellerId && !STATIC_PREVIEW && <> <Link className="lnk sh-more" href={sellerPath(l.sellerId, l.seller.name)}>Všetky diely predajcu →</Link></>}</h2>
         <div className="sim">
           {more.items.slice(0, 3).map((x) => (
             <ListingLink key={x.id} id={x.id} name={x.name} car={carName(x, cat)} className="simc">

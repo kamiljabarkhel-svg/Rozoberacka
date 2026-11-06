@@ -2,6 +2,7 @@
 // Úvodná stránka: hrdina, panel hľadania podľa auta, VIN, výsledky s facetami a kartami.
 // Správanie podľa prototyp.html. Filtre sa ukladajú do adresy (?znacka=…), dá sa ich poslať ďalej.
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import Link from "next/link";
 import type { Catalog, Filters } from "@/lib/types";
 import { emptyFilters } from "@/lib/types";
 import { getCatalog, getCities, getStats, initialData, searchListings, type SearchPage } from "@/lib/data";
@@ -10,6 +11,10 @@ import { pieces, sk } from "@/lib/format";
 import { useFavs } from "@/lib/favs";
 import { filterKey, hasCriteria, MAX_SAVED, useSaved } from "@/lib/saved";
 import SavedSearches from "./SavedSearches";
+import MyCarBar from "./MyCarBar";
+import ScanText from "./ScanText";
+import AlertForm, { EMAIL_ALERTS } from "./AlertForm";
+import { readMyCar, useMyCar } from "@/lib/mycar";
 import { STATIC_PREVIEW, sellersHref } from "@/lib/paths";
 import { Icon, catIcon } from "./Icons";
 import ListingCard from "./ListingCard";
@@ -70,6 +75,7 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
   const [oemQ, setOemQ] = useState("");
   const { favs, toggle } = useFavs();
   const saved = useSaved();
+  const my = useMyCar();
   const isSaved = saved.list.some((x) => filterKey(x.f) === filterKey(f));
   const ready = useRef(false);
   const resRef = useRef<HTMLDivElement>(null);
@@ -86,7 +92,10 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
 
   // Filtre z adresy pri otvorení
   useEffect(() => {
-    const u = readUrl();
+    let u = readUrl();
+    // Moje auto: bez filtrov v adrese ukážeme rovno diely pre uložené auto (ročník nefiltrujeme – diel často sedí na viac rokov)
+    const mc = readMyCar();
+    if (mc && !hasCriteria(u) && !u.fav && !window.location.search) u = { ...u, brand: mc.brand, model: mc.model, engine: mc.engine };
     setF(u);
     if (u.sub != null || u.year != null || u.max != null || u.cond || u.city || u.sort !== "new" || u.side || u.tested || u.ret) setAdv(true);
     ready.current = true;
@@ -103,7 +112,14 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
       if (d.scroll) setTimeout(toRes, 30);
     };
     window.addEventListener("rz-q", h);
-    return () => window.removeEventListener("rz-q", h);
+    // výber z našepkávania v hlavičke (auto alebo kategória)
+    const hf = (e: Event) => {
+      const p = (e as CustomEvent<Partial<Filters>>).detail;
+      setF((x) => ({ ...x, q: "", fav: false, ...("brand" in p ? { engine: null, year: null } : {}), ...p }));
+      setTimeout(toRes, 30);
+    };
+    window.addEventListener("rz-f", hf);
+    return () => { window.removeEventListener("rz-q", h); window.removeEventListener("rz-f", hf); };
   }, [toRes]);
 
   // Statický náhľad: detail a „pre predajcov“ cez # v adrese
@@ -196,6 +212,11 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
 
       <div className="wrap">
         <section className="panel" aria-label="Hľadanie dielov" ref={panelRef}>
+          <MyCarBar car={my.car} cat={catalog} f={f}
+            onUse={() => { if (my.car) { set({ brand: my.car.brand, model: my.car.model, engine: my.car.engine, year: null }); setTimeout(toRes, 30); } }}
+            onAll={() => set({ brand: null, model: null, engine: null, year: null })}
+            onSave={() => { if (f.brand != null) my.save({ brand: f.brand, model: f.model, engine: f.engine, year: f.year }); }}
+            onForget={() => my.save(null)} />
           <div className="pg">
             <label>Značka
               <select value={f.brand ?? ""} onChange={(e) => set({ brand: numOrNull(e.target.value), model: null, engine: null, year: null })}>
@@ -264,18 +285,20 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
             <button className="lnk" aria-expanded={adv} onClick={() => setAdv(!adv)}>Rozšírené hľadanie</button>
             <button className="btn" onClick={toRes}>Hľadať</button>
           </div>
-          <form className="oemrow" onSubmit={(e) => { e.preventDefault(); if (!oemQ.trim()) return; set({ q: oemQ.trim() }); window.dispatchEvent(new CustomEvent("rz-q-set", { detail: oemQ.trim() })); setTimeout(toRes, 30); }}>
-            <label>Číslo dielu (OEM)<input value={oemQ} onChange={(e) => setOemQ(e.target.value)} placeholder="napr. 03G903023 alebo 5E0 807 221" autoComplete="off" /></label>
+          <form id="hladat" className="oemrow" onSubmit={(e) => { e.preventDefault(); if (!oemQ.trim()) return; set({ q: oemQ.trim() }); window.dispatchEvent(new CustomEvent("rz-q-set", { detail: oemQ.trim() })); setTimeout(toRes, 30); }}>
+            <label>Číslo dielu (OEM)<span className="oemin"><input value={oemQ} onChange={(e) => setOemQ(e.target.value)} placeholder="napr. 03G903023 alebo 5E0 807 221" autoComplete="off" />
+              <ScanText kind="oem" onResult={(v) => { setOemQ(v); set({ q: v }); window.dispatchEvent(new CustomEvent("rz-q-set", { detail: v })); setTimeout(toRes, 30); }} /></span></label>
             <button className="btn2" type="submit">Hľadať podľa čísla</button>
           </form>
         </section>
 
-        <section className="plate" aria-label="Hľadanie podľa VIN">
+        <section id="vin" className="plate" aria-label="Hľadanie podľa VIN">
           <h2>Hľadať podľa VIN</h2>
           <div className="pg2">
             <label>VIN (17 znakov)
               <span className="pl"><span className="eu">VIN</span>
                 <input value={vin} onChange={(e) => setVin(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") onVin(); }} placeholder="TMBJJ7NE0G0123456" maxLength={17} autoComplete="off" />
+                <ScanText kind="vin" onResult={(v) => setVin(v)} />
               </span>
             </label>
             <label>Hľadám
@@ -283,7 +306,7 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
             </label>
             <button className="btn2" onClick={onVin}>Dekódovať VIN</button>
           </div>
-          <p>VIN nájdete v osvedčení o evidencii (časť I, pole E) a na štítku pri čelnom skle. Z VIN prečítame značku a približný ročník. Model a motorizáciu vyberte v paneli vyššie. Podľa ŠPZ nehľadáme.</p>
+          <p>VIN nájdete v osvedčení o evidencii (časť I, pole E) a na štítku pri čelnom skle (<Link href="/navody/vin">kde presne</Link>). Na mobile ho môžete odfotiť ikonou fotoaparátu. Z VIN prečítame značku a približný ročník. Model a motorizáciu vyberte v paneli vyššie. Podľa ŠPZ nehľadáme.</p>
           <p className="vmsg" role="status">{vinMsg}</p>
         </section>
 
@@ -300,6 +323,7 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
             <button className="chip" aria-pressed={f.fav} onClick={() => set({ fav: !f.fav })}>♥ Obľúbené</button>
           </span>
         </div>
+        {hasCriteria(f) && !f.fav && isSaved && EMAIL_ALERTS && <AlertForm key={filterKey(f)} f={f} cat={catalog} />}
         <SavedSearches list={saved.list} cat={catalog} onRemove={saved.remove}
           onOpen={(x) => { setF({ ...x.f, fav: false }); saved.seen(x.id); window.dispatchEvent(new CustomEvent("rz-q-set", { detail: x.f.q })); setTimeout(toRes, 30); }} />
 

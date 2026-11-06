@@ -1,10 +1,11 @@
 import type { MetadataRoute } from "next";
-import { getCatalog, getSeoCounts, getSitemapListings } from "@/lib/data";
-import { SITE_URL, carName, landingPath, listingPath, type Landing } from "@/lib/seo";
+import { getActiveSellers, getCatalog, getCities, getSeoCounts, getSitemapListings } from "@/lib/data";
+import { NAVODY, navodPath } from "@/lib/navody";
+import { SITE_URL, carName, landingPath, listingPath, sellerPath, type Landing } from "@/lib/seo";
 
 export const revalidate = 3600;
 
-// Zoznam stránok pre Google: úvod, právne stránky, stránky áut a kategórií s inzerátmi a všetky aktívne inzeráty.
+// Zoznam stránok pre Google: úvod, návody, právne stránky, stránky áut, kategórií a miest s inzerátmi, predajcovia a všetky aktívne inzeráty.
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
   const out: MetadataRoute.Sitemap = [
@@ -14,9 +15,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: SITE_URL + "/obchodne-podmienky", changeFrequency: "yearly", priority: 0.2 },
     { url: SITE_URL + "/ochrana-osobnych-udajov", changeFrequency: "yearly", priority: 0.2 },
     { url: SITE_URL + "/cookies", changeFrequency: "yearly", priority: 0.1 },
+    { url: SITE_URL + "/navody", changeFrequency: "monthly", priority: 0.4 },
+    ...NAVODY.map((n) => ({ url: SITE_URL + navodPath(n.slug), lastModified: new Date(n.updated), changeFrequency: "monthly" as const, priority: 0.5 })),
   ];
   try {
-    const [cat, counts, listings] = await Promise.all([getCatalog(), getSeoCounts(), getSitemapListings()]);
+    const [cat, counts, listings, cities, sellers] = await Promise.all([getCatalog(), getSeoCounts(), getSitemapListings(), getCities().catch(() => [] as string[]), getActiveSellers().catch(() => [])]);
     const pages = new Set<string>();
     const add = (x: Landing) => pages.add(landingPath(x, cat));
     for (const c of counts) {
@@ -26,7 +29,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       add({ brandId: null, modelId: null, cat: c.categoryId, sub: null });
       if (c.subcategoryId != null) add({ brandId: null, modelId: null, cat: c.categoryId, sub: c.subcategoryId });
     }
+    for (const c of cities) add({ brandId: null, modelId: null, cat: "", sub: null, city: c });
     for (const p of pages) out.push({ url: SITE_URL + p, changeFrequency: "daily", priority: 0.7 });
+    for (const v of sellers) out.push({ url: SITE_URL + sellerPath(v.id, v.name), changeFrequency: "daily", priority: 0.5 });
     for (const l of listings) out.push({ url: SITE_URL + listingPath(l.id, l.name, carName(l, cat)), lastModified: new Date(l.updatedAt), changeFrequency: "weekly", priority: 0.6 });
   } catch { /* pri výpadku databázy aspoň základné stránky */ }
   return out;

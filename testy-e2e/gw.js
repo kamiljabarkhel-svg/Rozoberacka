@@ -62,7 +62,7 @@ http.createServer(async (req, res) => {
       const [bucket, ...rest] = p.slice(26).split("/"); const name = decodeURIComponent(rest.join("/"));
       const b = await pool.query("select public from storage.buckets where id=$1", [bucket]); const f = path.join(FILES, bucket, name);
       if (!b.rows[0]?.public || !fs.existsSync(f)) return send(res, 404, { message: "Object not found" });
-      res.writeHead(200, { ...cors, "Content-Type": "image/jpeg" }); return fs.createReadStream(f).pipe(res);
+      res.writeHead(200, { ...cors, "Content-Type": /\.webp$/.test(f) ? "image/webp" : /\.png$/.test(f) ? "image/png" : "image/jpeg" }); return fs.createReadStream(f).pipe(res);
     }
     if (p.startsWith("/storage/v1/object/list/") && req.method === "POST") { // ako Supabase: jedna úroveň pod prefixom, podľa RLS
       const bucket = p.slice(24); const body = JSON.parse((await readBody(req)).toString() || "{}"); const pre = String(body.prefix || "").replace(/\/$/, "");

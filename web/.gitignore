@@ -41,3 +41,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 /out-single
+
+# súbory OCR (kopíruje scripts/copy-ocr.mjs)
+/public/ocr/

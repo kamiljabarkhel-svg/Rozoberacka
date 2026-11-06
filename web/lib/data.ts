@@ -10,6 +10,7 @@ import { buildDemoListings } from "./demo/listings";
 import { allVehicles, buildOemIndex, search as localSearch } from "./search";
 import type { Catalog, Condition, Filters, Listing, Vehicle } from "./types";
 import { emptyFilters } from "./types";
+import { mediumPath, thumbPath } from "./photos";
 
 const URL_ = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
 const KEY_ = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
@@ -75,10 +76,7 @@ function photoUrl(path: string): string {
   if (/^https?:|^data:/.test(path)) return path;
   return `${URL_}/storage/v1/object/public/${PHOTO_BUCKET}/${path.split("/").map(encodeURIComponent).join("/")}`;
 }
-/** Zmenšená fotka „…_t.jpg“ (vytvára sa pri nahratí od 3. 11. 2026). */
-export function thumbPath(path: string): string {
-  return /^https?:|^data:/.test(path) ? path : path.replace(/\.jpg$/, "_t.jpg");
-}
+export { thumbPath, mediumPath } from "./photos";
 
 const LISTING_COLS =
   "id,name,brand_id,model_id,engine_id,year,category_id,subcategory_id,oem,price,city,condition,description,warranty,shipping,created_at,updated_at,seller_id,donor_id," +
@@ -97,6 +95,7 @@ function toListing(r: Row): Listing {
     warranty: String(r.warranty), shipping: String(r.shipping), createdAt: String(r.created_at),
     photos: photos.map((p) => photoUrl(String(p.path))),
     thumbs: photos.map((p) => photoUrl(thumbPath(String(p.path)))),
+    mediums: photos.map((p) => photoUrl(mediumPath(String(p.path)))),
     updatedAt: String(r.updated_at || r.created_at),
     fits: ((r.listing_fits || []) as Row[]).map((f) => ({ brandId: f.brand_id as number, modelId: (f.model_id as number) ?? null, engineId: (f.engine_id as number) ?? null })),
     sellerId: String(r.seller_id || ""), donorId: (r.donor_id as number) ?? null,
@@ -128,6 +127,14 @@ export async function getCatalog(): Promise<Catalog> {
   };
 }
 
+/** Filtre v tvare pre databázovú funkciu search_listings (aj pre strážcu e-mailom). */
+export function filterParams(f: Filters): Record<string, unknown> {
+  const p: Record<string, unknown> = { q: f.q.trim(), brand: f.brand, model: f.model, engine: f.engine, year: f.year, cat: f.cat, sub: f.sub,
+    max: f.max, cond: f.cond, city: f.city, side: f.side, tested: f.tested, ret: f.ret };
+  for (const k of Object.keys(p)) if (p[k] === null || p[k] === "" || p[k] === false) delete p[k];
+  return p;
+}
+
 export type SearchPage = { items: Listing[]; total: number; base: number; cats: Map<string, number>; subs: Map<number, number> };
 
 /** Hľadanie inzerátov. So Supabase beží v databáze (funkcia search_listings), v ukážke v prehliadači. */
@@ -140,8 +147,7 @@ export async function searchListings(f: Filters, favs: number[], offset: number,
     const r = localSearch(all, f, demoCatalog, favs);
     return { items: r.items.slice(offset, offset + limit), total: r.total, base: r.facets.base, cats: r.facets.cat, subs: r.facets.sub };
   }
-  const p: Record<string, unknown> = { q: f.q.trim(), brand: f.brand, model: f.model, engine: f.engine, year: f.year, cat: f.cat, sub: f.sub,
-    max: f.max, cond: f.cond, city: f.city, side: f.side, tested: f.tested, ret: f.ret, sort: f.sort, limit, offset, ...extra };
+  const p: Record<string, unknown> = { ...filterParams(f), sort: f.sort, limit, offset, ...extra };
   if (f.fav) p.ids = favs;
   const { data, error } = await client().rpc("search_listings", { p });
   if (error) throw new Error("search: " + error.message);
@@ -247,15 +253,110 @@ export function demoListingIds(): number[] {
 }
 
 /** Všetko pre detail inzerátu naraz (používa server aj prehliadač). null = inzerát nie je aktívny. */
-export type DetailData = { l: Listing; cat: Catalog; vehicles: Vehicle[]; similar: Listing[]; more: { items: Listing[]; total: number }; sameCar: Listing[] };
+export type DetailData = { l: Listing; cat: Catalog; vehicles: Vehicle[]; similar: Listing[]; more: { items: Listing[]; total: number }; sameCar: Listing[]; seller: SellerPublic | null };
 export async function loadDetail(id: number): Promise<DetailData | null> {
   const [cat, l] = await Promise.all([getCatalog(), getListing(id)]);
   if (!l) return null;
-  const [vehicles, more] = await Promise.all([getListingVehicles(l), getSellerListings(l).catch(() => ({ items: [] as Listing[], total: 0 }))]);
+  const [vehicles, more, seller] = await Promise.all([getListingVehicles(l), getSellerListings(l).catch(() => ({ items: [] as Listing[], total: 0 })),
+    l.sellerId ? getSellerPublic(l.sellerId).catch(() => null) : Promise.resolve(null)]);
   const sameCar = l.donorId != null ? (await searchListings({ ...emptyFilters }, [], 0, 7, { exclude: l.id, donor: l.donorId }).catch(() => null))?.items || [] : [];
   const seen = new Set([...more.items, ...sameCar].map((x) => x.id));
   const similar = (await getSimilar(l).catch(() => [] as Listing[])).filter((x) => !seen.has(x.id));
-  return { l, cat, vehicles, similar, more: { ...more, items: more.items.filter((x) => !sameCar.some((y) => y.id === x.id)) }, sameCar };
+  return { l, cat, vehicles, similar, more: { ...more, items: more.items.filter((x) => !sameCar.some((y) => y.id === x.id)) }, sameCar, seller };
+}
+
+// ---------- PREDANÝ / POZASTAVENÝ DIEL ----------
+export type GoneListing = { id: number; name: string; status: "sold" | "paused"; brandId: number | null; modelId: number | null; engineId: number | null;
+  year: number | null; categoryId: string; subcategoryId: number | null; oem: string | null; soldAt: string | null; photo: string | null };
+/** Neaktívny inzerát (predaný do 180 dní alebo pozastavený) – stránka ostane s ponukou podobných dielov. */
+export async function getGone(id: number): Promise<GoneListing | null> {
+  if (IS_DEMO) return null;
+  const { data, error } = await client().rpc("listing_gone", { p_id: id });
+  if (error || !data) return null;
+  const r = data as Row;
+  return { id: Number(r.id), name: String(r.name), status: r.status as GoneListing["status"], brandId: (r.brand_id as number) ?? null, modelId: (r.model_id as number) ?? null,
+    engineId: (r.engine_id as number) ?? null, year: (r.year as number) ?? null, categoryId: String(r.category_id), subcategoryId: (r.subcategory_id as number) ?? null,
+    oem: (r.oem as string) ?? null, soldAt: (r.sold_at as string) ?? null, photo: r.photo ? photoUrl(thumbPath(String(r.photo))) : null };
+}
+/** Aktívne diely, ktoré nahradia predaný: rovnaké OEM, potom rovnaké auto a kategória, potom kategória. */
+export async function getReplacements(g: GoneListing): Promise<Listing[]> {
+  const seen = new Set<number>([g.id]); const out: Listing[] = [];
+  const add = (xs: Listing[]) => { for (const x of xs) if (!seen.has(x.id) && out.length < 8) { seen.add(x.id); out.push(x); } };
+  if (g.oem && g.oem.replace(/[^A-Za-z0-9]/g, "").length >= 4) add((await searchListings({ ...emptyFilters, q: g.oem }, [], 0, 8).catch(() => null))?.items || []);
+  if (g.brandId != null) add((await searchListings({ ...emptyFilters, brand: g.brandId, model: g.modelId, cat: g.categoryId }, [], 0, 8).catch(() => null))?.items || []);
+  add((await searchListings({ ...emptyFilters, cat: g.categoryId, sub: g.subcategoryId }, [], 0, 8).catch(() => null))?.items || []);
+  return out;
+}
+
+// ---------- PREDAJCA (verejný profil a hodnotenia) ----------
+export type SellerPublic = { id: string; name: string; type: string; city: string | null; verified: boolean; since: string; ratingAvg: number | null; ratingCount: number };
+export type Review = { id: number; stars: number; body: string; author: string; createdAt: string };
+export async function getSellerPublic(id: string): Promise<SellerPublic | null> {
+  if (!/^[0-9a-f-]{36}$/i.test(id)) return null;
+  if (IS_DEMO) {
+    const l = demo().listings.find((x) => x.sellerId === id);
+    return l ? { id, name: l.seller.name, type: l.seller.type, city: l.seller.city, verified: l.seller.verified, since: l.createdAt, ratingAvg: null, ratingCount: 0 } : null;
+  }
+  const { data, error } = await client().from("sellers").select("id,name,seller_type,city,verified,blocked,created_at,rating_avg,rating_count").eq("id", id).maybeSingle();
+  if (error || !data || data.blocked) return null;
+  return { id, name: String(data.name), type: String(data.seller_type), city: data.city ?? null, verified: !!data.verified, since: String(data.created_at),
+    ratingAvg: data.rating_avg != null ? Number(data.rating_avg) : null, ratingCount: Number(data.rating_count || 0) };
+}
+export async function getSellerReviews(id: string): Promise<Review[]> {
+  if (IS_DEMO) return [];
+  const { data, error } = await client().from("seller_reviews").select("id,stars,body,author,created_at").eq("seller_id", id).order("created_at", { ascending: false }).limit(50);
+  if (error) return [];
+  return ((data || []) as Row[]).map((r) => ({ id: Number(r.id), stars: Number(r.stars), body: String(r.body || ""), author: String(r.author), createdAt: String(r.created_at) }));
+}
+/** Predajcovia s aspoň jedným aktívnym inzerátom (pre sitemap). */
+export async function getActiveSellers(): Promise<{ id: string; name: string }[]> {
+  if (IS_DEMO) { const m = new Map<string, string>(); for (const l of demo().listings) if (l.sellerId) m.set(l.sellerId, l.seller.name); return [...m].map(([id, name]) => ({ id, name })); }
+  const rows = await selectAllWhere<Row>("listings", "seller_id,sellers(name,blocked)", "id", { status: "active" });
+  const m = new Map<string, string>();
+  for (const r of rows) { const s = r.sellers as Row | null; if (s && !s.blocked) m.set(String(r.seller_id), String(s.name)); }
+  return [...m].map(([id, name]) => ({ id, name }));
+}
+/** Kupujúci ohodnotí predajcu, ktorý mu poslal ponuku na dopyt. */
+export async function rateSeller(token: string, sellerId: string, stars: number, body: string): Promise<void> {
+  const { error } = await client().rpc("rate_seller", { p_token: token, p_seller: sellerId, p_stars: stars, p_body: body });
+  if (error) throw new Error(error.message);
+}
+
+// ---------- NAŠEPKÁVANIE ----------
+/** Názvy dielov z aktívnych inzerátov, ktoré obsahujú napísané slová (bez diakritiky). */
+export async function suggestNames(q: string): Promise<{ name: string; n: number }[]> {
+  const t = q.trim();
+  if (t.length < 2) return [];
+  if (IS_DEMO) {
+    const norm = (s: string) => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    const words = norm(t).split(/[^a-z0-9]+/).filter((w) => w.length >= 2);
+    const m = new Map<string, { name: string; n: number }>();
+    for (const l of demo().listings) { const k = norm(l.name); if (words.length && words.every((w) => k.includes(w))) { const c = m.get(k) || { name: l.name, n: 0 }; c.n++; m.set(k, c); } }
+    return [...m.values()].sort((a, b) => b.n - a.n || a.name.localeCompare(b.name, "sk")).slice(0, 6);
+  }
+  const { data, error } = await client().rpc("search_suggest", { p_q: t });
+  if (error) return [];
+  return ((data || []) as Row[]).map((r) => ({ name: String(r.name), n: Number(r.n) }));
+}
+
+// ---------- STRÁŽCA E-MAILOM ----------
+/** Zapne upozornenie e-mailom. E-mail s potvrdením pošle funkcia „strazca“ (Supabase Edge Function + Brevo). */
+export async function createAlert(email: string, filter: Record<string, unknown>, label: string): Promise<void> {
+  if (IS_DEMO) throw new Error("V ukážkovom režime sa upozornenie nedá zapnúť.");
+  const { error } = await client().rpc("create_search_alert", { p_email: email, p_filter: filter, p_label: label, p_consent: true });
+  if (error) throw new Error(error.message);
+}
+export async function confirmAlert(token: string): Promise<string | null> {
+  if (IS_DEMO || !/^[0-9a-f-]{36}$/i.test(token)) return null;
+  const { data, error } = await client().rpc("confirm_search_alert", { p_token: token });
+  if (error) throw new Error(error.message);
+  return (data as string | null) ?? null;
+}
+export async function cancelAlert(token: string): Promise<string | null> {
+  if (IS_DEMO || !/^[0-9a-f-]{36}$/i.test(token)) return null;
+  const { data, error } = await client().rpc("cancel_search_alert", { p_token: token });
+  if (error) throw new Error(error.message);
+  return (data as string | null) ?? null;
 }
 
 /** Počty aktívnych inzerátov podľa auta a kategórie – pre stránky značiek a modelov, interné odkazy a sitemap. */
@@ -288,7 +389,8 @@ export type RequestInput = { brand: number; model: number | null; engine: number
 export type RequestView = {
   id: number; status: "open" | "closed" | "expired"; brandId: number; modelId: number | null; engineId: number | null; year: number | null; categoryId: string | null;
   partName: string; note: string; city: string; createdAt: string; expiresAt: string;
-  offers: { price: number; phone: string; note: string; listingId: number | null; listingName: string; createdAt: string; seller: string; sellerType: string; sellerCity: string; verified: boolean }[];
+  offers: { price: number; phone: string; note: string; listingId: number | null; listingName: string; createdAt: string; seller: string; sellerType: string; sellerCity: string; verified: boolean;
+    sellerId: string; ratingAvg: number | null; ratingCount: number; myStars: number | null; myReview: string }[];
 };
 export async function createRequest(x: RequestInput): Promise<string> {
   if (IS_DEMO) throw new Error("V ukážkovom režime sa dopyt nedá odoslať.");
@@ -307,7 +409,9 @@ export async function getRequest(token: string): Promise<RequestView | null> {
     year: (r.year as number) ?? null, categoryId: (r.category_id as string) ?? null, partName: String(r.part_name), note: String(r.note || ""), city: String(r.city || ""),
     createdAt: String(r.created_at), expiresAt: String(r.expires_at),
     offers: ((r.offers || []) as Row[]).map((o) => ({ price: Number(o.price), phone: String(o.phone), note: String(o.note || ""), listingId: (o.listing_id as number) ?? null,
-      listingName: String(o.listing_name || ""), createdAt: String(o.created_at), seller: String(o.seller), sellerType: String(o.seller_type), sellerCity: String(o.seller_city || ""), verified: !!o.verified })),
+      listingName: String(o.listing_name || ""), createdAt: String(o.created_at), seller: String(o.seller), sellerType: String(o.seller_type), sellerCity: String(o.seller_city || ""), verified: !!o.verified,
+      sellerId: String(o.seller_id || ""), ratingAvg: o.rating_avg != null ? Number(o.rating_avg) : null, ratingCount: Number(o.rating_count || 0),
+      myStars: o.my_stars != null ? Number(o.my_stars) : null, myReview: String(o.my_review || "") })),
   };
 }
 export async function closeRequest(token: string): Promise<void> {

@@ -7,8 +7,8 @@ import { listingHref } from "@/lib/paths";
 import { price } from "@/lib/format";
 import * as A from "@/lib/admin";
 
-type Tab = "home" | "rep" | "sel" | "lst" | "req" | "log";
-const TABS: [Tab, string][] = [["home", "Prehľad"], ["rep", "Nahlásenia"], ["sel", "Predajcovia"], ["lst", "Inzeráty"], ["req", "Dopyty"], ["log", "Záznam akcií"]];
+type Tab = "home" | "rep" | "sel" | "lst" | "req" | "rev" | "log";
+const TABS: [Tab, string][] = [["home", "Prehľad"], ["rep", "Nahlásenia"], ["sel", "Predajcovia"], ["lst", "Inzeráty"], ["req", "Dopyty"], ["rev", "Hodnotenia"], ["log", "Záznam akcií"]];
 const ST: Record<string, string> = { active: "Aktívny", paused: "Pozastavený", sold: "Predaný", blocked: "Skrytý", open: "Otvorené", resolved: "Vybavené", rejected: "Zamietnuté" };
 const d = (s: string) => new Date(s).toLocaleString("sk-SK", { day: "numeric", month: "numeric", year: "numeric", hour: "2-digit", minute: "2-digit" });
 
@@ -37,6 +37,7 @@ export default function Admin() {
         {tab === "sel" && <Sellers run={run} />}
         {tab === "lst" && <Listings run={run} />}
         {tab === "req" && <Reqs run={run} />}
+        {tab === "rev" && <Revs run={run} />}
         {tab === "log" && <Log />}
       </section>
       {toast && <div className="pp-toast" role="status">{toast}</div>}
@@ -128,5 +129,16 @@ function Reqs({ run }: { run: Run }) {
     <ul className="pp-rows">{rows?.map((r) => <li key={r.id} className="pp-row ad-row">
       <div className="pp-ri"><b>#{r.id} {r.part}</b><span className="mute">{r.name} · {r.contact} · {d(r.createdAt)} · {r.status === "open" ? (new Date(r.expiresAt) > new Date() ? "otvorený" : "vypršal") : "uzavretý"}</span></div>
       <div className="pp-ra">{r.status === "open" && <button className="del" onClick={async () => { await run(() => A.closeRequestAdmin(r.id), "Dopyt uzavretý"); reload(); }}>Uzavrieť (spam)</button>}</div>
+    </li>)}</ul></div>;
+}
+
+function Revs({ run }: { run: Run }) {
+  const [rows, reload, e] = useLoad(A.reviews, []);
+  return <div><header className="pp-h"><h1>Hodnotenia predajcov</h1></header>{e && <p className="pp-err">{e}</p>}
+    <p className="mute">Hodnotiť môže len kupujúci, ktorému predajca poslal ponuku na dopyt. Skryté hodnotenie sa nezobrazuje a nepočíta do priemeru.</p>
+    {rows && !rows.length && <div className="empty">Žiadne hodnotenia.</div>}
+    <ul className="pp-rows">{rows?.map((r) => <li key={r.id} className="pp-row ad-row">
+      <div className="pp-ri"><b>{"★".repeat(r.stars)} {r.seller}{r.hidden ? " (skryté)" : ""}</b><span className="mute">{r.author} · {d(r.createdAt)}{r.body ? " · " + r.body : ""}</span></div>
+      <div className="pp-ra"><button className={r.hidden ? "ubtn" : "del"} onClick={async () => { await run(() => A.hideReview(r.id, !r.hidden), r.hidden ? "Hodnotenie obnovené" : "Hodnotenie skryté"); reload(); }}>{r.hidden ? "Obnoviť" : "Skryť"}</button></div>
     </li>)}</ul></div>;
 }

@@ -41,7 +41,7 @@ const errs = [];
     await pg.fill("label:has-text('Názov dielu') input", "Predné ľavé svetlo LED");
     await pg.selectOption("label:has-text('Kategória') select", { label: "Svetlá" });
     await pg.selectOption("label:has-text('Podkategória') select", { label: "Predné svetlá" });
-    await pg.fill("label:has-text('OEM') input", "5E1 941 015");
+    await pg.fill("label:has-text('OEM') input:not([type=file])", "5E1 941 015");
     await pg.click("text=Ďalej →");
     await pg.selectOption("label:has-text('Značka auta') select", { label: "Škoda" });
     const m = pg.locator("label:has-text('Model') select"); const opts = await m.locator("option").allTextContents();
@@ -73,12 +73,32 @@ const errs = [];
     await b2.goto(B + "/"); await b2.waitForSelector(".saved-i:has-text('Škoda')"); await b2.click(".saved-i .chip"); await b2.waitForSelector("text=✓ Hľadanie uložené");
     await b2.goto(B + "/");
   });
-  await step("verejne: hladanie OEM bez medzier", async () => { await b2.fill(".oemrow input", "5e1941015"); await b2.click("text=Hľadať podľa čísla"); await b2.waitForSelector(".cnt:has-text('1')"); });
+  await step("verejne: hladanie OEM bez medzier", async () => { await b2.fill(".oemrow input:not([type=file])", "5e1941015"); await b2.click("text=Hľadať podľa čísla"); await b2.waitForSelector(".cnt:has-text('1')"); });
   await step("verejne: hladanie podla auta cez pasuje aj na (VW)", async () => {
     await b2.goto(B + "/"); await b2.selectOption(".panel label:has-text('Značka') select", { label: "Volkswagen" }); await b2.waitForSelector(".card:has-text('Predné ľavé svetlo LED')");
   });
+  await step("nasepkavanie v hlavicke", async () => {
+    await b2.goto(B + "/"); await b2.click(".gs input[type=search]"); await b2.fill(".gs input[type=search]", "predne lav");
+    await b2.waitForSelector(".hs-list li:has-text('Predné ľavé svetlo LED')");
+    await b2.fill(".gs input[type=search]", "octavia iii"); await b2.waitForSelector(".hs-list li:has-text('Škoda Octavia III')");
+    await b2.click(".hs-list li:has-text('Škoda Octavia III')");
+    await b2.waitForFunction(() => { const s = document.querySelector(".panel label select"); return s && s.selectedOptions[0]?.textContent === "Škoda"; });
+  });
+  await step("moje auto: ulozit a pri navrate pouzit", async () => {
+    await b2.click("text=Uložiť ako moje auto"); await b2.waitForSelector(".mycar.on:has-text('Octavia III')");
+    await b2.goto(B + "/"); await b2.waitForSelector(".mycar.on:has-text('Octavia III')");
+    await b2.waitForFunction(() => document.querySelectorAll(".panel label select")[1]?.selectedOptions[0]?.textContent?.startsWith("Octavia III"));
+  });
+  await step("odfotit OEM (citanie v prehliadaci)", async () => {
+    await b2.setInputFiles(".oemrow input[type=file]", __dirname + "/oem.jpg");
+    await b2.waitForSelector(".scan-r .chip:has-text('5E0823031')", { timeout: 90000 });
+    await b2.click(".scan-r .chip:has-text('5E0823031')");
+    await b2.waitForFunction(() => document.querySelector(".oemrow input:not([type=file])")?.value === "5E0823031");
+  });
   await step("detail + telefon + sprava", async () => {
+    await b2.goto(B + "/?q=" + encodeURIComponent("ľavé svetlo")); await b2.waitForSelector(".card:has-text('Predné ľavé svetlo LED')");
     await b2.click(".card:has-text('Predné ľavé svetlo LED') a >> nth=0"); await b2.waitForURL("**/diel/**"); await b2.waitForSelector("text=Pasuje na");
+    await b2.waitForSelector(".mycar-fit.yes:has-text('Octavia III')");
     await b2.click("text=Zobraziť telefón"); await b2.waitForSelector("text=0905 111 222");
     await b2.click("text=Napísať predajcovi");
     const box = b2.locator(".msgbox"); await box.locator("input >> nth=0").fill("Jano Kupec"); await box.locator("input >> nth=1").fill("0911 222 333"); await box.locator("textarea").fill("Dobrý deň, je svetlo ešte dostupné?");
@@ -116,7 +136,7 @@ const errs = [];
     await pg.selectOption("label:has-text('Značka') select", { label: "Škoda" });
     const m = pg.locator("label:has-text('Model') select"); const o = (await m.locator("option").allTextContents()).find((t) => /^Octavia III/.test(t)); await m.selectOption({ label: o });
     await pg.selectOption("label:has-text('Ročník') select", "2016"); await pg.fill("label:has-text('Najazdené km') input", "150000");
-    await pg.fill("label:has-text('VIN') input", "TMBJJ7NE0G0123456");
+    await pg.fill("label:has-text('VIN') input:not([type=file])", "TMBJJ7NE0G0123456");
     await pg.click("text=Uložiť a pridať diely"); await pg.waitForSelector("text=Diely z auta");
     const row = (n) => pg.locator(".pp-qr", { has: pg.locator(`input[value="${n}"]`) });
     await row("Kapota").locator("input[aria-label^='OEM']").fill("5E0823031"); await row("Kapota").locator("input[aria-label^='Cena']").fill("90");
@@ -147,10 +167,43 @@ const errs = [];
   await step("dopyt: kupujuci vidi ponuku", async () => {
     await b2.goto(B + reqUrl); await b2.waitForSelector("text=Ponuky od predajcov (1)"); await b2.waitForSelector("text=95 €");
   });
+  await step("hodnotenie predajcu z dopytu", async () => {
+    await b2.click("text=Ohodnotiť predajcu"); await b2.click(".rate-s button[aria-label='5 z 5']");
+    await b2.fill(".rate textarea", "Rýchla odpoveď, diel sedel."); await b2.click("text=Uložiť hodnotenie");
+    await b2.waitForSelector("text=Vaše hodnotenie: ★★★★★");
+  });
+  await step("stranka predajcu s hodnotenim", async () => {
+    await b2.click(".pp-mh a"); await b2.waitForURL("**/predajci/**"); await b2.waitForSelector("h1:has-text('Vrakovisko Test')");
+    await b2.waitForSelector(".seller-head .stars:has-text('5,0')"); await b2.waitForSelector(".reviews li:has-text('Fero')");
+    await b2.waitForSelector("h2:has-text('Diely v ponuke')");
+  });
   await step("SEO: detail pripraveny na serveri", async () => {
     const id = require("child_process").execSync(`psql -h /tmp/pgt -p 5499 -U postgres -d e2e -tAc "select max(id) from listings where status='active'"`).toString().trim();
     const r = await fetch(B + "/diel/" + id); const h = await r.text(); if (!/\/diel\/\d+-/.test(r.url)) throw new Error("bez presmerovania na adresu s nazvom: " + r.url);
     if (!/application\/ld\+json/.test(h) || !/"@type":"Product"/.test(h) || !/<link rel="canonical"/.test(h)) throw new Error("chyba SEO v HTML");
+  });
+  await step("predany diel: stranka ostane s nahradou", async () => {
+    const q = (x) => require("child_process").execSync(`psql -h /tmp/pgt -p 5499 -U postgres -d e2e -tAc "${x}"`).toString().trim();
+    const [id, st] = q("select id || '|' || status from listings where status in ('active','paused') order by id desc limit 1").split("|");
+    q(`update listings set status='sold' where id=${id}`);
+    const r = await fetch(B + "/diel/" + id); const h = await r.text();
+    q(`update listings set status='${st}' where id=${id}`);
+    if (r.status !== 200 || !/Predané/.test(h) || !/noindex/.test(h) || /class="dacts"/.test(h))
+      throw new Error(`id ${id} (${st}) status ${r.status} predane=${/Predané/.test(h)} noindex=${/noindex/.test(h)} detail=${/class="dacts"/.test(h)} ${h.length}`);
+  });
+  await step("SEO: mesto, navody, mapa webu, aplikacia", async () => {
+    const t = async (u, re) => { const r = await fetch(B + u); const h = await r.text(); if (r.status !== 200 || !re.test(h)) throw new Error(u + " " + r.status); return h; };
+    await t("/mesto/zilina", /Použité autodiely Žilina/);
+    await t("/navody/vin", /Kde nájdem VIN číslo auta/);
+    await t("/navody/oem-cislo", /"@type":"Article"/);
+    const sm = await t("/sitemap.xml", /\/mesto\/zilina/); if (!/\/predajci\//.test(sm) || !/\/navody\/vin/.test(sm)) throw new Error("sitemap");
+    await t("/manifest.webmanifest", /"short_name":"Rozoberačka"/);
+    await t("/sw.js", /Ste bez internetu/);
+    await t("/ocr/worker.min.js", /./);
+    const r = await fetch(B + "/mesto/neexistuje"); if (r.status !== 404) throw new Error("mesto 404 " + r.status);
+  });
+  await step("strazca: zrusenie neexistujuceho odkazu", async () => {
+    await b2.goto(B + "/strazca/zrusit/00000000-0000-4000-8000-000000000000"); await b2.waitForSelector("text=Upozornenie už neexistuje");
   });
   await step("hladanie s preklepom (server)", async () => {
     await b2.goto(B + "/?q=alternatr"); await b2.waitForSelector(".card:has-text('Alternátor 140A')");
@@ -158,7 +211,7 @@ const errs = [];
   });
   await step("karta pouziva nahlad fotky", async () => {
     await b2.goto(B + "/?q=octavia"); await b2.waitForSelector(".card img");
-    const src = await b2.locator(".card img").first().getAttribute("src"); if (!/_t\.jpg/.test(src)) throw new Error(src);
+    const src = await b2.locator(".card img").first().getAttribute("src"); if (!/_t\.(jpg|webp)/.test(src)) throw new Error(src);
     await b2.waitForFunction(() => { const i = document.querySelector(".card img"); return i.complete && i.naturalWidth > 0 && i.naturalWidth <= 480; });
   });
   await step("nahlasenie inzeratu", async () => {
@@ -175,6 +228,7 @@ const errs = [];
     await pg.goto(B + "/admin"); await pg.waitForSelector(".pp-tile");
     await pg.click(".pp-nav >> text=Nahlásenia"); await pg.waitForSelector(".pp-msgs li:has-text('Podvod')");
     await pg.click("text=Skryť inzerát a vybaviť"); await pg.waitForSelector(".pp-toast");
+    await pg.click(".pp-nav >> text=Hodnotenia"); await pg.waitForSelector(".pp-row:has-text('Vrakovisko Test')");
     await pg.click(".pp-nav >> text=Záznam akcií"); await pg.waitForSelector(".pp-row:has-text('skryť inzerát')");
     await b2.goto(B + "/?q=octavia"); await b2.waitForSelector(".cnt"); await b2.waitForTimeout(800);
     if (await b2.locator(".card:has-text('LED Octavia')").count()) throw new Error("still public");
@@ -197,7 +251,7 @@ const errs = [];
   await step("zrusenie uctu", async () => {
     await pg.click("button.del:has-text('Zrušiť účet')"); await pg.fill(".pp-gdpr input", "zrušiť"); await pg.click("text=Natrvalo zrušiť účet");
     await pg.waitForURL("**/?ucet=zruseny", { timeout: 20000 });
-    const n = require("child_process").execSync(`psql -h /tmp/pgt -p 5499 -U postgres -d e2e -tAc "select (select count(*) from auth.users)+(select count(*) from sellers)+(select count(*) from listings)+(select count(*) from messages)+(select count(*) from storage.objects)+(select count(*) from donor_cars)"`).toString().trim();
+    const n = require("child_process").execSync(`psql -h /tmp/pgt -p 5499 -U postgres -d e2e -tAc "select (select count(*) from auth.users)+(select count(*) from sellers)+(select count(*) from listings)+(select count(*) from messages)+(select count(*) from storage.objects)+(select count(*) from donor_cars)+(select count(*) from seller_reviews)"`).toString().trim();
     if (n !== "0") throw new Error("zostali riadky: " + n);
     const files = require("child_process").execSync("find /tmp/claude-0/e2e/files -type f | wc -l").toString().trim();
     if (files !== "0") throw new Error("zostali subory: " + files);

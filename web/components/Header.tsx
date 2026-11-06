@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { Icon } from "./Icons";
 import { STATIC_PREVIEW, homeHref, sellersHref } from "@/lib/paths";
 import { getSession, onAuthChange } from "@/lib/seller";
+import HeaderSearch, { type Pick } from "./HeaderSearch";
 
 /** Hlavička: logo, hľadanie (na úvode filtruje hneď), „Pre predajcov“. */
 export default function Header() {
@@ -27,15 +28,25 @@ export default function Header() {
     else if (scroll) router.push("/?q=" + encodeURIComponent(v) + "#vysledky");
   };
 
+  const pick = (p: Pick) => {
+    if (p.kind === "q") { setQ(p.q); send(p.q, true); return; }
+    setQ("");
+    if (onHome) { window.dispatchEvent(new CustomEvent("rz-f", { detail: p.patch })); return; }
+    const u = new URLSearchParams();
+    if (p.patch.brand != null) u.set("znacka", String(p.patch.brand));
+    if (p.patch.model != null) u.set("model", String(p.patch.model));
+    if (p.patch.cat) u.set("kat", p.patch.cat);
+    if (p.patch.sub != null) u.set("pod", String(p.patch.sub));
+    router.push("/?" + u.toString() + "#vysledky");
+  };
+
   const Brand = STATIC_PREVIEW ? "a" : Link;
   return (
     <header className="site-header">
       <div className="tb">
         <Brand className="brand" href={homeHref}><Icon id="i-pr" />Rozoberačka</Brand>
         <form className="gs" role="search" onSubmit={(e) => { e.preventDefault(); send(q, true); }}>
-          <input type="search" value={q} placeholder="Hľadajte diel, OEM číslo alebo auto" aria-label="Hľadať"
-            onChange={(e) => { setQ(e.target.value); if (onHome) send(e.target.value, false); }} />
-          <button type="submit" aria-label="Hľadať"><Icon id="i-q" /></button>
+          <HeaderSearch value={q} onChange={(v) => { setQ(v); if (onHome) send(v, false); }} onPick={pick} />
         </form>
         <div id="user">
           {STATIC_PREVIEW ? <a className="ubtn" href={sellersHref}>Prihlásenie predajcu</a> : <Link className="ubtn" href={logged ? "/predajca" : sellersHref}>{logged ? "Portál predajcu" : "Prihlásenie predajcu"}</Link>}

@@ -40,6 +40,7 @@ export type Listing = {
   createdAt: string;
   photos: string[]; // úplné adresy obrázkov, prvá je hlavná
   thumbs: string[]; // zmenšené fotky pre karty (ak chýbajú, použije sa veľká)
+  mediums: string[]; // stredné fotky pre detail na mobile (ak chýbajú, použije sa veľká)
   updatedAt: string;
   fits: Vehicle[]; // „Pasuje aj na“ zadané predajcom
   seller: Seller;

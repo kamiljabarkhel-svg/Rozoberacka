@@ -13,7 +13,7 @@ h1,h2,h3{font-family:var(--f-d);text-wrap:balance}
 .tb{max-width:1160px;margin:0 auto;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
 .brand{display:flex;align-items:center;gap:9px;font:800 1.2rem/1 var(--f-d);letter-spacing:-.01em}
 .brand svg{display:block;width:32px;height:32px;padding:6px;border-radius:4px;background:var(--pet);color:var(--acc)}
-.gs{flex:1 1 280px;order:3;display:flex;background:var(--chip);border-radius:3px;overflow:hidden;min-width:0;border:1px solid transparent}
+.gs{flex:1 1 280px;order:3;display:flex;background:var(--chip);border-radius:3px;min-width:0;border:1px solid transparent;position:relative}
 .gs:focus-within{background:var(--card);border-color:var(--pet2)}
 @media(min-width:760px){.gs{order:0}}
 .gs input{flex:1;min-width:0;border:0;padding:11px 18px;color:var(--ink);background:transparent;outline:none}
@@ -477,3 +477,68 @@ button:disabled{opacity:.55;cursor:default}
 .rq-cta{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;background:var(--card);border:1px solid var(--line);border-left:4px solid var(--acc);border-radius:6px;padding:14px 16px;margin:18px 0}
 .rq-cta p{margin:0}
 .rq-offer{margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
+
+/* predaný / pozastavený diel */
+.gone-head{display:flex;gap:16px;align-items:flex-start;margin:6px 0 18px;padding:16px;border:1px solid var(--line);border-radius:6px;background:var(--card)}
+.gone-head img{width:120px;height:90px;object-fit:cover;border-radius:4px;filter:grayscale(.6);opacity:.8;flex:none}
+.gone-head h1{margin:6px 0 4px}
+.gone-head p{margin:4px 0}
+.gone-badge{display:inline-block;padding:2px 8px;border-radius:3px;font-size:12px;font-weight:700;background:var(--line);color:var(--ink)}
+.gone-badge.sold{background:var(--bad);color:#fff}
+@media (max-width:560px){.gone-head{flex-direction:column}.gone-head img{width:100%;height:160px}}
+
+/* hodnotenie a stránka predajcu */
+.stars{display:inline-flex;align-items:center;gap:6px;font-size:1rem;white-space:nowrap}
+.stars>span:first-child{color:var(--acc);letter-spacing:1px}
+.stars>span:first-child i{font-style:normal;color:var(--line)}
+.stars.sm{font-size:.85rem}
+.seller-head{padding:18px;border:1px solid var(--line);border-radius:6px;background:var(--card);margin:6px 0 18px}
+.seller-head h1{margin:0 0 6px}
+.seller-meta{display:flex;flex-wrap:wrap;gap:6px 14px;color:var(--mute);margin:0 0 8px;font-weight:600}
+.seller-meta .ok{color:var(--ok)}
+.reviews{margin-top:28px}
+.reviews ul{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+.reviews li{padding:12px 14px;border:1px solid var(--line);border-radius:6px;background:var(--card)}
+.reviews li p{margin:6px 0 0}
+.small{font-size:.88rem}
+.mycar-fit{margin:10px 0;padding:9px 12px;border-radius:4px;font-size:.92rem;border:1px solid var(--line)}
+.mycar-fit.yes{border-color:var(--ok);color:var(--ok);background:color-mix(in srgb,var(--ok) 8%,transparent)}
+.mycar-fit.no{color:var(--mute)}
+.sh-more{font-size:.85rem;font-weight:700;margin-left:6px}
+.navod code{background:var(--chip);padding:1px 5px;border-radius:3px;font:600 .9em var(--f-m)}
+.navod-list{list-style:none;padding:0;display:grid;gap:10px}
+.navod-list li{display:grid;gap:2px;padding:12px 14px;border:1px solid var(--line);border-radius:6px;background:var(--card)}
+.navod-more{margin-top:32px;border-top:1px solid var(--line)}
+
+/* našepkávanie v hlavičke */
+.hs{flex:1;display:flex;min-width:0}
+.hs-list{position:absolute;top:calc(100% + 4px);left:-1px;right:-1px;z-index:60;list-style:none;margin:0;padding:4px 0;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:4px;box-shadow:var(--sh2);max-height:min(70vh,440px);overflow:auto}
+.hs-list li{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 10px;padding:7px 14px;cursor:pointer}
+.hs-list li.on{background:var(--chip)}
+.hs-g{flex-basis:100%;font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--mute);margin-top:4px}
+.hs-l{font-weight:700}
+.hs-h{font-size:.85rem;color:var(--mute)}
+.mycar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 14px;padding:10px 12px;border:1px dashed var(--line);border-radius:4px;font-size:.92rem}
+.mycar.on{border-style:solid;border-color:var(--ok)}
+.mycar-a{display:flex;gap:12px;align-items:center}
+
+/* odfotenie čísla (OCR) */
+.scan{display:contents}
+.scan-b{flex:none;display:grid;place-items:center;width:44px;min-height:44px;border:2px solid var(--line);border-radius:4px;background:var(--card);color:var(--ink);cursor:pointer}
+.scan-b:disabled{opacity:.5;cursor:progress}
+.scan-r{flex-basis:100%;display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:.88rem;color:var(--mute);font-weight:600}
+.oemin{display:flex;gap:6px;flex-wrap:wrap;align-items:stretch}
+.oemin input{flex:1 1 200px}
+.pl .scan-b{border:0;border-left:2px solid var(--ink);border-radius:0}
+.pl .scan-r{padding:6px 10px;border-top:1px solid var(--line)}
+.pl{flex-wrap:wrap}
+.rate{display:grid;gap:8px;margin-top:10px;padding:10px;border:1px solid var(--line);border-radius:4px}
+.rate-s{display:flex;gap:2px}
+.rate-s button{border:0;background:none;font-size:1.7rem;line-height:1;color:var(--line);cursor:pointer;padding:2px}
+.rate-s button.on{color:var(--acc)}
+.rate textarea{width:100%;min-width:0;background:var(--chip);color:var(--ink);border:2px solid transparent;border-radius:4px;padding:8px 10px;font:inherit}
+.rate-a{display:flex;gap:12px;align-items:center}
+.alert-f{display:grid;gap:8px;margin:0 0 12px;padding:12px;border:1px solid var(--line);border-radius:6px;background:var(--card)}
+.alert-f.ok{color:var(--ok);font-weight:700}
+.alert-r{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.alert-r input{flex:1 1 220px;min-width:0;background:var(--chip);color:var(--ink);border:2px solid transparent;border-radius:4px;padding:10px 12px;font:inherit}

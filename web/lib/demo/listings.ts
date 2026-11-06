@@ -95,11 +95,17 @@ export function buildDemoListings(cat: Catalog): { listings: Listing[]; phones: 
       condition: r.cond, description: r.desc,
       // záruka podľa zákona: firma pri použitom diele najmenej 12 mesiacov (pôvodné hodnoty z prototypu sa prepočítajú)
       warranty: firm ? "12 mesiacov" : "Bez záruky", shipping: r.shipping,
-      createdAt: created, updatedAt: created, photos, thumbs: photos,
-      fits, sellerId: r.seller[0], donorId: null, seller: { name: r.seller[0], type: r.seller[1], city: r.city, verified: r.seller[2] },
+      createdAt: created, updatedAt: created, photos, thumbs: photos, mediums: photos,
+      fits, sellerId: demoSellerId(r.seller[0]), donorId: null, seller: { name: r.seller[0], type: r.seller[1], city: r.city, verified: r.seller[2] },
       side: EXTRA[r.id]?.side ?? null, gearbox: EXTRA[r.id]?.gearbox ?? null, km: EXTRA[r.id]?.km ?? null,
       tested: !!EXTRA[r.id]?.tested, returns14: firm || !!EXTRA[r.id]?.returns14, top: !!EXTRA[r.id]?.top, partMaker: null,
     };
   });
   return { listings, phones };
+}
+
+/** Ukážkové id predajcu v tvare UUID (z mena), aby fungovala jeho verejná stránka. */
+function demoSellerId(name: string): string {
+  let h = 0; for (const ch of name) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+  return "00000000-0000-4000-8000-" + h.toString(16).padStart(12, "0").slice(-12);
 }

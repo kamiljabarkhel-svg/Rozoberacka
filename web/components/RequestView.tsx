@@ -6,6 +6,9 @@ import type { Catalog } from "@/lib/types";
 import { closeRequest, getCatalog, getRequest, type RequestView as RV } from "@/lib/data";
 import { price } from "@/lib/format";
 import { listingHref } from "@/lib/paths";
+import { sellerPath } from "@/lib/seo";
+import Stars from "./Stars";
+import RateSeller from "./RateSeller";
 
 export default function RequestView({ token }: { token: string }) {
   const [r, setR] = useState<RV | null | undefined>(undefined);
@@ -26,11 +29,13 @@ export default function RequestView({ token }: { token: string }) {
       {!r.offers.length && <div className="empty">Zatiaľ žiadna ponuka. Predajcovia vidia dopyt vo svojom portáli a ozvú sa vám aj priamo na kontakt, ktorý ste uviedli. Stránku si uložte a pozrite sa neskôr.</div>}
       <ul className="pp-msgs">{r.offers.map((o, i) => (
         <li key={i}>
-          <div className="pp-mh"><b>{o.seller}{o.verified && <span className="bdg">Overený predajca</span>}</b><b className="rq-price">{price(o.price)}</b></div>
-          <div className="mute">{o.sellerType}{o.sellerCity ? ` · ${o.sellerCity}` : ""} · {new Date(o.createdAt).toLocaleDateString("sk-SK")}</div>
+          <div className="pp-mh"><b>{o.sellerId ? <Link href={sellerPath(o.sellerId, o.seller)}>{o.seller}</Link> : o.seller}{o.verified && <span className="bdg">Overený predajca</span>}</b><b className="rq-price">{price(o.price)}</b></div>
+          <div className="mute">{o.sellerType}{o.sellerCity ? ` · ${o.sellerCity}` : ""} · {new Date(o.createdAt).toLocaleDateString("sk-SK")}
+            {o.ratingCount > 0 && <> · <Stars value={o.ratingAvg} count={o.ratingCount} small /></>}</div>
           {o.note && <p>{o.note}</p>}
           <div className="pp-mf"><a className="call" href={"tel:" + o.phone.replace(/\s/g, "")}>Zavolať {o.phone}</a>
             {o.listingId && o.listingName && <Link className="lnk" href={listingHref(o.listingId, o.listingName)}>Pozrieť inzerát: {o.listingName}</Link>}</div>
+          {o.sellerId && <RateSeller token={token} sellerId={o.sellerId} seller={o.seller} stars={o.myStars} review={o.myReview} onDone={load} />}
         </li>))}</ul>
       {r.status === "open" && <p>{confirm
         ? <><button className="del" onClick={async () => { await closeRequest(token).catch((e) => setErr(String(e.message || e))); setConfirm(false); load(); }}>Áno, diel už nehľadám</button> <button className="lnk" onClick={() => setConfirm(false)}>Nie</button></>

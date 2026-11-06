@@ -54,3 +54,10 @@ export async function requests(): Promise<AdminRequest[]> {
   }));
 }
 export async function closeRequestAdmin(id: number) { must(await c().rpc("admin_close_request", { p_id: id })); }
+
+export type AdminReview = { id: number; seller: string; sellerId: string; stars: number; body: string; author: string; hidden: boolean; createdAt: string };
+export async function reviews(): Promise<AdminReview[]> {
+  return (must(await c().rpc("admin_reviews")) as Row[] || []).map((r) => ({ id: Number(r.id), seller: String(r.seller), sellerId: String(r.seller_id), stars: Number(r.stars),
+    body: String(r.body || ""), author: String(r.author), hidden: !!r.hidden, createdAt: String(r.created_at) }));
+}
+export async function hideReview(id: number, hide: boolean) { must(await c().rpc("admin_hide_review", { p_id: id, p_hide: hide })); }

@@ -9,7 +9,7 @@ export default function Page() {
     <LegalPage title="Ochrana osobných údajov">
       <p>Tu vysvetľujeme, aké osobné údaje spracúvame na portáli Rozoberačka, prečo, ako dlho a aké máte práva. Postupujeme podľa nariadenia (EÚ) 2016/679 (GDPR) a zákona č. 18/2018 Z. z. o ochrane osobných údajov.</p>
 
-      <h2>1. Kto vaše údaje spracúva</h2>
+      <h2 id="kontakt">1. Kto vaše údaje spracúva</h2>
       <OperatorBox />
       <p>Zodpovednú osobu sme neurčili, zákon nám to neukladá. So všetkými otázkami k osobným údajom nám píšte na {OPERATOR.email || fill("")}.</p>
 
@@ -22,6 +22,9 @@ export default function Page() {
           <tr><td>Kupujúci, ktorý píše predajcovi</td><td>meno, telefón alebo e-mail, text správy</td><td>doručenie správy predajcovi, ktorému píšete</td><td>vaša žiadosť o kontakt (čl. 6 ods. 1 písm. b) a náš oprávnený záujem na ochrane pred zneužitím (písm. f)</td><td>12 mesiacov, potom sa správa automaticky zmaže</td></tr>
           <tr><td>Kupujúci, ktorý zadá dopyt na diel</td><td>meno, telefón alebo e-mail, auto (značka, model, ročník, nepovinne VIN), hľadaný diel, poznámka, mesto, odtlačok IP</td><td>zobrazenie dopytu registrovaným predajcom, aby vám poslali ponuku; ochrana pred spamom</td><td>váš súhlas (čl. 6 ods. 1 písm. a GDPR), ktorý môžete kedykoľvek odvolať; ochrana pred zneužitím – oprávnený záujem (písm. f)</td><td>dopyt platí 30 dní, zmaže sa po 60 dňoch spolu s ponukami</td></tr>
           <tr><td>Predajca</td><td>darcovské autá (značka, model, ročník, km, farba, VIN), ponuky na dopyty</td><td>evidencia dielov z jedného auta, ponuky kupujúcim</td><td>zmluva</td><td>kým ich predajca nezmaže alebo nezruší účet; VIN vidí len predajca</td></tr>
+          <tr id="strazca"><td>Kupujúci, ktorý si zapne upozornenie e-mailom (strážca)</td><td>e-mail, uložené hľadanie (auto, diel, filtre), čas súhlasu a potvrdenia, odtlačok IP</td><td>raz denne poslať nové diely, ktoré zodpovedajú hľadaniu; ochrana pred zneužitím</td><td>váš súhlas (čl. 6 ods. 1 písm. a GDPR) potvrdený kliknutím na odkaz v e-maile; odvolať ho môžete odkazom v každom e-maile</td><td>nepotvrdené 3 dni, potvrdené do zrušenia, najviac 6 mesiacov; odtlačok IP 3 dni</td></tr>
+          <tr><td>Kupujúci, ktorý ohodnotí predajcu</td><td>počet hviezdičiek, text, krstné meno z dopytu</td><td>zverejnenie hodnotenia na stránke predajcu, aby sa ostatní kupujúci vedeli rozhodnúť</td><td>váš súhlas (čl. 6 ods. 1 písm. a) – hodnotenie pridávate dobrovoľne</td><td>kým predajca nezruší účet alebo nás nepožiadate o zmazanie; správca môže nevhodné hodnotenie skryť</td></tr>
+          <tr><td>Predajca</td><td>hodnotenia od kupujúcich a ich priemer</td><td>informácia pre kupujúcich na stránke predajcu</td><td>oprávnený záujem kupujúcich a prevádzkovateľa na dôveryhodnej inzercii (čl. 6 ods. 1 písm. f)</td><td>kým účet nezrušíte</td></tr>
           <tr><td>Ktokoľvek, kto nahlási inzerát</td><td>dôvod, text, nepovinne kontakt</td><td>preverenie nahlásenia</td><td>oprávnený záujem a povinnosti podľa nariadenia (EÚ) 2022/2065 o digitálnych službách (čl. 6 ods. 1 písm. c a f)</td><td>12 mesiacov po vybavení</td></tr>
           <tr><td>Každý návštevník</td><td>odtlačok IP adresy vytvorený tajným kľúčom, ktorý sa mení každý mesiac (samotnú IP adresu neukladáme)</td><td>ochrana pred robotmi a spamom, počítanie zobrazení bez duplicít</td><td>oprávnený záujem (čl. 6 ods. 1 písm. f)</td><td>3 dni; pri nahlásení 30 dní</td></tr>
           <tr><td>Každý návštevník</td><td>technické záznamy servera (IP adresa, čas, prehliadač) u poskytovateľov hostingu</td><td>prevádzka a bezpečnosť webu</td><td>oprávnený záujem</td><td>podľa podmienok poskytovateľa, spravidla dni až týždne</td></tr>
@@ -30,13 +33,14 @@ export default function Page() {
       </table>
       <p>Údaje predajcu, ktoré sú súčasťou inzerátu (názov alebo meno, typ, mesto a telefón v inzeráte), sú verejné. Telefón sa zobrazí až po kliknutí na „Zobraziť telefón“ a počet odkrytí z jedného pripojenia je obmedzený. Telefón a IČO z profilu nevidí nikto okrem predajcu a správcu portálu.</p>
       <p>Pri nahratí fotky web odstráni skryté údaje súboru vrátane polohy GPS.</p>
-      <p>Kupujúci sa neregistruje. Obľúbené inzeráty sa ukladajú len vo vašom prehliadači a my ich nevidíme.</p>
+      <p>Kupujúci sa neregistruje. Obľúbené inzeráty, uložené hľadania a „Moje auto“ sa ukladajú len vo vašom prehliadači a my ich nevidíme.</p>
+      <p>Pri odfotení OEM čísla alebo VIN sa text z fotky číta priamo vo vašom zariadení. Fotka sa nikam neposiela ani neukladá.</p>
 
       <h2>3. Komu údaje poskytujeme</h2>
       <ul>
         <li><b>Predajcovi</b>: meno, kontakt a text vašej správy dostane len predajca, ktorému píšete.</li>
         <li><b>Registrovaným predajcom</b>: dopyt na diel vrátane mena a kontaktu vidia prihlásení predajcovia na portáli (nie verejnosť), aby vám mohli poslať ponuku.</li>
-        <li><b>Sprostredkovateľom</b>, ktorí pre nás zabezpečujú techniku na základe zmluvy o spracúvaní údajov: Supabase Inc. (databáza, prihlásenie a fotky; údaje sú uložené v dátovom centre vo Frankfurte, Nemecko), Vercel Inc. (zobrazovanie webu) a poskytovateľ odosielania e-mailov.</li>
+        <li><b>Sprostredkovateľom</b>, ktorí pre nás zabezpečujú techniku na základe zmluvy o spracúvaní údajov: Supabase Inc. (databáza, prihlásenie a fotky; údaje sú uložené v dátovom centre vo Frankfurte, Nemecko), Vercel Inc. (zobrazovanie webu) a poskytovateľ odosielania e-mailov (Brevo, Sendinblue SAS, Francúzsko – potvrdenia registrácie a upozornenia strážcu).</li>
         <li><b>Orgánom verejnej moci</b>, ak nám to ukladá zákon.</li>
       </ul>
       <p>Supabase a Vercel sú spoločnosti so sídlom v USA. Ak by pri ich službách došlo k prenosu údajov mimo EÚ, deje sa na základe štandardných zmluvných doložiek Európskej komisie, prípadne rámca EÚ – USA na ochranu údajov. Údaje nepredávame a nepoužívame na reklamu.</p>
@@ -46,7 +50,7 @@ export default function Page() {
         <li>prístup k údajom a ich prenosnosť – predajca si všetky údaje stiahne v portáli (Profil → Moje údaje),</li>
         <li>oprava nesprávnych údajov – v portáli alebo e-mailom,</li>
         <li>vymazanie – predajca zruší účet v portáli (Profil → Zrušiť účet); kupujúci nám napíše, ktorú správu alebo dopyt máme zmazať (dopyt môžete aj sami uzavrieť na jeho stránke),</li>
-        <li>odvolanie súhlasu s dopytom – napíšte nám a dopyt zmažeme; odvolanie nemá vplyv na zákonnosť predchádzajúceho spracúvania,</li>
+        <li>odvolanie súhlasu s dopytom – napíšte nám a dopyt zmažeme; upozornenie e-mailom zrušíte odkazom v každom e-maile; hodnotenie vám na požiadanie zmažeme; odvolanie nemá vplyv na zákonnosť predchádzajúceho spracúvania,</li>
         <li>obmedzenie spracúvania a námietka proti spracúvaniu na základe oprávneného záujmu,</li>
         <li>podanie návrhu na začatie konania na Úrade na ochranu osobných údajov Slovenskej republiky, Hraničná 12, 820 07 Bratislava, <a href="https://dataprotection.gov.sk" rel="noreferrer">dataprotection.gov.sk</a>.</li>
       </ul>

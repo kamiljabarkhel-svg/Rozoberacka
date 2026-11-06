@@ -126,3 +126,29 @@ Na ostrej Supabase sú spustené aj `08` a `09` (6. 11. 2026, 22:40; obsah overe
 - `09_katalog_opravy.sql`: opravené roky konca výroby (Superb III, Passat B8, BMW 5 G30, Kona, Kodiaq, Tiguan II) a 17 nových generácií (napr. Superb IV, Kodiaq II, Passat B9, Tiguan III, BMW 5 G60, Audi A3 8Y, A6 C8, Q5 FY, Kia Ceed III, Sportage V, Hyundai Tucson IV, i20 III) – zatiaľ bez motorizácií. Katalóg je stále z pamäte, overiť s TecDoc.
 - Kontrola po spustení: `select count(*) from public.models;` má vyjsť **115**.
 - Testy: `testy/22_test_08.sql` (19 kontrol). Na ostrej databáze prešiel v transakcii, ktorá sa na konci zrušila: 19/19, po teste 0 testovacích účtov, inzerátov, áut aj dopytov.
+
+## Doplnky (6. 11. 2026, večer)
+Na ostrej Supabase je spustený aj `10_predane_navrhy_hodnotenia_strazca.sql` (obsah overený odtlačkom SHA-256).
+Test `testy/23_test_10.sql` prešiel priamo na nej v transakcii, ktorá sa zrušila: 31/31, databáza ostala čistá.
+- **Predaný diel**: `listings.sold_at`, funkcia `listing_gone` – stránka predaného (do 180 dní) alebo pozastaveného dielu ostane s ponukou náhrad, bez telefónu a popisu.
+- **Našepkávanie**: `search_suggest(text)` – názvy dielov z aktívnych inzerátov.
+- **Hodnotenie predajcov**: `seller_reviews`, `rate_seller` – hodnotiť môže len kupujúci, ktorému predajca poslal ponuku na dopyt (overené súkromným kódom dopytu). Priemer v `sellers.rating_avg/rating_count`, správca skrýva cez `admin_hide_review`.
+- **Strážca e-mailom**: `search_alerts`, `create_search_alert`, `confirm_search_alert`, `cancel_search_alert`. Dvojité potvrdenie, nepotvrdené sa mažú po 3 dňoch, všetky po 6 mesiacoch.
+- **Súkromie predajcov**: z tabuľky `sellers` je verejných len 9 stĺpcov (čas súhlasu s podmienkami už nie).
+
+### Strážca e-mailom – zapnutie (až po Brevo a doméne)
+E-maily posiela Edge Function `supabase/functions/strazca` (otestovaná lokálne: `testy-e2e/test_strazca.mjs`, 7/7).
+1. V Brevo overte doménu odosielateľa (napr. `upozornenia@vasadomena.sk`) a vytvorte API kľúč (SMTP & API → API Keys).
+2. Supabase → **Edge Functions** → **Deploy a new function** → názov `strazca`, vložte obsah `index.ts` a `handler.ts` (dva súbory; ak editor dovolí len jeden, vložte `handler.ts` nad `index.ts`, zmažte riadok `import { run } …` a slovo `export` pred `type Env` a `async function run` nechajte) → Deploy. Pri funkcii vypnite „Verify JWT“ (chráni ju vlastné heslo `CRON_SECRET`).
+3. Supabase → Edge Functions → **Secrets**: `BREVO_API_KEY`, `SITE_URL` (napr. https://vasadomena.sk), `MAIL_FROM`, `MAIL_FROM_NAME` (Rozoberačka), `OPERATOR` (KJ Trade s.r.o., IČO 57598142, Kvetná 1505/4D, 900 41 Rovinka) a `CRON_SECRET` (dlhé náhodné heslo).
+4. SQL Editor – spúšťanie každých 10 minút (heslo uložené vo Vault, nie v kóde):
+   ```sql
+   create extension if not exists pg_net;
+   select vault.create_secret('SEM_VLOZTE_CRON_SECRET', 'strazca_secret');
+   select cron.schedule('rozoberacka-strazca', '*/10 * * * *', $$
+     select net.http_post(
+       url := 'https://sbfhmlayemaiinuismhh.supabase.co/functions/v1/strazca',
+       headers := jsonb_build_object('x-cron-secret', (select decrypted_secret from vault.decrypted_secrets where name = 'strazca_secret'))
+     ) $$);
+   ```
+5. Vo Verceli nastavte `NEXT_PUBLIC_EMAIL_ALERTS=1` a nasaďte web znova. Tlačidlo „Posielať nové diely e-mailom“ sa zobrazí pri uloženom hľadaní.

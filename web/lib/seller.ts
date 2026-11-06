@@ -4,6 +4,7 @@
 // takže predajca vidí a mení len svoje údaje. Do prehliadača ide len verejný anon kľúč.
 import { createClient, type Session, type SupabaseClient } from "@supabase/supabase-js";
 import { IS_DEMO, PHOTO_BUCKET } from "./data";
+import { filesOf, mediumPath, thumbPath } from "./photos";
 import type { Condition } from "./types";
 import { TERMS_VERSION } from "./operator";
 
@@ -16,7 +17,7 @@ export function sellerClient(): SupabaseClient {
   return sb;
 }
 
-export type Profile = { id: string; email: string; name: string; type: string; city: string; phone: string; ico: string; verified: boolean };
+export type Profile = { id: string; email: string; name: string; type: string; city: string; phone: string; ico: string; verified: boolean; ratingAvg?: number | null; ratingCount?: number };
 export type Status = "active" | "paused" | "sold" | "blocked";
 export type MyListing = {
   id: number; name: string; brandId: number; modelId: number; engineId: number | null; year: number;
@@ -86,7 +87,7 @@ export async function signOut() { await sellerClient().auth.signOut(); }
 // ---------- PROFIL ----------
 export async function ensureProfile(s: Session): Promise<Profile> {
   const c = sellerClient(), uid = s.user.id;
-  const cols = "id,name,seller_type,city,verified";
+  const cols = "id,name,seller_type,city,verified,rating_avg,rating_count";
   let { data: sel } = await c.from("sellers").select(cols).eq("id", uid).maybeSingle();
   if (!sel) {
     const raw = String(s.user.user_metadata?.name || s.user.email?.split("@")[0] || "").trim().slice(0, 120);
@@ -101,7 +102,8 @@ export async function ensureProfile(s: Session): Promise<Profile> {
     sel = again.data;
   }
   const { data: pr } = await c.from("seller_private").select("phone,ico").eq("seller_id", uid).maybeSingle();
-  return { id: uid, email: s.user.email || "", name: sel.name, type: sel.seller_type, city: sel.city || "", phone: pr?.phone || "", ico: pr?.ico || "", verified: !!sel.verified };
+  return { id: uid, email: s.user.email || "", name: sel.name, type: sel.seller_type, city: sel.city || "", phone: pr?.phone || "", ico: pr?.ico || "", verified: !!sel.verified,
+    ratingAvg: sel.rating_avg != null ? Number(sel.rating_avg) : null, ratingCount: Number(sel.rating_count || 0) };
 }
 export async function saveProfile(p: Profile) {
   const c = sellerClient();
@@ -150,22 +152,25 @@ function dbRow(x: ListingInput) {
   };
 }
 
-/** Zmenší fotku: veľká najviac 1600 px (detail) a náhľad 480 px (karty). JPEG = menej dát na mobile. */
-export async function shrink(file: File): Promise<{ big: Blob; thumb: Blob }> {
+/** Zmenší fotku: veľká 1600 px JPEG (detail na počítači, zdieľanie), stredná 960 px (detail na mobile) a náhľad 480 px (karty).
+ *  Menšie verzie sú WebP, ak ho prehliadač vie vytvoriť (menej dát), inak JPEG. */
+export async function shrink(file: File): Promise<{ big: Blob; medium: Blob; thumb: Blob; small: "webp" | "jpg" }> {
   const url = URL.createObjectURL(file);
   try {
     const img = await new Promise<HTMLImageElement>((ok, bad) => { const i = new Image(); i.onload = () => ok(i); i.onerror = () => bad(new Error("Súbor nie je fotka alebo je poškodený.")); i.src = url; });
-    const draw = (max: number, q: number) => {
+    const draw = (max: number, q: number, type: string) => {
       const k = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
       const cv = document.createElement("canvas");
       cv.width = Math.round(img.naturalWidth * k); cv.height = Math.round(img.naturalHeight * k);
       cv.getContext("2d")!.drawImage(img, 0, 0, cv.width, cv.height);
-      return new Promise<Blob>((ok, bad) => cv.toBlob((b) => (b ? ok(b) : bad(new Error("Fotku sa nepodarilo spracovať."))), "image/jpeg", q));
+      return new Promise<Blob>((ok, bad) => cv.toBlob((b) => (b ? ok(b) : bad(new Error("Fotku sa nepodarilo spracovať."))), type, q));
     };
-    return { big: await draw(1600, 0.82), thumb: await draw(480, 0.78) };
+    const probe = await draw(480, 0.78, "image/webp");
+    const webp = probe.type === "image/webp"; // starší Safari vráti PNG → použijeme JPEG
+    const st = webp ? "image/webp" : "image/jpeg";
+    return { big: await draw(1600, 0.82, "image/jpeg"), medium: await draw(960, 0.8, st), thumb: webp ? probe : await draw(480, 0.78, st), small: webp ? "webp" : "jpg" };
   } finally { URL.revokeObjectURL(url); }
 }
-const thumbOf = (path: string) => path.replace(/\.jpg$/, "_t.jpg");
 
 export type PhotoItem = { path?: string; url: string; file?: File };
 
@@ -195,15 +200,18 @@ export async function saveListing(uid: string, id: number | null, x: ListingInpu
     const p = photos[k];
     if (p.path) { paths.push(p.path); continue; }
     if (!p.file) continue;
-    const { big, thumb } = await shrink(p.file);
-    const path = `${uid}/${lid}/${Date.now()}-${k}.jpg`;
+    const { big, medium, thumb, small } = await shrink(p.file);
+    const path = `${uid}/${lid}/${Date.now()}-${k}${small === "webp" ? ".w" : ""}.jpg`;
     const up = await c.storage.from(PHOTO_BUCKET).upload(path, big, { contentType: "image/jpeg", upsert: false });
     if (up.error) throw new Error("Fotku sa nepodarilo nahrať: " + up.error.message);
-    await c.storage.from(PHOTO_BUCKET).upload(thumbOf(path), thumb, { contentType: "image/jpeg", upsert: false }); // náhľad; ak zlyhá, karta použije veľkú
+    // menšie verzie; ak zlyhajú, web použije veľkú
+    const st = small === "webp" ? "image/webp" : "image/jpeg";
+    await c.storage.from(PHOTO_BUCKET).upload(thumbPath(path), thumb, { contentType: st, upsert: false });
+    await c.storage.from(PHOTO_BUCKET).upload(mediumPath(path), medium, { contentType: st, upsert: false });
     paths.push(path);
   }
   const gone = oldPaths.filter((p) => !paths.includes(p));
-  if (gone.length) await c.storage.from(PHOTO_BUCKET).remove(gone.flatMap((g) => [g, thumbOf(g)]));
+  if (gone.length) await c.storage.from(PHOTO_BUCKET).remove(gone.flatMap(filesOf));
   const dp = await c.from("listing_photos").delete().eq("listing_id", lid);
   if (dp.error) throw new Error(skError(dp.error));
   if (paths.length) {
@@ -230,7 +238,7 @@ export async function setTop(id: number, on: boolean) {
 }
 export async function deleteListings(items: MyListing[]) {
   const c = sellerClient();
-  const files = items.flatMap((i) => i.photos.flatMap((p) => [p.path, thumbOf(p.path)]));
+  const files = items.flatMap((i) => i.photos.flatMap((p) => filesOf(p.path)));
   if (files.length) await c.storage.from(PHOTO_BUCKET).remove(files);
   const { error } = await c.from("listings").delete().in("id", items.map((i) => i.id));
   if (error) throw new Error(skError(error));
@@ -284,7 +292,7 @@ export async function exportMyData(): Promise<void> {
 export async function deleteAccount(uid: string): Promise<void> {
   const c = sellerClient();
   const files = new Set<string>();
-  for (const l of await myListings(uid)) for (const p of l.photos) { files.add(p.path); files.add(thumbOf(p.path)); }
+  for (const l of await myListings(uid)) for (const p of l.photos) for (const f of filesOf(p.path)) files.add(f);
   try { // aj súbory, ktoré už nie sú priradené k inzerátu
     const top = await c.storage.from(PHOTO_BUCKET).list(uid, { limit: 1000 });
     for (const d of top.data || []) {
