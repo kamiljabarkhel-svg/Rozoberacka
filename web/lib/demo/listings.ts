@@ -96,7 +96,7 @@ export function buildDemoListings(cat: Catalog): { listings: Listing[]; phones: 
       // záruka podľa zákona: firma pri použitom diele najmenej 12 mesiacov (pôvodné hodnoty z prototypu sa prepočítajú)
       warranty: firm ? "12 mesiacov" : "Bez záruky", shipping: r.shipping,
       createdAt: created, updatedAt: created, photos, thumbs: photos,
-      fits, seller: { name: r.seller[0], type: r.seller[1], city: r.city, verified: r.seller[2] },
+      fits, sellerId: r.seller[0], seller: { name: r.seller[0], type: r.seller[1], city: r.city, verified: r.seller[2] },
       side: EXTRA[r.id]?.side ?? null, gearbox: EXTRA[r.id]?.gearbox ?? null, km: EXTRA[r.id]?.km ?? null,
       tested: !!EXTRA[r.id]?.tested, returns14: firm || !!EXTRA[r.id]?.returns14, top: !!EXTRA[r.id]?.top, partMaker: null,
     };

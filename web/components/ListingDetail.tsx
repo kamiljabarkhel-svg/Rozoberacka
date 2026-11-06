@@ -2,7 +2,7 @@
 // Detail inzerátu: galéria, cena, telefón, predajca, popis, parametre, „Pasuje na“, podobné inzeráty.
 import { Fragment, useCallback, useEffect, useState } from "react";
 import type { Catalog, Listing, Vehicle } from "@/lib/types";
-import { getCatalog, getListing, getListingVehicles, getSimilar, logView } from "@/lib/data";
+import { getCatalog, getListing, getListingVehicles, getSellerListings, getSimilar, logView } from "@/lib/data";
 import { groupVehicles } from "@/lib/search";
 import { agoText, condDot, price } from "@/lib/format";
 import { useFavs } from "@/lib/favs";
@@ -19,7 +19,7 @@ type State =
   | { st: "loading" }
   | { st: "missing" }
   | { st: "error"; msg: string }
-  | { st: "ok"; l: Listing; cat: Catalog; vehicles: Vehicle[]; similar: Listing[] };
+  | { st: "ok"; l: Listing; cat: Catalog; vehicles: Vehicle[]; similar: Listing[]; more: { items: Listing[]; total: number } };
 
 export default function ListingDetail({ id, onClose }: { id: number; onClose?: () => void }) {
   const [s, setS] = useState<State>({ st: "loading" });
@@ -34,9 +34,11 @@ export default function ListingDetail({ id, onClose }: { id: number; onClose?: (
         const [cat, l] = await Promise.all([getCatalog(), getListing(id)]);
         if (off) return;
         if (!l) { setS({ st: "missing" }); return; }
-        const [vehicles, similar] = await Promise.all([getListingVehicles(l), getSimilar(l).catch(() => [])]);
+        const [vehicles, more] = await Promise.all([getListingVehicles(l), getSellerListings(l).catch(() => ({ items: [], total: 0 }))]);
+        const seen = new Set(more.items.map((x) => x.id));
+        const similar = (await getSimilar(l).catch(() => [] as Listing[])).filter((x) => !seen.has(x.id));
         if (off) return;
-        setS({ st: "ok", l, cat, vehicles, similar });
+        setS({ st: "ok", l, cat, vehicles, similar, more });
         if (!onClose) document.title = `${l.name} – Rozoberačka`;
         logView(l.id);
       } catch (e) {
@@ -63,10 +65,10 @@ export default function ListingDetail({ id, onClose }: { id: number; onClose?: (
     : STATIC_PREVIEW ? <a className="back" href={homeHref}>← Späť na výsledky</a> : <Link className="back" href="/#vysledky" onClick={(e) => { if (window.history.length > 1) { e.preventDefault(); window.history.back(); } }}>← Späť na výsledky</Link>;
 
   if (s.st === "loading") return <div className="dbox">{back}<p className="mute">Načítavam inzerát…</p></div>;
-  if (s.st === "missing") return <div className="dbox">{back}<h2 className="sh">Inzerát sa nenašiel</h2><p className="mute">Mohol byť predaný, pozastavený alebo zmazaný.</p></div>;
+  if (s.st === "missing") return <div className="dbox">{back}<h2 className="sh">Inzerát sa nenašiel</h2><p className="mute">Diel bol pravdepodobne predaný, pozastavený alebo zmazaný.</p><p><a className="btn2" href={homeHref}>Hľadať podobné diely</a></p></div>;
   if (s.st === "error") return <div className="dbox">{back}<div className="err" role="alert">Inzerát sa nepodarilo načítať: {s.msg}</div></div>;
 
-  const { l, cat, vehicles, similar } = s;
+  const { l, cat, vehicles, similar, more } = s;
   const bName = cat.brands.find((x) => x.id === l.brandId)?.name || "";
   const mName = cat.models.find((x) => x.id === l.modelId)?.name || "";
   const eName = cat.engines.find((x) => x.id === l.engineId)?.name || "";
@@ -147,6 +149,18 @@ export default function ListingDetail({ id, onClose }: { id: number; onClose?: (
 
       <div className="warn">Pred nákupom porovnajte OEM číslo so starým dielom a vyžiadajte si od predajcu ďalšie fotky. Neposielajte zálohy vopred neznámym predajcom.</div>
       <ReportBox id={l.id} />
+
+      {more.items.length > 0 && <>
+        <h2 className="sh">Ďalšie diely od predajcu {l.seller.name}{more.total > more.items.length ? ` (${more.total})` : ""}</h2>
+        <div className="sim">
+          {more.items.slice(0, 3).map((x) => (
+            <ListingLink key={x.id} id={x.id} className="simc">
+              <div className="ph">{x.photos.length ? <img alt="" loading="lazy" src={x.thumbs[0]} onError={(e) => { e.currentTarget.src = x.photos[0]; }} /> : <div className="nop"><Icon id={catIcon(x.categoryId)} /></div>}</div>
+              <span>{x.name}</span><b>{price(x.price)}</b>
+            </ListingLink>
+          ))}
+        </div>
+      </>}
 
       {similar.length > 0 && <>
         <h2 className="sh">Podobné inzeráty</h2>

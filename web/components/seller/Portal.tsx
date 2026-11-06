@@ -8,7 +8,7 @@ import type { Catalog } from "@/lib/types";
 import { listingHref } from "@/lib/paths";
 import { price as fmtPrice } from "@/lib/format";
 import {
-  changePassword, deleteAccount, deleteListings, exportMyData, duplicate, ensureProfile, getSession, markRead, myListings, myMessages, onAuthChange,
+  changePassword, confirmFresh, deleteAccount, deleteListings, exportMyData, duplicate, ensureProfile, getSession, markRead, myListings, myMessages, onAuthChange,
   saveProfile, setStatus, setTop, signOut, skError, type Message, type MyListing, type Profile, type Status,
 } from "@/lib/seller";
 import ListingForm from "./ListingForm";
@@ -28,6 +28,7 @@ export default function Portal() {
   const [msgs, setMsgs] = useState<Message[]>([]);
   const [tab, setTab] = useState<Tab>("home");
   const [edit, setEdit] = useState<MyListing | null>(null);
+  const [listF, setListF] = useState<{ f: F; n: number }>({ f: "all", n: 0 });
   const [toast, setToast] = useState("");
   const [err, setErr] = useState("");
   const [pwMode, setPwMode] = useState(false);
@@ -69,7 +70,7 @@ export default function Portal() {
     const t = window.setInterval(() => { if (document.visibilityState === "visible") { last = Date.now(); reload(session); } }, 120000);
     return () => { document.removeEventListener("visibilitychange", h); window.removeEventListener("focus", h); window.clearInterval(t); };
   }, [session, reload]);
-  const go = (t: Tab) => { setTab(t); if (t !== "form") setEdit(null); history.replaceState(null, "", "#" + t); window.scrollTo({ top: 0 }); };
+  const go = (t: Tab, lf?: F) => { if (t === "list") setListF((o) => ({ f: lf || "all", n: o.n + 1 })); setTab(t); if (t !== "form") setEdit(null); history.replaceState(null, "", "#" + t); window.scrollTo({ top: 0 }); };
 
   if (IS_DEMO) return <div className="pp-auth"><h1>Portál predajcu</h1><p className="mute">V ukážkovej verzii bez databázy portál nefunguje. Pripojte Supabase.</p></div>;
   if (!ready || !session) return <div className="pp-auth"><p className="mute">Načítavam portál…</p>{err && <p className="pp-err">{err}</p>}</div>;
@@ -97,7 +98,8 @@ export default function Portal() {
         {(tab === "form" || tab === "csv") && !cat && !err && <p className="mute">Načítavam katalóg áut…</p>}
         {pwMode && <NewPassword onDone={() => { setPwMode(false); flash("Heslo je zmenené."); }} />}
         {tab === "home" && <Dashboard cat={cat} prof={prof} items={items} msgs={msgs} go={go} />}
-        {tab === "list" && <MyList items={items} cat={cat}
+        {tab === "list" && <MyList key={listF.n} initial={listF.f} items={items} cat={cat}
+          onFresh={(ids) => act(() => confirmFresh(ids), ids.length > 1 ? `Potvrdené ako aktuálne: ${ids.length}` : "Potvrdené ako aktuálne")}
           onEdit={(l) => { setEdit(l); setTab("form"); window.scrollTo({ top: 0 }); }}
           onStatus={(ids, s) => act(() => setStatus(ids, s), ids.length > 1 ? `Zmenené: ${ids.length}` : "Uložené")}
           onTop={(l) => act(() => setTop(l.id, !l.top), l.top ? "TOP zrušené" : "Inzerát je TOP na 30 dní")}
@@ -115,18 +117,18 @@ export default function Portal() {
 }
 
 // ---------- NÁSTENKA ----------
-function Dashboard({ cat, prof, items, msgs, go }: { cat: Catalog | null; prof: Profile | null; items: MyListing[]; msgs: Message[]; go: (t: Tab) => void }) {
+function Dashboard({ cat, prof, items, msgs, go }: { cat: Catalog | null; prof: Profile | null; items: MyListing[]; msgs: Message[]; go: (t: Tab, f?: F) => void }) {
   const a = items.filter((i) => i.status === "active"), s = items.filter((i) => i.status === "sold"), p = items.filter((i) => i.status === "paused");
   const views = items.reduce((x, i) => x + i.views, 0), calls = items.reduce((x, i) => x + i.calls, 0);
   const unread = msgs.filter((m) => !m.read).length;
   const top = [...items].sort((x, y) => y.views - x.views).slice(0, 5).filter((i) => i.views > 0);
   const max = Math.max(1, ...top.map((i) => i.views));
-  const todo: [string, number, Tab][] = [
+  const todo: [string, number, Tab, F?][] = [
     ["Neprečítané správy", unread, "msg"],
-    ["Inzeráty bez fotky", items.filter((i) => !i.photos.length && i.status !== "sold").length, "list"],
-    ["Inzeráty bez popisu", items.filter((i) => i.description.length < 20).length, "list"],
-    ["Pozastavené inzeráty", p.length, "list"],
-    ["Inzeráty skryté správcom", items.filter((i) => i.status === "blocked").length, "list"],
+    ["Inzeráty skryté správcom", items.filter((i) => i.status === "blocked").length, "list", "blocked"],
+    ["Aktívne inzeráty bez fotky (kupujúci ich obchádzajú)", items.filter((i) => !i.photos.length && i.status === "active").length, "list", "nophoto"],
+    [`Neaktualizované viac ako ${STALE_DAYS} dní – potvrďte, že diel stále máte`, items.filter(isStale).length, "list", "stale"],
+    ["Pozastavené inzeráty", p.length, "list", "paused"],
   ];
   const profMissing = !prof?.city || !prof?.phone;
   const byCat = new Map<string, number>();
@@ -150,7 +152,7 @@ function Dashboard({ cat, prof, items, msgs, go }: { cat: Catalog | null; prof: 
         </div>
         <div className="pp-box"><h2>Treba vybaviť</h2>
           <ul className="pp-todo">
-            {todo.filter(([, n]) => n > 0).map(([l, n, t]) => <li key={l}><button className="lnk" onClick={() => go(t)}>{l}</button><b>{n}</b></li>)}
+            {todo.filter(([, n]) => n > 0).map(([l, n, t, lf]) => <li key={l}><button className="lnk" onClick={() => go(t, lf)}>{l}</button><b>{n}</b></li>)}
             {profMissing && <li><button className="lnk" onClick={() => go("prof")}>Doplňte mesto a telefón v profile</button><b>!</b></li>}
             {!todo.some(([, n]) => n > 0) && !profMissing && <li className="mute">Všetko je vybavené.</li>}
           </ul>
@@ -167,12 +169,14 @@ function Tile({ n, l, s }: { n: number; l: string; s: string }) {
 }
 
 // ---------- MOJE INZERÁTY ----------
-type F = "all" | Status | "nophoto" | "nooem" | "nodesc";
-function MyList({ items, cat, onEdit, onStatus, onTop, onDup, onDelete }: {
-  items: MyListing[]; cat: Catalog | null; onEdit: (l: MyListing) => void; onStatus: (ids: number[], s: Status) => void;
+type F = "all" | Status | "nophoto" | "nooem" | "nodesc" | "stale";
+const STALE_DAYS = 60;
+const isStale = (i: MyListing) => i.status === "active" && Date.now() - Date.parse(i.updatedAt) > STALE_DAYS * 86400000;
+function MyList({ initial, items, cat, onEdit, onStatus, onTop, onDup, onDelete, onFresh }: {
+  initial: F; onFresh: (ids: number[]) => void; items: MyListing[]; cat: Catalog | null; onEdit: (l: MyListing) => void; onStatus: (ids: number[], s: Status) => void;
   onTop: (l: MyListing) => void; onDup: (l: MyListing) => void; onDelete: (l: MyListing[]) => void;
 }) {
-  const [q, setQ] = useState(""), [f, setF] = useState<F>("all"), [sort, setSort] = useState("new");
+  const [q, setQ] = useState(""), [f, setF] = useState<F>(initial), [sort, setSort] = useState("new");
   const [sel, setSel] = useState<Set<number>>(new Set());
   const [confirm, setConfirm] = useState<number[] | null>(null);
   const catName = (id: string) => cat?.categories.find((c) => c.id === id)?.name || id;
@@ -187,6 +191,7 @@ function MyList({ items, cat, onEdit, onStatus, onTop, onDup, onDelete }: {
       if (f === "nophoto") return !i.photos.length;
       if (f === "nooem") return i.oem.replace(/[^A-Za-z0-9]/g, "").length < 4;
       if (f === "nodesc") return i.description.length < 20;
+      if (f === "stale") return isStale(i);
       return f === "all" || i.status === f;
     });
     const by: Record<string, (a: MyListing, b: MyListing) => number> = {
@@ -197,8 +202,9 @@ function MyList({ items, cat, onEdit, onStatus, onTop, onDup, onDelete }: {
   }, [items, q, f, sort]);
   const ids = [...sel].filter((i) => shown.some((s) => s.id === i));
   const toggle = (id: number) => setSel((s) => { const n = new Set(s); if (n.has(id)) n.delete(id); else n.add(id); return n; });
-  const count = (x: F) => x === "all" ? items.length : x === "nophoto" ? items.filter((i) => !i.photos.length).length : x === "nooem" ? 0 : x === "nodesc" ? items.filter((i) => i.description.length < 20).length : items.filter((i) => i.status === x).length;
-  const FL: [F, string][] = [["all", "Všetky"], ["active", "Aktívne"], ["paused", "Pozastavené"], ["sold", "Predané"], ["nophoto", "Bez fotky"], ["nodesc", "Bez popisu"]];
+  const count = (x: F) => x === "all" ? items.length : x === "nophoto" ? items.filter((i) => !i.photos.length).length : x === "nooem" ? 0 : x === "nodesc" ? items.filter((i) => i.description.length < 20).length : x === "stale" ? items.filter(isStale).length : items.filter((i) => i.status === x).length;
+  const FL: [F, string][] = [["all", "Všetky"], ["active", "Aktívne"], ["paused", "Pozastavené"], ["sold", "Predané"], ["nophoto", "Bez fotky"], ["stale", `Staršie ako ${STALE_DAYS} dní`],
+    ...(items.some((i) => i.status === "blocked") ? [["blocked", "Skryté správcom"] as [F, string]] : [])];
   return (
     <div>
       <header className="pp-h"><h1>Moje inzeráty</h1><span className="mute">{items.length} spolu</span></header>
@@ -214,6 +220,7 @@ function MyList({ items, cat, onEdit, onStatus, onTop, onDup, onDelete }: {
           <button className="ubtn" onClick={() => { onStatus(ids, "active"); setSel(new Set()); }}>Aktivovať</button>
           <button className="ubtn" onClick={() => { onStatus(ids, "paused"); setSel(new Set()); }}>Pozastaviť</button>
           <button className="ubtn" onClick={() => { onStatus(ids, "sold"); setSel(new Set()); }}>Predané</button>
+          <button className="ubtn" title="Potvrdí, že diely stále máte (obnoví dátum aktualizácie)" onClick={() => { onFresh(ids); setSel(new Set()); }}>Stále aktuálne</button>
           {confirm ? <><button className="del" onClick={() => { onDelete(items.filter((i) => confirm.includes(i.id))); setConfirm(null); setSel(new Set()); }}>Naozaj zmazať {confirm.length}?</button><button className="lnk" onClick={() => setConfirm(null)}>Nie</button></>
             : <button className="del" onClick={() => setConfirm(ids)}>Zmazať</button>}
           <button className="lnk" onClick={() => setSel(new Set())}>Zrušiť výber</button>
@@ -229,7 +236,7 @@ function MyList({ items, cat, onEdit, onStatus, onTop, onDup, onDelete }: {
               <div className="pp-ri">
                 {l.status === "active" ? <a href={listingHref(l.id)} target="_blank" rel="noreferrer" title="Otvoriť, ako ho vidia kupujúci"><b>{l.name}</b></a> : <b>{l.name}</b>}
                 <span className="mute">{vehicle(l)} · {catName(l.categoryId)} · OEM {l.oem || "—"}</span>
-                <span className="pp-meta"><span className={"pp-st " + l.status}>{ST[l.status]}</span>{l.top && <span className="toptag">TOP</span>}<b>{fmtPrice(l.price)}</b><span className="mute">{l.views} zobrazení · {l.calls} telefónov</span></span>
+                <span className="pp-meta"><span className={"pp-st " + l.status}>{ST[l.status]}</span>{l.top && <span className="toptag">TOP</span>}<b>{fmtPrice(l.price)}</b><span className="mute">{l.views} zobrazení · {l.calls} telefónov</span>{isStale(l) && <span className="pp-stale">neaktualizované {Math.floor((Date.now() - Date.parse(l.updatedAt)) / 86400000)} dní · <button className="lnk" onClick={() => onFresh([l.id])}>Stále aktuálne</button></span>}</span>
               </div>
               <div className="pp-ra">
                 {l.status === "blocked" ? <span className="mute pp-blk">Inzerát skryl správca portálu{l.moderationNote ? ": " + l.moderationNote : ""}. Upravte ho a napíšte nám.</span> : null}
@@ -288,7 +295,8 @@ function ProfileTab({ prof, onSave, onPw }: { prof: Profile; onSave: (p: Profile
       <header className="pp-h"><h1>Profil predajcu</h1>{prof.verified ? <span className="tg">✓ Overený predajca</span> : <span className="mute">Neoverený</span>}</header>
       <form className="pp-form pp-grid" onSubmit={save}>
         <label>Názov firmy / meno<input value={p.name} onChange={set("name")} maxLength={120} /></label>
-        <label>Typ<select value={p.type} onChange={set("type")}><option>Firma</option><option>Súkromná osoba</option></select></label>
+        <label>Typ<select value={p.type} onChange={set("type")}><option>Firma</option><option>Súkromná osoba</option></select>
+          <small className="mute">{p.type === "Firma" ? "Firma (živnosť, s.r.o.) dáva pri použitom diele záruku aspoň 12 mesiacov." : "Súkromná osoba predáva vlastné diely príležitostne a môže predávať aj bez záruky."}</small></label>
         <label>Mesto<input value={p.city} onChange={set("city")} maxLength={60} /></label>
         <label>Telefón (predvyplní sa do inzerátov)<input value={p.phone} onChange={set("phone")} inputMode="tel" /></label>
         <label>IČO (nepovinné)<input value={p.ico} onChange={set("ico")} inputMode="numeric" /></label>

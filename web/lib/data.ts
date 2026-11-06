@@ -86,6 +86,7 @@ function toListing(r: Row): Listing {
     thumbs: photos.map((p) => photoUrl(thumbPath(String(p.path)))),
     updatedAt: String(r.updated_at || r.created_at),
     fits: ((r.listing_fits || []) as Row[]).map((f) => ({ brandId: f.brand_id as number, modelId: (f.model_id as number) ?? null, engineId: (f.engine_id as number) ?? null })),
+    sellerId: String(r.seller_id || ""),
     seller: { name: String(s.name || "Predajca"), type: String(s.seller_type || "Firma"), city: (s.city as string) ?? null, verified: Boolean(s.verified) },
     side: (r.side as Listing["side"]) ?? null, gearbox: (r.donor_gearbox as string) ?? null, km: (r.donor_km as number) ?? null,
     tested: Boolean(r.tested), returns14: Boolean(r.returns_14d),
@@ -121,6 +122,7 @@ export async function searchListings(f: Filters, favs: number[], offset: number,
   if (IS_DEMO) {
     let all = demo().listings;
     if (extra.exclude != null) all = all.filter((l) => l.id !== extra.exclude);
+    if (extra.seller) all = all.filter((l) => l.sellerId === extra.seller);
     const r = localSearch(all, f, demoCatalog, favs);
     return { items: r.items.slice(offset, offset + limit), total: r.total, base: r.facets.base, cats: r.facets.cat, subs: r.facets.sub };
   }
@@ -153,6 +155,13 @@ export async function getSimilar(l: Listing): Promise<Listing[]> {
   const b = await searchListings(base, [], 0, 4, { exclude: l.id });
   const seen = new Set(a.items.map((x) => x.id));
   return a.items.concat(b.items.filter((x) => !seen.has(x.id))).slice(0, 3);
+}
+
+/** Ďalšie aktívne diely toho istého predajcu (najnovšie). */
+export async function getSellerListings(l: Listing): Promise<{ items: Listing[]; total: number }> {
+  if (!l.sellerId) return { items: [], total: 0 };
+  const r = await searchListings({ ...emptyFilters }, [], 0, 4, { exclude: l.id, seller: l.sellerId });
+  return { items: r.items, total: r.total };
 }
 
 /** Nahlásenie inzerátu (podvod, nepravdivé údaje…). */

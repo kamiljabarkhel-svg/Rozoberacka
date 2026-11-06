@@ -67,6 +67,12 @@ const errs = [];
   // verejná časť v novom kontexte (kupujúci)
   const c2 = await br.newContext(); const b2 = await c2.newPage(); global.CUR = b2; b2.on("pageerror", (e) => errs.push("buyer pageerror: " + e.message)); b2.on("console", (m) => { if (m.type() === "error") errs.push("buyer console: " + m.text()); });
   await step("verejne: inzerat na uvode", async () => { await b2.goto(B + "/"); await b2.waitForSelector(".card:has-text('Predné ľavé svetlo LED')"); await b2.waitForSelector(".stats:has-text('1')"); });
+  await step("ulozene hladanie (strazca)", async () => {
+    await b2.selectOption(".panel label:has-text('Značka') select", { label: "Škoda" }); await b2.waitForTimeout(500);
+    await b2.click("text=Uložiť hľadanie"); await b2.waitForSelector(".saved-i:has-text('Škoda')");
+    await b2.goto(B + "/"); await b2.waitForSelector(".saved-i:has-text('Škoda')"); await b2.click(".saved-i .chip"); await b2.waitForSelector("text=✓ Hľadanie uložené");
+    await b2.goto(B + "/");
+  });
   await step("verejne: hladanie OEM bez medzier", async () => { await b2.fill(".oemrow input", "5e1941015"); await b2.click("text=Hľadať podľa čísla"); await b2.waitForSelector(".cnt:has-text('1')"); });
   await step("verejne: hladanie podla auta cez pasuje aj na (VW)", async () => {
     await b2.goto(B + "/"); await b2.selectOption(".panel label:has-text('Značka') select", { label: "Volkswagen" }); await b2.waitForSelector(".card:has-text('Predné ľavé svetlo LED')");

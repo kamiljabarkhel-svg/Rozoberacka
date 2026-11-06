@@ -8,6 +8,8 @@ import { getCatalog, getCities, getStats, initialData, searchListings, type Sear
 import { decodeVin } from "@/lib/vin";
 import { pieces, sk } from "@/lib/format";
 import { useFavs } from "@/lib/favs";
+import { filterKey, hasCriteria, MAX_SAVED, useSaved } from "@/lib/saved";
+import SavedSearches from "./SavedSearches";
 import { STATIC_PREVIEW, sellersHref } from "@/lib/paths";
 import { Icon, catIcon } from "./Icons";
 import ListingCard from "./ListingCard";
@@ -65,6 +67,8 @@ export default function Home() {
   const [stats, setStats] = useState<{ parts: number; sellers: number } | null>(null);
   const [oemQ, setOemQ] = useState("");
   const { favs, toggle } = useFavs();
+  const saved = useSaved();
+  const isSaved = saved.list.some((x) => filterKey(x.f) === filterKey(f));
   const ready = useRef(false);
   const resRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLElement>(null);
@@ -93,7 +97,7 @@ export default function Home() {
   useEffect(() => {
     const h = (e: Event) => {
       const d = (e as CustomEvent<{ q: string; scroll: boolean }>).detail;
-      setF((x) => ({ ...x, q: d.q }));
+      setF((x) => ({ ...x, q: d.q, fav: false }));
       if (d.scroll) setTimeout(toRes, 30);
     };
     window.addEventListener("rz-q", h);
@@ -179,7 +183,7 @@ export default function Home() {
       <section className="hero"><div className="in"><span id="main" />
         <h1>Použité autodiely presne na vaše auto</h1>
         <p className="sub">Vyberte značku, model a motorizáciu a uvidíte len diely, ktoré naň pasujú. Predajcov kontaktujete bez registrácie.</p>
-        {stats && <p className="stats"><b>{stats.parts.toLocaleString("sk-SK")}</b> {stats.parts === 1 ? "diel" : stats.parts >= 2 && stats.parts <= 4 ? "diely" : "dielov"} od <b>{stats.sellers}</b> {stats.sellers === 1 ? "predajcu" : "predajcov"} na jednom mieste</p>}
+        {stats && stats.parts > 0 && <p className="stats"><b>{stats.parts.toLocaleString("sk-SK")}</b> {stats.parts === 1 ? "diel" : stats.parts >= 2 && stats.parts <= 4 ? "diely" : "dielov"} od <b>{stats.sellers}</b> {stats.sellers === 1 ? "predajcu" : "predajcov"} na jednom mieste</p>}
         <div className="qb" aria-label="Najčastejšie značky">
           {quick.map((b) => (
             <button key={b.id} className="chip" onClick={() => { set({ brand: b.id, model: null, engine: null, year: null }); panelRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }); }}>{b.name}</button>
@@ -287,8 +291,15 @@ export default function Home() {
 
         <div id="vysledky" ref={resRef} className="head">
           <span className="cnt" aria-live="polite">{res ? pieces(res.total) : "Načítavam…"}</span>
-          <button className="chip" aria-pressed={f.fav} onClick={() => set({ fav: !f.fav })}>♥ Obľúbené</button>
+          <span className="head-a">
+            {hasCriteria(f) && !f.fav && (isSaved
+              ? <span className="chip saved-ok" title="Pri ďalšej návšteve uvidíte, koľko nových dielov pribudlo">✓ Hľadanie uložené</span>
+              : <button className="chip" disabled={saved.list.length >= MAX_SAVED} title="Uloží sa len v tomto prehliadači. Pri ďalšej návšteve uvidíte, koľko nových dielov pribudlo." onClick={() => saved.add(f)}>🔔 Uložiť hľadanie</button>)}
+            <button className="chip" aria-pressed={f.fav} onClick={() => set({ fav: !f.fav })}>♥ Obľúbené</button>
+          </span>
         </div>
+        <SavedSearches list={saved.list} cat={catalog} onRemove={saved.remove}
+          onOpen={(x) => { setF({ ...x.f, fav: false }); saved.seen(x.id); window.dispatchEvent(new CustomEvent("rz-q-set", { detail: x.f.q })); setTimeout(toRes, 30); }} />
 
         {res && catalog && (
           <div className="chips" aria-label="Kategórie nájdených dielov">
@@ -315,9 +326,12 @@ export default function Home() {
             <button className="add more" disabled={busy} onClick={more}>{busy ? "Načítavam…" : `Načítať viac (${res.total - res.items.length})`}</button>
           )}
           {res && res.total === 0 && (
-            <div className="empty">Nič sme nenašli. Skúste iné slovo, kategóriu alebo všetky značky.<br />
-              <button className="add" onClick={reset}>Zrušiť všetky filtre</button>
-            </div>
+            hasCriteria(f) || f.fav
+              ? <div className="empty">{f.fav && !favs.length ? "Zatiaľ nemáte obľúbené diely. Označte ich srdiečkom ♡ na karte." : "Nič sme nenašli. Skúste iné slovo, kategóriu alebo všetky značky."}
+                  {hasCriteria(f) && !f.fav && !isSaved && <><br />Uložte si hľadanie a pri ďalšej návšteve uvidíte, či pribudol vhodný diel.<br /><button className="add" onClick={() => saved.add(f)}>🔔 Uložiť hľadanie</button></>}
+                  <br /><button className="add" onClick={reset}>Zrušiť všetky filtre</button>
+                </div>
+              : <div className="empty">Na portáli zatiaľ nie sú žiadne inzeráty.<br />Predávate diely? <a href={STATIC_PREVIEW ? sellersHref : "/pre-predajcov?registracia=1"}>Pridajte prvý diel zadarmo</a>.</div>
           )}
         </div>
 

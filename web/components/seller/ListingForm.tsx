@@ -66,6 +66,7 @@ export default function ListingForm({ uid, cat, prof, edit, onSaved }: { uid: st
     return b;
   }
   const stepBad = (s: number, b = bad) => [...b].some((k) => STEP_OF[k] === s);
+  const cur = check(); // aktuálne chýbajúce polia (krok je „hotový“ len keď je vyplnený)
   const clear = (k: Key) => bad.has(k) && setBad((o) => { const n = new Set(o); n.delete(k); return n; });
   const goStep = (s: number) => { setStep(s); top.current?.scrollIntoView({ behavior: "smooth", block: "start" }); };
   function next() {
@@ -114,7 +115,7 @@ export default function ListingForm({ uid, cat, prof, edit, onSaved }: { uid: st
     <div ref={top}>
       <header className="pp-h"><h1>{edit ? "Upraviť inzerát" : "Pridať inzerát"}</h1><span className="mute">Polia s <em className="req">*</em> sú povinné.</span></header>
       <ol className="pp-steps">{STEPS.map((s, i) => (
-        <li key={s}><button type="button" aria-current={i === step ? "step" : undefined} className={(i < step ? "done " : "") + (stepBad(i) ? "bad" : "")} onClick={() => goStep(i)}><span>{i + 1}</span>{s}</button></li>
+        <li key={s}><button type="button" aria-current={i === step ? "step" : undefined} className={(i !== step && i < step && !stepBad(i, cur) ? "done " : "") + (stepBad(i) ? "bad" : "")} onClick={() => goStep(i)}><span>{i + 1}</span>{s}</button></li>
       ))}</ol>
       <div className="pp-form pp-grid pp-card">
         {step === 0 && <>

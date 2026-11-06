@@ -22,11 +22,11 @@ export type MyListing = {
   id: number; name: string; brandId: number; modelId: number; engineId: number | null; year: number;
   categoryId: string; subcategoryId: number | null; oem: string; partMaker: string; price: number; city: string;
   condition: Condition; description: string; warranty: string; shipping: string; status: Status;
-  views: number; calls: number; createdAt: string; phone: string;
+  views: number; calls: number; createdAt: string; updatedAt: string; phone: string;
   side: string; gearbox: string; km: number | null; tested: boolean; returns14: boolean; top: boolean; moderationNote: string;
   photos: { path: string; url: string }[]; fits: { brandId: number; modelId: number | null; engineId: number | null }[];
 };
-export type ListingInput = Omit<MyListing, "id" | "status" | "views" | "calls" | "createdAt" | "top" | "photos" | "moderationNote">;
+export type ListingInput = Omit<MyListing, "id" | "status" | "views" | "calls" | "createdAt" | "updatedAt" | "top" | "photos" | "moderationNote">;
 export type Message = { id: number; listingId: number; listingName: string; name: string; contact: string; body: string; createdAt: string; read: boolean };
 
 const SKMSG: [RegExp, string][] = [
@@ -112,7 +112,7 @@ export async function saveProfile(p: Profile) {
 }
 
 // ---------- INZERÁTY ----------
-const COLS = "id,name,brand_id,model_id,engine_id,year,category_id,subcategory_id,oem,part_maker,price,city,condition,description,warranty,shipping,status,views,calls,created_at,moderation_note," +
+const COLS = "id,name,brand_id,model_id,engine_id,year,category_id,subcategory_id,oem,part_maker,price,city,condition,description,warranty,shipping,status,views,calls,created_at,updated_at,moderation_note," +
   "side,donor_gearbox,donor_km,tested,returns_14d,top_until,listing_contacts(phone),listing_photos(path,position),listing_fits(brand_id,model_id,engine_id)";
 
 type Row = Record<string, unknown>;
@@ -128,7 +128,7 @@ function toMine(r: Row): MyListing {
     year: Number(r.year), categoryId: String(r.category_id), subcategoryId: (r.subcategory_id as number) ?? null, oem: String(r.oem || ""),
     partMaker: String(r.part_maker || ""), price: Number(r.price), city: String(r.city || ""), condition: r.condition as Condition,
     description: String(r.description || ""), warranty: String(r.warranty), shipping: String(r.shipping), status: r.status as Status,
-    views: Number(r.views || 0), calls: Number(r.calls || 0), createdAt: String(r.created_at), phone,
+    views: Number(r.views || 0), calls: Number(r.calls || 0), createdAt: String(r.created_at), updatedAt: String(r.updated_at || r.created_at), phone,
     side: String(r.side || ""), gearbox: String(r.donor_gearbox || ""), km: (r.donor_km as number) ?? null, tested: !!r.tested, returns14: !!r.returns_14d,
     top: !!r.top_until && Date.parse(String(r.top_until)) > Date.now(), moderationNote: String(r.moderation_note || ""),
     photos: ph.map((p) => ({ path: String(p.path), url: photoUrl(String(p.path)) })),
@@ -218,6 +218,12 @@ export async function setStatus(ids: number[], status: Status) {
   if (error) throw new Error(skError(error));
 }
 /** TOP na 30 dní (zatiaľ zadarmo, najviac 3 naraz). V databáze funkcia toggle_top. */
+/** „Stále aktuálne“: predajca potvrdí, že diel má – obnoví sa dátum aktualizácie (zobrazí sa kupujúcim). */
+export async function confirmFresh(ids: number[]) {
+  const { error } = await sellerClient().from("listings").update({ status: "active" }).in("id", ids).eq("status", "active");
+  if (error) throw new Error(skError(error));
+}
+
 export async function setTop(id: number, on: boolean) {
   const { error } = await sellerClient().rpc("toggle_top", { p_listing: id, p_on: on });
   if (error) throw new Error(skError(error));

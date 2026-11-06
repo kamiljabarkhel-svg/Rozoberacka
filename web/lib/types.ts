@@ -43,6 +43,7 @@ export type Listing = {
   updatedAt: string;
   fits: Vehicle[]; // „Pasuje aj na“ zadané predajcom
   seller: Seller;
+  sellerId: string;
   side: "Ľavá" | "Pravá" | null;
   gearbox: string | null;   // prevodovka auta, z ktorého je diel
   km: number | null;        // najazdené km auta

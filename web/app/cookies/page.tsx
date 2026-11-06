@@ -12,6 +12,7 @@ export default function Page() {
         <tbody>
           <tr><td>rozoberacka-auth*</td><td>localStorage</td><td>prihlásenie predajcu (len po prihlásení)</td><td>do odhlásenia</td></tr>
           <tr><td>rozoberacka-fav</td><td>localStorage</td><td>obľúbené inzeráty, ktoré ste si označili</td><td>kým ich nezmažete</td></tr>
+          <tr><td>rozoberacka-hladania</td><td>localStorage</td><td>hľadania, ktoré ste si uložili (strážca dielov)</td><td>kým ich nezmažete</td></tr>
           <tr><td>rz-tel-*, rz-view-*</td><td>sessionStorage</td><td>aby sa odkrytý telefón a zobrazenie nepočítali znova</td><td>do zatvorenia prehliadača</td></tr>
         </tbody>
       </table>

@@ -434,3 +434,15 @@ button:disabled{opacity:.55;cursor:default}
 .legal-t th,.legal-t td{border:1px solid var(--line);padding:8px;text-align:left;vertical-align:top;min-width:120px}
 .legal-t th{background:var(--chip)}
 .pp-gdpr{display:grid;gap:10px;justify-items:start;margin-top:16px}.pp-gdpr h2{margin:6px 0 0}.pp-chk a{color:var(--link)}
+.head-a{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.saved{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:-4px 0 14px;padding:10px 12px;background:var(--card);border:1px solid var(--line);border-radius:6px}
+.saved>b{font-size:.88rem;margin-right:4px}
+.saved-i{display:inline-flex;align-items:stretch}
+.saved-i .chip{border-top-right-radius:0;border-bottom-right-radius:0}
+.saved-x{border:1px solid var(--line);border-left:0;background:var(--card);color:var(--mute);border-radius:0 4px 4px 0;padding:0 9px;cursor:pointer;font-size:1.05rem}
+.saved-x:hover{color:var(--bad)}
+.saved-n{font-style:normal;background:var(--acc);color:var(--accink);border-radius:3px;padding:0 6px;margin-left:6px;font-size:.78rem;font-weight:800}
+.saved-ok{color:var(--ok);cursor:default}
+.empty a{color:var(--link);font-weight:700}
+.pp-stale{flex-basis:100%;color:var(--warn);font-size:.82rem;font-weight:700}.pp-stale .lnk{padding:0;font-size:.82rem}
+.pp-todo .lnk{text-align:left}
