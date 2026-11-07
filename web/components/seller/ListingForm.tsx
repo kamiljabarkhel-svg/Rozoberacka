@@ -118,13 +118,13 @@ export default function ListingForm({ uid, cat, prof, edit, donor, onSaved }: { 
       <header className="pp-h"><h1>{edit ? "Upraviť inzerát" : "Pridať inzerát"}</h1><span className="mute">Polia s <em className="req">*</em> sú povinné.</span></header>
       {donor && !edit && <p className="pp-donor-note">Diel z darcovského auta <b>{carName(donor, cat, true)}, {donor.year}{donor.km != null ? `, ${donor.km.toLocaleString("sk-SK")} km` : ""}</b>. Údaje o aute sú predvyplnené.</p>}
       <ol className="pp-steps">{STEPS.map((s, i) => (
-        <li key={s}><button type="button" aria-current={i === step ? "step" : undefined} className={(i !== step && i < step && !stepBad(i, cur) ? "done " : "") + (stepBad(i) ? "bad" : "")} onClick={() => goStep(i)}><span>{i + 1}</span>{s}</button></li>
+        <li key={s}><button type="button" aria-current={i === step ? "step" : undefined} className={(i !== step && i < step && !stepBad(i, cur) ? "done " : "") + (stepBad(i) ? "bad" : "")} onClick={() => goStep(i)} aria-label={`Krok ${i + 1}: ${s}`}><span>{i + 1}</span><em>{s}</em></button></li>
       ))}</ol>
       <div className="pp-form pp-grid pp-card">
         {step === 0 && <>
           <div className="full">{L({ k: "name", t: "Názov dielu", children: <input value={v.name} maxLength={120} placeholder="napr. Predné ľavé svetlo LED" onChange={(e) => { set("name", e.target.value); clear("name"); }} /> })}</div>
           {L({ k: "cat", t: "Kategória", children: <select value={v.categoryId} onChange={(e) => { set("categoryId", e.target.value); set("subcategoryId", null); clear("cat"); }}><option value="">Vyberte…</option>{cat.categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}</select> })}
-          {L({ t: "Podkategória", req: false, children: <select value={v.subcategoryId ?? ""} disabled={!subs.length} onChange={(e) => set("subcategoryId", e.target.value ? Number(e.target.value) : null)}><option value="">—</option>{subs.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}</select> })}
+          {L({ t: "Podkategória", req: false, children: <select value={v.subcategoryId ?? ""} disabled={!subs.length} onChange={(e) => set("subcategoryId", e.target.value ? Number(e.target.value) : null)}><option value="">{v.categoryId ? "Nevybraná" : "Najprv vyberte kategóriu"}</option>{subs.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}</select> })}
           {L({ k: "oem", t: "Kód súčiastky / OEM číslo", children: <span className="oemin"><input value={v.oem} maxLength={40} placeholder="napr. 5E1941015" onChange={(e) => { set("oem", e.target.value); clear("oem"); }} />
             <ScanText kind="oem" onResult={(x) => { set("oem", x); clear("oem"); }} /></span> })}
           {L({ t: "Výrobca dielu", req: false, children: <input value={v.partMaker} maxLength={60} placeholder="Bosch, Valeo, Hella…" onChange={(e) => set("partMaker", e.target.value)} /> })}
@@ -135,9 +135,9 @@ export default function ListingForm({ uid, cat, prof, edit, donor, onSaved }: { 
           {L({ k: "model", t: "Model", children: <select value={v.modelId || ""} disabled={!models.length} onChange={(e) => { set("modelId", Number(e.target.value)); set("engineId", null); set("year", 0); clear("model"); }}><option value="">Vyberte…</option>{models.map((m) => <option key={m.id} value={m.id}>{m.name} ({m.yearFrom}–{m.yearTo ?? ""})</option>)}</select> })}
           {L({ t: "Motorizácia", req: false, children: <select value={v.engineId ?? ""} disabled={!engines.length} onChange={(e) => set("engineId", e.target.value ? Number(e.target.value) : null)}><option value="">Všetky motorizácie</option>{engines.map((x) => <option key={x.id} value={x.id}>{x.name}</option>)}</select> })}
           {L({ k: "year", t: "Ročník auta", children: <select value={v.year || ""} disabled={!v.modelId} onChange={(e) => { set("year", Number(e.target.value)); clear("year"); }}><option value="">Vyberte…</option>{years.map((y) => <option key={y}>{y}</option>)}</select> })}
-          {L({ t: "Prevodovka auta", req: false, children: <select value={v.gearbox} onChange={(e) => set("gearbox", e.target.value)}><option value="">—</option><option>Manuálna</option><option>Automatická</option></select> })}
+          {L({ t: "Prevodovka auta", req: false, children: <select value={v.gearbox} onChange={(e) => set("gearbox", e.target.value)}><option value="">Neuvedená</option><option>Manuálna</option><option>Automatická</option></select> })}
           {L({ t: "Najazdené km auta", req: false, children: <input value={v.km} inputMode="numeric" placeholder="napr. 184000" onChange={(e) => set("km", e.target.value)} /> })}
-          {L({ t: "Strana auta", req: false, children: <select value={v.side} onChange={(e) => set("side", e.target.value)}><option value="">—</option><option>Ľavá</option><option>Pravá</option></select> })}
+          {L({ t: "Strana auta", req: false, children: <select value={v.side} onChange={(e) => set("side", e.target.value)}><option value="">Neuvádza sa</option><option>Ľavá</option><option>Pravá</option></select> })}
           <div className="full pp-fits"><b>Pasuje aj na ďalšie autá</b><span className="mute">Nepovinné. Diel sa zobrazí aj pri hľadaní podľa týchto áut.</span>
             <div className="pp-fitrow">
               <select value={fb || ""} onChange={(e) => { setFb(Number(e.target.value)); setFm(0); setFe(0); }} aria-label="Značka"><option value="">Značka</option>{cat.brands.map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}</select>

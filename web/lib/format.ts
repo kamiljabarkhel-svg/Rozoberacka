@@ -1,6 +1,12 @@
 export function pieces(n: number): string {
   return n + " " + (n === 1 ? "diel" : n >= 2 && n <= 4 ? "diely" : "dielov");
 }
+/** „je 1 diel“, „sú 3 diely“, „je 12 dielov“ */
+export function jeSu(n: number): string { return n >= 2 && n <= 4 ? "sú" : "je"; }
+/** Jednotné/množné číslo: plural(3, "telefón", "telefóny", "telefónov") */
+export function plural(n: number, one: string, few: string, many: string): string {
+  return n + " " + (n === 1 ? one : n >= 2 && n <= 4 ? few : many);
+}
 export function photosText(n: number): string {
   return n + " " + (n === 1 ? "fotka" : n < 5 ? "fotky" : "fotiek");
 }

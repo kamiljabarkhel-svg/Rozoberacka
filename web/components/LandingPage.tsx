@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getCatalog, getCities, getSeoCounts, searchListings } from "@/lib/data";
 import { emptyFilters, type Catalog } from "@/lib/types";
-import { pieces, sk } from "@/lib/format";
+import { jeSu, pieces, sk } from "@/lib/format";
 import { JsonLd, SITE_NAME, SITE_URL, breadcrumbLd, carName, landingCrumbs, landingPath, landingTitle, listingPath, type Landing } from "@/lib/seo";
 import Crumbs from "./Crumbs";
 import LandingGrid from "./LandingGrid";
@@ -88,14 +88,15 @@ export default async function LandingPage({ x }: { x: Landing }) {
       <Crumbs items={crumbs.slice(0, -1)} last={crumbs[crumbs.length - 1]?.name} />
       <h1>{title}</h1>
       <p className="landing-lead">
-        {res.total ? (x.city ? <>V meste {x.city} je na Rozoberačke {pieces(res.total)} od miestnych vrakovísk a predajcov – diel si môžete prevziať osobne. </>
-          : <>Na Rozoberačke je {pieces(res.total)}{car ? ` pre ${car}` : ""} od vrakovísk a predajcov z celého Slovenska. </>) : <>Zatiaľ tu nie sú žiadne ponuky. </>}
-        Zoznam zahŕňa aj diely, ktoré podľa predajcov pasujú cez rovnaké OEM číslo. Predajcovi zavoláte bez registrácie – pred kúpou porovnajte OEM číslo so starým dielom.
+        {res.total ? <>{x.city ? <>V meste {x.city} {jeSu(res.total)} na Rozoberačke {pieces(res.total)} od miestnych vrakovísk a predajcov – diel si môžete prevziať osobne. </>
+          : <>Na Rozoberačke {jeSu(res.total)} {pieces(res.total)}{car ? ` na auto ${car}` : ""} od vrakovísk a predajcov z celého Slovenska. </>}
+        Zoznam zahŕňa aj diely, ktoré podľa predajcov pasujú cez rovnaké OEM číslo. Predajcovi zavoláte bez registrácie – pred kúpou porovnajte OEM číslo so starým dielom.</>
+          : <>Zatiaľ tu nie sú žiadne ponuky. Nové diely pribúdajú každý deň – zadajte dopyt a predajcovia sa vám ozvú sami.</>}
       </p>
-      <p><Link className="btn2" href={`/?${qs.toString()}#vysledky`}>Filtrovať podľa ceny, stavu a mesta</Link></p>
-      {res.items.length ? <LandingGrid items={res.items} cat={cat} /> : <div className="empty">Uložte si hľadanie na úvodnej stránke a pri ďalšej návšteve uvidíte, či pribudol vhodný diel.</div>}
+      {res.total > 0 && <p><Link className="btn2" href={`/?${qs.toString()}#vysledky`}>Filtrovať podľa ceny, stavu a mesta</Link></p>}
+      {res.items.length ? <LandingGrid items={res.items} cat={cat} /> : <div className="empty">Pre tento výber zatiaľ nemáme diely. <Link href={`/?${qs.toString()}#vysledky`}>Uložte si hľadanie</Link> a pri ďalšej návšteve uvidíte, či pribudol vhodný diel.</div>}
       {res.total > res.items.length && <p className="landing-more"><Link className="btn2" href={`/?${qs.toString()}#vysledky`}>Zobraziť všetkých {res.total}</Link></p>}
-      <div className="rq-cta"><p><b>Nenašli ste diel{car ? ` pre ${car}` : ""}?</b> Zadajte dopyt – vrakoviská vám pošlú ponuku. Bez registrácie.</p>
+      <div className="rq-cta"><p><b>Nenašli ste diel{car ? ` na auto ${car}` : ""}?</b> Zadajte dopyt – vrakoviská vám pošlú ponuku. Bez registrácie.</p>
         <Link className="btn2" href={`/dopyt?${new URLSearchParams({ ...(x.brandId != null ? { znacka: String(x.brandId) } : {}), ...(x.modelId != null ? { model: String(x.modelId) } : {}) }).toString()}`}>Zadať dopyt na diel</Link></div>
       {groups.map((g) => (
         <section key={g.title} className="landing-links"><h2>{g.title}</h2>

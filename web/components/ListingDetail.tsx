@@ -1,6 +1,6 @@
 "use client";
 // Detail inzerátu: galéria, cena, telefón, predajca, popis, parametre, „Pasuje na“, podobné inzeráty.
-import { Fragment, useCallback, useEffect, useState } from "react";
+import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { loadDetail, logView, type DetailData } from "@/lib/data";
 import { groupVehicles } from "@/lib/search";
 import { agoText, condDot, price } from "@/lib/format";
@@ -14,7 +14,7 @@ import Tags from "./Tags";
 import ContactBox from "./ContactBox";
 import ReportBox from "./ReportBox";
 import Crumbs from "./Crumbs";
-import { carName, landingCrumbs, sellerPath } from "@/lib/seo";
+import { carName, landingCrumbs, listingPath, sellerPath } from "@/lib/seo";
 import Stars from "./Stars";
 import MyCarFit from "./MyCarFit";
 
@@ -24,10 +24,28 @@ type State =
   | { st: "error"; msg: string }
   | ({ st: "ok" } & DetailData);
 
+type MiniItem = DetailData["similar"][number];
+function Mini({ x, cat }: { x: MiniItem; cat: DetailData["cat"] }) {
+  return <>
+    <div className="ph">{x.photos.length ? <img alt="" loading="lazy" src={x.thumbs[0]} onError={(e) => { e.currentTarget.src = x.photos[0]; }} /> : <div className="nop"><Icon id={catIcon(x.categoryId)} /></div>}</div>
+    <span>{x.name}</span><small className="mute">{[carName(x, cat), x.year].filter(Boolean).join(", ")}</small><b>{price(x.price)}</b>
+  </>;
+}
+
 export default function ListingDetail({ id, onClose, initial }: { id: number; onClose?: () => void; initial?: DetailData | null }) {
   const [s, setS] = useState<State>(initial ? { st: "ok", ...initial } : { st: "loading" });
   const [gi, setGi] = useState(0);
   const { favs, toggle } = useFavs();
+  // Na mobile: keď hlavné tlačidlo telefónu zíde z obrazovky, ukáže sa lišta s cenou a telefónom dole.
+  const actsRef = useRef<HTMLDivElement>(null);
+  const [bar, setBar] = useState(false);
+  useEffect(() => {
+    const el = actsRef.current;
+    if (!el || typeof IntersectionObserver === "undefined") return;
+    const o = new IntersectionObserver(([e]) => setBar(!e.isIntersecting && e.boundingClientRect.top < 0));
+    o.observe(el);
+    return () => o.disconnect();
+  }, [s.st]);
 
   useEffect(() => {
     let off = false;
@@ -77,7 +95,7 @@ export default function ListingDetail({ id, onClose, initial }: { id: number; on
   const rows: [string, string][] = [
     ["Značka", bName || "neuvedené"], ["Model", mName || "neuvedené"], ["Motorizácia", eName || "Pasuje na všetky motorizácie"],
     ["Ročník", l.year ? String(l.year) : "neuvedené"], ["OEM číslo", l.oem || "neuvedené"], ["Kategória", cName + (sName ? " · " + sName : "")],
-    ["Stav", l.condition], ["Záruka", l.warranty === "Bez záruky" ? "Bez záruky (predáva súkromná osoba)" : l.warranty], ["Zasielanie", l.shipping || "Len osobný odber"], ["Mesto", l.city || "neuvedené"],
+    ["Stav", l.condition], ["Záruka", l.warranty === "Bez záruky" ? "Bez záruky (predáva súkromná osoba)" : l.warranty], ["Odovzdanie", l.shipping || "Len osobný odber"], ["Mesto", l.city || "neuvedené"],
   ];
   if (l.side) rows.splice(5, 0, ["Strana auta", l.side]);
   if (l.partMaker) rows.splice(5, 0, ["Výrobca dielu", l.partMaker]);
@@ -100,6 +118,7 @@ export default function ListingDetail({ id, onClose, initial }: { id: number; on
               <div className="main">
                 <img key={gi} alt={l.name} src={l.photos[gi]} srcSet={l.mediums[gi] !== l.photos[gi] ? `${l.mediums[gi]} 960w, ${l.photos[gi]} 1600w` : undefined}
                   sizes="(max-width: 900px) 100vw, 640px" fetchPriority={gi === 0 ? "high" : "auto"}
+                  ref={(im) => { if (im && im.complete && im.naturalWidth === 0 && im.getAttribute("srcset")) { im.removeAttribute("srcset"); im.src = l.photos[gi]; } }}
                   onError={(e) => { const im = e.currentTarget; if (im.getAttribute("srcset")) { im.removeAttribute("srcset"); im.src = l.photos[gi]; } }} />
                 {n > 1 && <>
                   <button className="gn l" aria-label="Predchádzajúca fotka" onClick={() => go(gi - 1)}>‹</button>
@@ -121,11 +140,11 @@ export default function ListingDetail({ id, onClose, initial }: { id: number; on
           <h1>{l.name}</h1>
           <div className="dpr"><span className="price">{price(l.price)}</span><span className="cond"><i className={"dot " + condDot(l.condition)} />{l.condition}</span></div>
           <p className="car">{[bName, mName, eName].filter(Boolean).join(" ")}{l.year ? ", " + l.year : ""}</p>
-          <div className="dacts">
+          <div className="dacts" ref={actsRef}>
             <PhoneButton id={l.id} />
             <button className="fav" aria-pressed={fav} onClick={() => toggle(l.id)}>{fav ? "♥" : "♡"} Obľúbené</button>
           </div>
-          <ContactBox id={l.id} name={l.name} seller={l.seller.name} />
+          <ContactBox id={l.id} name={l.name} seller={l.seller.name} path={listingPath(l.id, l.name, carName(l, cat))} cat={cat} />
           <Tags l={l} />
           <MyCarFit vehicles={vehicles} cat={cat} />
           <div className="seller">
@@ -148,7 +167,7 @@ export default function ListingDetail({ id, onClose, initial }: { id: number; on
         <ul className="fits">
           {groups.map((g) => <li key={g.label}><b>{g.label}</b><br /><span className="mute">{g.engines ? g.engines.join(", ") : "všetky motorizácie"}</span></li>)}
         </ul>
-        <p className="mute fits-note">Zoznam skladáme z údajov predajcov (vlastné auto, „pasuje aj na“ a inzeráty s rovnakým OEM číslom). Nie je to overený katalóg. Pred nákupom porovnajte OEM číslo s pôvodným dielom.</p>
+        <p className="mute fits-note">Zoznam skladáme z údajov predajcov (vlastné auto, „pasuje aj na“ a inzeráty s rovnakým OEM číslom). Nie je to overený katalóg.</p>
       </>}
 
       <div className="warn">Pred nákupom porovnajte OEM číslo so starým dielom a vyžiadajte si od predajcu ďalšie fotky. Neposielajte zálohy vopred neznámym predajcom.</div>
@@ -160,8 +179,7 @@ export default function ListingDetail({ id, onClose, initial }: { id: number; on
         <div className="sim">
           {sameCar.slice(0, 6).map((x) => (
             <ListingLink key={x.id} id={x.id} name={x.name} car={carName(x, cat)} className="simc">
-              <div className="ph">{x.photos.length ? <img alt="" loading="lazy" src={x.thumbs[0]} onError={(e) => { e.currentTarget.src = x.photos[0]; }} /> : <div className="nop"><Icon id={catIcon(x.categoryId)} /></div>}</div>
-              <span>{x.name}</span><b>{price(x.price)}</b>
+              <Mini x={x} cat={cat} />
             </ListingLink>
           ))}
         </div>
@@ -173,8 +191,7 @@ export default function ListingDetail({ id, onClose, initial }: { id: number; on
         <div className="sim">
           {more.items.slice(0, 3).map((x) => (
             <ListingLink key={x.id} id={x.id} name={x.name} car={carName(x, cat)} className="simc">
-              <div className="ph">{x.photos.length ? <img alt="" loading="lazy" src={x.thumbs[0]} onError={(e) => { e.currentTarget.src = x.photos[0]; }} /> : <div className="nop"><Icon id={catIcon(x.categoryId)} /></div>}</div>
-              <span>{x.name}</span><b>{price(x.price)}</b>
+              <Mini x={x} cat={cat} />
             </ListingLink>
           ))}
         </div>
@@ -185,12 +202,15 @@ export default function ListingDetail({ id, onClose, initial }: { id: number; on
         <div className="sim">
           {similar.map((x) => (
             <ListingLink key={x.id} id={x.id} name={x.name} car={carName(x, cat)} className="simc">
-              <div className="ph">{x.photos.length ? <img alt="" loading="lazy" src={x.thumbs[0]} onError={(e) => { e.currentTarget.src = x.photos[0]; }} /> : <div className="nop"><Icon id={catIcon(x.categoryId)} /></div>}</div>
-              <span>{x.name}</span><b>{price(x.price)}</b>
+              <Mini x={x} cat={cat} />
             </ListingLink>
           ))}
         </div>
       </>}
+      {!onClose && <div className={"dbar" + (bar ? " on" : "")}>
+        <span><b>{price(l.price)}</b><small>{l.name}</small></span>
+        <PhoneButton id={l.id} />
+      </div>}
     </article>
   );
 }

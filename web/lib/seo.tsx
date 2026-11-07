@@ -81,10 +81,20 @@ export function sellerPath(id: string, name: string): string {
 }
 
 /** Nadpis stránky: „Použité svetlá Škoda Octavia III“, „Použité diely BMW“, „Predné svetlá – použité diely“. */
+// Názov kategórie v nadpise „Použité …“: kategórie sú v jednotnom čísle (Motor, Interiér), preto vlastné tvary.
+const CAT_PHRASE: Record<string, string> = {
+  motor: "motory a diely motora", pr: "prevodovky a spojky", kar: "karosárske diely", sv: "svetlá", kol: "kolesá a disky",
+  el: "elektrodiely", pod: "diely podvozku a riadenia", brz: "brzdy", chl: "diely chladenia a klimatizácie",
+  pal: "diely palivovej sústavy a výfuku", int: "diely interiéru",
+};
+const SUB_PHRASE: Record<string, string> = { "Riadenie a servo": "diely riadenia a servá", "Kúrenie": "diely kúrenia" };
+/** Malé prvé písmeno, skratky (ABS, DPF) ostanú. */
+const lowerFirst = (t: string) => (/^[A-ZÁČĎÉÍĽĹŇÓÔŔŠŤÚÝŽ]{2}/.test(t) ? t : t.charAt(0).toLowerCase() + t.slice(1));
+
 export function landingTitle(x: Landing, cat: Catalog): string {
   const car = [cat.brands.find((v) => v.id === x.brandId)?.name, cat.models.find((v) => v.id === x.modelId)?.name].filter(Boolean).join(" ");
   const c = cat.categories.find((v) => v.id === x.cat)?.name, s = cat.subcategories.find((v) => v.id === x.sub)?.name;
-  const what = (s || c || "diely").toLowerCase();
+  const what = s ? (SUB_PHRASE[s] || lowerFirst(s)) : c ? (CAT_PHRASE[x.cat] || lowerFirst(c)) : "diely";
   if (x.city) return c ? `Použité ${what} – ${x.city}` : `Použité autodiely ${x.city}`;
   return car ? `Použité ${what} ${car}` : `Použité ${what} na auto`;
 }

@@ -161,3 +161,6 @@ Na ostrej Supabase je spustený `11_spravca_dvojite_overenie.sql` (obsah overen�
   `insert into public.admins select id from auth.users where email = 'VAS@EMAIL';`
   Pri prvom otvorení `/admin` vás web prevedie nastavením aplikácie Google Authenticator alebo Microsoft Authenticator (QR kód) a odvtedy pri každom prihlásení do administrácie zadáte 6-miestny kód.
 - **Stratený mobil:** v Supabase → Authentication → Users → váš účet → „Multi-factor authentication“ → zmazať faktor. Pri ďalšom otvorení `/admin` nastavíte novú aplikáciu.
+
+## Oprava názvu podkategórie (7. 11. 2026)
+`12_oprava_nazvu_podkategorie.sql`: „Polosi a kĺby“ → „Poloosi a kĺby“. Spustené na ostrej Supabase, kontrolný výpis podkategórií prevodovky potvrdil nový názov. Opravené aj v `02_kategorie.sql` (nová databáza) a v ukážkovom katalógu webu.

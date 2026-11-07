@@ -12,7 +12,7 @@ export default function Auth() {
   const router = useRouter();
   const [mode, setMode] = useState<Mode>("in");
   const [email, setEmail] = useState(""), [pw, setPw] = useState(""), [name, setName] = useState("");
-  const [agree, setAgree] = useState(false);
+  const [agree, setAgree] = useState(false), [show, setShow] = useState(false);
   const [busy, setBusy] = useState(false), [err, setErr] = useState(""), [ok, setOk] = useState("");
 
   useEffect(() => {
@@ -51,15 +51,17 @@ export default function Auth() {
         <button type="button" role="tab" aria-selected={mode === "in"} onClick={() => { setMode("in"); setErr(""); setOk(""); }}>Prihlásiť sa</button>
         <button type="button" role="tab" aria-selected={mode === "up"} onClick={() => { setMode("up"); setErr(""); setOk(""); }}>Registrácia</button>
       </div>
+      {mode === "up" && <ul className="pp-why"><li>Inzeráty zadarmo, bez provízie z predaja</li><li>Kupujúci vám volajú alebo píšu priamo</li><li>Hromadný import skladu z CSV a diely z darcovského auta naraz</li></ul>}
       <form className="pp-form" onSubmit={submit} noValidate>
         {mode === "up" && <label>Názov firmy alebo meno<input value={name} onChange={(e) => setName(e.target.value)} autoComplete="organization" maxLength={120} /></label>}
         <label>E-mail<input type="email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" /></label>
-        {mode !== "reset" && <label>Heslo{mode === "up" && <small className="mute"> (aspoň 8 znakov)</small>}<input type="password" value={pw} onChange={(e) => setPw(e.target.value)} autoComplete={mode === "up" ? "new-password" : "current-password"} /></label>}
+        {mode !== "reset" && <label><span>Heslo{mode === "up" && <small className="mute"> (aspoň 8 znakov)</small>}</span><span className="pw"><input type={show ? "text" : "password"} value={pw} onChange={(e) => setPw(e.target.value)} autoComplete={mode === "up" ? "new-password" : "current-password"} /><button type="button" aria-pressed={show} onClick={() => setShow(!show)}>{show ? "Skryť" : "Zobraziť"}</button></span></label>}
         {mode === "up" && <label className="pp-chk"><input type="checkbox" checked={agree} onChange={(e) => setAgree(e.target.checked)} /> <span>Súhlasím s <a href="/obchodne-podmienky" target="_blank">obchodnými podmienkami</a>. Beriem na vedomie, že {OPERATOR.name} spracúva moje údaje podľa <a href="/ochrana-osobnych-udajov" target="_blank">zásad ochrany osobných údajov</a> a že názov, mesto a telefón z inzerátu budú verejné.</span></label>}
         {err && <p className="pp-err" role="alert">{err}</p>}
         {ok && <p className="pp-ok" role="status">{ok}</p>}
         <button className="btn" disabled={busy}>{busy ? "Čakajte…" : mode === "up" ? "Vytvoriť účet" : mode === "reset" ? "Poslať odkaz" : "Prihlásiť sa"}</button>
         {mode === "in" && <button type="button" className="lnk" onClick={() => { setMode("reset"); setErr(""); setOk(""); }}>Zabudli ste heslo?</button>}
+        {mode === "in" && <p className="mute pp-new">Nemáte účet? <button type="button" className="lnk" onClick={() => { setMode("up"); setErr(""); setOk(""); }}>Vytvorte si ho zadarmo</button></p>}
         {mode === "reset" && <button type="button" className="lnk" onClick={() => setMode("in")}>Späť na prihlásenie</button>}
       </form>
     </section>

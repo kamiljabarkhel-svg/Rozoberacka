@@ -243,14 +243,14 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
                 {models.map((m) => opt(m.id, `${m.name} (${m.yearFrom}–${m.yearTo || "dnes"})`))}
               </select>
             </label>
-            <label>Kategória
-              <select value={f.cat} onChange={(e) => set({ cat: e.target.value, sub: null })}>
-                {opt("", "Všetky kategórie")}{cats.map((c) => opt(c.id, c.name))}
-              </select>
-            </label>
             <label>Motorizácia
               <select value={f.engine ?? ""} disabled={!model} onChange={(e) => set({ engine: numOrNull(e.target.value) })}>
                 {opt("", model ? "Všetky motorizácie" : "Najprv vyberte model")}{engines.map((x) => opt(x.id, x.name))}
+              </select>
+            </label>
+            <label>Kategória
+              <select value={f.cat} onChange={(e) => set({ cat: e.target.value, sub: null })}>
+                {opt("", "Všetky kategórie")}{cats.map((c) => opt(c.id, c.name))}
               </select>
             </label>
           </div>
@@ -316,7 +316,7 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
             </label>
             <button className="btn2" onClick={onVin}>Hľadať podľa VIN</button>
           </div>
-          <p>VIN nájdete v osvedčení o evidencii (časť I, pole E) a na štítku pri čelnom skle (<Link href="/navody/vin">kde presne</Link>). Na mobile ho môžete odfotiť ikonou fotoaparátu. Z VIN prečítame značku a približný ročník. Model a motorizáciu vyberte v paneli vyššie. Podľa ŠPZ nehľadáme.</p>
+          <p>VIN nájdete v osvedčení o evidencii (časť I, pole E) a na štítku pri čelnom skle (<Link href="/navody/vin">kde presne</Link>). Z VIN prečítame značku a približný ročník, model a motorizáciu potom vyberte v paneli vyššie. Podľa ŠPZ nehľadáme.</p>
           <p className="vmsg" role="status">{vinMsg}</p>
         </section>
 
@@ -346,7 +346,7 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
         <SavedSearches list={saved.list} cat={catalog} onRemove={saved.remove}
           onOpen={(x) => { setF({ ...x.f, fav: false }); saved.seen(x.id); window.dispatchEvent(new CustomEvent("rz-q-set", { detail: x.f.q })); setTimeout(toRes, 30); }} />
 
-        {res && catalog && (
+        {res && catalog && !(f.fav && res.total === 0) && (
           <div className="chips" aria-label="Kategórie nájdených dielov">
             {f.q.trim() && <button className="chip qchip" title="Zrušiť hľadaný text" aria-label={`Zrušiť hľadaný text ${f.q.trim()}`} onClick={() => { set({ q: "" }); setOemQ(""); window.dispatchEvent(new CustomEvent("rz-q-set", { detail: "" })); }}>„{f.q.trim()}“ <span aria-hidden="true">✕</span></button>}
             <button className="chip" aria-pressed={!f.cat} onClick={() => set({ cat: "", sub: null })}>Všetky ({res.base})</button>
@@ -375,7 +375,7 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
             hasCriteria(f) || f.fav
               ? <div className="empty">{f.fav && !favs.length ? "Zatiaľ nemáte obľúbené diely. Označte ich srdiečkom ♡ na karte." : "Nič sme nenašli. Skúste iné slovo, kategóriu alebo všetky značky."}
                   {hasCriteria(f) && !f.fav && !isSaved && <><br />Uložte si hľadanie a pri ďalšej návšteve uvidíte, či pribudol vhodný diel.<br /><button className="add" onClick={() => saved.add(f)}>🔔 Uložiť hľadanie</button></>}
-                  <br /><button className="add" onClick={reset}>Zrušiť všetky filtre</button>
+                  <br />{f.fav ? <button className="add" onClick={() => set({ fav: false })}>Zobraziť všetky diely</button> : <button className="add" onClick={reset}>Zrušiť všetky filtre</button>}
                 </div>
               : <div className="empty">Na portáli zatiaľ nie sú žiadne inzeráty.<br />Predávate diely? <a href={STATIC_PREVIEW ? sellersHref : "/pre-predajcov?registracia=1"}>Pridajte prvý diel zadarmo</a>.</div>
           )}

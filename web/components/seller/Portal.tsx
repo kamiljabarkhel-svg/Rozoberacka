@@ -10,7 +10,7 @@ import { carName, sellerPath } from "@/lib/seo";
 import Stars from "../Stars";
 import { isAdminCandidate } from "@/lib/admin";
 import { download, listingsCsv } from "@/lib/csvExport";
-import { price as fmtPrice } from "@/lib/format";
+import { plural, price as fmtPrice } from "@/lib/format";
 import {
   changePassword, confirmFresh, setPrices, deleteAccount, deleteListings, exportMyData, duplicate, ensureProfile, getSession, markRead, myListings, myMessages, onAuthChange,
   saveProfile, setStatus, setTop, signOut, skError, type Donor, type Message, type MyListing, type Profile, type Status,
@@ -148,7 +148,8 @@ function Dashboard({ cat, prof, items, msgs, go }: { cat: Catalog | null; prof: 
   const profMissing = !prof?.city || !prof?.phone;
   const byCat = new Map<string, number>();
   a.forEach((i) => byCat.set(i.categoryId, (byCat.get(i.categoryId) || 0) + 1));
-  const d = new Date().toLocaleDateString("sk-SK", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+  const d0 = new Date().toLocaleDateString("sk-SK", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+  const d = d0.charAt(0).toUpperCase() + d0.slice(1);
   return (
     <div className="pp-dash">
       <header className="pp-h"><div><h1>Dobrý deň{prof?.name ? ", " + prof.name : ""}</h1><p className="mute">{d}
@@ -255,7 +256,7 @@ function MyList({ initial, items, cat, onEdit, onStatus, onTop, onDup, onDelete,
               <div className="pp-ri">
                 {l.status === "active" ? <a href={listingHref(l.id, l.name, carName(l, cat))} target="_blank" rel="noreferrer" title="Otvoriť, ako ho vidia kupujúci"><b>{l.name}</b></a> : <b>{l.name}</b>}
                 <span className="mute">{vehicle(l)} · {catName(l.categoryId)} · OEM {l.oem || "—"}</span>
-                <span className="pp-meta"><span className={"pp-st " + l.status}>{ST[l.status]}</span>{l.top && <span className="toptag">TOP</span>}<b>{fmtPrice(l.price)}</b><span className="mute">{l.views} zobrazení · {l.calls} telefónov</span>{isStale(l) && <span className="pp-stale">neaktualizované {Math.floor((Date.now() - Date.parse(l.updatedAt)) / 86400000)} dní · <button className="lnk" onClick={() => onFresh([l.id])}>Stále aktuálne</button></span>}</span>
+                <span className="pp-meta"><span className={"pp-st " + l.status}>{ST[l.status]}</span>{l.top && <span className="toptag">TOP</span>}<b>{fmtPrice(l.price)}</b><span className="mute">{plural(l.views, "zobrazenie", "zobrazenia", "zobrazení")} · {plural(l.calls, "telefón", "telefóny", "telefónov")}</span>{isStale(l) && <span className="pp-stale">neaktualizované {Math.floor((Date.now() - Date.parse(l.updatedAt)) / 86400000)} dní · <button className="lnk" onClick={() => onFresh([l.id])}>Stále aktuálne</button></span>}</span>
               </div>
               <div className="pp-ra">
                 {l.status === "blocked" ? <span className="mute pp-blk">Inzerát skryl správca portálu{l.moderationNote ? ": " + l.moderationNote : ""}. Upravte ho a napíšte nám.</span> : null}
@@ -287,7 +288,7 @@ function Messages({ msgs, onRead }: { msgs: Message[]; onRead: (ids: number[]) =
       {!msgs.length ? <div className="empty">Zatiaľ žiadne správy. Kupujúci vám môžu napísať z detailu inzerátu.</div> : (
         <ul className="pp-msgs">{msgs.map((m) => (
           <li key={m.id} className={m.read ? "" : "unread"}>
-            <div className="pp-mh"><b>{m.name}</b><span className="mute">{new Date(m.createdAt).toLocaleString("sk-SK")}</span></div>
+            <div className="pp-mh"><b>{m.name}</b><span className="mute">{new Date(m.createdAt).toLocaleString("sk-SK", { dateStyle: "short", timeStyle: "short" })}</span></div>
             <div className="mute">K inzerátu: <a href={listingHref(m.listingId)} target="_blank" rel="noreferrer">{m.listingName}</a></div>
             <p>{m.body}</p>
             <div className="pp-mf"><span>Kontakt: <b>{/@/.test(m.contact) ? <a href={"mailto:" + m.contact}>{m.contact}</a> : <a href={"tel:" + m.contact.replace(/\s/g, "")}>{m.contact}</a>}</b></span>

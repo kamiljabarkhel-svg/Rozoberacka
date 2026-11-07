@@ -11,7 +11,7 @@ insert into public.categories (id, name, sort) values ('pr', 'Prevodovka', 6) on
 insert into public.subcategories (category_id, name, sort) values ('pr', 'Manuálne prevodovky', 1) on conflict (category_id, name) do nothing;
 insert into public.subcategories (category_id, name, sort) values ('pr', 'Automatické prevodovky', 2) on conflict (category_id, name) do nothing;
 insert into public.subcategories (category_id, name, sort) values ('pr', 'Spojky a zotrvačníky', 3) on conflict (category_id, name) do nothing;
-insert into public.subcategories (category_id, name, sort) values ('pr', 'Polosi a kĺby', 4) on conflict (category_id, name) do nothing;
+insert into public.subcategories (category_id, name, sort) values ('pr', 'Poloosi a kĺby', 4) on conflict (category_id, name) do nothing;
 insert into public.categories (id, name, sort) values ('kar', 'Karoséria', 1) on conflict (id) do update set name = excluded.name, sort = excluded.sort;
 insert into public.subcategories (category_id, name, sort) values ('kar', 'Nárazníky', 1) on conflict (category_id, name) do nothing;
 insert into public.subcategories (category_id, name, sort) values ('kar', 'Kapoty', 2) on conflict (category_id, name) do nothing;

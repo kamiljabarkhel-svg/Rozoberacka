@@ -2,13 +2,29 @@
 // Napísať predajcovi a Poslať odkaz mechanikovi (detail inzerátu).
 import { useState } from "react";
 import { sendMessage, IS_DEMO } from "@/lib/data";
+import type { Catalog } from "@/lib/types";
+import { myCarName, readMyCar } from "@/lib/mycar";
 
-export default function ContactBox({ id, name, seller }: { id: number; name: string; seller: string }) {
+export default function ContactBox({ id, name, seller, path, cat }: { id: number; name: string; seller: string; path?: string; cat?: Catalog }) {
   const [mode, setMode] = useState<"" | "msg" | "share">("");
   const [nm, setNm] = useState(""); const [ct, setCt] = useState("");
-  const [tx, setTx] = useState(`Dobrý deň, je diel „${name}“ ešte k dispozícii? Pasuje na moje auto: `);
+  const [tx, setTx] = useState("");
   const [st, setSt] = useState<{ busy?: boolean; ok?: boolean; err?: string }>({});
-  const url = typeof window !== "undefined" ? window.location.origin + "/inzerat/" + id : "/inzerat/" + id;
+  const p = path || "/diel/" + id;
+  const url = typeof window !== "undefined" ? window.location.origin + p : p;
+  const openMsg = () => {
+    if (!tx) { // predvyplnená správa; ak si kupujúci uložil „Moje auto“, doplníme ho
+      const car = readMyCar();
+      setTx(`Dobrý deň, je diel „${name}“ ešte k dispozícii? Pasuje na moje auto: ${car && cat ? myCarName(car, cat) : ""}`);
+    }
+    setMode(mode === "msg" ? "" : "msg"); setSt({});
+  };
+  const share = async () => {
+    if (typeof navigator !== "undefined" && "share" in navigator && window.matchMedia("(pointer: coarse)").matches) { // mobil: ponuka zdieľania (WhatsApp, SMS…)
+      try { await navigator.share({ title: name, url }); return; } catch (e) { if ((e as Error).name === "AbortError") return; }
+    }
+    setMode(mode === "share" ? "" : "share"); setSt({});
+  };
 
   const send = async () => {
     if (nm.trim().length < 2 || ct.trim().length < 5 || tx.trim().length < 5) { setSt({ err: "Vyplňte meno, telefón alebo e-mail a správu." }); return; }
@@ -23,9 +39,9 @@ export default function ContactBox({ id, name, seller }: { id: number; name: str
 
   return (
     <>
-      <div className="hbtns">
-        <button className="chip" aria-expanded={mode === "msg"} onClick={() => { setMode(mode === "msg" ? "" : "msg"); setSt({}); }}>✉ Napísať predajcovi</button>
-        <button className="chip" aria-expanded={mode === "share"} onClick={() => { setMode(mode === "share" ? "" : "share"); setSt({}); }}>↗ Poslať odkaz mechanikovi</button>
+      <div className="hbtns cbtns">
+        <button className="chip" aria-expanded={mode === "msg"} onClick={openMsg}>✉ Napísať predajcovi</button>
+        <button className="chip" aria-expanded={mode === "share"} onClick={share}>↗ Poslať odkaz mechanikovi</button>
       </div>
       {mode === "msg" && (st.ok ? <div className="warn">Správa bola odoslaná predajcovi. Ozve sa vám na kontakt, ktorý ste uviedli.</div> : (
         <div className="msgbox">

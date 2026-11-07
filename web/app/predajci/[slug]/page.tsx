@@ -52,7 +52,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
           <span>{s.type}</span>{s.city && <span>{s.city}</span>}{s.verified && <span className="ok">✓ Overený predajca</span>}<span>Na Rozoberačke od {since}</span>
         </p>
         {s.ratingCount > 0 ? <p><Stars value={s.ratingAvg} count={s.ratingCount} /> <a href="#hodnotenia" className="lnk">Hodnotenia kupujúcich</a></p>
-          : <p className="mute">Zatiaľ bez hodnotení. Hodnotiť môže kupujúci, ktorý od predajcu dostal ponuku na svoj dopyt.</p>}
+          : <p className="mute">Zatiaľ bez hodnotení.</p>}
       </div>
       <h2>Diely v ponuke ({res.total})</h2>
       {res.items.length ? <LandingGrid items={res.items} cat={cat} /> : <div className="empty">Predajca teraz nemá aktívne inzeráty.</div>}
