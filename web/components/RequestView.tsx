@@ -1,5 +1,6 @@
 "use client";
 // Súkromná stránka kupujúceho: jeho dopyt a ponuky od predajcov (zoradené od najlacnejšej).
+import { isTrader, sellerKind } from "@/lib/legal";
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import type { Catalog } from "@/lib/types";
@@ -26,11 +27,12 @@ export default function RequestView({ token }: { token: string }) {
       <h1>{r.partName}</h1>
       <p className="landing-lead">{car} · zadaný {new Date(r.createdAt).toLocaleDateString("sk-SK")} · <b>{st}</b>{r.note ? <><br />{r.note}</> : null}</p>
       <h2 className="sh">Ponuky od predajcov ({r.offers.length})</h2>
+      {r.offers.length > 0 && <p className="mute small">Pri kúpe od podnikateľa máte práva spotrebiteľa (zodpovednosť za vady, pri kúpe na diaľku odstúpenie do 14 dní). Pri kúpe od súkromnej osoby sa predpisy na ochranu spotrebiteľa nepoužijú. Typ predajcu vychádza z jeho vyhlásenia.</p>}
       {!r.offers.length && <div className="empty">Zatiaľ žiadna ponuka. Predajcovia vidia dopyt vo svojom portáli a ozvú sa vám aj priamo na kontakt, ktorý ste uviedli. Stránku si uložte a pozrite sa neskôr.</div>}
       <ul className="pp-msgs">{r.offers.map((o, i) => (
         <li key={i}>
           <div className="pp-mh"><b>{o.sellerId ? <Link href={sellerPath(o.sellerId, o.seller)}>{o.seller}</Link> : o.seller}{o.verified && <span className="bdg">Overený predajca</span>}</b><b className="rq-price">{price(o.price)}</b></div>
-          <div className="mute">{o.sellerType}{o.sellerCity ? ` · ${o.sellerCity}` : ""} · {new Date(o.createdAt).toLocaleDateString("sk-SK")}
+          <div className="mute">{sellerKind(o.sellerType)}{isTrader(o.sellerType) ? "" : " (bez práv spotrebiteľa)"}{o.sellerCity ? ` · ${o.sellerCity}` : ""} · {new Date(o.createdAt).toLocaleDateString("sk-SK")}
             {o.ratingCount > 0 && <> · <Stars value={o.ratingAvg} count={o.ratingCount} small /></>}</div>
           {o.note && <p>{o.note}</p>}
           <div className="pp-mf"><a className="call" href={"tel:" + o.phone.replace(/\s/g, "")}>Zavolať {o.phone}</a>

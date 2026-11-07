@@ -14,6 +14,8 @@ insert into public.admins values ('99999999-9999-9999-9999-999999999999');
 select pg_temp.as_user('33333333-3333-3333-3333-333333333333', '4.4.4.4');
 set role authenticated;
 insert into public.sellers (id, name, seller_type, city, terms_accepted_at, terms_version) values ('33333333-3333-3333-3333-333333333333','Test C','Firma','Martin', now(), '2026-11-03');
+-- od 14: podnikateľ musí mať IČO a sídlo, aby mohol zverejniť inzerát
+update public.sellers set ico = '12345678', address = 'Testovacia 1, 900 01 Mesto' where seller_type = 'Firma' and ico is null;
 insert into public.seller_private (seller_id, phone, ico) values ('33333333-3333-3333-3333-333333333333', '0905 000 111', '12345678');
 insert into public.listings (seller_id,name,brand_id,model_id,year,category_id,oem,price,city,description)
 select '33333333-3333-3333-3333-333333333333','Kapota',b.id,m.id,2016,'kar','5E0823031',90,'Martin','Kapota bez hrdze, drobné škrabance.' from brands b join models m on m.brand_id=b.id where b.name='Škoda' limit 1;

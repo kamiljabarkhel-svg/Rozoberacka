@@ -334,7 +334,7 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
         </div></div>
 
         <div id="vysledky" ref={resRef} className="head">
-          <span className="cnt" aria-live="polite">{res ? pieces(res.total) : "Načítavam…"}</span>
+          <span className="cnt-w"><span className="cnt" aria-live="polite">{res ? pieces(res.total) : "Načítavam…"}</span>{!STATIC_PREVIEW && <Link className="sortinfo" href="/ako-zoradujeme">Ako zoraďujeme ponuky</Link>}</span>
           <span className="head-a">
             {hasCriteria(f) && !f.fav && (isSaved
               ? <span className="chip saved-ok" title="Pri ďalšej návšteve uvidíte, koľko nových dielov pribudlo">✓ Hľadanie uložené</span>

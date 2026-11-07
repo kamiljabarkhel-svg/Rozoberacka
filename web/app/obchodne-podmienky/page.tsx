@@ -21,16 +21,28 @@ export default function Page() {
         <li>Zoznam „Pasuje na“ skladáme z údajov predajcov (vlastné auto, „pasuje aj na“ a inzeráty s rovnakým OEM číslom). Nie je to overený katalóg. Pred kúpou porovnajte OEM číslo s pôvodným dielom.</li>
       </ul>
 
-      <h2>3. Predajca a jeho povinnosti</h2>
+      <h2>3. Podnikateľ alebo súkromná osoba – vyhlásenie predajcu</h2>
       <ul>
-        <li>Predajca uvádza pravdivé údaje o sebe aj o diele, vrátane známych vád, a pravdivo vyberie, či je firma alebo súkromná osoba.</li>
+        <li>Pri registrácii a v profile predajca <b>vyhlási, či predáva ako podnikateľ (obchodník) alebo ako súkromná osoba</b>, ktorá nepredáva v rámci podnikania. Podľa tohto vyhlásenia portál kupujúcim zobrazí, kto predáva, a poučí ich o ich právach (§ 16 zákona č. 108/2024 Z. z. o ochrane spotrebiteľa).</li>
+        <li><b>Podnikateľ</b> uvedie obchodné meno, IČO a sídlo alebo miesto podnikania. Tieto údaje sú verejné, aby kupujúci vedel, s kým uzatvára zmluvu. Bez nich podnikateľ nemôže zverejniť inzerát.</li>
+        <li><b>Súkromná osoba</b> predáva len príležitostne, napríklad diely z vlastného auta. Kto predáva diely <b>sústavne a za účelom zisku</b> (napríklad skupuje autá na rozobratie), podniká a musí sa zaregistrovať ako podnikateľ. Nepravdivé vyhlásenie môže byť dôvodom na skrytie inzerátov alebo zablokovanie účtu.</li>
+        <li>Prevádzkovateľ vyhlásenie predajcu neoveruje; za jeho pravdivosť zodpovedá predajca. Označenie „Overený predajca“ znamená, že prevádzkovateľ overil totožnosť predajcu.</li>
+      </ul>
+
+      <h2>3a. Povinnosti predajcu</h2>
+      <ul>
+        <li>Predajca uvádza pravdivé údaje o sebe aj o diele vrátane známych vád a poškodení.</li>
         <li>Predáva len diely, ktoré vlastní alebo s ktorými smie nakladať. Zakázané sú kradnuté diely, diely s pozmeneným identifikačným číslom a veci, ktorých predaj zakazuje zákon.</li>
-        <li>Firma predávajúca spotrebiteľovi dodržiava zákony na ochranu spotrebiteľa, najmä zodpovednosť za vady 24 mesiacov pri novom tovare a najmenej 12 mesiacov pri použitom tovare (vrátane repasovaného) a pri predaji na diaľku právo spotrebiteľa odstúpiť od zmluvy do 14 dní.</li>
+        <li><b>Podnikateľ predávajúci spotrebiteľovi</b> dodržiava predpisy na ochranu spotrebiteľa: zodpovedá za vady, ktoré sa prejavia do 24 mesiacov od prevzatia; pri použitom (aj repasovanom) diele sa so spotrebiteľom môže dohodnúť na kratšej dobe, najmenej 12 mesiacov (§ 619 Občianskeho zákonníka) – dohodnutú dobu uvedie v inzeráte aj na doklade. Pri predaji na diaľku má spotrebiteľ právo odstúpiť od zmluvy do 14 dní (§ 20 zákona č. 108/2024 Z. z.). Pri predaji inému podnikateľovi sa zodpovednosť za vady riadi Obchodným zákonníkom a dohodou strán.</li>
+        <li><b>Súkromná osoba</b> zodpovedá za vady, na ktoré kupujúceho neupozornila (§ 597 a 599 Občianskeho zákonníka). Predpisy na ochranu spotrebiteľa sa na súkromný predaj nevzťahujú.</li>
         <li>Predajca zodpovedá za obsah inzerátu, fotky (musia byť jeho alebo ich smie použiť) a za vybavenie reklamácie.</li>
         <li>Predajca neposiela kupujúcim nevyžiadanú reklamu a kontakty kupujúcich (zo správ aj z dopytov na diely) používa len na ponuku a dohodu o danom diele.</li>
         <li>VIN darcovského auta, ktorý predajca zadá v portáli, je neverejný a predajca ho smie zadať len pre svoju evidenciu.</li>
         <li>Prístup k účtu chráni heslom a nezdieľa ho.</li>
       </ul>
+
+      <h2>3b. Poradie ponúk</h2>
+      <p>Podľa čoho zoraďujeme inzeráty vo výsledkoch hľadania (vrátane zvýraznenia TOP), opisuje stránka <a href="/ako-zoradujeme">Ako zoraďujeme ponuky</a>.</p>
 
       <h2>4. Nahlásenie obsahu a moderovanie</h2>
       <ul>
@@ -60,6 +72,7 @@ export default function Page() {
       <ul>
         <li>Podmienky sa riadia právom Slovenskej republiky.</li>
         <li>Predajca, ktorý je spotrebiteľom, sa môže so sporom obrátiť aj na subjekt alternatívneho riešenia spotrebiteľských sporov, napríklad Slovenskú obchodnú inšpekciu.</li>
+        <li>Od 1. 7. 2027 nahrádza doterajší Občiansky zákonník nový Občiansky zákonník (zákon č. 260/2026 Z. z.). Odkazy na ustanovenia v týchto podmienkach sa potom vzťahujú na zodpovedajúce ustanovenia nového zákona.</li>
         <li>Zmenu podmienok oznámime predajcom e-mailom najmenej 15 dní vopred. Ak so zmenou nesúhlasia, môžu účet zrušiť.</li>
       </ul>
     </LegalPage>

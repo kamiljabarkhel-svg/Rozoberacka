@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 import Crumbs from "@/components/Crumbs";
 import SellerStock from "@/components/SellerStock";
 import Stars from "@/components/Stars";
+import SellerNotice from "@/components/SellerNotice";
+import { sellerKind } from "@/lib/legal";
 import { getCatalog, getSellerPublic, getSellerReviews, searchListings } from "@/lib/data";
 import { emptyFilters } from "@/lib/types";
 import { pieces } from "@/lib/format";
@@ -44,15 +46,17 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
     <main id="main" className="main landing seller-page">
       <JsonLd data={[breadcrumbLd([...crumbs, { name: s.name, href: path }]),
         { "@context": "https://schema.org", "@type": s.type === "Firma" ? "AutoPartsStore" : "Person", name: s.name, url: SITE_URL + path,
-          ...(s.city ? { address: { "@type": "PostalAddress", addressLocality: s.city, addressCountry: "SK" } } : {}) }]} />
+          ...(s.address ? { address: { "@type": "PostalAddress", streetAddress: s.address, addressCountry: "SK" }, ...(s.ico ? { taxID: s.ico } : {}) }
+            : s.city ? { address: { "@type": "PostalAddress", addressLocality: s.city, addressCountry: "SK" } } : {}) }]} />
       <Crumbs items={crumbs} last={s.name} />
       <div className="seller-head">
         <h1>{s.name}</h1>
         <p className="seller-meta">
-          <span>{s.type}</span>{s.city && <span>{s.city}</span>}{s.verified && <span className="ok">✓ Overený predajca</span>}<span>Na Rozoberačke od {since}</span>
+          <span>{sellerKind(s.type)}</span>{s.city && <span>{s.city}</span>}{s.verified && <span className="ok">✓ Overený predajca</span>}<span>Na Rozoberačke od {since}</span>
         </p>
         {s.ratingCount > 0 ? <p><Stars value={s.ratingAvg} count={s.ratingCount} /> <a href="#hodnotenia" className="lnk">Hodnotenia kupujúcich</a></p>
           : <p className="mute">Zatiaľ bez hodnotení.</p>}
+        <SellerNotice type={s.type} name={s.name} ico={s.ico} address={s.address} />
       </div>
       <SellerStock seller={s.id} cat={cat} initial={{ items: res.items, total: res.total, cats: [...res.cats] }} />
       <section id="hodnotenia" className="reviews">

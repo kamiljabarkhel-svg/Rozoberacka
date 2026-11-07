@@ -39,7 +39,7 @@ export default function ListingCard({ l, cat, fav, onFav }: { l: Listing; cat: C
         <div className="meta">
           <span className="cond"><i className={"dot " + condDot(l.condition)} />{l.condition}</span>
           {l.city && <span>{l.city}</span>}
-          {l.warranty && l.warranty !== "Bez záruky" && <span>Záruka {l.warranty}</span>}
+          {l.warranty && l.warranty !== "Bez záruky" && l.seller.type === "Firma" && <span>Záruka {l.warranty}</span>}
           {l.seller.type !== "Firma" && <span>Súkromná osoba</span>}
         </div>
       </div>

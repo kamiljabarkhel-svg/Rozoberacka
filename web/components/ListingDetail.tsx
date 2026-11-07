@@ -18,6 +18,8 @@ import Crumbs from "./Crumbs";
 import { carName, landingCrumbs, listingPath, sellerPath } from "@/lib/seo";
 import Stars from "./Stars";
 import MyCarFit from "./MyCarFit";
+import SellerNotice from "./SellerNotice";
+import { isTrader, liabilityText, sellerKind, withdrawalText } from "@/lib/legal";
 
 type State =
   | { st: "loading" }
@@ -96,16 +98,14 @@ export default function ListingDetail({ id, onClose, initial }: { id: number; on
   const rows: [string, string][] = [
     ["Značka", bName || "neuvedené"], ["Model", mName || "neuvedené"], ["Motorizácia", eName || "Pasuje na všetky motorizácie"],
     ["Ročník", l.year ? String(l.year) : "neuvedené"], ["OEM číslo", l.oem || "neuvedené"], ["Kategória", cName + (sName ? " · " + sName : "")],
-    ["Stav", condLabel(l.condition)], ["Záruka", l.warranty === "Bez záruky" ? "Bez záruky (predáva súkromná osoba)" : l.warranty], ["Odovzdanie", l.shipping || "Len osobný odber"], ["Mesto", l.city || "neuvedené"],
+    ["Stav", condLabel(l.condition)], ["Zodpovednosť za vady", liabilityText(l)], ["Odovzdanie", l.shipping || "Len osobný odber"], ["Mesto", l.city || "neuvedené"],
   ];
   if (l.side) rows.splice(5, 0, ["Strana auta", l.side]);
   if (l.partMaker) rows.splice(5, 0, ["Výrobca dielu", l.partMaker]);
   if (l.gearbox) rows.push(["Prevodovka auta", l.gearbox]);
   if (l.km) rows.push(["Najazdené km auta", l.km.toLocaleString("sk-SK") + " km"]);
   rows.push(["Odskúšaný", l.tested ? "Áno, podľa predajcu" : "Neuvedené"]);
-  rows.push(["Vrátenie", l.seller.type === "Firma"
-    ? "Pri kúpe na diaľku (kuriér) môžete od zmluvy odstúpiť do 14 dní"
-    : l.returns14 ? "Do 14 dní, ak diel nepasuje (ponuka predajcu)" : "Podľa dohody s predajcom"]);
+  rows.push(["Odstúpenie a vrátenie", withdrawalText(l)]);
   const groups = groupVehicles(vehicles, cat);
 
   return (
@@ -150,7 +150,8 @@ export default function ListingDetail({ id, onClose, initial }: { id: number; on
           <MyCarFit vehicles={vehicles} cat={cat} />
           <div className="seller">
             <b>{l.sellerId && !STATIC_PREVIEW ? <Link href={sellerPath(l.sellerId, l.seller.name)}>{l.seller.name}</Link> : l.seller.name}{l.seller.verified && <span className="bdg">Overený predajca</span>}</b>
-            <span className="mute">{l.seller.type} · {l.seller.city || l.city}</span>
+            <span className="mute">{sellerKind(l.seller.type)} · {l.seller.city || l.city}</span>
+            {isTrader(l.seller.type) && (l.seller.ico || l.seller.address) && <span className="mute">{[l.seller.ico && `IČO ${l.seller.ico}`, l.seller.address].filter(Boolean).join(" · ")}</span>}
             {s.seller && s.seller.ratingCount > 0 && <span><Stars value={s.seller.ratingAvg} count={s.seller.ratingCount} small /></span>}
             {l.sellerId && !STATIC_PREVIEW && <Link className="lnk seller-all" href={sellerPath(l.sellerId, l.seller.name)}>Všetky diely predajcu{more.total ? ` (${more.total + 1})` : ""} →</Link>}
             <span className="mute">Inzerát pridaný {agoText(l.createdAt)}{l.updatedAt && Date.parse(l.updatedAt) - Date.parse(l.createdAt) > 3600000 ? ` · upravený ${agoText(l.updatedAt)}` : ""}</span>
@@ -172,6 +173,7 @@ export default function ListingDetail({ id, onClose, initial }: { id: number; on
         <p className="mute fits-note">Zoznam skladáme z údajov predajcov (vlastné auto, „pasuje aj na“ a inzeráty s rovnakým OEM číslom). Nie je to overený katalóg.</p>
       </>}
 
+      <SellerNotice type={l.seller.type} name={l.seller.name} ico={l.seller.ico} address={l.seller.address} />
       <div className="warn">Pred nákupom porovnajte OEM číslo so starým dielom a vyžiadajte si od predajcu ďalšie fotky. Neposielajte zálohy vopred neznámym predajcom.</div>
       <ReportBox id={l.id} />
 

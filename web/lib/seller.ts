@@ -17,7 +17,7 @@ export function sellerClient(): SupabaseClient {
   return sb;
 }
 
-export type Profile = { id: string; email: string; name: string; type: string; city: string; phone: string; ico: string; verified: boolean; ratingAvg?: number | null; ratingCount?: number };
+export type Profile = { id: string; email: string; name: string; type: string; city: string; phone: string; ico: string; address: string; verified: boolean; ratingAvg?: number | null; ratingCount?: number };
 export type Status = "active" | "paused" | "sold" | "blocked";
 export type MyListing = {
   id: number; name: string; brandId: number; modelId: number; engineId: number | null; year: number;
@@ -40,6 +40,8 @@ const SKMSG: [RegExp, string][] = [
   [/weak|Password should contain/i, "Heslo je príliš slabé. Použite aspoň 8 znakov."],
   [/listings_oem_required/i, "Zadajte OEM číslo dielu (aspoň 4 písmená alebo číslice)."],
   [/listings_desc_required/i, "Popis musí mať aspoň 20 znakov."],
+  [/sellers_ico_check/i, "IČO musí mať 8 číslic."],
+  [/sellers_address_check/i, "Sídlo (adresa) musí mať aspoň 5 znakov."],
   [/contacts_phone_digits/i, "Telefón musí mať aspoň 9 číslic."],
   [/permission denied/i, "Na túto zmenu nemáte oprávnenie."],
   [/listings_warranty_check/i, "Vyberte platnú záruku."],
@@ -66,10 +68,13 @@ export async function signIn(email: string, password: string) {
   if (error) throw new Error(skError(error));
 }
 /** Vráti true, ak je treba potvrdiť e-mail. */
-export async function signUp(email: string, password: string, name: string): Promise<boolean> {
+export type SignUpInfo = { name: string; type: "Firma" | "Súkromná osoba"; ico: string; address: string };
+export async function signUp(email: string, password: string, info: SignUpInfo): Promise<boolean> {
+  const firm = info.type === "Firma";
   const { data, error } = await sellerClient().auth.signUp({
     email: email.trim(), password,
-    options: { data: { name: name.trim(), terms_version: TERMS_VERSION, terms_accepted_at: new Date().toISOString() }, emailRedirectTo: window.location.origin + "/predajca" },
+    options: { data: { name: info.name.trim(), seller_type: info.type, ico: firm ? info.ico.replace(/\s/g, "") : null, address: firm ? info.address.trim() : null,
+      terms_version: TERMS_VERSION, terms_accepted_at: new Date().toISOString() }, emailRedirectTo: window.location.origin + "/predajca" },
   });
   if (error) throw new Error(skError(error));
   return !data.session;
@@ -93,13 +98,16 @@ export async function signOut() { await sellerClient().auth.signOut(); }
 // ---------- PROFIL ----------
 export async function ensureProfile(s: Session): Promise<Profile> {
   const c = sellerClient(), uid = s.user.id;
-  const cols = "id,name,seller_type,city,verified,rating_avg,rating_count";
+  const cols = "id,name,seller_type,city,verified,rating_avg,rating_count,ico,address";
   let { data: sel } = await c.from("sellers").select(cols).eq("id", uid).maybeSingle();
   if (!sel) {
     const raw = String(s.user.user_metadata?.name || s.user.email?.split("@")[0] || "").trim().slice(0, 120);
     // upsert + ignoreDuplicates: dve otvorené karty naraz nespôsobia chybu „duplicate key“
     const md = s.user.user_metadata || {};
-    const ins = await c.from("sellers").upsert({ id: uid, name: raw.length >= 2 ? raw : "Predajca",
+    const type = md.seller_type === "Súkromná osoba" ? "Súkromná osoba" : "Firma"; // vyhlásenie z registrácie
+    const ico = type === "Firma" && /^[0-9]{8}$/.test(String(md.ico || "")) ? String(md.ico) : null;
+    const address = type === "Firma" && String(md.address || "").trim().length >= 5 ? String(md.address).trim().slice(0, 200) : null;
+    const ins = await c.from("sellers").upsert({ id: uid, name: raw.length >= 2 ? raw : "Predajca", seller_type: type, ico, address,
       terms_version: String(md.terms_version || TERMS_VERSION), terms_accepted_at: String(md.terms_accepted_at || s.user.created_at || new Date().toISOString()) },
       { onConflict: "id", ignoreDuplicates: true });
     if (ins.error) throw new Error(skError(ins.error));
@@ -107,15 +115,17 @@ export async function ensureProfile(s: Session): Promise<Profile> {
     if (again.error) throw new Error(skError(again.error));
     sel = again.data;
   }
-  const { data: pr } = await c.from("seller_private").select("phone,ico").eq("seller_id", uid).maybeSingle();
-  return { id: uid, email: s.user.email || "", name: sel.name, type: sel.seller_type, city: sel.city || "", phone: pr?.phone || "", ico: pr?.ico || "", verified: !!sel.verified,
+  const { data: pr } = await c.from("seller_private").select("phone").eq("seller_id", uid).maybeSingle();
+  return { id: uid, email: s.user.email || "", name: sel.name, type: sel.seller_type, city: sel.city || "", phone: pr?.phone || "", ico: sel.ico || "", address: sel.address || "", verified: !!sel.verified,
     ratingAvg: sel.rating_avg != null ? Number(sel.rating_avg) : null, ratingCount: Number(sel.rating_count || 0) };
 }
 export async function saveProfile(p: Profile) {
   const c = sellerClient();
-  const a = await c.from("sellers").update({ name: p.name.trim(), seller_type: p.type, city: p.city.trim() || null }).eq("id", p.id);
+  const firm = p.type === "Firma";
+  const a = await c.from("sellers").update({ name: p.name.trim(), seller_type: p.type, city: p.city.trim() || null,
+    ico: firm ? p.ico.replace(/\s/g, "") || null : null, address: firm ? p.address.trim() || null : null }).eq("id", p.id);
   if (a.error) throw new Error(skError(a.error));
-  const b = await c.from("seller_private").upsert({ seller_id: p.id, phone: p.phone.trim() || null, ico: p.ico.trim() || null, updated_at: new Date().toISOString() });
+  const b = await c.from("seller_private").upsert({ seller_id: p.id, phone: p.phone.trim() || null, updated_at: new Date().toISOString() });
   if (b.error) throw new Error(skError(b.error));
 }
 

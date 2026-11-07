@@ -13,6 +13,8 @@ set client_min_messages = notice;
 
 insert into auth.users (id, email) values ('11111111-1111-1111-1111-111111111111','a@t.sk'),('22222222-2222-2222-2222-222222222222','b@t.sk'),('99999999-9999-9999-9999-999999999999','admin@t.sk');
 insert into public.sellers (id, name, seller_type, city) values ('11111111-1111-1111-1111-111111111111','Vrakovisko A','Firma','Žilina'),('22222222-2222-2222-2222-222222222222','Peter B','Súkromná osoba','Nitra');
+-- od 14: podnikateľ musí mať IČO a sídlo, aby mohol zverejniť inzerát
+update public.sellers set ico = '12345678', address = 'Testovacia 1, 900 01 Mesto' where seller_type = 'Firma' and ico is null;
 insert into public.admins values ('99999999-9999-9999-9999-999999999999');
 
 -- ===== predajca A (firma) =====

@@ -81,7 +81,7 @@ export { thumbPath, mediumPath } from "./photos";
 const LISTING_COLS =
   "id,name,brand_id,model_id,engine_id,year,category_id,subcategory_id,oem,price,city,condition,description,warranty,shipping,created_at,updated_at,seller_id,donor_id," +
   "side,donor_gearbox,donor_km,tested,returns_14d,top_until,part_maker," +
-  "sellers(name,seller_type,city,verified),listing_photos(path,position),listing_fits(brand_id,model_id,engine_id)";
+  "sellers(name,seller_type,city,verified,ico,address),listing_photos(path,position),listing_fits(brand_id,model_id,engine_id)";
 
 function toListing(r: Row): Listing {
   const s = (r.sellers || {}) as Row;
@@ -99,7 +99,7 @@ function toListing(r: Row): Listing {
     updatedAt: String(r.updated_at || r.created_at),
     fits: ((r.listing_fits || []) as Row[]).map((f) => ({ brandId: f.brand_id as number, modelId: (f.model_id as number) ?? null, engineId: (f.engine_id as number) ?? null })),
     sellerId: String(r.seller_id || ""), donorId: (r.donor_id as number) ?? null,
-    seller: { name: String(s.name || "Predajca"), type: String(s.seller_type || "Firma"), city: (s.city as string) ?? null, verified: Boolean(s.verified) },
+    seller: { name: String(s.name || "Predajca"), type: String(s.seller_type || "Firma"), city: (s.city as string) ?? null, verified: Boolean(s.verified), ico: (s.ico as string) ?? null, address: (s.address as string) ?? null },
     side: (r.side as Listing["side"]) ?? null, gearbox: (r.donor_gearbox as string) ?? null, km: (r.donor_km as number) ?? null,
     tested: Boolean(r.tested), returns14: Boolean(r.returns_14d),
     top: !!r.top_until && Date.parse(String(r.top_until)) > Date.now(), partMaker: (r.part_maker as string) ?? null,
@@ -289,18 +289,18 @@ export async function getReplacements(g: GoneListing): Promise<Listing[]> {
 }
 
 // ---------- PREDAJCA (verejný profil a hodnotenia) ----------
-export type SellerPublic = { id: string; name: string; type: string; city: string | null; verified: boolean; since: string; ratingAvg: number | null; ratingCount: number };
+export type SellerPublic = { id: string; name: string; type: string; city: string | null; verified: boolean; since: string; ratingAvg: number | null; ratingCount: number; ico?: string | null; address?: string | null };
 export type Review = { id: number; stars: number; body: string; author: string; createdAt: string };
 export async function getSellerPublic(id: string): Promise<SellerPublic | null> {
   if (!/^[0-9a-f-]{36}$/i.test(id)) return null;
   if (IS_DEMO) {
     const l = demo().listings.find((x) => x.sellerId === id);
-    return l ? { id, name: l.seller.name, type: l.seller.type, city: l.seller.city, verified: l.seller.verified, since: l.createdAt, ratingAvg: null, ratingCount: 0 } : null;
+    return l ? { id, name: l.seller.name, type: l.seller.type, city: l.seller.city, verified: l.seller.verified, since: l.createdAt, ratingAvg: null, ratingCount: 0, ico: l.seller.ico ?? null, address: l.seller.address ?? null } : null;
   }
-  const { data, error } = await client().from("sellers").select("id,name,seller_type,city,verified,blocked,created_at,rating_avg,rating_count").eq("id", id).maybeSingle();
+  const { data, error } = await client().from("sellers").select("id,name,seller_type,city,verified,blocked,created_at,rating_avg,rating_count,ico,address").eq("id", id).maybeSingle();
   if (error || !data || data.blocked) return null;
   return { id, name: String(data.name), type: String(data.seller_type), city: data.city ?? null, verified: !!data.verified, since: String(data.created_at),
-    ratingAvg: data.rating_avg != null ? Number(data.rating_avg) : null, ratingCount: Number(data.rating_count || 0) };
+    ratingAvg: data.rating_avg != null ? Number(data.rating_avg) : null, ratingCount: Number(data.rating_count || 0), ico: data.ico ?? null, address: data.address ?? null };
 }
 export async function getSellerReviews(id: string): Promise<Review[]> {
   if (IS_DEMO) return [];

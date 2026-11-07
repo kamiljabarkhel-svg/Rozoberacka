@@ -13,6 +13,8 @@ insert into auth.users (id, email) values ('e1111111-0000-0000-0000-000000000001
   ('e3333333-0000-0000-0000-000000000003','e3@t.sk') on conflict do nothing;
 insert into public.sellers (id, name, seller_type, city) values ('e1111111-0000-0000-0000-000000000001','Vrak E1','Firma','Nitra'),
   ('e2222222-0000-0000-0000-000000000002','Vrak E2','Firma','Košice');
+-- od 14: podnikateľ musí mať IČO a sídlo, aby mohol zverejniť inzerát
+update public.sellers set ico = '12345678', address = 'Testovacia 1, 900 01 Mesto' where seller_type = 'Firma' and ico is null;
 insert into public.admins (user_id) values ('e3333333-0000-0000-0000-000000000003') on conflict do nothing;
 
 -- ===== A. predaný diel =====

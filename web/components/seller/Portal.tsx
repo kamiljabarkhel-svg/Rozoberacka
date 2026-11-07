@@ -146,6 +146,7 @@ function Dashboard({ cat, prof, items, msgs, go }: { cat: Catalog | null; prof: 
     ["Pozastavené inzeráty", p.length, "list", "paused"],
   ];
   const profMissing = !prof?.city || !prof?.phone;
+  const traderMissing = prof?.type === "Firma" && (!prof.ico || !prof.address);
   const byCat = new Map<string, number>();
   a.forEach((i) => byCat.set(i.categoryId, (byCat.get(i.categoryId) || 0) + 1));
   const d0 = new Date().toLocaleDateString("sk-SK", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
@@ -172,7 +173,8 @@ function Dashboard({ cat, prof, items, msgs, go }: { cat: Catalog | null; prof: 
           <ul className="pp-todo">
             {todo.filter(([, n]) => n > 0).map(([l, n, t, lf]) => <li key={l}><button className="lnk" onClick={() => go(t, lf)}>{l}</button><b>{n}</b></li>)}
             {profMissing && <li><button className="lnk" onClick={() => go("prof")}>Doplňte mesto a telefón v profile</button><b>!</b></li>}
-            {!todo.some(([, n]) => n > 0) && !profMissing && <li className="mute">Všetko je vybavené.</li>}
+            {traderMissing && <li><button className="lnk" onClick={() => go("prof")}>Doplňte IČO a sídlo – bez nich nezverejníte inzerát</button><b>!</b></li>}
+            {!todo.some(([, n]) => n > 0) && !profMissing && !traderMissing && <li className="mute">Všetko je vybavené.</li>}
           </ul>
         </div>
       </div>
@@ -301,30 +303,44 @@ function Messages({ msgs, onRead }: { msgs: Message[]; onRead: (ids: number[]) =
 
 // ---------- PROFIL ----------
 function ProfileTab({ prof, onSave, onPw }: { prof: Profile; onSave: (p: Profile) => Promise<void>; onPw: () => void }) {
-  const [p, setP] = useState(prof), [busy, setBusy] = useState(false), [err, setErr] = useState("");
+  const [p, setP] = useState(prof), [busy, setBusy] = useState(false), [err, setErr] = useState(""), [decl, setDecl] = useState(false);
+  const firm = p.type === "Firma";
   const set = (k: keyof Profile) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => setP({ ...p, [k]: e.target.value });
   async function save(e: React.FormEvent) {
     e.preventDefault(); setErr("");
     if (p.name.trim().length < 2) return setErr("Zadajte názov alebo meno.");
     if (p.phone && p.phone.replace(/\D/g, "").length < 9) return setErr("Telefón musí mať aspoň 9 číslic.");
-    if (p.ico && !/^\d{6,8}$/.test(p.ico.replace(/\s/g, ""))) return setErr("IČO má 6 až 8 číslic.");
-    setBusy(true); try { await onSave(p); } catch (x) { setErr(skError(x)); } finally { setBusy(false); }
+    if (firm && !/^[0-9]{8}$/.test(p.ico.replace(/\s/g, ""))) return setErr("Ako podnikateľ zadajte IČO (8 číslic).");
+    if (firm && p.address.trim().length < 5) return setErr("Ako podnikateľ zadajte sídlo alebo miesto podnikania.");
+    if (p.type !== prof.type && !decl) return setErr("Potvrďte vyhlásenie o zmene spôsobu predaja.");
+    setBusy(true); try { await onSave(p); setDecl(false); } catch (x) { setErr(skError(x)); } finally { setBusy(false); }
   }
   return (
     <div>
       <header className="pp-h"><h1>Profil predajcu</h1>{prof.verified ? <span className="tg">✓ Overený predajca</span> : <span className="mute">Neoverený</span>}</header>
       <form className="pp-form pp-grid" onSubmit={save}>
-        <label>Názov firmy / meno<input value={p.name} onChange={set("name")} maxLength={120} /></label>
-        <label>Typ<select value={p.type} onChange={set("type")}><option>Firma</option><option>Súkromná osoba</option></select>
-          <small className="mute">{p.type === "Firma" ? "Firma (živnosť, s.r.o.) dáva pri použitom diele záruku aspoň 12 mesiacov." : "Súkromná osoba predáva vlastné diely príležitostne a môže predávať aj bez záruky."}</small></label>
+        <fieldset className="pp-type full">
+          <legend>Ako predávate (vyhlásenie pre kupujúcich)</legend>
+          <label className={"pp-typeo" + (firm ? " on" : "")}><input type="radio" name="ptyp" checked={firm} onChange={() => setP({ ...p, type: "Firma" })} />
+            <span><b>Ako podnikateľ</b><small>Kupujúci uvidia obchodné meno, IČO a sídlo. Spotrebiteľom zodpovedáte za vady (nový diel 24 mesiacov, použitý najmenej 12) a pri predaji na diaľku môžu odstúpiť do 14 dní.</small></span></label>
+          <label className={"pp-typeo" + (!firm ? " on" : "")}><input type="radio" name="ptyp" checked={!firm} onChange={() => setP({ ...p, type: "Súkromná osoba" })} />
+            <span><b>Ako súkromná osoba</b><small>Príležitostný predaj, nie v rámci podnikania. Kupujúci uvidí poučenie, že sa nepoužijú predpisy na ochranu spotrebiteľa. Zodpovedáte za vady, na ktoré kupujúceho neupozorníte.</small></span></label>
+        </fieldset>
+        <label>{firm ? "Obchodné meno" : "Meno (zobrazí sa kupujúcim)"}<input value={p.name} onChange={set("name")} maxLength={120} /></label>
         <label>Mesto<input value={p.city} onChange={set("city")} maxLength={60} /></label>
+        {firm && <label>IČO<input value={p.ico} onChange={set("ico")} inputMode="numeric" maxLength={11} placeholder="12345678" /></label>}
+        {firm && <label>Sídlo / miesto podnikania<input value={p.address} onChange={set("address")} maxLength={200} placeholder="Ulica 1, 900 01 Mesto" /></label>}
         <label>Telefón (predvyplní sa do inzerátov)<input value={p.phone} onChange={set("phone")} inputMode="tel" /></label>
-        <label>IČO (nepovinné)<input value={p.ico} onChange={set("ico")} inputMode="numeric" /></label>
         <label>E-mail<input value={p.email} disabled /></label>
+        {p.type !== prof.type && <label className="pp-chk full"><input type="checkbox" checked={decl} onChange={(e) => setDecl(e.target.checked)} /><span>{firm
+          ? "Vyhlasujem, že diely predávam ako podnikateľ (obchodník) a uvedené údaje sú pravdivé."
+          : "Vyhlasujem, že diely nepredávam v rámci podnikania. Ak by som predával pravidelne za účelom zisku, zaregistrujem sa ako podnikateľ."}</span></label>}
         {err && <p className="pp-err full">{err}</p>}
         <div className="full pp-actions"><button className="btn" disabled={busy}>{busy ? "Ukladám…" : "Uložiť profil"}</button><button type="button" className="lnk" onClick={onPw}>Zmeniť heslo</button></div>
       </form>
-      <p className="mute pp-note">Názov, typ a mesto vidia kupujúci pri vašich inzerátoch. Telefón a IČO sú uložené oddelene a nikto iný ich nevidí; kupujúci vidí len telefón zadaný v inzeráte po kliknutí na „Zobraziť telefón“.</p>
+      <p className="mute pp-note">{firm
+        ? "Obchodné meno, IČO, sídlo a mesto sú verejné – zákon vyžaduje, aby kupujúci vedel, s kým uzatvára zmluvu. Telefón z profilu sa nezobrazuje; kupujúci vidí len telefón zadaný v inzeráte po kliknutí na „Zobraziť telefón“."
+        : "Meno a mesto vidia kupujúci pri vašich inzerátoch. Telefón z profilu sa nezobrazuje; kupujúci vidí len telefón zadaný v inzeráte po kliknutí na „Zobraziť telefón“."}</p>
     </div>
   );
 }

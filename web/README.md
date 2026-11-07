@@ -80,7 +80,7 @@ Bezpečnosť: heslo SMTP patrí **len** do Supabase (políčko Password). Nikdy 
 ## Novinky 6. 11. 2026 (večer)
 - **Čítanie čísla z fotky (OCR)**: knižnica tesseract.js beží v prehliadači. Jej súbory sa pred `dev` a `build` skopírujú do `public/ocr` (`scripts/copy-ocr.mjs`), takže sa nenačítavajú z cudzieho servera a fotka sa nikam neposiela. Na Verceli sa to stane samo pri zostavení.
 - **Aplikácia na plochu**: `app/manifest.ts`, ikony v `public/icons`, `public/sw.js` (neukladá žiadne údaje, len hlásenie bez internetu).
-- **Premenné na Verceli** (Settings → Environment Variables): okrem dvoch kľúčov Supabase aj `NEXT_PUBLIC_SITE_URL` (po kúpe domény) a `NEXT_PUBLIC_EMAIL_ALERTS=1` (až keď beží strážca e-mailom, návod v `supabase/README.md`).
+- **Premenné na Verceli** (Settings → Environment Variables): okrem dvoch kľúčov Supabase aj `NEXT_PUBLIC_SITE_URL` (po kúpe domény) a `NEXT_PUBLIC_EMAIL_ALERTS=1` (až keď beží strážca e-mailom, návod v `supabase/README.md`). Voliteľne `NEXT_PUBLIC_ANALYTICS_SRC` = adresa skriptu merania návštevnosti (napr. Plausible): skript sa načíta až po súhlase v lište cookies a jeho doména sa sama doplní do CSP. Bez tejto premennej web nemá žiadne voliteľné cookies a lišta len informuje. Pri pridaní nástroja doplňte stránku Cookies a zásady ochrany osobných údajov a zvýšte `CONSENT_VERSION` v `web/lib/consent.ts`.
 
 ## Bezpečnosť webu (7. 11. 2026)
 - `next.config.ts` posiela bezpečnostné hlavičky: Content-Security-Policy (skripty, obrázky a spojenia len z nášho webu a zo Supabase; web sa nedá vložiť do cudzej stránky), HSTS, X-Frame-Options, nosniff, Referrer-Policy, Permissions-Policy. Adresa Supabase sa do CSP doplní z `NEXT_PUBLIC_SUPABASE_URL` pri zostavení – po zmene premennej na Verceli treba web nasadiť znova.

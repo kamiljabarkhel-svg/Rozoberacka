@@ -17,7 +17,8 @@ export default function Page() {
       <table className="legal-t">
         <thead><tr><th>Koho sa týka</th><th>Údaje</th><th>Účel</th><th>Právny základ</th><th>Ako dlho</th></tr></thead>
         <tbody>
-          <tr><td>Predajca</td><td>e-mail, heslo (uložené len ako nečitateľný odtlačok), názov alebo meno, typ (firma / súkromná osoba), mesto, telefón, IČO, čas súhlasu s podmienkami</td><td>účet predajcu a zverejňovanie inzerátov</td><td>zmluva (čl. 6 ods. 1 písm. b GDPR)</td><td>kým účet nezrušíte</td></tr>
+          <tr><td>Predajca</td><td>e-mail, heslo (uložené len ako nečitateľný odtlačok), názov alebo meno, vyhlásenie o type predajcu (podnikateľ / súkromná osoba) a jeho čas, mesto, telefón, čas súhlasu s podmienkami</td><td>účet predajcu a zverejňovanie inzerátov</td><td>zmluva (čl. 6 ods. 1 písm. b GDPR)</td><td>kým účet nezrušíte</td></tr>
+          <tr><td>Predajca – podnikateľ</td><td>obchodné meno, IČO, sídlo alebo miesto podnikania</td><td>zverejnenie totožnosti obchodníka kupujúcim a informácia, či predáva obchodník</td><td>zákonná povinnosť (čl. 6 ods. 1 písm. c GDPR; § 5 a § 16 zákona č. 108/2024 Z. z.)</td><td>kým účet nezrušíte; súkromná osoba tieto údaje nezadáva</td></tr>
           <tr><td>Predajca</td><td>inzeráty, fotky, telefón v inzeráte, počty zobrazení a odkrytí telefónu</td><td>zverejnenie inzerátu a štatistiky pre predajcu</td><td>zmluva</td><td>kým inzerát alebo účet nezmažete</td></tr>
           <tr><td>Kupujúci, ktorý píše predajcovi</td><td>meno, telefón alebo e-mail, text správy</td><td>doručenie správy predajcovi, ktorému píšete</td><td>vaša žiadosť o kontakt (čl. 6 ods. 1 písm. b) a náš oprávnený záujem na ochrane pred zneužitím (písm. f)</td><td>12 mesiacov, potom sa správa automaticky zmaže</td></tr>
           <tr><td>Kupujúci, ktorý zadá dopyt na diel</td><td>meno, telefón alebo e-mail, auto (značka, model, ročník, nepovinne VIN), hľadaný diel, poznámka, mesto, odtlačok IP</td><td>zobrazenie dopytu registrovaným predajcom, aby vám poslali ponuku; ochrana pred spamom</td><td>váš súhlas (čl. 6 ods. 1 písm. a GDPR), ktorý môžete kedykoľvek odvolať; ochrana pred zneužitím – oprávnený záujem (písm. f)</td><td>dopyt platí 30 dní, zmaže sa po 60 dňoch spolu s ponukami</td></tr>
@@ -31,7 +32,7 @@ export default function Page() {
           <tr><td>Správca portálu</td><td>záznam o akciách správcu (skrytie inzerátu, overenie predajcu)</td><td>kontrola a preukázanie zásahov</td><td>oprávnený záujem a nariadenie o digitálnych službách</td><td>3 roky</td></tr>
         </tbody>
       </table>
-      <p>Údaje predajcu, ktoré sú súčasťou inzerátu (názov alebo meno, typ, mesto a telefón v inzeráte), sú verejné. Telefón sa zobrazí až po kliknutí na „Zobraziť telefón“ a počet odkrytí z jedného pripojenia je obmedzený. Telefón a IČO z profilu nevidí nikto okrem predajcu a správcu portálu.</p>
+      <p>Údaje predajcu, ktoré sú súčasťou inzerátu (názov alebo meno, či je podnikateľ alebo súkromná osoba, mesto a telefón v inzeráte), sú verejné. Pri podnikateľovi sú verejné aj IČO a sídlo, lebo zákon vyžaduje, aby kupujúci vedel, s kým uzatvára zmluvu. Telefón sa zobrazí až po kliknutí na „Zobraziť telefón“ a počet odkrytí z jedného pripojenia je obmedzený. Telefón z profilu nevidí nikto okrem predajcu a správcu portálu.</p>
       <p>Pri nahratí fotky web odstráni skryté údaje súboru vrátane polohy GPS.</p>
       <p>Kupujúci sa neregistruje. Obľúbené inzeráty, uložené hľadania a „Moje auto“ sa ukladajú len vo vašom prehliadači a my ich nevidíme.</p>
       <p>Pri odfotení OEM čísla alebo VIN sa text z fotky číta priamo vo vašom zariadení. Fotka sa nikam neposiela ani neukladá.</p>
@@ -60,7 +61,7 @@ export default function Page() {
       <p>Prístup k údajom stráži databáza pravidlami pre každý riadok (predajca vidí len svoje údaje), komunikácia je šifrovaná (HTTPS), heslá sa ukladajú len ako odtlačok a zásahy správcu sa zaznamenávajú.</p>
 
       <h2>6. Cookies</h2>
-      <p>Používame len nevyhnutné úložisko prehliadača. Podrobnosti sú na stránke <a href="/cookies">Cookies</a>.</p>
+      <p>Používame len nevyhnutné úložisko prehliadača, na ktoré nie je potrebný súhlas. Reklamné ani analytické cookies nepoužívame. Keby sme v budúcnosti pridali voliteľné nástroje (napríklad meranie návštevnosti), načítame ich až po vašom súhlase, ktorý môžete kedykoľvek odvolať v „Nastaveniach cookies“ v pätičke. Podrobnosti a zoznam všetkých údajov sú na stránke <a href="/cookies">Cookies</a>.</p>
     </LegalPage>
   );
 }

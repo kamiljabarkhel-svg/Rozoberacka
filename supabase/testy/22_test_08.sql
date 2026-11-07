@@ -11,6 +11,8 @@ begin if not coalesce(cond, false) then raise exception 'ZLYHAL: %', msg; end if
 
 insert into auth.users (id, email) values ('d1111111-0000-0000-0000-000000000001','d1@t.sk'),('d2222222-0000-0000-0000-000000000002','d2@t.sk') on conflict do nothing;
 insert into public.sellers (id, name, seller_type, city) values ('d1111111-0000-0000-0000-000000000001','Vrak D1','Firma','Martin'),('d2222222-0000-0000-0000-000000000002','Vrak D2','Firma','Trnava');
+-- od 14: podnikateľ musí mať IČO a sídlo, aby mohol zverejniť inzerát
+update public.sellers set ico = '12345678', address = 'Testovacia 1, 900 01 Mesto' where seller_type = 'Firma' and ico is null;
 
 -- ===== darcovské auto =====
 select pg_temp.as_user('d1111111-0000-0000-0000-000000000001', '7.7.7.1'); set role authenticated;

@@ -5,6 +5,9 @@ const errs = [];
 const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((process.env.RZ_REPO || "/home/claude/rozoberacka") + "/web/lib/operator.ts", "utf8"))[1];
 (async () => {
   const br = await chromium.launch(); const ctx = await br.newContext({ viewport: { width: 1280, height: 900 } }); const pg = await ctx.newPage();
+  // voľba v lište cookies už je uložená (lištu testuje samostatný krok), aby neprekrývala tlačidlá
+  const seen = () => localStorage.setItem("rozoberacka-suhlas", JSON.stringify({ v: 1, at: new Date().toISOString(), analytics: false }));
+  await ctx.addInitScript(seen);
   pg.on("console", (m) => { if (m.type() === "error") errs.push("console: " + m.text()); });
   pg.on("response", (r) => { if (r.status() >= 400) errs.push("HTTP " + r.status() + " " + r.request().method() + " " + r.url().slice(0, 140)); }); pg.on("pageerror", (e) => errs.push("pageerror: " + e.message));
   const step = async (n, f) => { try { await f(); console.log("OK  ", n); } catch (e) { console.log("FAIL", n, "->", e.message.split("\n")[0]); await (global.CUR||pg).screenshot({ path: "fail-" + n.replace(/\W+/g, "_") + ".png", fullPage: true }); } };
@@ -21,14 +24,26 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
     await pg.click(".pop .chip:has-text('Zadné svetlo')"); await pg.waitForFunction(() => !location.search.includes("kat="));
     if ((await pg.locator(".pa .btn").innerText()) !== "Hľadať" || !(await pg.locator("#vin .btn2").innerText()).includes("Hľadať podľa VIN")) throw new Error("texty tlacidiel");
   });
+  await step("cookies: lista, nastavenia, odkaz v paticke", async () => {
+    const c0 = await br.newContext(); const p0 = await c0.newPage();
+    await p0.goto(B + "/ako-zoradujeme"); await p0.waitForSelector(".ckbar"); await p0.waitForSelector("h1:has-text('Ako zoraďujeme')");
+    await p0.click(".ckbar button:has-text('Rozumiem')"); await p0.waitForSelector(".ckbar", { state: "detached" });
+    await p0.reload(); await p0.waitForTimeout(600); if (await p0.locator(".ckbar").count()) throw new Error("lista sa zobrazila znova");
+    await p0.click("footer button:has-text('Nastavenia cookies')"); await p0.waitForSelector(".ckdlg:has-text('Nevyhnutné')");
+    await p0.click(".ckdlg button:has-text('Zavrieť')"); await p0.waitForSelector(".ckdlg", { state: "detached" });
+    await c0.close();
+  });
   await step("hlavicka -> prihlasenie", async () => { await pg.click("text=Prihlásenie predajcu"); await pg.waitForURL("**/pre-predajcov"); });
   await step("registracia validacia", async () => {
     await pg.click("role=tab[name='Registrácia']"); await pg.click("button:has-text('Vytvoriť účet')");
     await pg.waitForSelector(".pp-err");
   });
   await step("registracia", async () => {
+    await pg.click(".pp-typeo:has-text('Ako podnikateľ')");
     await pg.fill("input[autocomplete=organization]", "Vrakovisko Test"); await pg.fill("input[type=email]", "test@rz.sk"); await pg.fill("input[type=password]", "heslo1234");
-    await pg.check(".pp-chk input"); await pg.click("button:has-text('Vytvoriť účet')"); await pg.waitForSelector(".pp-ok");
+    await pg.fill("input[placeholder='12345678']", "12 345 678"); await pg.fill("input[autocomplete=street-address]", "Hlavná 1, 010 01 Žilina");
+    for (const c of await pg.locator(".pp-chk input").all()) await c.check();
+    await pg.click("button:has-text('Vytvoriť účet')"); await pg.waitForSelector(".pp-ok");
   });
   await step("prihlasenie bez potvrdenia", async () => {
     await pg.click("role=tab[name='Prihlásiť sa']"); await pg.fill("input[type=email]", "test@rz.sk"); await pg.fill("input[type=password]", "heslo1234");
@@ -75,7 +90,7 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
   await step("moje inzeraty zobrazuju + fotka sa nacita", async () => { await pg.waitForSelector(".pp-row:has-text('Predné ľavé svetlo LED') img"); await pg.waitForFunction(() => { const i = document.querySelector(".pp-row img"); return i && i.complete && i.naturalWidth > 0; }, null, { timeout: 8000 }); });
   await ctx.storageState({ path: "seller.json" });
   // verejná časť v novom kontexte (kupujúci)
-  const c2 = await br.newContext(); const b2 = await c2.newPage(); global.CUR = b2; b2.on("pageerror", (e) => errs.push("buyer pageerror: " + e.message)); b2.on("console", (m) => { if (m.type() === "error") errs.push("buyer console: " + m.text()); });
+  const c2 = await br.newContext(); await c2.addInitScript(seen); const b2 = await c2.newPage(); global.CUR = b2; b2.on("pageerror", (e) => errs.push("buyer pageerror: " + e.message)); b2.on("console", (m) => { if (m.type() === "error") errs.push("buyer console: " + m.text()); });
   await step("verejne: inzerat na uvode", async () => { await b2.goto(B + "/"); await b2.waitForSelector(".card:has-text('Predné ľavé svetlo LED')"); await b2.waitForSelector(".stats:has-text('1')"); });
   await step("ulozene hladanie (strazca)", async () => {
     await b2.selectOption(".panel label:has-text('Značka') select", { label: "Škoda" }); await b2.waitForTimeout(500);
@@ -109,6 +124,7 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
     await b2.goto(B + "/?q=" + encodeURIComponent("ľavé svetlo")); await b2.waitForSelector(".card:has-text('Predné ľavé svetlo LED')");
     await b2.click(".card:has-text('Predné ľavé svetlo LED') a >> nth=0"); await b2.waitForURL("**/diel/**"); await b2.waitForSelector("text=Pasuje na");
     await b2.waitForSelector(".mycar-fit.yes:has-text('Octavia III')");
+    await b2.waitForSelector(".snote.trader:has-text('IČO 12345678')"); await b2.waitForSelector(".seller:has-text('Podnikateľ')");
     await b2.click("text=Zobraziť telefón"); await b2.waitForSelector("text=0905 111 222");
     await b2.click("text=Napísať predajcovi");
     const box = b2.locator(".msgbox"); await box.locator("input >> nth=0").fill("Jano Kupec"); await box.locator("input >> nth=1").fill("0911 222 333"); await box.locator("textarea").fill("Dobrý deň, je svetlo ešte dostupné?");

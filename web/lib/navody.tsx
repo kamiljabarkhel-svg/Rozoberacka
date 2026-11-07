@@ -58,7 +58,7 @@ export const NAVODY: Navod[] = [
     title: "Ako bezpečne kúpiť použitý autodiel",
     short: "Bezpečný nákup",
     description: "Ako overiť, že použitý diel pasuje, na čo sa pýtať predajcu, ako platiť a aké máte práva pri kúpe od firmy a od súkromnej osoby.",
-    updated: "2026-11-06",
+    updated: "2026-11-07",
     body: <>
       <p><b>Najprv overte diel, potom plaťte.</b> Rozoberačka je inzertný portál – diel kupujete priamo od predajcu, my platby nesprostredkúvame.</p>
       <h2>Pred kúpou</h2>
@@ -75,8 +75,10 @@ export const NAVODY: Navod[] = [
       </ul>
       <h2>Vaše práva</h2>
       <ul>
-        <li><b>Kúpa od firmy:</b> máte zákonné práva zo zodpovednosti za vady: pri novom diele 24 mesiacov, pri použitom alebo repasovanom môže byť lehota skrátená, najmenej na 12 mesiacov. Pri kúpe na diaľku (zásielka) môžete spravidla odstúpiť od zmluvy do 14 dní bez udania dôvodu.</li>
-        <li><b>Kúpa od súkromnej osoby:</b> pravidlá ochrany spotrebiteľa sa nepoužijú. Podmienky si dohodnite vopred, ideálne písomne (stačí správa).</li>
+        <li><b>Kto predáva:</b> pri každom inzeráte uvidíte, či predáva <b>podnikateľ</b> (s obchodným menom, IČO a sídlom) alebo <b>súkromná osoba</b>. Vychádza to z vyhlásenia predajcu.</li>
+        <li><b>Kúpa od podnikateľa:</b> máte práva spotrebiteľa. Predajca zodpovedá za vady, ktoré sa prejavia do 24 mesiacov od prevzatia; pri použitom alebo repasovanom diele sa s vami môže dohodnúť na kratšej dobe, najmenej 12 mesiacov (v inzeráte to uvidíte). Za vadu sa nepovažuje bežné opotrebenie zodpovedajúce veku dielu. Pri kúpe na diaľku (zásielka) môžete odstúpiť od zmluvy do 14 dní bez udania dôvodu; pri osobnom odbere toto právo nemáte.</li>
+        <li><b>Kúpa od súkromnej osoby:</b> predpisy na ochranu spotrebiteľa sa nepoužijú (žiadne odstúpenie do 14 dní). Predajca zodpovedá za vady, na ktoré vás neupozornil – vytknite mu ich čo najskôr, najneskôr do 24 mesiacov od prevzatia (od 1. 7. 2027 podľa nového Občianskeho zákonníka spravidla do 6 mesiacov). Podmienky si dohodnite vopred, ideálne písomne (stačí správa).</li>
+        <li><b>Kupujete pre firmu alebo servis?</b> Vtedy nie ste spotrebiteľ – zodpovednosť za vady sa riadi Obchodným zákonníkom a dohodou s predajcom.</li>
       </ul>
       <p className="mute">Toto je všeobecná informácia, nie právna rada.</p>
       <h2>Nenašli ste diel?</h2>

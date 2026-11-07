@@ -168,3 +168,11 @@ Na ostrej Supabase je spustený `11_spravca_dvojite_overenie.sql` (obsah overen�
 ## Stavy „Nový“ a „Repasovaný“ (7. 11. 2026)
 `13_stav_novy_repasovany.sql`: stav dielu môže byť Nový (nepoužitý), Repasovaný, Veľmi dobrý, Dobrý alebo Na opravu. Firma musí pri novom diele dať záruku 24 mesiacov, pri použitom a repasovanom aspoň 12 mesiacov (kontroluje databáza, `guard_listing`). Keď sa predajca zmení na firmu, jeho nové diely dostanú 24 mesiacov.
 Spustené na ostrej Supabase (obsah overený odtlačkom SHA-256 c78b732b…), test `testy/25_test_13.sql` (8 kontrol) prešiel lokálne aj priamo na ostrej databáze v zrušenej transakcii 8/8; po teste 0 inzerátov a 0 testovacích účtov.
+
+## Vyhlásenie predajcu: podnikateľ / súkromná osoba (7. 11. 2026)
+`14_vyhlasenie_predajcu.sql` (zákon č. 108/2024 Z. z. § 16 – online trh musí kupujúcemu povedať, či predáva obchodník, a poučiť ho):
+- `sellers.ico`, `sellers.address` (sídlo / miesto podnikania) sú pri podnikateľovi verejné; súkromná osoba ich nemá (trigger ich zmaže). IČO sa presunulo zo `seller_private`.
+- `sellers.type_declared_at` – čas vyhlásenia (zapíše sa pri registrácii a pri každej zmene typu).
+- Podnikateľ bez IČO a sídla nemôže zverejniť ani aktivovať inzerát (`guard_listing`).
+- Test `testy/26_test_14.sql` (10 kontrol). Staršie testy 20–25 dávajú testovacím firmám IČO a sídlo.
+

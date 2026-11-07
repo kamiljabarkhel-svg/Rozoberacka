@@ -11,15 +11,18 @@ function securityHeaders() {
   let supa = "";
   try { supa = new URL(process.env.NEXT_PUBLIC_SUPABASE_URL || "").origin; } catch {}
   const ws = supa.replace(/^http/, "ws");
+  // meranie návštevnosti (len po súhlase s cookies) – jeho doména musí byť povolená
+  let an = "";
+  try { an = process.env.NEXT_PUBLIC_ANALYTICS_SRC ? new URL(process.env.NEXT_PUBLIC_ANALYTICS_SRC).origin : ""; } catch {}
   const csp = [
     "default-src 'self'",
     // 'unsafe-inline' potrebuje Next.js pre vložené skripty stránky; 'wasm-unsafe-eval' a blob: čítanie čísla z fotky (tesseract.js)
-    `script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' blob:${dev ? " 'unsafe-eval'" : ""}`,
+    `script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' blob:${dev ? " 'unsafe-eval'" : ""}${an ? " " + an : ""}`,
     "worker-src 'self' blob:",
     "style-src 'self' 'unsafe-inline'",
     `img-src 'self' data: blob: ${supa}`.trim(),
     "font-src 'self' data:",
-    `connect-src 'self' ${supa} ${ws}`.trim(),
+    `connect-src 'self' ${supa} ${ws} ${an}`.trim(),
     "manifest-src 'self'",
     "media-src 'self' blob:",
     "object-src 'none'",

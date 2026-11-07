@@ -17,6 +17,8 @@ insert into auth.users (id, email) values ('b1111111-0000-0000-0000-0000000000b1
 insert into public.sellers (id, name, city, seller_type) values
   ('b1111111-0000-0000-0000-0000000000b1','Firma 13','Senica','Firma'),
   ('b2222222-0000-0000-0000-0000000000b2','Osoba 13','Senica','Súkromná osoba') on conflict do nothing;
+-- od 14: podnikateľ musí mať IČO a sídlo, aby mohol zverejniť inzerát
+update public.sellers set ico = '12345678', address = 'Testovacia 1, 900 01 Mesto' where seller_type = 'Firma' and ico is null;
 
 select pg_temp.as_user('b1111111-0000-0000-0000-0000000000b1'); set role authenticated;
 do $$ begin

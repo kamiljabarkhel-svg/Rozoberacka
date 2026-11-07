@@ -162,3 +162,13 @@ Audit a návrh priorít: Claude Docs „Rozoberačka – audit a návrh priorít
 - Stav dielu: Nový (nepoužitý), Repasovaný, Veľmi dobrý, Dobrý, Na opravu (`supabase/13`). Firma: nový diel záruka 24 mesiacov, použitý aj repasovaný najmenej 12 mesiacov; súkromná osoba môže „Bez záruky“. Overiť s právnikom.
 - Verejná stránka predajcu `/predajci/<id>` ukazuje celú jeho ponuku: hľadanie v ponuke, kategórie s počtami, zoradenie a „Načítať ďalšie“. V detaile dielu je odkaz „Všetky diely predajcu (N)“.
 - Po zmene alebo zmazaní inzerátu `/api/obnovit` obnoví aj úvod a stránky áut, kategórií a miest, aby kupujúci nevidel zmazaný diel.
+
+## Súlad so zákonom a cookies (7. 11. 2026, 23:59)
+Overené na Slov-Lexe: Občiansky zákonník § 597, 599, 612, 618, 619 (znenie od 31. 7. 2026), zákon č. 108/2024 Z. z. § 2, 16, 20 (znenie od 27. 9. 2026). **Od 1. 7. 2027 platí nový Občiansky zákonník č. 260/2026 Z. z.** (spotrebiteľ § 809 – rovnaké 2 roky / 1 rok; súkromný predaj § 521 – vadu vytknúť do 6 mesiacov). K tomuto dátumu prepísať texty v `web/lib/legal.ts`, formulári, návode a podmienkach.
+- Predajca pri registrácii a v profile **vyhlási**: podnikateľ (obchodné meno, IČO, sídlo – verejné) alebo súkromná osoba (bez IČO a adresy). `supabase/14`.
+- Detail dielu, stránka predajcu a ponuky na dopyt zobrazujú poučenie podľa typu predajcu (`components/SellerNotice.tsx`, `lib/legal.ts`): pri súkromnej osobe, že sa nepoužijú predpisy na ochranu spotrebiteľa.
+- Riadok „Zodpovednosť za vady“: podnikateľ 24 mesiacov, pri použitom/repasovanom dohodnutých 12 mesiacov (§ 619 ods. 3); súkromná osoba – zodpovedá za vady, na ktoré neupozornila. Odstúpenie do 14 dní len pri kúpe od podnikateľa na diaľku.
+- Stránka `/ako-zoradujeme` (parametre poradia, TOP) s odkazom pri výsledkoch a v pätičke.
+- Cookies: `lib/consent.ts` + `components/CookieBar.tsx`. Bez voliteľných nástrojov len informačná lišta „Nesledujeme vás“; s `NEXT_PUBLIC_ANALYTICS_SRC` tri rovnocenné tlačidlá (Prijať všetky / Odmietnuť / Nastavenia), skript až po súhlase, odvolanie v pätičke („Nastavenia cookies“) zmaže cookies tretích strán.
+- Overiť s právnikom: znenie poučení, repasovaný diel ako použitá vec, či je portál „online trhom“ aj bez platieb (zvolili sme bezpečnejší výklad – áno).
+

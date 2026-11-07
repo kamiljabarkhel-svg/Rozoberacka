@@ -117,6 +117,7 @@ export default function ListingForm({ uid, cat, prof, edit, donor, onSaved }: { 
   return (
     <div ref={top}>
       <header className="pp-h"><h1>{edit ? "Upraviť inzerát" : "Pridať inzerát"}</h1><span className="mute">Polia s <em className="req">*</em> sú povinné.</span></header>
+      {firm && prof && (!prof.ico || !prof.address) && <p className="pp-warnbox" role="alert">Ako podnikateľ musíte mať v profile vyplnené <b>IČO a sídlo</b> – kupujúci musí vedieť, s kým uzatvára zmluvu. Bez nich inzerát nezverejníte. Doplňte ich v záložke Profil.</p>}
       {donor && !edit && <p className="pp-donor-note">Diel z darcovského auta <b>{carName(donor, cat, true)}, {donor.year}{donor.km != null ? `, ${donor.km.toLocaleString("sk-SK")} km` : ""}</b>. Údaje o aute sú predvyplnené.</p>}
       <ol className="pp-steps">{STEPS.map((s, i) => (
         <li key={s}><button type="button" aria-current={i === step ? "step" : undefined} className={(i !== step && i < step && !stepBad(i, cur) ? "done " : "") + (stepBad(i) ? "bad" : "")} onClick={() => goStep(i)} aria-label={`Krok ${i + 1}: ${s}`}><span>{i + 1}</span><em>{s}</em></button></li>
@@ -156,12 +157,15 @@ export default function ListingForm({ uid, cat, prof, edit, donor, onSaved }: { 
         {step === 2 && <>
           {L({ k: "cond", t: "Stav", children: <select value={v.condition} onChange={(e) => { const c = e.target.value as Condition; set("condition", c); if (firm && c === "Nový") set("warranty", "24 mesiacov"); clear("cond"); }}><option value="">Vyberte…</option>{CONDITIONS.map((c) => <option key={c} value={c}>{condLabel(c)}</option>)}</select> })}
           {L({ k: "price", t: "Cena (€)", children: <input value={v.price} inputMode="decimal" placeholder="napr. 120" onChange={(e) => { set("price", e.target.value); clear("price"); }} /> })}
-          {L({ k: "war", t: "Záruka", children: <select value={v.warranty} onChange={(e) => set("warranty", e.target.value)}>{!firm && <option>Bez záruky</option>}{!(firm && v.condition === "Nový") && <option>12 mesiacov</option>}<option>24 mesiacov</option></select> })}
+          {L({ k: "war", t: "Zodpovednosť za vady (záruka)", children: <select value={v.warranty} onChange={(e) => set("warranty", e.target.value)}>{!firm && <option value="Bez záruky">Bez záruky (súkromný predaj)</option>}{!(firm && v.condition === "Nový") && <option>12 mesiacov</option>}<option>24 mesiacov</option></select> })}
           {L({ k: "ship", t: "Odovzdanie", children: <select value={v.shipping} onChange={(e) => set("shipping", e.target.value)}><option>Len osobný odber</option><option>Zasielam kuriérom</option></select> })}
           <label className="pp-chk"><input type="checkbox" checked={v.tested} onChange={(e) => set("tested", e.target.checked)} /><span>Diel je odskúšaný</span></label>
           {firm
-            ? <p className="full mute pp-hint">Ako firma dávate spotrebiteľovi pri použitom a repasovanom diele záruku aspoň 12 mesiacov, pri novom 24 mesiacov. Pri predaji na diaľku (kuriér) môže kupujúci odstúpiť od zmluvy do 14 dní – na webe sa to zobrazí automaticky. Vady, ktoré opíšete v popise, nie sú predmetom reklamácie. Toto nie je právna rada.</p>
-            : <label className="pp-chk"><input type="checkbox" checked={v.returns14} onChange={(e) => set("returns14", e.target.checked)} /><span>Ponúkam vrátenie do 14 dní, ak diel nepasuje</span></label>}
+            ? <p className="full mute pp-hint">Ako podnikateľ zodpovedáte spotrebiteľovi za vady: pri novom diele 24 mesiacov, pri použitom a repasovanom môžete dobu dohodou skrátiť na 12 mesiacov (§ 619 ods. 3 Občianskeho zákonníka) – kupujúci to uvidí v inzeráte, uveďte to aj na doklade. Pri predaji na diaľku (kuriér) môže kupujúci odstúpiť od zmluvy do 14 dní – na webe sa to zobrazí automaticky. Vady, ktoré opíšete v popise, nie sú predmetom reklamácie. Toto nie je právna rada.</p>
+            : <>
+              <label className="pp-chk"><input type="checkbox" checked={v.returns14} onChange={(e) => set("returns14", e.target.checked)} /><span>Ponúkam vrátenie do 14 dní, ak diel nepasuje (dobrovoľne)</span></label>
+              <p className="full mute pp-hint">Ako súkromná osoba zodpovedáte za vady, na ktoré kupujúceho neupozorníte (§ 597 Občianskeho zákonníka; kupujúci ich musí vytknúť do 24 mesiacov od prevzatia, podľa nového zákonníka od 1. 7. 2027 spravidla do 6 mesiacov). Všetky poškodenia preto uveďte v popise. Toto nie je právna rada.</p>
+            </>}
         </>}
         {step === 3 && <>
           <div className={"full pp-photos" + (bad.has("photos") ? " bad" : "")}>

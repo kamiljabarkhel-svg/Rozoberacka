@@ -1,3 +1,4 @@
+import CookieBar, { CookieSettingsLink } from "@/components/CookieBar";
 import type { Metadata, Viewport } from "next";
 // Písma: balíky @fontsource, web ich podáva sám (návštevník nevolá Google – lepšie pre GDPR).
 import "@fontsource/sora/600.css";
@@ -46,14 +47,15 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           <span>Katalóg áut je zatiaľ predbežný (6 značiek) a môže obsahovať chyby.</span>
           <Pwa />
           <nav className="foot-l" aria-label="Pomoc">
-            <Link href="/navody/oem-cislo">Kde nájdem OEM číslo</Link><Link href="/navody/vin">Kde nájdem VIN</Link><Link href="/navody/bezpecny-nakup">Bezpečný nákup</Link><Link href="/dopyt">Dopyt na diel</Link><Link href="/pre-predajcov">Pre predajcov</Link>
+            <Link href="/navody/oem-cislo">Kde nájdem OEM číslo</Link><Link href="/navody/vin">Kde nájdem VIN</Link><Link href="/navody/bezpecny-nakup">Bezpečný nákup</Link><Link href="/dopyt">Dopyt na diel</Link><Link href="/pre-predajcov">Pre predajcov</Link><Link href="/ako-zoradujeme">Ako zoraďujeme ponuky</Link>
           </nav>
           <nav className="foot-l" aria-label="Právne informácie">
-            <a href="/obchodne-podmienky">Obchodné podmienky</a><a href="/ochrana-osobnych-udajov">Ochrana osobných údajov</a><a href="/cookies">Cookies</a>
+            <a href="/obchodne-podmienky">Obchodné podmienky</a><a href="/ochrana-osobnych-udajov">Ochrana osobných údajov</a><a href="/cookies">Cookies</a><CookieSettingsLink />
             {OPERATOR.email && <a href={"mailto:" + OPERATOR.email}>Kontakt</a>}
           </nav>
           <span>Prevádzkovateľ: {OPERATOR.name}, IČO {OPERATOR.ico}{OPERATOR.address ? ", " + OPERATOR.address : ""}</span>
         </footer>
+        <CookieBar />
       </body>
     </html>
   );

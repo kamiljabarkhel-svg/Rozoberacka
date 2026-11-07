@@ -22,7 +22,9 @@ export type Condition = "Nový" | "Repasovaný" | "Veľmi dobrý" | "Dobrý" | "
 export const CONDITIONS: Condition[] = ["Nový", "Repasovaný", "Veľmi dobrý", "Dobrý", "Na opravu"];
 export const condLabel = (c: string) => (c === "Nový" ? "Nový (nepoužitý)" : c);
 
-export type Seller = { name: string; type: string; city: string | null; verified: boolean };
+/** type: „Firma“ = podnikateľ (obchodník) podľa vyhlásenia predajcu, „Súkromná osoba“ = nepredáva v rámci podnikania.
+ *  ico/address: verejné údaje obchodníka (len pri podnikateľovi). */
+export type Seller = { name: string; type: string; city: string | null; verified: boolean; ico?: string | null; address?: string | null };
 
 export type Listing = {
   id: number;
