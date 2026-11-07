@@ -9,9 +9,17 @@ const sign = (p) => { const h = b64(JSON.stringify({ alg: "HS256", typ: "JWT" })
 const verify = (t) => { try { const [h, b, s] = t.split("."); if (crypto.createHmac("sha256", SECRET).update(h + "." + b).digest("base64url") !== s) return null; const p = JSON.parse(Buffer.from(b, "base64url")); if (p.exp && p.exp < Date.now() / 1000) return null; return p; } catch { return null; } };
 const hash = (pw) => crypto.createHash("sha256").update("salt" + pw).digest("hex");
 const refresh = new Map();
-const userObj = (u) => ({ id: u.id, aud: "authenticated", role: "authenticated", email: u.email, email_confirmed_at: u.email_confirmed_at, user_metadata: u.raw_user_meta_data || {}, app_metadata: { provider: "email" }, created_at: u.created_at, identities: [] });
-function session(u) { const now = Math.floor(Date.now() / 1000); const rt = crypto.randomBytes(16).toString("hex"); refresh.set(rt, u.id);
-  return { access_token: sign({ sub: u.id, role: "authenticated", aud: "authenticated", email: u.email, iat: now, exp: now + 3600 }), token_type: "bearer", expires_in: 3600, expires_at: now + 3600, refresh_token: rt, user: userObj(u) }; }
+// dvojité overenie (TOTP) ako v Supabase: faktory v pamäti, úroveň aal1/aal2 v tokene
+const factors = new Map(); // userId -> [{ id, factor_type, status, friendly_name, secret, created_at, updated_at }]
+const challenges = new Map(); // challengeId -> factorId
+const B32 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+const b32dec = (s) => { let bits = ""; for (const ch of s.replace(/=+$/, "")) bits += B32.indexOf(ch).toString(2).padStart(5, "0"); const out = []; for (let i = 0; i + 8 <= bits.length; i += 8) out.push(parseInt(bits.slice(i, i + 8), 2)); return Buffer.from(out); };
+const totp = (secret, t = Date.now()) => { const c = Buffer.alloc(8); c.writeBigUInt64BE(BigInt(Math.floor(t / 30000))); const h = crypto.createHmac("sha1", b32dec(secret)).update(c).digest(); const o = h[h.length - 1] & 15; return String(((h.readUInt32BE(o) & 0x7fffffff) % 1e6)).padStart(6, "0"); };
+const pub = (f) => ({ id: f.id, factor_type: f.factor_type, status: f.status, friendly_name: f.friendly_name, created_at: f.created_at, updated_at: f.updated_at });
+const userObj = (u) => ({ id: u.id, aud: "authenticated", role: "authenticated", email: u.email, email_confirmed_at: u.email_confirmed_at, user_metadata: u.raw_user_meta_data || {}, app_metadata: { provider: "email" }, created_at: u.created_at, identities: [], factors: (factors.get(u.id) || []).map(pub) });
+function session(u, aal = "aal1") { const now = Math.floor(Date.now() / 1000); const rt = crypto.randomBytes(16).toString("hex"); refresh.set(rt, { id: u.id, aal });
+  const amr = [{ method: "password", timestamp: now }, ...(aal === "aal2" ? [{ method: "totp", timestamp: now }] : [])];
+  return { access_token: sign({ sub: u.id, role: "authenticated", aud: "authenticated", email: u.email, aal, amr, session_id: rt, iat: now, exp: now + 3600 }), token_type: "bearer", expires_in: 3600, expires_at: now + 3600, refresh_token: rt, user: userObj(u) }; }
 const cors = { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "*", "Access-Control-Allow-Methods": "GET,POST,PUT,PATCH,DELETE,OPTIONS,HEAD", "Access-Control-Expose-Headers": "Content-Range, Content-Profile, X-Total-Count" };
 const send = (res, code, body, h = {}) => { res.writeHead(code, { ...cors, "Content-Type": "application/json", ...h }); res.end(body === undefined ? "" : JSON.stringify(body)); };
 const readBody = (req) => new Promise((ok) => { const c = []; req.on("data", (d) => c.push(d)); req.on("end", () => ok(Buffer.concat(c))); });
@@ -32,6 +40,7 @@ http.createServer(async (req, res) => {
     }
     if (p === "/e2e/confirm") { await pool.query("update auth.users set email_confirmed_at=now() where email=$1", [u.searchParams.get("email")]); return send(res, 200, { ok: true }); }
     if (p === "/e2e/mails") return send(res, 200, log);
+    if (p === "/e2e/totp") { const s2 = u.searchParams.get("secret"); return send(res, 200, { code: totp(s2) }); }
     if (p.startsWith("/auth/v1/")) {
       const body = JSON.parse((await readBody(req)).toString() || "{}"); const a = p.slice(9);
       if (a === "signup") {
@@ -49,11 +58,35 @@ http.createServer(async (req, res) => {
           if (!x.email_confirmed_at) return send(res, 400, { code: 400, error_code: "email_not_confirmed", msg: "Email not confirmed" });
           return send(res, 200, session(x));
         }
-        if (gt === "refresh_token") { const id = refresh.get(body.refresh_token); if (!id) return send(res, 400, { code: 400, error_code: "refresh_token_not_found", msg: "Invalid Refresh Token" }); refresh.delete(body.refresh_token); const r = await pool.query("select * from auth.users where id=$1", [id]); return send(res, 200, session(r.rows[0])); }
+        if (gt === "refresh_token") { const rf = refresh.get(body.refresh_token); if (!rf) return send(res, 400, { code: 400, error_code: "refresh_token_not_found", msg: "Invalid Refresh Token" }); refresh.delete(body.refresh_token); const r = await pool.query("select * from auth.users where id=$1", [rf.id]); return send(res, 200, session(r.rows[0], rf.aal)); }
       }
       if (a === "user") { const cl = claims(req); if (!cl?.sub) return send(res, 401, { code: 401, msg: "invalid JWT" });
         if (req.method === "PUT" && body.password) await pool.query("update auth.users set encrypted_password=$1 where id=$2", [hash(body.password), cl.sub]);
         const r = await pool.query("select * from auth.users where id=$1", [cl.sub]); return send(res, 200, userObj(r.rows[0])); }
+      if (a === "factors" || a.startsWith("factors/")) {
+        const cl = claims(req); if (!cl?.sub) return send(res, 401, { code: 401, msg: "invalid JWT" });
+        const list = factors.get(cl.sub) || []; factors.set(cl.sub, list);
+        const [, fid, act] = a.split("/");
+        if (!fid && req.method === "POST") {
+          if (list.some((f) => f.status === "verified") && cl.aal !== "aal2") return send(res, 422, { code: 422, error_code: "insufficient_aal", msg: "AAL2 required to enroll a new factor" });
+          const secret = Array.from(crypto.randomBytes(20), (b) => B32[b & 31]).join("");
+          const now = new Date().toISOString();
+          const f = { id: crypto.randomUUID(), factor_type: "totp", status: "unverified", friendly_name: body.friendly_name || "", secret, created_at: now, updated_at: now };
+          list.push(f);
+          return send(res, 200, { id: f.id, type: "totp", friendly_name: f.friendly_name, totp: { qr_code: `<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"><rect width="10" height="10"/></svg>`, secret, uri: `otpauth://totp/Rozoberacka:${cl.email}?secret=${secret}&issuer=Rozoberacka` } });
+        }
+        const f = list.find((x) => x.id === fid); if (!f) return send(res, 404, { code: 404, error_code: "mfa_factor_not_found", msg: "Factor not found" });
+        if (act === "challenge") { const id = crypto.randomUUID(); challenges.set(id, f.id); return send(res, 200, { id, type: "totp", expires_at: Math.floor(Date.now() / 1000) + 300 }); }
+        if (act === "verify") {
+          if (challenges.get(body.challenge_id) !== f.id) return send(res, 422, { code: 422, error_code: "mfa_challenge_expired", msg: "Challenge not found" });
+          const ok = [-30000, 0, 30000].some((d) => totp(f.secret, Date.now() + d) === String(body.code));
+          if (!ok) return send(res, 422, { code: 422, error_code: "mfa_verification_failed", msg: "Invalid TOTP code entered" });
+          challenges.delete(body.challenge_id); f.status = "verified"; f.updated_at = new Date().toISOString();
+          const r = await pool.query("select * from auth.users where id=$1", [cl.sub]); return send(res, 200, session(r.rows[0], "aal2"));
+        }
+        if (!act && req.method === "DELETE") { factors.set(cl.sub, list.filter((x) => x.id !== f.id)); return send(res, 200, { id: f.id }); }
+        return send(res, 404, { msg: "not implemented " + a });
+      }
       if (a === "logout") return send(res, 204);
       if (a === "recover") { log.push({ to: body.email, type: "recover" }); return send(res, 200, {}); }
       return send(res, 404, { msg: "not implemented " + a });

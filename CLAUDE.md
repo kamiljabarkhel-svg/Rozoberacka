@@ -150,3 +150,10 @@ Audit a návrh priorít: Claude Docs „Rozoberačka – audit a návrh priorít
 - Aplikácia na plochu: manifest, ikony, `sw.js` bez ukladania údajov.
 - Hodnotenie predajcov len od kupujúceho, ktorému predajca poslal ponuku na dopyt; zobrazí sa krstné meno; správca môže skryť. Pravidlá v obchodných podmienkach (časť 4a).
 - Strážca e-mailom: hotový, ale vypnutý (`NEXT_PUBLIC_EMAIL_ALERTS`), kým nebeží Brevo a funkcia `strazca` (návod v `supabase/README.md`).
+
+## Bezpečnosť (7. 11. 2026, 13:00)
+- Bezpečnostné hlavičky v `web/next.config.ts` (CSP, HSTS, X-Frame-Options…). Nová služba z cudzej domény sa musí doplniť do CSP.
+- Správca portálu len s dvojitým overením (heslo + kód z aplikácie, TOTP): `is_admin()` vyžaduje `aal2` (`supabase/11`). Nastavenie aj zadanie kódu je priamo na `/admin`.
+- Po zmene inzerátu portál volá `/api/obnovit` – verejné stránky dielov sa obnovia hneď.
+- Detail `/diel/<id>` bez názvu sa zobrazí s canonical na plnú adresu (bez presmerovania).
+- Otvorené: CAPTCHA (potrebuje účet Cloudflare Turnstile), Next.js 16 (zvyšné slabé miesta v knižniciach) až po spustení.

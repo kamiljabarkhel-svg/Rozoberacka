@@ -2,7 +2,7 @@
 \set ON_ERROR_STOP 1
 create or replace function pg_temp.as_user(uid text, ip text) returns void language plpgsql as $$
 begin
-  perform set_config('request.jwt.claims', case when uid is null then '{"role":"anon"}' else json_build_object('sub', uid, 'role', 'authenticated')::text end, false);
+  perform set_config('request.jwt.claims', case when uid is null then '{"role":"anon"}' else json_build_object('sub', uid, 'role', 'authenticated', 'aal', 'aal2')::text end, false);  -- aal2 = prihlásenie s kódom z mobilu (test 24 skúša aal1)
   perform set_config('request.jwt.claim.sub', coalesce(uid, ''), false);
   perform set_config('request.headers', json_build_object('x-forwarded-for', ip)::text, false);
 end $$;

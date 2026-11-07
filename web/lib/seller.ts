@@ -82,6 +82,12 @@ export async function changePassword(pw: string) {
   const { error } = await sellerClient().auth.updateUser({ password: pw });
   if (error) throw new Error(skError(error));
 }
+/** Obnoví verejné stránky dielov po zmene (beží na pozadí, chyba nevadí – stránky sa obnovia aj samé o pár minút). */
+function refreshPublic(ids: number[]) {
+  if (IS_DEMO || typeof window === "undefined" || !ids.length) return;
+  fetch("/api/obnovit", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ids: ids.slice(0, 500) }) }).catch(() => {});
+}
+
 export async function signOut() { await sellerClient().auth.signOut(); }
 
 // ---------- PROFIL ----------
@@ -218,12 +224,14 @@ export async function saveListing(uid: string, id: number | null, x: ListingInpu
     const ip = await c.from("listing_photos").insert(paths.map((path, position) => ({ listing_id: lid, path, position })));
     if (ip.error) throw new Error(skError(ip.error));
   }
+  refreshPublic([lid]);
   return lid;
 }
 
 export async function setStatus(ids: number[], status: Status) {
   const { error } = await sellerClient().from("listings").update({ status }).in("id", ids).neq("status", "blocked");
   if (error) throw new Error(skError(error));
+  refreshPublic(ids);
 }
 /** TOP na 30 dní (zatiaľ zadarmo, najviac 3 naraz). V databáze funkcia toggle_top. */
 /** „Stále aktuálne“: predajca potvrdí, že diel má – obnoví sa dátum aktualizácie (zobrazí sa kupujúcim). */
@@ -235,6 +243,7 @@ export async function confirmFresh(ids: number[]) {
 export async function setTop(id: number, on: boolean) {
   const { error } = await sellerClient().rpc("toggle_top", { p_listing: id, p_on: on });
   if (error) throw new Error(skError(error));
+  refreshPublic([id]);
 }
 export async function deleteListings(items: MyListing[]) {
   const c = sellerClient();
@@ -242,6 +251,7 @@ export async function deleteListings(items: MyListing[]) {
   if (files.length) await c.storage.from(PHOTO_BUCKET).remove(files);
   const { error } = await c.from("listings").delete().in("id", items.map((i) => i.id));
   if (error) throw new Error(skError(error));
+  refreshPublic(items.map((i) => i.id));
 }
 /** Kópia inzerátu bez fotiek (fotky sa pridajú pri úprave). */
 export async function duplicate(uid: string, l: MyListing): Promise<number> {
@@ -350,6 +360,7 @@ export async function setPrices(rows: { id: number; price: number }[]) {
     const { error } = await c.from("listings").update({ price: r.price }).eq("id", r.id);
     if (error) throw new Error(skError(error));
   }
+  refreshPublic(rows.map((r) => r.id));
 }
 
 // ---------- DOPYTY NA DIELY ----------

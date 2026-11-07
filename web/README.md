@@ -81,3 +81,9 @@ Bezpečnosť: heslo SMTP patrí **len** do Supabase (políčko Password). Nikdy 
 - **Čítanie čísla z fotky (OCR)**: knižnica tesseract.js beží v prehliadači. Jej súbory sa pred `dev` a `build` skopírujú do `public/ocr` (`scripts/copy-ocr.mjs`), takže sa nenačítavajú z cudzieho servera a fotka sa nikam neposiela. Na Verceli sa to stane samo pri zostavení.
 - **Aplikácia na plochu**: `app/manifest.ts`, ikony v `public/icons`, `public/sw.js` (neukladá žiadne údaje, len hlásenie bez internetu).
 - **Premenné na Verceli** (Settings → Environment Variables): okrem dvoch kľúčov Supabase aj `NEXT_PUBLIC_SITE_URL` (po kúpe domény) a `NEXT_PUBLIC_EMAIL_ALERTS=1` (až keď beží strážca e-mailom, návod v `supabase/README.md`).
+
+## Bezpečnosť webu (7. 11. 2026)
+- `next.config.ts` posiela bezpečnostné hlavičky: Content-Security-Policy (skripty, obrázky a spojenia len z nášho webu a zo Supabase; web sa nedá vložiť do cudzej stránky), HSTS, X-Frame-Options, nosniff, Referrer-Policy, Permissions-Policy. Adresa Supabase sa do CSP doplní z `NEXT_PUBLIC_SUPABASE_URL` pri zostavení – po zmene premennej na Verceli treba web nasadiť znova.
+- Ak sa pridá služba z iného webu (napr. CAPTCHA Cloudflare Turnstile alebo štatistiky), treba jej adresu doplniť do CSP, inak ju prehliadač zablokuje.
+- Po zmene inzerátu v portáli web zavolá `/api/obnovit`, aby sa verejná stránka dielu obnovila hneď (inak až do 5 minút).
+- Detail dielu nepresmerováva skrátenú adresu `/diel/123`; hlavnú adresu dostane Google cez `<link rel="canonical">` (presmerovanie zo stránky s ISR posielalo v Next.js 15 hlavičku Location dvakrát).

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { notFound, permanentRedirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import ListingDetail from "@/components/ListingDetail";
 import GonePage from "@/components/GonePage";
 import { IS_DEMO, demoListingIds, getCatalog, getGone, loadDetail } from "@/lib/data";
@@ -54,7 +54,8 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
     return <GonePage g={g} />;
   }
   const path = listingPath(d.l.id, d.l.name, carName(d.l, d.cat));
-  if (!IS_DEMO && "/diel/" + slug !== path) permanentRedirect(path); // stará alebo skrátená adresa → kanonická
+  // Stará alebo skrátená adresa (/diel/123) sa zobrazí tiež; Google dostane hlavnú adresu cez <link rel="canonical">.
+  // (Presmerovanie zo stránky s ISR posiela v Next.js 15 pri prvom zobrazení hlavičku Location dvakrát.)
   const crumbs = landingCrumbs({ brandId: d.l.brandId, modelId: d.l.modelId, cat: d.l.categoryId, sub: null }, d.cat);
   return (
     <main id="main" className="dpage">

@@ -542,3 +542,9 @@ button:disabled{opacity:.55;cursor:default}
 .alert-f.ok{color:var(--ok);font-weight:700}
 .alert-r{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .alert-r input{flex:1 1 220px;min-width:0;background:var(--chip);color:var(--ink);border:2px solid transparent;border-radius:4px;padding:10px 12px;font:inherit}
+.mfa ol{padding-left:20px}
+.mfa-f{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;margin:12px 0}
+.mfa-f label{display:grid;gap:4px;font-weight:700}
+.mfa-f input{font:700 1.4rem var(--f-m);letter-spacing:.2em;width:9ch;padding:8px 10px;border:2px solid var(--line);border-radius:4px;background:var(--card);color:var(--ink)}
+.mfa-qr{display:block;background:#fff;padding:8px;border:1px solid var(--line);border-radius:4px}
+.mfa-secret{word-break:break-all;font:600 .95em var(--f-m)}

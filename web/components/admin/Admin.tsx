@@ -13,12 +13,16 @@ const ST: Record<string, string> = { active: "Aktívny", paused: "Pozastavený",
 const d = (s: string) => new Date(s).toLocaleString("sk-SK", { day: "numeric", month: "numeric", year: "numeric", hour: "2-digit", minute: "2-digit" });
 
 export default function Admin() {
-  const [state, setState] = useState<"load" | "out" | "no" | "ok">("load");
+  const [state, setState] = useState<"load" | "out" | "no" | "mfa" | "ok">("load");
   const [tab, setTab] = useState<Tab>("home");
   const [toast, setToast] = useState(""); const [err, setErr] = useState("");
   useEffect(() => {
     if (IS_DEMO) { setState("no"); return; }
-    getSession().then(async (s) => { if (!s) { setState("out"); return; } setState((await A.isAdmin().catch(() => false)) ? "ok" : "no"); });
+    getSession().then(async (s) => {
+      if (!s) { setState("out"); return; }
+      if (await A.isAdmin().catch(() => false)) { setState("ok"); return; }
+      setState((await A.isAdminCandidate().catch(() => false)) ? "mfa" : "no");   // správca bez kódu z mobilu
+    });
   }, []);
   const run = useCallback(async (fn: () => Promise<unknown>, done: string) => {
     setErr(""); try { await fn(); setToast(done); window.setTimeout(() => setToast(""), 2500); return true; } catch (e) { setErr(String((e as Error).message || e)); return false; }
@@ -26,6 +30,7 @@ export default function Admin() {
   if (state === "load") return <p className="mute">Načítavam…</p>;
   if (state === "out") return <div className="pp-auth"><h1>Administrácia</h1><p>Najprv sa prihláste. <a href="/pre-predajcov">Prihlásenie</a></p></div>;
   if (state === "no") return <div className="pp-auth"><h1>Administrácia</h1><p className="mute">Na túto stránku nemáte prístup.</p></div>;
+  if (state === "mfa") return <MfaGate onOk={async () => setState((await A.isAdmin().catch(() => false)) ? "ok" : "no")} />;
   return (
     <div className="pp">
       <aside className="pp-nav"><div className="pp-who"><b>Administrácia</b><span className="mute">Rozoberačka</span></div>
@@ -141,4 +146,43 @@ function Revs({ run }: { run: Run }) {
       <div className="pp-ri"><b>{"★".repeat(r.stars)} {r.seller}{r.hidden ? " (skryté)" : ""}</b><span className="mute">{r.author} · {d(r.createdAt)}{r.body ? " · " + r.body : ""}</span></div>
       <div className="pp-ra"><button className={r.hidden ? "ubtn" : "del"} onClick={async () => { await run(() => A.hideReview(r.id, !r.hidden), r.hidden ? "Hodnotenie obnovené" : "Hodnotenie skryté"); reload(); }}>{r.hidden ? "Obnoviť" : "Skryť"}</button></div>
     </li>)}</ul></div>;
+}
+
+/** Dvojité overenie správcu: prvé nastavenie aplikácie v mobile (QR kód) alebo zadanie kódu pri každom prihlásení. */
+function MfaGate({ onOk }: { onOk: () => void }) {
+  const [st, setSt] = useState<A.MfaState | null>(null);
+  const [en, setEn] = useState<{ factorId: string; qr: string; secret: string } | null>(null);
+  const [code, setCode] = useState(""), [busy, setBusy] = useState(false), [err, setErr] = useState("");
+  useEffect(() => { A.mfaState().then(setSt).catch((e) => setErr(String(e?.message || e))); }, []);
+  const factorId = st?.factorId || en?.factorId || null;
+  const submit = async () => {
+    if (!factorId) return;
+    setBusy(true); setErr("");
+    try { await A.verifyTotp(factorId, code); onOk(); } catch (e) { setErr(String((e as Error).message || e)); setCode(""); } finally { setBusy(false); }
+  };
+  const form = (
+    <form className="mfa-f" onSubmit={(e) => { e.preventDefault(); submit(); }}>
+      <label>6-miestny kód z aplikácie<input value={code} onChange={(e) => setCode(e.target.value.replace(/\D/g, "").slice(0, 6))} inputMode="numeric" autoComplete="one-time-code" autoFocus pattern="\d{6}" placeholder="123456" /></label>
+      <button className="btn" disabled={busy || code.length !== 6}>{busy ? "Overujem…" : "Potvrdiť"}</button>
+    </form>
+  );
+  return (
+    <div className="pp-auth mfa">
+      <h1>Administrácia – potvrdenie kódom</h1>
+      {err && <p className="pp-err">{err}</p>}
+      {!st && !err && <p className="mute">Načítavam…</p>}
+      {st?.factorId && <><p>Otvorte v mobile aplikáciu na overovanie (napr. Google Authenticator) a zadajte kód pre <b>Rozoberačka</b>.</p>{form}</>}
+      {st && !st.factorId && !en && <>
+        <p>Do administrácie sa pre vyššiu bezpečnosť vstupuje heslom <b>a</b> kódom z mobilu. Ak niekto získa vaše heslo, bez vášho mobilu sa dnu nedostane.</p>
+        <ol><li>Nainštalujte si do mobilu aplikáciu <b>Google Authenticator</b> alebo <b>Microsoft Authenticator</b> (zadarmo).</li><li>Kliknite nižšie a naskenujte QR kód.</li><li>Zadajte 6-miestny kód, ktorý aplikácia ukáže.</li></ol>
+        <button className="btn" disabled={busy} onClick={async () => { setBusy(true); setErr(""); try { setEn(await A.enrollTotp()); } catch (e) { setErr(String((e as Error).message || e)); } finally { setBusy(false); } }}>Nastaviť aplikáciu v mobile</button>
+      </>}
+      {en && !st?.factorId && <>
+        <p>V aplikácii zvoľte <b>Pridať</b> → <b>Naskenovať QR kód</b>:</p>
+        <img className="mfa-qr" src={en.qr} alt="QR kód pre aplikáciu na overovanie" width={200} height={200} />
+        <p className="mute small">Nedá sa skenovať? Zadajte v aplikácii kľúč ručne: <code className="mfa-secret">{en.secret}</code></p>
+        {form}
+      </>}
+    </div>
+  );
 }

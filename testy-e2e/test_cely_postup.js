@@ -179,8 +179,9 @@ const errs = [];
   });
   await step("SEO: detail pripraveny na serveri", async () => {
     const id = require("child_process").execSync(`psql -h /tmp/pgt -p 5499 -U postgres -d e2e -tAc "select max(id) from listings where status='active'"`).toString().trim();
-    const r = await fetch(B + "/diel/" + id); const h = await r.text(); if (!/\/diel\/\d+-/.test(r.url)) throw new Error("bez presmerovania na adresu s nazvom: " + r.url);
-    if (!/application\/ld\+json/.test(h) || !/"@type":"Product"/.test(h) || !/<link rel="canonical"/.test(h)) throw new Error("chyba SEO v HTML");
+    const r = await fetch(B + "/diel/" + id); const h = await r.text(); if (!new RegExp(`<link rel="canonical" href="[^"]*/diel/${id}-[a-z0-9-]+"`).test(h)) throw new Error("hlavná adresa (canonical) bez názvu: " + r.url);
+    if (!/application\/ld\+json/.test(h) || !/"@type":"Product"/.test(h) || !/<link rel="canonical"/.test(h))
+      throw new Error(`chyba SEO v HTML: id ${id} ${r.status} ${r.url} ld=${/application\/ld\+json/.test(h)} product=${/"@type":"Product"/.test(h)} canonical=${/<link rel="canonical"/.test(h)} predane=${/Predané|nedostupné/.test(h)} title=${(h.match(/<title>([^<]*)/) || [])[1]}`);
   });
   await step("predany diel: stranka ostane s nahradou", async () => {
     const q = (x) => require("child_process").execSync(`psql -h /tmp/pgt -p 5499 -U postgres -d e2e -tAc "${x}"`).toString().trim();
@@ -196,7 +197,8 @@ const errs = [];
     await t("/mesto/zilina", /Použité autodiely Žilina/);
     await t("/navody/vin", /Kde nájdem VIN číslo auta/);
     await t("/navody/oem-cislo", /"@type":"Article"/);
-    const sm = await t("/sitemap.xml", /\/mesto\/zilina/); if (!/\/predajci\//.test(sm) || !/\/navody\/vin/.test(sm)) throw new Error("sitemap");
+    // produkčný web obnovuje mapu webu raz za hodinu – mestá a predajcov kontrolujeme len vo vývojovom režime
+    const sm = await t("/sitemap.xml", /\/navody\/vin/); if (process.env.RZ_PROD !== "1" && (!/\/predajci\//.test(sm) || !/\/mesto\/zilina/.test(sm))) throw new Error("sitemap");
     await t("/manifest.webmanifest", /"short_name":"Rozoberačka"/);
     await t("/sw.js", /Ste bez internetu/);
     await t("/ocr/worker.min.js", /./);
@@ -225,7 +227,13 @@ const errs = [];
   });
   await step("admin: nahlasenie -> skryt inzerat", async () => {
     require("child_process").execSync(`psql -h /tmp/pgt -p 5499 -U postgres -d e2e -qc "insert into admins select id from auth.users where email='test@rz.sk' on conflict do nothing"`);
-    await pg.goto(B + "/admin"); await pg.waitForSelector(".pp-tile");
+    await pg.goto(B + "/admin"); await pg.waitForSelector("text=Administrácia – potvrdenie kódom");
+    // bez kódu z mobilu databáza správcu nepustí
+    await pg.click("text=Nastaviť aplikáciu v mobile"); await pg.waitForSelector(".mfa-qr");
+    const secret = (await pg.locator(".mfa-secret").textContent()).trim();
+    await pg.fill(".mfa-f input", "000000"); await pg.click(".mfa-f button"); await pg.waitForSelector("text=Kód nesedí");
+    const code = (await (await fetch("http://127.0.0.1:54321/e2e/totp?secret=" + secret)).json()).code;
+    await pg.fill(".mfa-f input", code); await pg.click(".mfa-f button"); await pg.waitForSelector(".pp-tile");
     await pg.click(".pp-nav >> text=Nahlásenia"); await pg.waitForSelector(".pp-msgs li:has-text('Podvod')");
     await pg.click("text=Skryť inzerát a vybaviť"); await pg.waitForSelector(".pp-toast");
     await pg.click(".pp-nav >> text=Hodnotenia"); await pg.waitForSelector(".pp-row:has-text('Vrakovisko Test')");
@@ -257,5 +265,6 @@ const errs = [];
     if (files !== "0") throw new Error("zostali subory: " + files);
   });
   console.log("ERRORS:", errs.length ? "\n" + [...new Set(errs)].join("\n") : "none");
+  if (errs.some((e) => /Content Security Policy|Refused to/i.test(e))) console.log("FAIL bezpecnostne hlavicky (CSP) blokuju cast webu");
   await br.close();
 })();

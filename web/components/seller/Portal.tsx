@@ -8,6 +8,7 @@ import type { Catalog } from "@/lib/types";
 import { listingHref } from "@/lib/paths";
 import { carName, sellerPath } from "@/lib/seo";
 import Stars from "../Stars";
+import { isAdminCandidate } from "@/lib/admin";
 import { download, listingsCsv } from "@/lib/csvExport";
 import { price as fmtPrice } from "@/lib/format";
 import {
@@ -38,6 +39,8 @@ export default function Portal() {
   const [toast, setToast] = useState("");
   const [err, setErr] = useState("");
   const [pwMode, setPwMode] = useState(false);
+  const [adm, setAdm] = useState(false);
+  useEffect(() => { isAdminCandidate().then(setAdm).catch(() => {}); }, []);
 
   const flash = (t: string) => { setToast(t); window.setTimeout(() => setToast(""), 3200); };
 
@@ -97,6 +100,7 @@ export default function Portal() {
             </button>
           ))}
         </nav>
+        {adm && <a className="lnk pp-out" href="/admin">Administrácia portálu</a>}
         <button type="button" className="lnk pp-out" onClick={() => signOut()}>Odhlásiť sa</button>
       </aside>
       <section className="pp-body">

@@ -7,6 +7,33 @@ const c = () => sellerClient();
 const must = <T,>(r: { data: T | null; error: { message: string } | null }): T => { if (r.error) throw new Error(skError(r.error)); return r.data as T; };
 
 export async function isAdmin(): Promise<boolean> { return !!must(await c().rpc("is_admin")); }
+/** Je v zozname správcov? (aj bez kódu z mobilu – vtedy web ponúkne dvojité overenie) */
+export async function isAdminCandidate(): Promise<boolean> { return !!must(await c().rpc("admin_candidate")); }
+
+// ---------- DVOJITÉ OVERENIE (kód z aplikácie v mobile, TOTP) ----------
+export type MfaState = { level: string; factorId: string | null };
+/** Aktuálna úroveň prihlásenia (aal1 = len heslo, aal2 = heslo + kód) a overená aplikácia, ak je nastavená. */
+export async function mfaState(): Promise<MfaState> {
+  const [lv, fs] = await Promise.all([c().auth.mfa.getAuthenticatorAssuranceLevel(), c().auth.mfa.listFactors()]);
+  if (lv.error) throw new Error(skError(lv.error));
+  if (fs.error) throw new Error(skError(fs.error));
+  return { level: String(lv.data?.currentLevel || "aal1"), factorId: fs.data?.totp?.[0]?.id ?? null };
+}
+/** Prvé nastavenie: vytvorí tajný kľúč pre aplikáciu (Google Authenticator, Microsoft Authenticator…) a QR kód. */
+export async function enrollTotp(): Promise<{ factorId: string; qr: string; secret: string }> {
+  const fs = await c().auth.mfa.listFactors();
+  for (const f of fs.data?.all || []) if (f.status !== "verified") await c().auth.mfa.unenroll({ factorId: f.id }); // staré nedokončené pokusy
+  const r = await c().auth.mfa.enroll({ factorType: "totp", friendlyName: "Rozoberačka " + new Date().toLocaleDateString("sk-SK"), issuer: "Rozoberačka" });
+  if (r.error || !r.data) throw new Error(skError(r.error || { message: "Nepodarilo sa začať nastavenie" }));
+  return { factorId: r.data.id, qr: r.data.totp.qr_code, secret: r.data.totp.secret };
+}
+/** Overí 6-miestny kód z aplikácie; po úspechu je prihlásenie na úrovni aal2. */
+export async function verifyTotp(factorId: string, code: string): Promise<void> {
+  const ch = await c().auth.mfa.challenge({ factorId });
+  if (ch.error || !ch.data) throw new Error(skError(ch.error || { message: "Overenie sa nepodarilo začať" }));
+  const v = await c().auth.mfa.verify({ factorId, challengeId: ch.data.id, code: code.replace(/\D/g, "") });
+  if (v.error) throw new Error(/invalid|verification/i.test(v.error.message) ? "Kód nesedí. Skontrolujte čas v mobile a zadajte nový kód." : skError(v.error));
+}
 export async function adminStats(): Promise<Record<string, number>> { return must(await c().rpc("admin_stats")) as Record<string, number>; }
 
 export type Report = { id: number; listingId: number; listingName: string; listingStatus: string; reason: string; note: string; contact: string; status: string; createdAt: string };
@@ -37,7 +64,10 @@ export async function listings(q: string, status: string): Promise<AdminListing[
   if (status) x = x.eq("status", status);
   return (must(await x) as Row[]).map((r) => ({ id: Number(r.id), name: String(r.name), status: String(r.status), price: Number(r.price), oem: String(r.oem || ""), seller: String((r.sellers as Row)?.name || ""), createdAt: String(r.created_at) }));
 }
-export async function setListing(id: number, block: boolean, note: string) { must(await c().rpc("admin_set_listing", { p_listing: id, p_block: block, p_note: note })); }
+export async function setListing(id: number, block: boolean, note: string) {
+  must(await c().rpc("admin_set_listing", { p_listing: id, p_block: block, p_note: note }));
+  fetch("/api/obnovit", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ids: [id] }) }).catch(() => {}); // skrytý inzerát hneď zmizne
+}
 
 export type LogRow = { id: number; action: string; target: string; detail: string; createdAt: string };
 export async function log(): Promise<LogRow[]> {

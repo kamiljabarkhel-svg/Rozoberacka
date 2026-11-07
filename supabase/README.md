@@ -152,3 +152,12 @@ E-maily posiela Edge Function `supabase/functions/strazca` (otestovaná lokálne
      ) $$);
    ```
 5. Vo Verceli nastavte `NEXT_PUBLIC_EMAIL_ALERTS=1` a nasaďte web znova. Tlačidlo „Posielať nové diely e-mailom“ sa zobrazí pri uloženom hľadaní.
+
+## Správca s dvojitým overením (7. 11. 2026)
+Na ostrej Supabase je spustený `11_spravca_dvojite_overenie.sql` (obsah overený odtlačkom SHA-256); test `testy/24_test_11.sql` prešiel priamo na nej v zrušenej transakcii 11/11.
+- Práva správcu (`is_admin()`) platia len pri prihlásení s kódom z aplikácie v mobile (úroveň `aal2`). Samotné heslo nestačí – databáza správcovi bez kódu neukáže nahlásenia, skryté inzeráty ani záznam akcií a odmietne všetky funkcie správcu.
+- V Supabase je v Authentication → Multi-Factor zapnuté **TOTP (App Authenticator)** (overené 7. 11. 2026).
+- **Ako sa stať správcom:** zaregistrujte sa na webe ako predajca, potom v SQL Editore spustite
+  `insert into public.admins select id from auth.users where email = 'VAS@EMAIL';`
+  Pri prvom otvorení `/admin` vás web prevedie nastavením aplikácie Google Authenticator alebo Microsoft Authenticator (QR kód) a odvtedy pri každom prihlásení do administrácie zadáte 6-miestny kód.
+- **Stratený mobil:** v Supabase → Authentication → Users → váš účet → „Multi-factor authentication“ → zmazať faktor. Pri ďalšom otvorení `/admin` nastavíte novú aplikáciu.

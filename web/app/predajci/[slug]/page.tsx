@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound, permanentRedirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import Crumbs from "@/components/Crumbs";
 import LandingGrid from "@/components/LandingGrid";
 import Stars from "@/components/Stars";
-import { IS_DEMO, getCatalog, getSellerPublic, getSellerReviews, searchListings } from "@/lib/data";
+import { getCatalog, getSellerPublic, getSellerReviews, searchListings } from "@/lib/data";
 import { emptyFilters } from "@/lib/types";
 import { pieces } from "@/lib/format";
 import { JsonLd, SITE_NAME, SITE_URL, breadcrumbLd, sellerPath } from "@/lib/seo";
@@ -38,7 +38,6 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
   if (!d) notFound();
   const { s, cat, res, reviews } = d;
   const path = sellerPath(s.id, s.name);
-  if (!IS_DEMO && "/predajci/" + slug !== path) permanentRedirect(path);
   const since = new Date(s.since).toLocaleDateString("sk-SK", { month: "long", year: "numeric" });
   const crumbs = [{ name: "Úvod", href: "/" }];
   return (
