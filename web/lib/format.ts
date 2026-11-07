@@ -18,7 +18,7 @@ export function agoText(iso: string, now = Date.now()): string {
   return d === 0 ? "dnes" : d === 1 ? "včera" : "pred " + d + " dňami";
 }
 export function condDot(c: string): string {
-  return c === "Na opravu" ? "b" : c === "Dobrý" ? "w" : "";
+  return c === "Na opravu" ? "b" : c === "Dobrý" ? "w" : c === "Nový" ? "n" : c === "Repasovaný" ? "r" : "";
 }
 export function sk(a: string, b: string): number {
   return a.localeCompare(b, "sk");

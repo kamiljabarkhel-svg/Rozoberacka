@@ -157,3 +157,8 @@ Audit a návrh priorít: Claude Docs „Rozoberačka – audit a návrh priorít
 - Po zmene inzerátu portál volá `/api/obnovit` – verejné stránky dielov sa obnovia hneď.
 - Detail `/diel/<id>` bez názvu sa zobrazí s canonical na plnú adresu (bez presmerovania).
 - Otvorené: CAPTCHA (potrebuje účet Cloudflare Turnstile), Next.js 16 (zvyšné slabé miesta v knižniciach) až po spustení.
+
+## Stavy dielu a ponuka predajcu (7. 11. 2026)
+- Stav dielu: Nový (nepoužitý), Repasovaný, Veľmi dobrý, Dobrý, Na opravu (`supabase/13`). Firma: nový diel záruka 24 mesiacov, použitý aj repasovaný najmenej 12 mesiacov; súkromná osoba môže „Bez záruky“. Overiť s právnikom.
+- Verejná stránka predajcu `/predajci/<id>` ukazuje celú jeho ponuku: hľadanie v ponuke, kategórie s počtami, zoradenie a „Načítať ďalšie“. V detaile dielu je odkaz „Všetky diely predajcu (N)“.
+- Po zmene alebo zmazaní inzerátu `/api/obnovit` obnoví aj úvod a stránky áut, kategórií a miest, aby kupujúci nevidel zmazaný diel.

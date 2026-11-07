@@ -9,5 +9,5 @@ export const OPERATOR = {
   email: "autosuciastky24@gmail.com",
 };
 /** Verzia podmienok a zásad. Pri zmene textov zvýšiť – uloží sa pri registrácii predajcu. */
-export const TERMS_VERSION = "2026-11-06";
+export const TERMS_VERSION = "2026-11-07";
 export const fill = (v: string) => v || "údaj doplníme pred spustením";

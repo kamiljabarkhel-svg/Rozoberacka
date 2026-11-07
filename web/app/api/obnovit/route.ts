@@ -11,7 +11,13 @@ export async function POST(req: Request) {
   let ids: unknown = [];
   try { ids = (await req.json())?.ids; } catch {}
   if (!Array.isArray(ids) || !ids.length || ids.length > 500 || !ids.every((x) => Number.isInteger(x) && x > 0)) return Response.json({ ok: false }, { status: 400 });
-  revalidatePath("/diel/[slug]", "page");   // všetky detaily (prepočítajú sa pri ďalšej návšteve)
+  // Stránky sa prepočítajú pri ďalšej návšteve: detaily, predajcovia, úvod (najnovšie diely) a stránky áut, kategórií a miest.
+  // Bez toho by kupujúci ešte pár minút videl zmazaný alebo predaný diel a po kliknutí dostal „Stránka neexistuje“.
+  revalidatePath("/diel/[slug]", "page");
   revalidatePath("/predajci/[slug]", "page");
+  revalidatePath("/");
+  revalidatePath("/diely/[...path]", "page");
+  revalidatePath("/kategoria/[...path]", "page");
+  revalidatePath("/mesto/[...path]", "page");
   return Response.json({ ok: true });
 }

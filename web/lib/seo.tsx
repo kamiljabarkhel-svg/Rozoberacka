@@ -136,7 +136,7 @@ export function productLd(l: Listing, cat: Catalog, path: string) {
     category: cat.categories.find((c) => c.id === l.categoryId)?.name,
     offers: {
       "@type": "Offer", url: SITE_URL + path, price: l.price.toFixed(2), priceCurrency: "EUR",
-      availability: "https://schema.org/InStock", itemCondition: "https://schema.org/UsedCondition",
+      availability: "https://schema.org/InStock", itemCondition: l.condition === "Nový" ? "https://schema.org/NewCondition" : l.condition === "Repasovaný" ? "https://schema.org/RefurbishedCondition" : "https://schema.org/UsedCondition",
       seller: { "@type": l.seller.type === "Firma" ? "Organization" : "Person", name: l.seller.name },
     },
   };

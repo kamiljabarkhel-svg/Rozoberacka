@@ -3,6 +3,7 @@
 // Povinné polia podľa CLAUDE.md; tie isté pravidlá stráži aj databáza (04_funkcie.sql).
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { Catalog, Condition } from "@/lib/types";
+import { CONDITIONS, condLabel } from "@/lib/types";
 import { carName } from "@/lib/seo";
 import { saveListing, skError, type Donor, type ListingInput, type MyListing, type PhotoItem, type Profile } from "@/lib/seller";
 import ScanText from "../ScanText";
@@ -153,13 +154,13 @@ export default function ListingForm({ uid, cat, prof, edit, donor, onSaved }: { 
           </div>
         </>}
         {step === 2 && <>
-          {L({ k: "cond", t: "Stav", children: <select value={v.condition} onChange={(e) => { set("condition", e.target.value as Condition); clear("cond"); }}><option value="">Vyberte…</option><option>Veľmi dobrý</option><option>Dobrý</option><option>Na opravu</option></select> })}
+          {L({ k: "cond", t: "Stav", children: <select value={v.condition} onChange={(e) => { const c = e.target.value as Condition; set("condition", c); if (firm && c === "Nový") set("warranty", "24 mesiacov"); clear("cond"); }}><option value="">Vyberte…</option>{CONDITIONS.map((c) => <option key={c} value={c}>{condLabel(c)}</option>)}</select> })}
           {L({ k: "price", t: "Cena (€)", children: <input value={v.price} inputMode="decimal" placeholder="napr. 120" onChange={(e) => { set("price", e.target.value); clear("price"); }} /> })}
-          {L({ k: "war", t: "Záruka", children: <select value={v.warranty} onChange={(e) => set("warranty", e.target.value)}>{!firm && <option>Bez záruky</option>}<option>12 mesiacov</option><option>24 mesiacov</option></select> })}
+          {L({ k: "war", t: "Záruka", children: <select value={v.warranty} onChange={(e) => set("warranty", e.target.value)}>{!firm && <option>Bez záruky</option>}{!(firm && v.condition === "Nový") && <option>12 mesiacov</option>}<option>24 mesiacov</option></select> })}
           {L({ k: "ship", t: "Odovzdanie", children: <select value={v.shipping} onChange={(e) => set("shipping", e.target.value)}><option>Len osobný odber</option><option>Zasielam kuriérom</option></select> })}
           <label className="pp-chk"><input type="checkbox" checked={v.tested} onChange={(e) => set("tested", e.target.checked)} /><span>Diel je odskúšaný</span></label>
           {firm
-            ? <p className="full mute pp-hint">Ako firma dávate spotrebiteľovi pri použitom diele záruku aspoň 12 mesiacov. Pri predaji na diaľku (kuriér) môže kupujúci odstúpiť od zmluvy do 14 dní – na webe sa to zobrazí automaticky. Vady, ktoré opíšete v popise, nie sú predmetom reklamácie. Toto nie je právna rada.</p>
+            ? <p className="full mute pp-hint">Ako firma dávate spotrebiteľovi pri použitom a repasovanom diele záruku aspoň 12 mesiacov, pri novom 24 mesiacov. Pri predaji na diaľku (kuriér) môže kupujúci odstúpiť od zmluvy do 14 dní – na webe sa to zobrazí automaticky. Vady, ktoré opíšete v popise, nie sú predmetom reklamácie. Toto nie je právna rada.</p>
             : <label className="pp-chk"><input type="checkbox" checked={v.returns14} onChange={(e) => set("returns14", e.target.checked)} /><span>Ponúkam vrátenie do 14 dní, ak diel nepasuje</span></label>}
         </>}
         {step === 3 && <>

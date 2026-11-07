@@ -164,3 +164,7 @@ Na ostrej Supabase je spustený `11_spravca_dvojite_overenie.sql` (obsah overen�
 
 ## Oprava názvu podkategórie (7. 11. 2026)
 `12_oprava_nazvu_podkategorie.sql`: „Polosi a kĺby“ → „Poloosi a kĺby“. Spustené na ostrej Supabase, kontrolný výpis podkategórií prevodovky potvrdil nový názov. Opravené aj v `02_kategorie.sql` (nová databáza) a v ukážkovom katalógu webu.
+
+## Stavy „Nový“ a „Repasovaný“ (7. 11. 2026)
+`13_stav_novy_repasovany.sql`: stav dielu môže byť Nový (nepoužitý), Repasovaný, Veľmi dobrý, Dobrý alebo Na opravu. Firma musí pri novom diele dať záruku 24 mesiacov, pri použitom a repasovanom aspoň 12 mesiacov (kontroluje databáza, `guard_listing`). Keď sa predajca zmení na firmu, jeho nové diely dostanú 24 mesiacov.
+Spustené na ostrej Supabase (obsah overený odtlačkom SHA-256 c78b732b…), test `testy/25_test_13.sql` (8 kontrol) prešiel lokálne aj priamo na ostrej databáze v zrušenej transakcii 8/8; po teste 0 inzerátov a 0 testovacích účtov.

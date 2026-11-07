@@ -2,6 +2,7 @@
 // Import inzerátov z CSV (Excel → Uložiť ako CSV). Najprv náhľad s chybami, potom import.
 import { useState } from "react";
 import type { Catalog, Condition } from "@/lib/types";
+import { CONDITIONS, condLabel } from "@/lib/types";
 import { importMany, type ListingInput, type Profile } from "@/lib/seller";
 
 const MAX = 500;
@@ -62,11 +63,11 @@ export default function CsvImport({ uid, cat, prof, onDone }: { uid: string; cat
       const price = Number(g("cena").replace(/\s|€/g, "").replace(",", ".")); if (!(price > 0)) errors.push("cena musí byť väčšia ako 0");
       let year = parseInt(g("rocnik"), 10);
       if (!year && model) { year = model.yearFrom; warns.push(`ročník chýba – nastavený ${year}`); }
-      const conds: Condition[] = ["Veľmi dobrý", "Dobrý", "Na opravu"];
-      const condition = conds.find((x) => norm(x) === norm(g("stav"))) || "Dobrý";
-      if (g("stav") && norm(condition) !== norm(g("stav"))) warns.push("stav nerozpoznaný – nastavený Dobrý");
+      const condition: Condition = CONDITIONS.find((x) => norm(x) === norm(g("stav")) || norm(condLabel(x)) === norm(g("stav"))) || (norm(g("stav")) === norm("nepoužitý") ? "Nový" : "Dobrý");
+      if (g("stav") && ![norm(condition), norm(condLabel(condition)), norm("nepoužitý")].includes(norm(g("stav")))) warns.push("stav nerozpoznaný – nastavený Dobrý");
       const firm = (prof?.type || "Firma") === "Firma";
       let warranty = ["Bez záruky", "12 mesiacov", "24 mesiacov"].find((x) => norm(x) === norm(g("zaruka"))) || (firm ? "12 mesiacov" : "Bez záruky");
+      if (firm && condition === "Nový" && warranty !== "24 mesiacov") { warranty = "24 mesiacov"; warns.push("firma, nový diel: záruka nastavená na 24 mesiacov (zákon)"); }
       if (firm && warranty === "Bez záruky") { warranty = "12 mesiacov"; warns.push("firma: záruka nastavená na 12 mesiacov (zákon)"); }
       if (g("zaruka") && !["Bez záruky", "12 mesiacov", "24 mesiacov"].some((x) => norm(x) === norm(g("zaruka")))) warns.push(`záruka „${g("zaruka")}“ nerozpoznaná – nastavená ${warranty}`);
       const description = g("popis"); if (description.length < 20) errors.push("popis má menej ako 20 znakov");
@@ -108,7 +109,7 @@ export default function CsvImport({ uid, cat, prof, onDone }: { uid: string; cat
     <div>
       <header className="pp-h"><h1>Import z CSV</h1><a className="ubtn" href={sampleHref} download="vzor-rozoberacka.csv">Stiahnuť vzorový súbor</a></header>
       <div className="pp-box">
-        <p>Povinné stĺpce: <b>{REQ.join(", ")}</b>. Voliteľné: {OPT.join(", ")}. Oddeľovač <b>;</b> alebo <b>,</b>, najviac {MAX} riadkov. V stĺpci <b>pasuje</b> oddeľte autá znakom | (napr. „Škoda Octavia III | VW Golf VII“).</p>
+        <p>Povinné stĺpce: <b>{REQ.join(", ")}</b>. Voliteľné: {OPT.join(", ")}. Oddeľovač <b>;</b> alebo <b>,</b>, najviac {MAX} riadkov. Stav: Nový, Repasovaný, Veľmi dobrý, Dobrý alebo Na opravu. V stĺpci <b>pasuje</b> oddeľte autá znakom | (napr. „Škoda Octavia III | VW Golf VII“).</p>
         <p className="mute">Popis musí mať aspoň 20 znakov. Mesto a telefón sa doplnia z profilu, ak ich v súbore nemáte. Importované inzeráty sú bez fotiek – doplníte ich cez Upraviť.</p>
         <label className="pp-add pp-file"><input type="file" accept=".csv,text/csv" onChange={async (e) => { const f = e.target.files?.[0]; if (f) load(await f.text()); e.target.value = ""; }} /><span>Vybrať CSV súbor</span></label>
         {head && <p className="pp-err">{head}</p>}

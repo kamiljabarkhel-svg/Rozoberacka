@@ -17,7 +17,10 @@ export type Catalog = {
 /** Auto, na ktoré diel pasuje. model/engine null = všetky modely / všetky motorizácie. */
 export type Vehicle = { brandId: number; modelId: number | null; engineId: number | null };
 
-export type Condition = "Veľmi dobrý" | "Dobrý" | "Na opravu";
+export type Condition = "Nový" | "Repasovaný" | "Veľmi dobrý" | "Dobrý" | "Na opravu";
+/** Všetky stavy v poradí, v akom sa ponúkajú. „Nový“ = nepoužitý diel (napr. zo zásob). */
+export const CONDITIONS: Condition[] = ["Nový", "Repasovaný", "Veľmi dobrý", "Dobrý", "Na opravu"];
+export const condLabel = (c: string) => (c === "Nový" ? "Nový (nepoužitý)" : c);
 
 export type Seller = { name: string; type: string; city: string | null; verified: boolean };
 

@@ -302,7 +302,8 @@ export async function exportMyData(): Promise<void> {
 export async function deleteAccount(uid: string): Promise<void> {
   const c = sellerClient();
   const files = new Set<string>();
-  for (const l of await myListings(uid)) for (const p of l.photos) for (const f of filesOf(p.path)) files.add(f);
+  const mine = await myListings(uid);
+  for (const l of mine) for (const p of l.photos) for (const f of filesOf(p.path)) files.add(f);
   try { // aj súbory, ktoré už nie sú priradené k inzerátu
     const top = await c.storage.from(PHOTO_BUCKET).list(uid, { limit: 1000 });
     for (const d of top.data || []) {
@@ -314,6 +315,7 @@ export async function deleteAccount(uid: string): Promise<void> {
   for (let i = 0; i < all.length; i += 100) await c.storage.from(PHOTO_BUCKET).remove(all.slice(i, i + 100));
   const { error } = await c.rpc("delete_my_account");
   if (error) throw new Error(skError(error));
+  refreshPublic(mine.map((l) => l.id)); // zmazané diely zmiznú z verejných stránok hneď
   await c.auth.signOut().catch(() => {});
 }
 

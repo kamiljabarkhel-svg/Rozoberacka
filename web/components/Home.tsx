@@ -4,7 +4,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import type { Catalog, Filters } from "@/lib/types";
-import { emptyFilters } from "@/lib/types";
+import { CONDITIONS, condLabel, emptyFilters } from "@/lib/types";
 import { getCatalog, getCities, getStats, initialData, searchListings, type SearchPage } from "@/lib/data";
 import { decodeVin } from "@/lib/vin";
 import { pieces, sk } from "@/lib/format";
@@ -270,7 +270,7 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
             </label>
             <label>Stav
               <select value={f.cond} onChange={(e) => set({ cond: e.target.value })}>
-                {opt("", "Každý stav")}{opt("Veľmi dobrý", "Veľmi dobrý")}{opt("Dobrý", "Dobrý")}{opt("Na opravu", "Na opravu")}
+                {opt("", "Každý stav")}{CONDITIONS.map((c) => opt(c, condLabel(c)))}
               </select>
             </label>
             <label>Mesto

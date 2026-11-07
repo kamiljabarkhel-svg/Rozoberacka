@@ -75,7 +75,7 @@ export const NAVODY: Navod[] = [
       </ul>
       <h2>Vaše práva</h2>
       <ul>
-        <li><b>Kúpa od firmy:</b> máte zákonné práva zo zodpovednosti za vady. Pri použitom tovare môže byť lehota skrátená, najmenej na 12 mesiacov. Pri kúpe na diaľku (zásielka) môžete spravidla odstúpiť od zmluvy do 14 dní bez udania dôvodu.</li>
+        <li><b>Kúpa od firmy:</b> máte zákonné práva zo zodpovednosti za vady: pri novom diele 24 mesiacov, pri použitom alebo repasovanom môže byť lehota skrátená, najmenej na 12 mesiacov. Pri kúpe na diaľku (zásielka) môžete spravidla odstúpiť od zmluvy do 14 dní bez udania dôvodu.</li>
         <li><b>Kúpa od súkromnej osoby:</b> pravidlá ochrany spotrebiteľa sa nepoužijú. Podmienky si dohodnite vopred, ideálne písomne (stačí správa).</li>
       </ul>
       <p className="mute">Toto je všeobecná informácia, nie právna rada.</p>

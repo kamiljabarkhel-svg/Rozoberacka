@@ -1,6 +1,8 @@
 const { chromium } = require("playwright");
 const B = "http://127.0.0.1:3000", G = "http://127.0.0.1:54321";
 const errs = [];
+// aktuálna verzia obchodných podmienok z web/lib/operator.ts (cesta k repozitáru: RZ_REPO)
+const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((process.env.RZ_REPO || "/home/claude/rozoberacka") + "/web/lib/operator.ts", "utf8"))[1];
 (async () => {
   const br = await chromium.launch(); const ctx = await br.newContext({ viewport: { width: 1280, height: 900 } }); const pg = await ctx.newPage();
   pg.on("console", (m) => { if (m.type() === "error") errs.push("console: " + m.text()); });
@@ -185,6 +187,11 @@ const errs = [];
     await b2.waitForSelector(".seller-head .stars:has-text('5,0')"); await b2.waitForSelector(".reviews li:has-text('Fero')");
     await b2.waitForSelector("h2:has-text('Diely v ponuke')");
   });
+  await step("stranka predajcu: hladanie v celej ponuke", async () => {
+    const all = await b2.locator(".stock .card").count(); if (!all) throw new Error("ziadne diely");
+    await b2.fill(".stock-t input", "xyzneexistuje"); await b2.waitForSelector(".stock .empty");
+    await b2.click(".stock .empty button"); await b2.waitForFunction((n) => document.querySelectorAll(".stock .card").length === n, all);
+  });
   await step("SEO: detail pripraveny na serveri", async () => {
     const id = require("child_process").execSync(`psql -h /tmp/pgt -p 5499 -U postgres -d e2e -tAc "select max(id) from listings where status='active'"`).toString().trim();
     const r = await fetch(B + "/diel/" + id); const h = await r.text(); if (!new RegExp(`<link rel="canonical" href="[^"]*/diel/${id}-[a-z0-9-]+"`).test(h)) throw new Error("hlavná adresa (canonical) bez názvu: " + r.url);
@@ -262,7 +269,7 @@ const errs = [];
     await pg.click(".pp-nav >> text=Profil");
     const [dl] = await Promise.all([pg.waitForEvent("download"), pg.click("text=Stiahnuť moje údaje")]);
     const j = JSON.parse(require("fs").readFileSync(await dl.path(), "utf8"));
-    if (!j.profil || j.profil.terms_version !== "2026-11-06" || !Array.isArray(j.inzeraty) || !j.inzeraty.length) throw new Error(JSON.stringify(j).slice(0, 200));
+    if (!j.profil || j.profil.terms_version !== TERMS || !Array.isArray(j.inzeraty) || !j.inzeraty.length) throw new Error(JSON.stringify(j).slice(0, 200));
   });
   await step("zrusenie uctu", async () => {
     await pg.click("button.del:has-text('Zrušiť účet')"); await pg.fill(".pp-gdpr input", "zrušiť"); await pg.click("text=Natrvalo zrušiť účet");

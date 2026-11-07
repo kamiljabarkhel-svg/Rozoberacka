@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Crumbs from "@/components/Crumbs";
-import LandingGrid from "@/components/LandingGrid";
+import SellerStock from "@/components/SellerStock";
 import Stars from "@/components/Stars";
 import { getCatalog, getSellerPublic, getSellerReviews, searchListings } from "@/lib/data";
 import { emptyFilters } from "@/lib/types";
@@ -11,13 +11,13 @@ import { JsonLd, SITE_NAME, SITE_URL, breadcrumbLd, sellerPath } from "@/lib/seo
 
 export const revalidate = 600;
 
-// Verejná stránka predajcu: všetky jeho aktívne diely a hodnotenia od kupujúcich (overené cez dopyt).
+// Verejná stránka predajcu: celá jeho ponuka (hľadanie, kategórie, načítať ďalšie) a hodnotenia od kupujúcich (overené cez dopyt).
 const idOf = (slug: string) => (/^[0-9a-f-]{36}/i.exec(slug)?.[0] || "").toLowerCase();
 
 async function load(slug: string) {
   const s = await getSellerPublic(idOf(slug));
   if (!s) return null;
-  const [cat, res, reviews] = await Promise.all([getCatalog(), searchListings({ ...emptyFilters }, [], 0, 60, { seller: s.id }), getSellerReviews(s.id)]);
+  const [cat, res, reviews] = await Promise.all([getCatalog(), searchListings({ ...emptyFilters }, [], 0, 24, { seller: s.id }), getSellerReviews(s.id)]);
   return { s, cat, res, reviews };
 }
 
@@ -54,9 +54,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
         {s.ratingCount > 0 ? <p><Stars value={s.ratingAvg} count={s.ratingCount} /> <a href="#hodnotenia" className="lnk">Hodnotenia kupujúcich</a></p>
           : <p className="mute">Zatiaľ bez hodnotení.</p>}
       </div>
-      <h2>Diely v ponuke ({res.total})</h2>
-      {res.items.length ? <LandingGrid items={res.items} cat={cat} /> : <div className="empty">Predajca teraz nemá aktívne inzeráty.</div>}
-      {res.total > res.items.length && <p className="mute">Zobrazených je najnovších {res.items.length} z {res.total} dielov.</p>}
+      <SellerStock seller={s.id} cat={cat} initial={{ items: res.items, total: res.total, cats: [...res.cats] }} />
       <section id="hodnotenia" className="reviews">
         <h2>Hodnotenia kupujúcich</h2>
         <p className="mute small">Hodnotiť môže len kupujúci, ktorému predajca poslal ponuku na jeho dopyt. Hodnotenia nekontrolujeme vopred; nevhodné môžete nahlásiť na <Link href="/ochrana-osobnych-udajov#kontakt">kontakte prevádzkovateľa</Link>.</p>

@@ -5,6 +5,7 @@ import { loadDetail, logView, type DetailData } from "@/lib/data";
 import { groupVehicles } from "@/lib/search";
 import { agoText, condDot, price } from "@/lib/format";
 import { useFavs } from "@/lib/favs";
+import { condLabel } from "@/lib/types";
 import { STATIC_PREVIEW, homeHref } from "@/lib/paths";
 import { Icon, catIcon } from "./Icons";
 import PhoneButton from "./PhoneButton";
@@ -95,7 +96,7 @@ export default function ListingDetail({ id, onClose, initial }: { id: number; on
   const rows: [string, string][] = [
     ["Značka", bName || "neuvedené"], ["Model", mName || "neuvedené"], ["Motorizácia", eName || "Pasuje na všetky motorizácie"],
     ["Ročník", l.year ? String(l.year) : "neuvedené"], ["OEM číslo", l.oem || "neuvedené"], ["Kategória", cName + (sName ? " · " + sName : "")],
-    ["Stav", l.condition], ["Záruka", l.warranty === "Bez záruky" ? "Bez záruky (predáva súkromná osoba)" : l.warranty], ["Odovzdanie", l.shipping || "Len osobný odber"], ["Mesto", l.city || "neuvedené"],
+    ["Stav", condLabel(l.condition)], ["Záruka", l.warranty === "Bez záruky" ? "Bez záruky (predáva súkromná osoba)" : l.warranty], ["Odovzdanie", l.shipping || "Len osobný odber"], ["Mesto", l.city || "neuvedené"],
   ];
   if (l.side) rows.splice(5, 0, ["Strana auta", l.side]);
   if (l.partMaker) rows.splice(5, 0, ["Výrobca dielu", l.partMaker]);
@@ -151,6 +152,7 @@ export default function ListingDetail({ id, onClose, initial }: { id: number; on
             <b>{l.sellerId && !STATIC_PREVIEW ? <Link href={sellerPath(l.sellerId, l.seller.name)}>{l.seller.name}</Link> : l.seller.name}{l.seller.verified && <span className="bdg">Overený predajca</span>}</b>
             <span className="mute">{l.seller.type} · {l.seller.city || l.city}</span>
             {s.seller && s.seller.ratingCount > 0 && <span><Stars value={s.seller.ratingAvg} count={s.seller.ratingCount} small /></span>}
+            {l.sellerId && !STATIC_PREVIEW && <Link className="lnk seller-all" href={sellerPath(l.sellerId, l.seller.name)}>Všetky diely predajcu{more.total ? ` (${more.total + 1})` : ""} →</Link>}
             <span className="mute">Inzerát pridaný {agoText(l.createdAt)}{l.updatedAt && Date.parse(l.updatedAt) - Date.parse(l.createdAt) > 3600000 ? ` · upravený ${agoText(l.updatedAt)}` : ""}</span>
           </div>
         </div>
