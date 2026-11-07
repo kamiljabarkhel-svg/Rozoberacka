@@ -384,11 +384,11 @@ a.btn2{display:inline-block;text-decoration:none}
       <label class="chk"><input type="checkbox" id="tested"> Len odskúšané diely</label>
       <label class="chk"><input type="checkbox" id="retonly"> Len s možnosťou vrátenia</label>
     </div>
+    <div class="pa"><button class="lnk" id="advBtn" aria-expanded="false">Rozšírené hľadanie</button><button class="btn" id="goF">Hľadať</button></div>
     <div class="oemrow">
       <label>Číslo dielu (OEM)<input id="oemq" placeholder="napr. 03G903023 alebo 5E0 807 221" autocomplete="off"></label>
       <button class="btn2" id="oemGo">Hľadať podľa čísla</button>
     </div>
-    <div class="pa"><button class="lnk" id="advBtn" aria-expanded="false">Rozšírené hľadanie</button><button class="btn" id="goF">Hľadať</button></div>
   </section>
 
   <section class="plate" aria-label="Hľadanie podľa VIN">
@@ -396,7 +396,7 @@ a.btn2{display:inline-block;text-decoration:none}
     <div class="pg2">
       <label>VIN (17 znakov)<span class="pl"><span class="eu">VIN</span><input id="vin" placeholder="TMBJJ7NE0G0123456" maxlength="17" autocomplete="off"></span></label>
       <label>Hľadám<select id="pcat"></select></label>
-      <button class="btn2" id="vinGo">Dekódovať VIN</button>
+      <button class="btn2" id="vinGo">Hľadať podľa VIN</button>
     </div>
     <p>VIN nájdete v osvedčení o evidencii (časť I, pole E) a na štítku pri čelnom skle. Ukážka z neho prečíta značku a približný ročník. Model a motorizáciu vyberte v paneli vyššie.</p>
     <p class="vmsg" id="vmsg" role="status"></p>

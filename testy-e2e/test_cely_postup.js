@@ -11,6 +11,14 @@ const errs = [];
     const a = await pg.locator(".pa .btn").boundingBox(), o = await pg.locator(".oemrow").boundingBox();
     if (!(a.y < o.y)) throw new Error(`Hladat y=${a.y} oem y=${o.y}`);
   });
+  await step("najhladanejsie diely nastavia kategoriu", async () => {
+    await pg.click(".pop .chip:has-text('Prevodovka')"); await pg.waitForURL(/kat=pr/);
+    if (await pg.locator(".pop .chip:has-text('Prevodovka')").getAttribute("aria-pressed") !== "true") throw new Error("tlacidlo nie je zapnute");
+    await pg.click(".pop .chip:has-text('Zadné svetlo')"); await pg.waitForURL(/kat=sv&pod=\d+/);
+    if (/q=/.test(pg.url())) throw new Error("ostal skryty text");
+    await pg.click(".pop .chip:has-text('Zadné svetlo')"); await pg.waitForFunction(() => !location.search.includes("kat="));
+    if ((await pg.locator(".pa .btn").innerText()) !== "Hľadať" || !(await pg.locator("#vin .btn2").innerText()).includes("Hľadať podľa VIN")) throw new Error("texty tlacidiel");
+  });
   await step("hlavicka -> prihlasenie", async () => { await pg.click("text=Prihlásenie predajcu"); await pg.waitForURL("**/pre-predajcov"); });
   await step("registracia validacia", async () => {
     await pg.click("role=tab[name='Registrácia']"); await pg.click("button:has-text('Vytvoriť účet')");

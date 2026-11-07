@@ -22,7 +22,17 @@ import ListingDetail from "./ListingDetail";
 import SellersSoon from "./SellersSoon";
 
 const PAGE = 12;
-const POP = ["Predné svetlo", "Zadné svetlo", "Nárazník", "Kapota", "Zrkadlo", "Dvere", "Riadiaca jednotka", "Alternátor", "Turbo", "Motor", "Prevodovka", "Volant"];
+// Najhľadanejšie diely: tlačidlo nastaví kategóriu (a podkategóriu podľa názvu v katalógu), nie skrytý text.
+// Predchádzajúci text a kategória sa zrušia, vybrané auto ostane. Bez podkategórie = celá kategória,
+// bez kategórie = hľadanie textom (riadiace jednotky sú v kategórii Motor aj Elektro).
+const POP: { label: string; cat?: string; sub?: string; q?: string }[] = [
+  { label: "Predné svetlo", cat: "sv", sub: "Predné svetlá" }, { label: "Zadné svetlo", cat: "sv", sub: "Zadné svetlá" },
+  { label: "Nárazník", cat: "kar", sub: "Nárazníky" }, { label: "Kapota", cat: "kar", sub: "Kapoty" },
+  { label: "Zrkadlo", cat: "kar", sub: "Spätné zrkadlá" }, { label: "Dvere", cat: "kar", sub: "Dvere" },
+  { label: "Riadiaca jednotka", q: "Riadiaca jednotka" }, { label: "Alternátor", cat: "el", sub: "Alternátory" },
+  { label: "Turbo", cat: "motor", sub: "Turbodúchadlá" }, { label: "Motor", cat: "motor", sub: "Motory kompletné" },
+  { label: "Prevodovka", cat: "pr" }, { label: "Volant", cat: "int", sub: "Volanty a airbagy" },
+];
 
 // Krátke názvy parametrov v adrese
 const P = { q: "q", brand: "znacka", model: "model", engine: "motor", year: "rok", cat: "kat", sub: "pod", max: "cena", cond: "stav", city: "mesto", sort: "zoradit", fav: "oblubene", side: "strana", tested: "odskusane", ret: "vratenie" } as const;
@@ -304,14 +314,23 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
             <label>Hľadám
               <select value={vinCat} onChange={(e) => setVinCat(e.target.value)}>{opt("", "Všetky diely")}{cats.map((c) => opt(c.id, c.name))}</select>
             </label>
-            <button className="btn2" onClick={onVin}>Dekódovať VIN</button>
+            <button className="btn2" onClick={onVin}>Hľadať podľa VIN</button>
           </div>
           <p>VIN nájdete v osvedčení o evidencii (časť I, pole E) a na štítku pri čelnom skle (<Link href="/navody/vin">kde presne</Link>). Na mobile ho môžete odfotiť ikonou fotoaparátu. Z VIN prečítame značku a približný ročník. Model a motorizáciu vyberte v paneli vyššie. Podľa ŠPZ nehľadáme.</p>
           <p className="vmsg" role="status">{vinMsg}</p>
         </section>
 
         <div className="pop"><h2 className="sh">Najhľadanejšie diely</h2><div className="chips">
-          {POP.map((p) => <button key={p} className="chip" onClick={() => { set({ q: p }); window.dispatchEvent(new CustomEvent("rz-q-set", { detail: p })); setTimeout(toRes, 30); }}>{p}</button>)}
+          {POP.map((p) => {
+            const sub = p.sub && catalog ? catalog.subcategories.find((s) => s.categoryId === p.cat && s.name === p.sub)?.id ?? null : null;
+            const on = p.q ? f.q === p.q && !f.cat : !f.q && f.cat === p.cat && f.sub === sub;
+            return <button key={p.label} className="chip" aria-pressed={on} onClick={() => {
+              const q = on ? "" : p.q || "";
+              set(on ? { q: "", cat: "", sub: null } : { q, cat: p.cat || "", sub });
+              window.dispatchEvent(new CustomEvent("rz-q-set", { detail: q })); setOemQ("");
+              if (!on) setTimeout(toRes, 30);
+            }}>{p.label}</button>;
+          })}
         </div></div>
 
         <div id="vysledky" ref={resRef} className="head">
@@ -329,6 +348,7 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
 
         {res && catalog && (
           <div className="chips" aria-label="Kategórie nájdených dielov">
+            {f.q.trim() && <button className="chip qchip" title="Zrušiť hľadaný text" aria-label={`Zrušiť hľadaný text ${f.q.trim()}`} onClick={() => { set({ q: "" }); setOemQ(""); window.dispatchEvent(new CustomEvent("rz-q-set", { detail: "" })); }}>„{f.q.trim()}“ <span aria-hidden="true">✕</span></button>}
             <button className="chip" aria-pressed={!f.cat} onClick={() => set({ cat: "", sub: null })}>Všetky ({res.base})</button>
             {cats.filter((c) => res.cats.get(c.id) || f.cat === c.id).map((c) => (
               <button key={c.id} className="chip" aria-pressed={f.cat === c.id} onClick={() => set({ cat: f.cat === c.id ? "" : c.id, sub: null })}>

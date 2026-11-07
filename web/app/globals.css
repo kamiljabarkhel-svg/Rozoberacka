@@ -68,6 +68,8 @@ h1,h2,h3{font-family:var(--f-d);text-wrap:balance}
 .chips{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 20px}
 .chips .chip{display:inline-flex;align-items:center;gap:7px}
 .chips .chip svg{width:18px;height:18px;flex:none}
+.chip.qchip{border-color:var(--pet2);border-style:dashed}
+.chip.qchip span{color:var(--mute)}
 .grid{display:grid;gap:20px;grid-template-columns:repeat(auto-fill,minmax(270px,1fr))}
 .card{background:var(--card);border:1px solid var(--line);border-radius:6px;overflow:hidden;display:flex;flex-direction:column;cursor:pointer;transition:border-color .18s}
 .card:hover{border-color:var(--pet2)}
