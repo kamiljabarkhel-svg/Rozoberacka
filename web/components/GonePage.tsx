@@ -1,6 +1,7 @@
 // Predaný alebo pozastavený diel: odkaz (napr. poslaný mechanikovi) ostáva užitočný – ukážeme náhradu.
 import Link from "next/link";
 import { getCatalog, getReplacements, type GoneListing } from "@/lib/data";
+import { pickCatalog } from "@/lib/catalogSort";
 import { carName, landingCrumbs, landingPath } from "@/lib/seo";
 import Crumbs from "./Crumbs";
 import LandingGrid from "./LandingGrid";
@@ -25,7 +26,7 @@ export default async function GonePage({ g }: { g: GoneListing }) {
           <p>{sold ? "Tento diel už predajca predal." : "Predajca inzerát dočasne pozastavil."} Nižšie sú podobné diely, ktoré sú teraz v ponuke{g.oem ? " – najprv tie s rovnakým OEM číslom" : ""}.</p>
         </div>
       </div>
-      {items.length ? <LandingGrid items={items} cat={cat} /> : <div className="empty">Podobný diel teraz nikto neponúka.</div>}
+      {items.length ? <LandingGrid items={items} cat={pickCatalog(cat, items)} /> : <div className="empty">Podobný diel teraz nikto neponúka.</div>}
       <p className="landing-more"><Link className="btn2" href={more}>Všetky podobné diely</Link></p>
       <div className="rq-cta"><p><b>Nenašli ste náhradu?</b> Zadajte dopyt – vrakoviská vám pošlú ponuku. Bez registrácie.</p>
         <Link className="btn2" href={`/dopyt?${rq.toString()}`}>Zadať dopyt na diel</Link></div>

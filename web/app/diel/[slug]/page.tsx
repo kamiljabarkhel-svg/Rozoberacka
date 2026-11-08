@@ -12,7 +12,7 @@ export const revalidate = 300;
 export async function generateStaticParams() {
   if (!IS_DEMO) return [];
   const cat = await getCatalog();
-  const ids = demoListingIds();
+  const ids = await demoListingIds();
   const out: { slug: string }[] = [];
   for (const id of ids) { const d = await loadDetail(id); if (d) out.push({ slug: listingPath(id, d.l.name, carName(d.l, cat)).slice(6) }); }
   return out;

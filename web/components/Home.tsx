@@ -14,7 +14,8 @@ import SavedSearches from "./SavedSearches";
 import MyCarBar from "./MyCarBar";
 import ScanText from "./ScanText";
 import AlertForm, { EMAIL_ALERTS } from "./AlertForm";
-import { readMyCar, useMyCar } from "@/lib/mycar";
+import { readMyCar, useMyCar, myCarLabel } from "@/lib/mycar";
+import { type PackedCatalog, unpackCatalog } from "@/lib/catalogSort";
 import { STATIC_PREVIEW, sellersHref } from "@/lib/paths";
 import { Icon, catIcon } from "./Icons";
 import ListingCard from "./ListingCard";
@@ -66,10 +67,10 @@ function writeUrl(f: Filters) {
   window.history.replaceState(window.history.state, "", url);
 }
 
-export type HomeSsr = { catalog: Catalog; res: SearchPage; stats: { parts: number; sellers: number }; cities: string[] };
+export type HomeSsr = { catalog: PackedCatalog; res: SearchPage; stats: { parts: number; sellers: number }; cities: string[] };
 
 export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
-  const init = useMemo(() => (ssr ? { catalog: ssr.catalog } : initialData()), [ssr]);
+  const init = useMemo(() => (ssr ? { catalog: unpackCatalog(ssr.catalog) } : initialData()), [ssr]);
   const [catalog, setCatalog] = useState<Catalog | null>(init?.catalog || null);
   const [res, setRes] = useState<SearchPage | null>(ssr?.res || null);
   const [busy, setBusy] = useState(false);
@@ -86,6 +87,8 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
   const { favs, toggle } = useFavs();
   const saved = useSaved();
   const my = useMyCar();
+  // staršie uložené auto nemá názov – doplníme ho, aby sa ukázal aj v detaile dielu (tam je len časť katalógu)
+  useEffect(() => { if (my.car && !my.car.label && catalog) my.save({ ...my.car, label: myCarLabel(my.car, catalog) }); }, [my, catalog]);
   const isSaved = saved.list.some((x) => filterKey(x.f) === filterKey(f));
   const ready = useRef(false);
   const resRef = useRef<HTMLDivElement>(null);
@@ -171,7 +174,7 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
   const brands = useMemo(() => (catalog ? [...catalog.brands].sort((a, b) => sk(a.name, b.name)) : []), [catalog]);
   // Rýchle značky v poradí ako v prototype (najčastejšie na SK), potom ostatné obľúbené
   const quick = useMemo(() => {
-    const order = ["Škoda", "Volkswagen", "BMW", "Audi", "Hyundai", "Kia"];
+    const order = ["Škoda", "Volkswagen", "BMW", "Audi", "Hyundai", "Kia", "Ford", "Opel", "Mercedes-Benz", "Toyota", "Peugeot", "Renault", "Citroën", "Dacia", "Fiat", "Volvo"];
     const rank = (n: string) => { const i = order.indexOf(n); return i < 0 ? 99 : i; };
     return brands.filter((b) => b.popular).sort((a, b) => rank(a.name) - rank(b.name) || sk(a.name, b.name));
   }, [brands]);
@@ -225,7 +228,7 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
           <MyCarBar car={my.car} cat={catalog} f={f}
             onUse={() => { if (my.car) { set({ brand: my.car.brand, model: my.car.model, engine: my.car.engine, year: null }); setTimeout(toRes, 30); } }}
             onAll={() => set({ brand: null, model: null, engine: null, year: null })}
-            onSave={() => { if (f.brand != null) my.save({ brand: f.brand, model: f.model, engine: f.engine, year: f.year }); }}
+            onSave={() => { if (f.brand != null) { const c = { brand: f.brand, model: f.model, engine: f.engine, year: f.year }; my.save(catalog ? { ...c, label: myCarLabel(c, catalog) } : c); } }}
             onForget={() => my.save(null)} />
           <div className="pg">
             <label>Značka
@@ -395,7 +398,7 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
 
       {detailId != null && (
         <div className="overlay" onClick={(e) => { if (e.target === e.currentTarget) closeHash(); }}>
-          <ListingDetail id={detailId} onClose={closeHash} />
+          <ListingDetail id={detailId} onClose={closeHash} catalog={catalog} />
         </div>
       )}
       {STATIC_PREVIEW && hash === "#pre-predajcov" && (

@@ -4,7 +4,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { Catalog, Filters, Listing } from "@/lib/types";
 import { emptyFilters } from "@/lib/types";
-import { searchListings } from "@/lib/data";
+import { getCatalog, searchListings } from "@/lib/data";
 import { pieces } from "@/lib/format";
 import { useFavs } from "@/lib/favs";
 import { Icon, catIcon } from "./Icons";
@@ -12,7 +12,7 @@ import ListingCard from "./ListingCard";
 
 const PAGE = 24;
 
-export default function SellerStock({ seller, cat, initial }: {
+export default function SellerStock({ seller, cat: cat0, initial }: {
   seller: string; cat: Catalog;
   initial: { items: Listing[]; total: number; cats: [string, number][] };
 }) {
@@ -20,6 +20,12 @@ export default function SellerStock({ seller, cat, initial }: {
   const [q, setQ] = useState(""), [qx, setQx] = useState("");
   const [c, setC] = useState(""), [sort, setSort] = useState<Filters["sort"]>("new");
   const [items, setItems] = useState(initial.items), [total, setTotal] = useState(initial.total);
+  // Server posiela len časť katalógu (autá z prvej stránky); pri ďalších dieloch sa celý katalóg načíta raz v prehliadači.
+  const [cat, setCat] = useState(cat0);
+  useEffect(() => {
+    const miss = items.some((l) => (l.modelId != null && !cat.models.some((m) => m.id === l.modelId)) || (l.engineId != null && !cat.engines.some((e) => e.id === l.engineId)));
+    if (miss) getCatalog().then(setCat).catch(() => {});
+  }, [items, cat]);
   const [cats, setCats] = useState(new Map(initial.cats)), [base, setBase] = useState(initial.total);
   const [busy, setBusy] = useState(false), [err, setErr] = useState("");
   const first = useRef(true);

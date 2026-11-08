@@ -1,0 +1,277 @@
+# Toyota, Lexus, Honda, Nissan, Infiniti, Mazda, Mitsubishi, Subaru, Suzuki, Daihatsu, Isuzu – údaje z pamäte (8. 11. 2026), nie overený katalóg.
+
+@Toyota|1
+Aygo I|2005|2014|1.0 50 kW; 1.4 D-4D 40 kW
+Aygo II|2014|2022|1.0 51 kW; 1.0 53 kW
+Aygo X|2022|-|1.0 53 kW; 1.5 Hybrid 85 kW
+Yaris I (XP10)|1999|2005|1.0 50 kW; 1.3 63 kW; 1.5 T Sport 77 kW; 1.4 D-4D 55 kW
+Yaris II (XP90)|2005|2011|1.0 51 kW; 1.3 63 kW; 1.33 74 kW; 1.8 97 kW; 1.4 D-4D 66 kW
+Yaris III (XP130)|2011|2020|1.0 51 kW; 1.33 73 kW; 1.5 82 kW; 1.5 Hybrid 74 kW; 1.4 D-4D 66 kW
+Yaris IV (XP210)|2020|-|1.0 53 kW; 1.5 92 kW; 1.5 Hybrid 85 kW; 1.5 Hybrid 96 kW; GR Yaris 1.6 Turbo 192 kW
+Yaris Cross|2021|-|1.5 92 kW; 1.5 Hybrid 85 kW; 1.5 Hybrid 96 kW
+Yaris Verso|1999|2005|1.3 63 kW; 1.5 77 kW; 1.4 D-4D 55 kW
+Starlet|1996|1999|1.3 55 kW
+Corolla (E11)|1997|2002|1.3 63 kW; 1.4 71 kW; 1.6 81 kW; 2.0 D 53 kW; 2.0 D-4D 66 kW
+Corolla (E12)|2002|2007|1.4 71 kW; 1.6 81 kW; 1.8 TS 141 kW; 1.4 D-4D 66 kW; 2.0 D-4D 66 kW; 2.0 D-4D 85 kW; 2.2 D-4D 130 kW
+Corolla (E15) / Auris I|2006|2012|1.33 74 kW; 1.4 71 kW; 1.6 91 kW; 1.6 97 kW; 1.8 Hybrid 100 kW; 1.4 D-4D 66 kW; 2.0 D-4D 93 kW; 2.2 D-4D 130 kW
+Auris II|2012|2018|1.2 T 85 kW; 1.33 73 kW; 1.6 97 kW; 1.8 Hybrid 100 kW; 1.4 D-4D 66 kW; 1.6 D-4D 82 kW; 2.0 D-4D 91 kW
+Corolla (E21)|2018|-|1.2 T 85 kW; 1.8 Hybrid 90 kW; 1.8 Hybrid 103 kW; 2.0 Hybrid 135 kW; 2.0 Hybrid 145 kW
+Corolla Verso|2001|2009|1.6 81 kW; 1.8 95 kW; 2.0 D-4D 66 kW; 2.2 D-4D 100 kW; 2.2 D-4D 130 kW
+Corolla Cross|2022|-|1.8 Hybrid 103 kW; 2.0 Hybrid 145 kW
+Verso|2009|2018|1.6 97 kW; 1.8 108 kW; 1.6 D-4D 82 kW; 2.0 D-4D 93 kW; 2.2 D-4D 110 kW
+Verso-S|2010|2015|1.33 73 kW; 1.4 D-4D 66 kW
+Avensis (T22)|1997|2003|1.6 81 kW; 1.8 95 kW; 2.0 94 kW; 2.0 D-4D 81 kW; 2.0 TD 66 kW
+Avensis (T25)|2003|2009|1.6 81 kW; 1.8 95 kW; 2.0 108 kW; 2.4 120 kW; 2.0 D-4D 85 kW; 2.2 D-4D 110 kW; 2.2 D-4D 130 kW
+Avensis (T27)|2009|2018|1.6 97 kW; 1.8 108 kW; 2.0 112 kW; 1.6 D-4D 82 kW; 2.0 D-4D 93 kW; 2.2 D-4D 110 kW; 2.2 D-4D 130 kW
+Camry (XV70)|2019|-|2.5 Hybrid 160 kW; 2.5 Hybrid 170 kW
+Prius II|2003|2009|1.5 Hybrid 82 kW
+Prius III|2009|2015|1.8 Hybrid 100 kW
+Prius IV|2015|2022|1.8 Hybrid 90 kW; 1.8 Plug-in 90 kW
+Prius V|2023|-|2.0 Plug-in 164 kW
+Prius+|2012|2021|1.8 Hybrid 100 kW
+C-HR I|2016|2023|1.2 T 85 kW; 1.8 Hybrid 90 kW; 1.8 Hybrid 100 kW; 2.0 Hybrid 135 kW
+C-HR II|2023|-|1.8 Hybrid 103 kW; 2.0 Hybrid 145 kW; 2.0 Plug-in 164 kW
+RAV4 II (XA20)|2000|2005|1.8 91 kW; 2.0 110 kW; 2.0 D-4D 85 kW
+RAV4 III (XA30)|2005|2012|2.0 112 kW; 2.4 125 kW; 2.0 D-4D 85 kW; 2.2 D-4D 100 kW; 2.2 D-4D 110 kW; 2.2 D-4D 130 kW
+RAV4 IV (XA40)|2012|2018|2.0 111 kW; 2.5 Hybrid 145 kW; 2.0 D-4D 91 kW; 2.2 D-4D 110 kW; 2.2 D-4D 135 kW
+RAV4 V (XA50)|2018|2025|2.0 129 kW; 2.5 Hybrid 160 kW; 2.5 Hybrid AWD 163 kW; 2.5 Plug-in 225 kW
+RAV4 VI|2025|-|2.5 Hybrid 140 kW; 2.5 Plug-in 227 kW
+Land Cruiser (J120)|2002|2009|4.0 V6 183 kW; 3.0 D-4D 120 kW; 3.0 D-4D 127 kW
+Land Cruiser (J150)|2009|2024|4.0 V6 202 kW; 3.0 D-4D 127 kW; 2.8 D-4D 130 kW; 2.8 D-4D 150 kW
+Land Cruiser (J250)|2024|-|2.8 D-4D 150 kW
+Land Cruiser (J90)|1996|2002|2.7 110 kW; 3.4 V6 131 kW; 3.0 TD 92 kW; 3.0 D-4D 120 kW
+Hilux (AN10/AN20/AN30)|2005|2015|2.5 D-4D 75 kW; 2.5 D-4D 106 kW; 3.0 D-4D 126 kW; 3.0 D-4D 127 kW
+Hilux (AN120/AN130)|2015|-|2.4 D-4D 110 kW; 2.8 D-4D 150 kW; 2.8 D-4D 165 kW
+Proace I|2013|2016|1.6 D-4D 66 kW; 2.0 D-4D 94 kW; 2.0 D-4D 120 kW
+Proace II|2016|-|1.5 D-4D 75 kW; 1.6 D-4D 85 kW; 2.0 D-4D 90 kW; 2.0 D-4D 110 kW; 2.0 D-4D 130 kW; Proace Electric 100 kW
+Proace City|2019|-|1.2 81 kW; 1.5 D-4D 55 kW; 1.5 D-4D 75 kW; 1.5 D-4D 96 kW; Proace City Electric 100 kW
+Hiace|1995|2012|2.4 D 66 kW; 2.5 D-4D 65 kW; 2.5 D-4D 75 kW; 2.5 D-4D 86 kW
+Previa (XR30)|2000|2006|2.4 115 kW; 2.0 D-4D 85 kW
+GT86 / GR86|2012|2024|2.0 147 kW; 2.4 172 kW
+Supra (A90)|2019|-|2.0 Turbo 190 kW; 3.0 Turbo 250 kW; 3.0 Turbo 285 kW
+bZ4X|2022|-|Elektro 150 kW; Elektro 160 kW
+Urban Cruiser (2024)|2024|-|Elektro 106 kW; Elektro 128 kW; Elektro 135 kW
+iQ|2008|2015|1.0 50 kW; 1.33 72 kW
+Urban Cruiser (2009)|2009|2014|1.33 74 kW; 1.4 D-4D 66 kW
+Celica (T23)|1999|2006|1.8 105 kW; 1.8 TS 141 kW
+MR2 (W30)|1999|2007|1.8 103 kW
+
+@Lexus|0
+CT 200h|2011|2022|1.8 Hybrid 100 kW
+IS (XE20)|2005|2013|2.5 V6 153 kW; 2.2 D 130 kW; 2.2 D 150 kW
+IS (XE30)|2013|2025|2.5 Hybrid 164 kW; 2.0 Turbo 180 kW
+ES (XZ10)|2018|-|2.5 Hybrid 160 kW
+GS (S190/L10)|2005|2020|3.0 V6 183 kW; 3.5 V6 233 kW; 3.5 Hybrid 254 kW; 2.5 Hybrid 164 kW; 2.0 Turbo 180 kW
+NX|2014|-|2.5 Hybrid 145 kW; 2.0 Turbo 175 kW; 2.5 Hybrid 179 kW; 2.5 Plug-in 227 kW
+RX (XU30)|2003|2009|3.0 V6 150 kW; 3.5 V6 203 kW; 3.3 Hybrid 155 kW
+RX (AL10)|2009|2015|3.5 V6 203 kW; 3.5 Hybrid 220 kW
+RX (AL20)|2015|2022|2.0 Turbo 175 kW; 3.5 Hybrid 230 kW
+RX (2022)|2022|-|2.5 Hybrid 184 kW; 2.5 Plug-in 227 kW; 2.4 Turbo Hybrid 273 kW
+UX|2018|-|2.0 Hybrid 135 kW; 2.0 Hybrid 145 kW; UX 300e Elektro 150 kW
+LBX|2023|-|1.5 Hybrid 100 kW
+LS (XF40/XF50)|2006|-|4.6 V8 280 kW; 5.0 V8 Hybrid 327 kW; 3.5 V6 Hybrid 264 kW
+RZ|2022|-|Elektro 230 kW
+
+@Honda|0
+Jazz I (GD)|2001|2008|1.2 57 kW; 1.4 61 kW
+Jazz II (GE)|2008|2015|1.2 66 kW; 1.4 73 kW; 1.3 Hybrid 72 kW
+Jazz III (GK)|2015|2020|1.3 75 kW
+Jazz IV (GR)|2020|-|1.5 e:HEV 80 kW; 1.5 e:HEV 90 kW
+Civic VI|1995|2001|1.4 55 kW; 1.5 84 kW; 1.6 85 kW; 1.8 VTi 124 kW; 2.0 TDi 63 kW
+Civic VII|2001|2005|1.4 66 kW; 1.6 81 kW; 2.0 Type R 147 kW; 1.7 CTDi 74 kW
+Civic VIII|2005|2011|1.4 61 kW; 1.4 73 kW; 1.8 103 kW; 2.0 Type R 148 kW; 2.2 i-CTDi 103 kW
+Civic IX|2011|2017|1.4 73 kW; 1.8 104 kW; 2.0 Type R 228 kW; 1.6 i-DTEC 88 kW; 2.2 i-DTEC 110 kW
+Civic X|2017|2021|1.0 VTEC Turbo 95 kW; 1.5 VTEC Turbo 134 kW; 2.0 Type R 235 kW; 1.6 i-DTEC 88 kW
+Civic XI|2022|-|2.0 e:HEV 135 kW; 2.0 Type R 243 kW
+Accord VI|1998|2003|1.6 85 kW; 1.8 100 kW; 2.0 108 kW; 2.2 Type R 156 kW; 2.0 TDi 77 kW
+Accord VII|2003|2008|2.0 114 kW; 2.4 140 kW; 2.2 i-CTDi 103 kW
+Accord VIII|2008|2015|2.0 115 kW; 2.4 148 kW; 2.2 i-DTEC 110 kW; 2.2 i-DTEC 132 kW
+CR-V I|1995|2001|2.0 94 kW; 2.0 108 kW
+CR-V II|2001|2006|2.0 110 kW; 2.2 i-CTDi 103 kW
+CR-V III|2006|2012|2.0 110 kW; 2.4 122 kW; 2.2 i-CTDi 103 kW; 2.2 i-DTEC 110 kW
+CR-V IV|2012|2018|2.0 114 kW; 2.4 140 kW; 1.6 i-DTEC 88 kW; 1.6 i-DTEC 118 kW; 2.2 i-DTEC 110 kW
+CR-V V|2018|2023|1.5 VTEC Turbo 127 kW; 1.5 VTEC Turbo 142 kW; 2.0 i-MMD Hybrid 135 kW
+CR-V VI|2023|-|2.0 e:HEV 135 kW; 2.0 e:PHEV 135 kW
+HR-V I|1999|2006|1.6 77 kW; 1.6 VTEC 92 kW
+HR-V II|2015|2021|1.5 96 kW; 1.5 VTEC Turbo 134 kW; 1.6 i-DTEC 88 kW
+HR-V III|2021|-|1.5 e:HEV 96 kW
+ZR-V|2023|-|2.0 e:HEV 135 kW
+FR-V|2004|2009|1.7 92 kW; 1.8 103 kW; 2.0 110 kW; 2.2 i-CTDi 103 kW
+Stream|2001|2006|1.7 92 kW; 2.0 115 kW
+Insight|2009|2014|1.3 Hybrid 72 kW
+Legend|2006|2012|3.5 V6 217 kW
+S2000|1999|2009|2.0 177 kW
+e|2020|2023|Elektro 100 kW; Elektro 113 kW
+e:Ny1|2023|-|Elektro 150 kW
+
+@Nissan|0
+Micra K11|1992|2003|1.0 40 kW; 1.3 55 kW; 1.4 60 kW; 1.5 D 42 kW
+Micra K12|2002|2010|1.0 48 kW; 1.2 59 kW; 1.4 65 kW; 1.6 81 kW; 1.5 dCi 48 kW; 1.5 dCi 60 kW
+Micra K13|2010|2017|1.2 59 kW; 1.2 DIG-S 72 kW
+Micra K14|2017|2023|0.9 IG-T 66 kW; 1.0 52 kW; 1.0 IG-T 74 kW; 1.5 dCi 66 kW
+Micra (2025)|2025|-|Elektro 90 kW; Elektro 110 kW
+Note|2006|2013|1.4 65 kW; 1.6 81 kW; 1.5 dCi 63 kW; 1.5 dCi 66 kW
+Almera N15|1995|2000|1.4 55 kW; 1.6 73 kW; 2.0 D 55 kW
+Almera N16|2000|2006|1.5 66 kW; 1.8 85 kW; 1.5 dCi 60 kW; 2.2 Di 81 kW; 2.2 dCi 82 kW
+Almera Tino|2000|2006|1.8 85 kW; 2.0 100 kW; 2.2 dCi 85 kW
+Primera P11|1996|2002|1.6 73 kW; 1.8 83 kW; 2.0 103 kW; 2.0 TD 66 kW
+Primera P12|2002|2008|1.6 80 kW; 1.8 85 kW; 2.0 103 kW; 1.9 dCi 88 kW; 2.2 dCi 102 kW
+Tiida|2007|2012|1.6 81 kW; 1.8 93 kW; 1.5 dCi 77 kW
+Pulsar (C13)|2014|2018|1.2 DIG-T 85 kW; 1.6 DIG-T 140 kW; 1.5 dCi 81 kW
+Juke I|2010|2019|1.0 86 kW; 1.2 DIG-T 85 kW; 1.6 69 kW; 1.6 86 kW; 1.6 DIG-T 140 kW; 1.5 dCi 81 kW
+Juke II|2019|-|1.0 DIG-T 84 kW; 1.0 DIG-T 85 kW; 1.6 Hybrid 105 kW
+Qashqai I (J10)|2006|2013|1.6 84 kW; 2.0 104 kW; 1.5 dCi 78 kW; 1.6 dCi 96 kW; 2.0 dCi 110 kW
+Qashqai+2|2008|2013|1.6 84 kW; 2.0 104 kW; 1.5 dCi 78 kW; 2.0 dCi 110 kW
+Qashqai II (J11)|2013|2021|1.2 DIG-T 85 kW; 1.3 DIG-T 103 kW; 1.3 DIG-T 117 kW; 1.6 DIG-T 120 kW; 1.5 dCi 81 kW; 1.5 dCi 85 kW; 1.6 dCi 96 kW; 1.7 dCi 110 kW
+Qashqai III (J12)|2021|-|1.3 DIG-T Mild Hybrid 103 kW; 1.3 DIG-T Mild Hybrid 116 kW; 1.5 e-Power 140 kW
+X-Trail T30|2001|2007|2.0 103 kW; 2.5 121 kW; 2.2 dCi 100 kW
+X-Trail T31|2007|2014|2.0 104 kW; 2.5 124 kW; 2.0 dCi 110 kW; 2.0 dCi 127 kW
+X-Trail T32|2014|2022|1.6 DIG-T 120 kW; 1.3 DIG-T 117 kW; 1.6 dCi 96 kW; 1.7 dCi 110 kW; 2.0 dCi 130 kW
+X-Trail T33|2022|-|1.5 VC-T Mild Hybrid 120 kW; 1.5 e-Power 150 kW; 1.5 e-Power e-4ORCE 157 kW
+Murano Z50/Z51|2003|2015|3.5 V6 172 kW; 3.5 V6 188 kW; 2.5 dCi 140 kW
+Pathfinder R51|2005|2014|4.0 V6 198 kW; 2.5 dCi 128 kW; 2.5 dCi 140 kW; 3.0 V6 dCi 170 kW
+Navara D22|1997|2005|2.5 TD 59 kW; 2.5 Di 98 kW
+Navara D40|2005|2015|2.5 dCi 128 kW; 2.5 dCi 140 kW; 3.0 V6 dCi 170 kW
+Navara D23 (NP300)|2015|2022|2.3 dCi 118 kW; 2.3 dCi 140 kW
+Terrano II|1993|2006|2.4 85 kW; 2.7 TD 74 kW; 3.0 Di 113 kW
+Patrol Y61|1997|2010|3.0 Di 116 kW; 2.8 TD 95 kW; 4.8 183 kW
+Leaf ZE0|2010|2017|Elektro 80 kW
+Leaf ZE1|2017|2025|Elektro 110 kW; Elektro e+ 160 kW
+Leaf (2025)|2025|-|Elektro 130 kW; Elektro 160 kW
+Ariya|2022|-|Elektro 160 kW; Elektro 178 kW; Elektro e-4ORCE 225 kW
+Townstar|2022|-|1.3 DIG-T 96 kW; Elektro 90 kW
+NV200 / e-NV200|2009|2022|1.6 81 kW; 1.5 dCi 63 kW; 1.5 dCi 66 kW; e-NV200 Elektro 80 kW
+Primastar|2002|2014|1.9 dCi 60 kW; 1.9 dCi 74 kW; 2.0 dCi 66 kW; 2.0 dCi 84 kW; 2.5 dCi 99 kW
+NV300 / Primastar (2016)|2016|-|1.6 dCi 70 kW; 1.6 dCi 88 kW; 2.0 dCi 88 kW; 2.0 dCi 110 kW; 2.0 dCi 125 kW
+NV400 / Interstar|2010|-|2.3 dCi 74 kW; 2.3 dCi 92 kW; 2.3 dCi 107 kW; 2.3 dCi 120 kW; 2.0 dCi 96 kW
+Cabstar|2006|2013|2.5 dCi 81 kW; 2.5 dCi 92 kW; 3.0 dCi 110 kW
+370Z|2009|2020|3.7 V6 241 kW
+350Z|2003|2009|3.5 V6 206 kW; 3.5 V6 221 kW
+GT-R (R35)|2007|2025|3.8 V6 Turbo 357 kW; 3.8 V6 Turbo 419 kW
+
+@Infiniti|0
+Q30 / QX30|2015|2019|1.6t 115 kW; 2.0t 155 kW; 1.5d 80 kW; 2.2d 125 kW
+Q50|2013|2019|2.0t 155 kW; 3.5 Hybrid 268 kW; 2.2d 125 kW
+QX70 / FX|2003|2017|3.5 V6 206 kW; 3.7 V6 235 kW; 5.0 V8 287 kW; 3.0d 175 kW
+
+@Mazda|0
+121 / Demio|1996|2003|1.25 37 kW; 1.3 46 kW; 1.5 55 kW
+2 (DY)|2003|2007|1.25 55 kW; 1.4 59 kW; 1.6 74 kW; 1.4 MZ-CD 50 kW; 1.6 MZ-CD 66 kW
+2 (DE)|2007|2015|1.3 55 kW; 1.3 63 kW; 1.5 76 kW; 1.4 MZ-CD 50 kW; 1.6 MZ-CD 70 kW
+2 (DJ)|2014|2024|1.5 55 kW; 1.5 66 kW; 1.5 85 kW; 1.5 Mild Hybrid 66 kW; 1.5 Mild Hybrid 85 kW; 1.5 Skyactiv-D 77 kW
+2 Hybrid|2022|-|1.5 Hybrid 85 kW
+323 (BJ)|1998|2004|1.3 54 kW; 1.5 65 kW; 1.6 72 kW; 1.8 84 kW; 2.0 TD 66 kW; 2.0 DiTD 74 kW
+3 (BK)|2003|2009|1.4 62 kW; 1.6 77 kW; 2.0 110 kW; 2.3 MPS 191 kW; 1.6 MZ-CD 66 kW; 2.0 MZ-CD 105 kW
+3 (BL)|2009|2013|1.6 77 kW; 2.0 110 kW; 2.0 111 kW; 2.3 MPS 191 kW; 1.6 MZ-CD 80 kW; 2.2 MZR-CD 110 kW; 2.2 MZR-CD 136 kW
+3 (BM/BN)|2013|2019|1.5 74 kW; 2.0 88 kW; 2.0 121 kW; 1.5 Skyactiv-D 77 kW; 2.2 Skyactiv-D 110 kW
+3 (BP)|2019|-|2.0 Skyactiv-G 90 kW; 2.0 Skyactiv-G 110 kW; 2.0 Skyactiv-X 132 kW; 2.5 Skyactiv-G 103 kW; 1.8 Skyactiv-D 85 kW
+5 (CR/CW)|2005|2015|1.8 85 kW; 2.0 107 kW; 2.0 110 kW; 1.6 MZ-CD 85 kW; 2.0 MZR-CD 81 kW; 2.0 MZR-CD 105 kW
+6 (GG/GY)|2002|2008|1.8 88 kW; 2.0 104 kW; 2.3 121 kW; 2.3 MPS 191 kW; 2.0 MZR-CD 89 kW; 2.0 MZR-CD 100 kW
+6 (GH)|2007|2013|1.8 88 kW; 2.0 108 kW; 2.5 125 kW; 2.0 MZR-CD 103 kW; 2.2 MZR-CD 92 kW; 2.2 MZR-CD 120 kW; 2.2 MZR-CD 132 kW
+6 (GJ/GL)|2012|2024|2.0 107 kW; 2.0 121 kW; 2.5 141 kW; 2.2 Skyactiv-D 110 kW; 2.2 Skyactiv-D 129 kW; 2.2 Skyactiv-D 135 kW
+626 (GF/GW)|1997|2002|1.8 66 kW; 2.0 85 kW; 2.0 DiTD 74 kW; 2.0 DiTD 81 kW
+Premacy|1999|2005|1.8 74 kW; 1.9 74 kW; 2.0 DiTD 66 kW; 2.0 DiTD 74 kW
+Tribute|2000|2008|2.0 91 kW; 3.0 V6 145 kW
+CX-3|2015|2021|2.0 88 kW; 2.0 110 kW; 1.5 Skyactiv-D 77 kW; 1.8 Skyactiv-D 85 kW
+CX-30|2019|-|2.0 Skyactiv-G 90 kW; 2.0 Skyactiv-G 110 kW; 2.0 Skyactiv-X 132 kW; 2.5 Skyactiv-G 103 kW; 1.8 Skyactiv-D 85 kW
+CX-5 (KE)|2012|2017|2.0 118 kW; 2.0 121 kW; 2.5 141 kW; 2.2 Skyactiv-D 110 kW; 2.2 Skyactiv-D 129 kW
+CX-5 (KF)|2017|2025|2.0 121 kW; 2.0 Mild Hybrid 121 kW; 2.5 143 kW; 2.2 Skyactiv-D 110 kW; 2.2 Skyactiv-D 135 kW
+CX-5 (2025)|2025|-|2.5 Mild Hybrid 104 kW
+CX-60|2022|-|2.5 PHEV 241 kW; 3.3 Skyactiv-D 147 kW; 3.3 Skyactiv-D 187 kW
+CX-80|2024|-|2.5 PHEV 241 kW; 3.3 Skyactiv-D 187 kW
+CX-7|2006|2012|2.3 Turbo 175 kW; 2.2 MZR-CD 127 kW
+MX-5 (NB)|1998|2005|1.6 81 kW; 1.8 103 kW
+MX-5 (NC)|2005|2015|1.8 93 kW; 2.0 118 kW
+MX-5 (ND)|2015|-|1.5 96 kW; 2.0 118 kW; 2.0 135 kW
+RX-8|2003|2012|1.3 Wankel 141 kW; 1.3 Wankel 170 kW
+MX-30|2020|-|Elektro 107 kW; e-Skyactiv R-EV 125 kW
+6e|2025|-|Elektro 190 kW; Elektro 180 kW
+BT-50|2006|2015|2.5 TD 105 kW; 2.2 MZ-CD 110 kW; 3.2 MZ-CD 147 kW
+
+@Mitsubishi|0
+Colt (CJ0)|1996|2003|1.3 55 kW; 1.6 66 kW
+Colt (Z30)|2004|2012|1.1 55 kW; 1.3 70 kW; 1.5 80 kW; 1.5 Turbo 110 kW; 1.5 DI-D 50 kW; 1.5 DI-D 70 kW
+Colt (2023)|2023|-|1.0 67 kW; 1.6 Hybrid 105 kW
+Space Star|2012|-|1.0 52 kW; 1.2 59 kW
+Space Star (1998)|1998|2005|1.3 63 kW; 1.6 72 kW; 1.8 90 kW; 1.9 DI-D 75 kW
+Carisma|1995|2004|1.6 66 kW; 1.8 85 kW; 1.8 GDI 92 kW; 1.9 TD 66 kW; 1.9 DI-D 75 kW
+Lancer (CS)|2003|2008|1.3 60 kW; 1.6 72 kW; 2.0 99 kW; Evo IX 2.0 206 kW
+Lancer (CY)|2007|2017|1.5 80 kW; 1.6 86 kW; 1.8 105 kW; 2.0 DI-D 103 kW; 1.8 DI-D 85 kW; Evo X 2.0 217 kW
+Galant (EA)|1996|2004|2.0 100 kW; 2.4 GDI 106 kW; 2.5 V6 120 kW
+Grandis|2003|2011|2.4 121 kW; 2.0 DI-D 100 kW
+Outlander I|2003|2007|2.0 100 kW; 2.4 118 kW
+Outlander II|2007|2012|2.0 108 kW; 2.4 125 kW; 3.0 V6 162 kW; 2.0 DI-D 103 kW; 2.2 DI-D 115 kW
+Outlander III|2012|2021|2.0 110 kW; 2.4 124 kW; 2.0 PHEV 89 kW; 2.4 PHEV 99 kW; 2.2 DI-D 110 kW; 2.3 DI-D 110 kW
+Outlander (2024)|2024|-|2.4 PHEV 225 kW
+ASX|2010|2023|1.6 86 kW; 1.8 103 kW; 2.0 110 kW; 1.6 DI-D 84 kW; 1.8 DI-D 85 kW; 1.8 DI-D 110 kW; 2.2 DI-D 110 kW
+ASX (2023)|2023|-|1.0 67 kW; 1.3 Mild Hybrid 103 kW; 1.6 Hybrid 105 kW; 1.6 PHEV 117 kW
+Eclipse Cross|2017|-|1.5 Turbo 120 kW; 2.4 PHEV 138 kW; 2.2 DI-D 110 kW
+Pajero III/IV|1999|2021|3.2 DI-D 118 kW; 3.2 DI-D 125 kW; 3.2 DI-D 147 kW; 3.5 V6 149 kW; 3.8 V6 184 kW
+Pajero Pinin|1999|2007|1.8 GDI 84 kW; 2.0 GDI 95 kW
+L200 (K74)|1996|2006|2.5 TD 73 kW; 2.5 DI-D 85 kW
+L200 (KB4)|2006|2015|2.5 DI-D 100 kW; 2.5 DI-D 131 kW; 2.5 DI-D 115 kW
+L200 (KL)|2015|2024|2.4 DI-D 113 kW; 2.4 DI-D 133 kW; 2.2 DI-D 110 kW
+i-MiEV|2009|2020|Elektro 49 kW
+
+@Subaru|0
+Impreza (GC/GF)|1993|2000|1.6 66 kW; 1.8 76 kW; 2.0 85 kW; 2.0 Turbo 160 kW
+Impreza (GD/GG)|2000|2007|1.5 74 kW; 1.6 70 kW; 2.0 92 kW; 2.0 Turbo 160 kW; 2.5 Turbo 206 kW
+Impreza (GE/GH)|2007|2011|1.5 79 kW; 2.0 110 kW; 2.0 D 110 kW; 2.5 Turbo 169 kW
+Impreza (GJ/GP)|2011|2016|1.6 84 kW; 2.0 110 kW
+Impreza (GT)|2016|2023|1.6 84 kW; 2.0 115 kW
+Legacy III / Outback II|1998|2003|2.0 92 kW; 2.5 115 kW; 3.0 H6 154 kW
+Legacy IV / Outback III|2003|2009|2.0 101 kW; 2.0 Turbo 132 kW; 2.5 127 kW; 3.0 H6 180 kW; 2.0 D 110 kW
+Legacy V / Outback IV|2009|2014|2.0 110 kW; 2.5 123 kW; 3.6 H6 191 kW; 2.0 D 110 kW
+Outback V|2014|2021|2.5 129 kW; 2.0 D 110 kW
+Outback VI|2021|-|2.5 124 kW
+Forester (SF/SG)|1997|2008|2.0 92 kW; 2.0 Turbo 130 kW; 2.5 115 kW; 2.5 Turbo 155 kW
+Forester (SH)|2008|2013|2.0 110 kW; 2.5 Turbo 169 kW; 2.0 D 108 kW
+Forester (SJ)|2013|2018|2.0 110 kW; 2.0 XT 177 kW; 2.0 D 108 kW
+Forester (SK)|2018|2024|2.0 e-Boxer 110 kW; 2.5 136 kW
+Forester (SL)|2024|-|2.0 e-Boxer 100 kW
+XV / Crosstrek|2011|-|1.6 84 kW; 2.0 110 kW; 2.0 e-Boxer 110 kW; 2.0 D 108 kW
+Levorg|2015|2023|1.6 Turbo 125 kW; 1.6 Turbo 130 kW; 2.0 Turbo 220 kW
+BRZ|2012|-|2.0 147 kW; 2.4 172 kW
+Justy (G3X)|2003|2007|1.3 69 kW; 1.5 73 kW
+Trezia|2011|2016|1.33 73 kW; 1.4 D 66 kW
+Solterra|2022|-|Elektro 160 kW
+
+@Suzuki|0
+Alto|2009|2014|1.0 50 kW
+Splash|2008|2014|1.0 48 kW; 1.2 63 kW; 1.3 DDiS 55 kW
+Wagon R+|2000|2008|1.0 43 kW; 1.2 55 kW; 1.3 55 kW; 1.3 DDiS 51 kW
+Ignis I|2000|2008|1.3 61 kW; 1.5 73 kW; 1.3 DDiS 51 kW
+Ignis II|2016|-|1.2 66 kW; 1.2 Mild Hybrid 61 kW
+Swift II (EA/MA)|1989|2003|1.0 39 kW; 1.3 50 kW
+Swift III (RS)|2005|2010|1.3 68 kW; 1.5 75 kW; 1.6 Sport 92 kW; 1.3 DDiS 55 kW
+Swift IV (FZ/NZ)|2010|2017|1.2 69 kW; 1.6 Sport 100 kW; 1.3 DDiS 55 kW
+Swift V (AZ)|2017|2024|1.0 BoosterJet 82 kW; 1.2 66 kW; 1.2 Mild Hybrid 61 kW; 1.4 BoosterJet 103 kW
+Swift VI|2024|-|1.2 Mild Hybrid 61 kW
+Baleno (2016)|2016|2020|1.0 BoosterJet 82 kW; 1.2 66 kW
+Liana|2001|2007|1.3 66 kW; 1.6 76 kW; 1.4 DDiS 66 kW
+SX4|2006|2014|1.5 82 kW; 1.6 79 kW; 1.6 88 kW; 1.6 DDiS 88 kW; 1.9 DDiS 88 kW; 2.0 DDiS 99 kW
+SX4 S-Cross|2013|2021|1.0 BoosterJet 82 kW; 1.4 BoosterJet 103 kW; 1.6 88 kW; 1.4 Mild Hybrid 95 kW; 1.6 DDiS 88 kW
+S-Cross (2021)|2021|-|1.4 Mild Hybrid 95 kW; 1.5 Hybrid 85 kW
+Vitara (1988)|1988|1998|1.6 59 kW; 1.6 70 kW; 2.0 TD 52 kW
+Grand Vitara I|1998|2005|1.6 69 kW; 2.0 94 kW; 2.5 V6 106 kW; 2.0 TD 64 kW
+Grand Vitara II|2005|2015|1.6 78 kW; 2.0 103 kW; 2.4 124 kW; 3.2 V6 170 kW; 1.9 DDiS 95 kW
+Vitara (LY)|2015|-|1.0 BoosterJet 82 kW; 1.4 BoosterJet 103 kW; 1.6 88 kW; 1.4 Mild Hybrid 95 kW; 1.5 Hybrid 85 kW; 1.6 DDiS 88 kW
+e Vitara|2025|-|Elektro 106 kW; Elektro 128 kW; Elektro 135 kW
+Jimny (FJ)|1998|2018|1.3 59 kW; 1.3 63 kW; 1.5 DDiS 48 kW; 1.5 DDiS 63 kW
+Jimny (GJ)|2018|-|1.5 75 kW
+Across|2020|-|2.5 PHEV 225 kW
+Swace|2020|-|1.8 Hybrid 90 kW
+
+@Daihatsu|0
+Cuore|1995|2011|0.85 31 kW; 1.0 43 kW; 1.0 51 kW
+Sirion|1998|2013|1.0 40 kW; 1.0 51 kW; 1.3 64 kW; 1.3 67 kW; 1.5 76 kW
+Terios|1997|2017|1.3 61 kW; 1.3 63 kW; 1.5 77 kW
+YRV|2001|2005|1.0 47 kW; 1.3 64 kW; 1.3 Turbo 103 kW
+Materia|2006|2013|1.3 67 kW; 1.5 76 kW
+Copen|2002|2012|0.66 Turbo 50 kW; 1.3 64 kW
+
+@Isuzu|0
+D-Max I|2002|2012|2.5 TD 100 kW; 3.0 TD 120 kW
+D-Max II|2012|2020|1.9 Ddi 120 kW; 2.5 TD 120 kW
+D-Max III|2020|-|1.9 Ddi 120 kW; 2.2 Ddi 120 kW
+Trooper|1991|2004|3.0 DTi 117 kW; 3.5 V6 158 kW

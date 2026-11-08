@@ -1,0 +1,183 @@
+# Mercedes-Benz, Smart, Opel, Ford – údaje z pamäte (8. 11. 2026), nie overený katalóg.
+
+@Mercedes-Benz|1
+A (W168)|1997|2004|A 140 60 kW; A 160 75 kW; A 190 92 kW; A 210 103 kW; A 160 CDI 44 kW; A 170 CDI 66 kW
+A (W169)|2004|2012|A 150 70 kW; A 170 85 kW; A 200 100 kW; A 200 Turbo 142 kW; A 160 CDI 60 kW; A 180 CDI 80 kW; A 200 CDI 103 kW
+A (W176)|2012|2018|A 160 75 kW; A 180 90 kW; A 200 115 kW; A 250 155 kW; A 45 AMG 265 kW; A 160 CDI 66 kW; A 180 CDI 80 kW; A 200 CDI 100 kW; A 220 CDI 125 kW
+A (W177)|2018|-|A 160 80 kW; A 180 100 kW; A 200 120 kW; A 250 165 kW; A 250 e 160 kW; A 35 AMG 225 kW; A 180 d 85 kW; A 200 d 110 kW; A 220 d 140 kW
+B (W245)|2005|2011|B 150 70 kW; B 170 85 kW; B 200 100 kW; B 200 Turbo 142 kW; B 180 CDI 80 kW; B 200 CDI 103 kW
+B (W246)|2011|2018|B 160 75 kW; B 180 90 kW; B 200 115 kW; B 220 4MATIC 135 kW; B 180 CDI 80 kW; B 200 CDI 100 kW; B 220 CDI 125 kW; B 250 e Elektro 132 kW
+B (W247)|2018|-|B 160 80 kW; B 180 100 kW; B 200 120 kW; B 250 e 160 kW; B 180 d 85 kW; B 200 d 110 kW; B 220 d 140 kW
+C (W202)|1993|2000|C 180 90 kW; C 200 100 kW; C 220 110 kW; C 230 Kompressor 142 kW; C 280 142 kW; C 200 D 55 kW; C 220 D 70 kW; C 220 CDI 92 kW; C 250 TD 110 kW
+C (W203)|2000|2007|C 180 95 kW; C 180 Kompressor 105 kW; C 200 Kompressor 120 kW; C 230 150 kW; C 240 125 kW; C 280 170 kW; C 320 160 kW; C 200 CDI 75 kW; C 200 CDI 90 kW; C 220 CDI 105 kW; C 220 CDI 110 kW; C 270 CDI 125 kW; C 320 CDI 165 kW
+C (W204)|2007|2014|C 180 Kompressor 115 kW; C 180 CGI 115 kW; C 200 Kompressor 135 kW; C 250 CGI 150 kW; C 280 170 kW; C 350 200 kW; C 180 CDI 88 kW; C 200 CDI 100 kW; C 220 CDI 125 kW; C 250 CDI 150 kW; C 320 CDI 165 kW; C 350 CDI 170 kW
+C (W205)|2014|2021|C 160 95 kW; C 180 115 kW; C 200 135 kW; C 250 155 kW; C 300 180 kW; C 43 AMG 270 kW; C 180 d 85 kW; C 200 d 100 kW; C 220 d 125 kW; C 250 d 150 kW; C 300 h 150 kW; C 350 e 155 kW
+C (W206)|2021|-|C 180 125 kW; C 200 150 kW; C 300 190 kW; C 300 e 230 kW; C 200 d 120 kW; C 220 d 147 kW; C 300 d 195 kW
+CLA (C117)|2013|2019|CLA 180 90 kW; CLA 200 115 kW; CLA 250 155 kW; CLA 45 AMG 265 kW; CLA 180 d 80 kW; CLA 200 d 100 kW; CLA 220 d 130 kW
+CLA (C118)|2019|2025|CLA 180 100 kW; CLA 200 120 kW; CLA 250 165 kW; CLA 250 e 160 kW; CLA 35 AMG 225 kW; CLA 180 d 85 kW; CLA 200 d 110 kW; CLA 220 d 140 kW
+CLA (C178)|2025|-|CLA 250+ Elektro 200 kW; CLA 350 4MATIC Elektro 260 kW; CLA 200 Hybrid 120 kW
+CLK (C208)|1997|2003|CLK 200 100 kW; CLK 200 Kompressor 141 kW; CLK 230 Kompressor 142 kW; CLK 320 160 kW; CLK 430 205 kW
+CLK (C209)|2002|2010|CLK 200 Kompressor 120 kW; CLK 240 125 kW; CLK 320 160 kW; CLK 350 200 kW; CLK 500 225 kW; CLK 220 CDI 110 kW; CLK 270 CDI 125 kW; CLK 320 CDI 165 kW
+CLS (C219)|2004|2010|CLS 350 200 kW; CLS 500 225 kW; CLS 320 CDI 165 kW
+CLS (C218)|2010|2018|CLS 350 225 kW; CLS 500 300 kW; CLS 250 CDI 150 kW; CLS 350 CDI 195 kW
+CLS (C257)|2018|2023|CLS 350 220 kW; CLS 450 270 kW; CLS 300 d 180 kW; CLS 400 d 250 kW
+E (W210)|1995|2003|E 200 100 kW; E 230 110 kW; E 240 125 kW; E 280 150 kW; E 320 165 kW; E 430 205 kW; E 220 D 70 kW; E 290 TD 95 kW; E 200 CDI 75 kW; E 220 CDI 105 kW; E 270 CDI 125 kW; E 300 TD 130 kW; E 320 CDI 145 kW
+E (W211)|2002|2009|E 200 Kompressor 120 kW; E 240 130 kW; E 280 170 kW; E 320 165 kW; E 350 200 kW; E 500 225 kW; E 200 CDI 90 kW; E 220 CDI 110 kW; E 270 CDI 130 kW; E 280 CDI 140 kW; E 320 CDI 150 kW; E 320 CDI 165 kW
+E (W212)|2009|2016|E 200 CGI 135 kW; E 250 CGI 150 kW; E 350 CGI 215 kW; E 500 285 kW; E 200 CDI 100 kW; E 220 CDI 125 kW; E 250 CDI 150 kW; E 300 BlueTEC Hybrid 150 kW; E 350 CDI 170 kW; E 350 BlueTEC 185 kW
+E (W213)|2016|2023|E 200 135 kW; E 300 180 kW; E 350 e 155 kW; E 400 245 kW; E 200 d 110 kW; E 220 d 143 kW; E 300 de 225 kW; E 350 d 190 kW; E 400 d 250 kW
+E (W214)|2023|-|E 200 150 kW; E 300 e 230 kW; E 220 d 145 kW; E 300 de 230 kW; E 450 275 kW
+S (W140)|1991|1998|S 280 142 kW; S 320 170 kW; S 420 205 kW; S 500 235 kW; S 600 290 kW; S 300 TD 130 kW
+S (W220)|1998|2005|S 280 150 kW; S 320 165 kW; S 350 180 kW; S 430 205 kW; S 500 225 kW; S 320 CDI 145 kW; S 400 CDI 184 kW
+S (W221)|2005|2013|S 280 170 kW; S 350 200 kW; S 450 250 kW; S 500 285 kW; S 320 CDI 173 kW; S 350 CDI 190 kW; S 420 CDI 235 kW; S 400 Hybrid 225 kW
+S (W222)|2013|2020|S 400 245 kW; S 450 270 kW; S 500 335 kW; S 560 345 kW; S 350 d 190 kW; S 400 d 250 kW; S 500 e 325 kW
+S (W223)|2020|-|S 450 270 kW; S 500 320 kW; S 580 370 kW; S 350 d 210 kW; S 400 d 243 kW; S 580 e 375 kW
+SL (R230)|2001|2012|SL 350 180 kW; SL 500 225 kW; SL 55 AMG 368 kW; SL 600 368 kW
+SLK (R170)|1996|2004|SLK 200 100 kW; SLK 200 Kompressor 120 kW; SLK 230 Kompressor 145 kW; SLK 320 160 kW
+SLK (R171)|2004|2011|SLK 200 Kompressor 120 kW; SLK 280 170 kW; SLK 350 200 kW
+SLK / SLC (R172)|2011|2020|SLK 200 135 kW; SLK 250 150 kW; SLK 350 225 kW; SLK 250 CDI 150 kW
+GLA (X156)|2013|2020|GLA 180 90 kW; GLA 200 115 kW; GLA 250 155 kW; GLA 180 d 80 kW; GLA 200 d 100 kW; GLA 220 d 130 kW
+GLA (H247)|2020|-|GLA 180 100 kW; GLA 200 120 kW; GLA 250 e 160 kW; GLA 200 d 110 kW; GLA 220 d 140 kW
+GLB (X247)|2019|-|GLB 180 100 kW; GLB 200 120 kW; GLB 250 165 kW; GLB 180 d 85 kW; GLB 200 d 110 kW; GLB 220 d 140 kW
+GLC (X253)|2015|2022|GLC 200 145 kW; GLC 250 155 kW; GLC 300 190 kW; GLC 300 e 235 kW; GLC 200 d 120 kW; GLC 220 d 125 kW; GLC 250 d 150 kW; GLC 300 d 180 kW
+GLC (X254)|2022|-|GLC 200 150 kW; GLC 300 190 kW; GLC 300 e 230 kW; GLC 200 d 120 kW; GLC 220 d 145 kW; GLC 300 de 245 kW
+GLK (X204)|2008|2015|GLK 280 170 kW; GLK 350 200 kW; GLK 200 CDI 105 kW; GLK 220 CDI 125 kW; GLK 250 CDI 150 kW; GLK 320 CDI 165 kW
+ML (W163)|1997|2005|ML 230 110 kW; ML 320 160 kW; ML 350 173 kW; ML 430 200 kW; ML 500 215 kW; ML 270 CDI 120 kW; ML 400 CDI 184 kW
+ML (W164)|2005|2011|ML 280 CDI 140 kW; ML 300 CDI 150 kW; ML 320 CDI 165 kW; ML 350 200 kW; ML 350 CDI 170 kW; ML 420 CDI 225 kW; ML 500 225 kW
+ML / GLE (W166)|2011|2019|ML 250 BlueTEC 150 kW; ML 350 BlueTEC 190 kW; ML 350 225 kW; ML 500 300 kW; GLE 250 d 150 kW; GLE 350 d 190 kW; GLE 400 245 kW; GLE 500 e 325 kW
+GLE (V167)|2019|-|GLE 300 d 180 kW; GLE 350 d 200 kW; GLE 400 d 243 kW; GLE 350 de 235 kW; GLE 450 270 kW; GLE 400 e 280 kW
+GL / GLS (X164/X166)|2006|2019|GL 320 CDI 165 kW; GL 350 CDI 190 kW; GL 420 CDI 225 kW; GL 450 250 kW; GL 500 285 kW; GLS 350 d 190 kW; GLS 400 245 kW
+GLS (X167)|2019|-|GLS 350 d 210 kW; GLS 400 d 243 kW; GLS 450 270 kW; GLS 580 360 kW
+G (W463)|1990|2018|G 300 125 kW; G 320 160 kW; G 500 220 kW; G 270 CDI 115 kW; G 300 CDI 135 kW; G 350 d 180 kW; G 400 CDI 184 kW; G 63 AMG 400 kW
+G (W463A)|2018|-|G 400 d 243 kW; G 500 310 kW; G 63 AMG 430 kW; G 580 Elektro 432 kW
+Vaneo|2002|2005|1.6 60 kW; 1.9 92 kW; 1.7 CDI 67 kW
+Citan (W415)|2012|2021|109 CDI 66 kW; 111 CDI 81 kW; 108 CDI 55 kW; 112 84 kW
+Citan (W420)|2021|-|108 CDI 55 kW; 110 CDI 70 kW; 112 CDI 85 kW; 113 96 kW; e-Citan Elektro 90 kW
+T-Class (W420)|2022|-|T 160 75 kW; T 180 96 kW; T 180 d 85 kW; EQT Elektro 90 kW
+Vito / V (W638)|1996|2003|108 D 58 kW; 110 D 72 kW; 108 CDI 60 kW; 110 CDI 75 kW; 112 CDI 90 kW; 113 105 kW; 114 105 kW
+Vito / Viano (W639)|2003|2014|109 CDI 70 kW; 111 CDI 80 kW; 113 CDI 100 kW; 115 CDI 110 kW; 116 CDI 120 kW; 120 CDI 150 kW; 122 CDI 165 kW; 3.0 V6 140 kW; 3.2 V6 140 kW
+Vito / V (W447)|2014|-|109 CDI 65 kW; 111 CDI 84 kW; 114 CDI 100 kW; 116 CDI 120 kW; 119 CDI 140 kW; 124 CDI 174 kW; V 220 d 120 kW; V 250 d 140 kW; V 300 d 176 kW; eVito Elektro 85 kW
+Sprinter (T1N)|1995|2006|208 CDI 60 kW; 211 CDI 80 kW; 213 CDI 95 kW; 216 CDI 115 kW; 308 D 58 kW; 312 D 90 kW; 313 CDI 95 kW; 316 CDI 115 kW; 413 CDI 95 kW
+Sprinter (NCV3, W906)|2006|2018|209 CDI 65 kW; 210 CDI 70 kW; 211 CDI 80 kW; 213 CDI 95 kW; 215 CDI 110 kW; 216 CDI 120 kW; 313 CDI 95 kW; 316 CDI 120 kW; 318 CDI 135 kW; 319 CDI 140 kW; 516 CDI 120 kW
+Sprinter (W907/W910)|2018|-|211 CDI 84 kW; 214 CDI 105 kW; 311 CDI 84 kW; 314 CDI 105 kW; 316 CDI 120 kW; 317 CDI 125 kW; 319 CDI 140 kW; 519 CDI 140 kW; eSprinter Elektro 85 kW
+X (W470)|2017|2020|X 220 d 120 kW; X 250 d 140 kW; X 350 d 190 kW
+EQA|2021|-|250 Elektro 140 kW; 300 4MATIC Elektro 168 kW; 350 4MATIC Elektro 215 kW
+EQB|2021|-|250 Elektro 140 kW; 300 4MATIC Elektro 168 kW; 350 4MATIC Elektro 215 kW
+EQC|2019|2023|400 4MATIC Elektro 300 kW
+EQE|2022|-|300 Elektro 180 kW; 350 Elektro 215 kW; 500 4MATIC Elektro 300 kW
+EQS|2021|-|450+ Elektro 245 kW; 580 4MATIC Elektro 385 kW
+EQV|2020|-|300 Elektro 150 kW
+
+@Smart|0
+Fortwo (W450)|1998|2007|0.6 33 kW; 0.6 40 kW; 0.7 37 kW; 0.7 45 kW; 0.8 CDI 30 kW
+Forfour (W454)|2004|2006|1.1 55 kW; 1.3 70 kW; 1.5 80 kW; 1.5 CDI 50 kW; 1.5 CDI 70 kW
+Fortwo (W451)|2007|2014|1.0 45 kW; 1.0 52 kW; 1.0 Turbo 62 kW; 0.8 CDI 33 kW; 0.8 CDI 40 kW; Electric Drive 55 kW
+Fortwo / Forfour (W453)|2014|2024|1.0 52 kW; 0.9 Turbo 66 kW; 0.9 Turbo 80 kW; EQ Elektro 60 kW
+#1|2022|-|Elektro 200 kW; Brabus Elektro 315 kW
+#3|2023|-|Elektro 200 kW; Brabus Elektro 315 kW
+
+@Opel|1
+Corsa B|1993|2000|1.0 40 kW; 1.2 33 kW; 1.2 48 kW; 1.4 44 kW; 1.4 66 kW; 1.6 GSi 79 kW; 1.5 D 37 kW; 1.5 TD 49 kW; 1.7 D 44 kW
+Corsa C|2000|2006|1.0 43 kW; 1.2 55 kW; 1.4 66 kW; 1.8 92 kW; 1.7 DI 48 kW; 1.7 DTI 55 kW; 1.3 CDTI 51 kW; 1.7 CDTI 74 kW
+Corsa D|2006|2014|1.0 44 kW; 1.2 59 kW; 1.4 66 kW; 1.4 74 kW; 1.6 Turbo 110 kW; 1.3 CDTI 55 kW; 1.3 CDTI 66 kW; 1.3 CDTI 70 kW; 1.7 CDTI 92 kW
+Corsa E|2014|2019|1.0 Turbo 66 kW; 1.0 Turbo 85 kW; 1.2 51 kW; 1.4 55 kW; 1.4 66 kW; 1.4 Turbo 110 kW; 1.6 Turbo 152 kW; 1.3 CDTI 55 kW; 1.3 CDTI 70 kW
+Corsa F|2019|-|1.2 55 kW; 1.2 Turbo 74 kW; 1.2 Turbo 96 kW; 1.5 Diesel 75 kW; Corsa-e Elektro 100 kW; Corsa-e Elektro 115 kW
+Tigra A|1994|2000|1.4 66 kW; 1.6 74 kW
+Tigra TwinTop|2004|2009|1.4 66 kW; 1.8 92 kW; 1.3 CDTI 51 kW
+Adam|2012|2019|1.0 Turbo 66 kW; 1.2 51 kW; 1.4 64 kW; 1.4 74 kW; 1.4 Turbo 110 kW
+Karl|2015|2019|1.0 55 kW
+Agila A|2000|2007|1.0 43 kW; 1.2 55 kW; 1.3 CDTI 51 kW
+Agila B|2008|2014|1.0 50 kW; 1.2 69 kW; 1.3 CDTI 55 kW
+Astra F|1991|2002|1.4 44 kW; 1.4 60 kW; 1.6 52 kW; 1.6 74 kW; 1.8 66 kW; 2.0 85 kW; 1.7 D 50 kW; 1.7 TD 50 kW; 1.7 TDS 60 kW
+Astra G|1998|2009|1.2 48 kW; 1.4 55 kW; 1.4 66 kW; 1.6 55 kW; 1.6 74 kW; 1.8 85 kW; 2.0 100 kW; 2.0 Turbo 140 kW; 1.7 TD 50 kW; 1.7 DTI 55 kW; 1.7 CDTI 59 kW; 2.0 DI 60 kW; 2.0 DTI 74 kW; 2.2 DTI 92 kW
+Astra H|2004|2014|1.4 66 kW; 1.6 77 kW; 1.6 85 kW; 1.6 Turbo 132 kW; 1.8 92 kW; 1.8 103 kW; 2.0 Turbo 125 kW; 2.0 Turbo 147 kW; 2.0 Turbo 177 kW; 1.3 CDTI 66 kW; 1.7 CDTI 59 kW; 1.7 CDTI 74 kW; 1.7 CDTI 81 kW; 1.9 CDTI 74 kW; 1.9 CDTI 88 kW; 1.9 CDTI 110 kW
+Astra J|2009|2015|1.4 74 kW; 1.4 Turbo 88 kW; 1.4 Turbo 103 kW; 1.6 85 kW; 1.6 Turbo 132 kW; 2.0 Turbo 206 kW; 1.3 CDTI 70 kW; 1.7 CDTI 81 kW; 1.7 CDTI 92 kW; 1.7 CDTI 96 kW; 2.0 CDTI 118 kW; 2.0 CDTI 121 kW; 2.0 BiTurbo CDTI 143 kW
+Astra K|2015|2021|1.0 Turbo 77 kW; 1.4 74 kW; 1.4 Turbo 92 kW; 1.4 Turbo 110 kW; 1.6 Turbo 147 kW; 1.2 Turbo 81 kW; 1.2 Turbo 96 kW; 1.2 Turbo 107 kW; 1.4 Turbo 107 kW; 1.6 CDTI 70 kW; 1.6 CDTI 81 kW; 1.6 CDTI 100 kW; 1.6 BiTurbo CDTI 118 kW; 1.5 Diesel 77 kW; 1.5 Diesel 90 kW
+Astra L|2021|-|1.2 Turbo 81 kW; 1.2 Turbo 96 kW; 1.5 Diesel 96 kW; 1.6 PHEV 133 kW; 1.6 PHEV 165 kW; Astra Electric 115 kW
+Zafira A|1999|2005|1.6 74 kW; 1.8 85 kW; 2.2 108 kW; 2.0 Turbo 141 kW; 2.0 DTI 74 kW; 2.2 DTI 92 kW
+Zafira B|2005|2014|1.6 77 kW; 1.6 85 kW; 1.6 CNG 69 kW; 1.8 103 kW; 2.2 110 kW; 2.0 Turbo 147 kW; 1.7 CDTI 81 kW; 1.7 CDTI 92 kW; 1.9 CDTI 74 kW; 1.9 CDTI 88 kW; 1.9 CDTI 110 kW
+Zafira C (Tourer)|2011|2019|1.4 Turbo 88 kW; 1.4 Turbo 103 kW; 1.6 Turbo 125 kW; 1.6 CNG 110 kW; 1.6 CDTI 88 kW; 1.6 CDTI 99 kW; 1.6 CDTI 100 kW; 2.0 CDTI 81 kW; 2.0 CDTI 96 kW; 2.0 CDTI 121 kW
+Zafira Life|2019|-|1.5 Diesel 75 kW; 1.5 Diesel 88 kW; 2.0 Diesel 110 kW; 2.0 Diesel 130 kW; Zafira-e Elektro 100 kW
+Meriva A|2003|2010|1.4 66 kW; 1.6 64 kW; 1.6 74 kW; 1.8 92 kW; 1.6 Turbo 132 kW; 1.3 CDTI 55 kW; 1.7 CDTI 55 kW; 1.7 CDTI 74 kW
+Meriva B|2010|2017|1.4 74 kW; 1.4 Turbo 88 kW; 1.4 Turbo 103 kW; 1.3 CDTI 70 kW; 1.6 CDTI 81 kW; 1.6 CDTI 100 kW; 1.7 CDTI 74 kW; 1.7 CDTI 81 kW; 1.7 CDTI 96 kW
+Vectra B|1995|2002|1.6 55 kW; 1.6 74 kW; 1.8 85 kW; 2.0 100 kW; 2.2 108 kW; 2.5 V6 125 kW; 2.6 V6 125 kW; 1.7 TD 60 kW; 2.0 DI 60 kW; 2.0 DTI 74 kW; 2.2 DTI 92 kW
+Vectra C|2002|2009|1.6 74 kW; 1.8 90 kW; 1.8 103 kW; 2.2 108 kW; 2.2 114 kW; 2.0 Turbo 129 kW; 2.8 V6 Turbo 169 kW; 3.2 V6 155 kW; 1.9 CDTI 74 kW; 1.9 CDTI 88 kW; 1.9 CDTI 110 kW; 2.2 DTI 92 kW; 3.0 V6 CDTI 130 kW; 3.0 V6 CDTI 135 kW
+Signum|2003|2008|1.8 90 kW; 2.2 114 kW; 2.0 Turbo 129 kW; 2.8 V6 Turbo 169 kW; 3.2 V6 155 kW; 1.9 CDTI 88 kW; 1.9 CDTI 110 kW; 3.0 V6 CDTI 135 kW
+Insignia A|2008|2017|1.4 Turbo 103 kW; 1.6 85 kW; 1.6 Turbo 125 kW; 1.6 Turbo 132 kW; 1.8 103 kW; 2.0 Turbo 162 kW; 2.0 Turbo 184 kW; 2.8 V6 Turbo 191 kW; 1.6 CDTI 88 kW; 1.6 CDTI 100 kW; 2.0 CDTI 81 kW; 2.0 CDTI 96 kW; 2.0 CDTI 118 kW; 2.0 CDTI 120 kW; 2.0 BiTurbo CDTI 143 kW
+Insignia B|2017|2022|1.5 Turbo 103 kW; 1.5 Turbo 121 kW; 1.4 Turbo 92 kW; 2.0 Turbo 191 kW; 1.6 CDTI 81 kW; 1.6 CDTI 100 kW; 2.0 CDTI 125 kW; 2.0 BiTurbo CDTI 154 kW; 1.5 Diesel 90 kW; 2.0 Diesel 128 kW
+Omega B|1994|2003|2.0 85 kW; 2.0 100 kW; 2.2 106 kW; 2.5 V6 125 kW; 3.0 V6 155 kW; 3.2 V6 160 kW; 2.0 DTI 74 kW; 2.2 DTI 88 kW; 2.5 TD 96 kW
+Mokka (A)|2012|2019|1.4 Turbo 103 kW; 1.6 85 kW; 1.4 LPG 103 kW; 1.6 CDTI 81 kW; 1.6 CDTI 100 kW; 1.7 CDTI 96 kW
+Mokka (B)|2020|-|1.2 Turbo 74 kW; 1.2 Turbo 96 kW; 1.2 Turbo 100 kW; 1.5 Diesel 81 kW; Mokka-e Elektro 100 kW; Mokka-e Elektro 115 kW
+Crossland X / Crossland|2017|2024|1.2 60 kW; 1.2 Turbo 81 kW; 1.2 Turbo 96 kW; 1.6 Diesel 73 kW; 1.5 Diesel 75 kW; 1.5 Diesel 88 kW
+Frontera|2024|-|1.2 Turbo 74 kW; 1.2 Turbo Hybrid 100 kW; Frontera Electric 83 kW
+Grandland X / Grandland|2017|2024|1.2 Turbo 96 kW; 1.6 Turbo 133 kW; 1.6 PHEV 165 kW; 1.6 PHEV4 220 kW; 1.5 Diesel 96 kW; 2.0 Diesel 130 kW
+Grandland (2024)|2024|-|1.2 Turbo Hybrid 107 kW; 1.6 PHEV 144 kW; Grandland Electric 157 kW
+Antara|2006|2015|2.4 103 kW; 2.4 123 kW; 3.2 V6 167 kW; 2.0 CDTI 93 kW; 2.0 CDTI 110 kW; 2.2 CDTI 120 kW; 2.2 CDTI 135 kW
+Frontera B|1998|2004|2.2 100 kW; 3.2 V6 151 kW; 2.2 DTI 85 kW
+Combo C|2001|2011|1.4 66 kW; 1.6 64 kW; 1.6 CNG 69 kW; 1.3 CDTI 51 kW; 1.3 CDTI 55 kW; 1.7 DI 48 kW; 1.7 DTI 55 kW; 1.7 CDTI 74 kW
+Combo D|2011|2018|1.4 70 kW; 1.4 Turbo 88 kW; 1.4 CNG 88 kW; 1.3 CDTI 66 kW; 1.3 CDTI 70 kW; 1.6 CDTI 77 kW; 2.0 CDTI 99 kW
+Combo E|2018|-|1.2 Turbo 81 kW; 1.2 Turbo 96 kW; 1.5 Diesel 55 kW; 1.5 Diesel 75 kW; 1.5 Diesel 96 kW; Combo-e Elektro 100 kW
+Vivaro A|2001|2014|1.9 DI 60 kW; 1.9 DTI 74 kW; 1.9 CDTI 60 kW; 1.9 CDTI 74 kW; 2.0 CDTI 66 kW; 2.0 CDTI 84 kW; 2.0 CDTI 86 kW; 2.0 CDTI 103 kW; 2.5 CDTI 99 kW; 2.5 CDTI 107 kW
+Vivaro B|2014|2019|1.6 CDTI 66 kW; 1.6 CDTI 70 kW; 1.6 CDTI 85 kW; 1.6 BiTurbo CDTI 92 kW; 1.6 BiTurbo CDTI 107 kW
+Vivaro C|2019|-|1.5 Diesel 75 kW; 1.5 Diesel 88 kW; 2.0 Diesel 90 kW; 2.0 Diesel 110 kW; 2.0 Diesel 130 kW; Vivaro-e Elektro 100 kW
+Movano A|1998|2010|2.2 DTI 66 kW; 2.5 D 59 kW; 2.5 CDTI 84 kW; 2.5 CDTI 107 kW; 2.8 DTI 84 kW; 3.0 CDTI 100 kW; 3.0 CDTI 116 kW
+Movano B|2010|2021|2.3 CDTI 74 kW; 2.3 CDTI 81 kW; 2.3 CDTI 92 kW; 2.3 CDTI 107 kW; 2.3 BiTurbo CDTI 120 kW
+Movano C|2021|-|2.2 Diesel 88 kW; 2.2 Diesel 103 kW; 2.2 Diesel 118 kW; 2.2 Diesel 132 kW; Movano-e Elektro 90 kW
+GT|2007|2010|2.0 Turbo 194 kW
+Ampera|2012|2015|1.4 Range Extender 111 kW
+Ampera-e|2017|2019|Elektro 150 kW
+Cascada|2013|2019|1.4 Turbo 88 kW; 1.4 Turbo 103 kW; 1.6 Turbo 125 kW; 1.6 Turbo 147 kW; 2.0 CDTI 121 kW
+
+@Ford|1
+Ka I|1996|2008|1.3 37 kW; 1.3 44 kW; 1.6 70 kW
+Ka II|2008|2016|1.2 51 kW; 1.3 TDCi 55 kW
+Ka+|2016|2021|1.2 51 kW; 1.2 63 kW; 1.5 TDCi 70 kW
+Fiesta IV|1995|2002|1.25 55 kW; 1.3 37 kW; 1.4 66 kW; 1.6 74 kW; 1.8 D 44 kW; 1.8 TDDi 55 kW
+Fiesta V|2001|2008|1.25 55 kW; 1.3 51 kW; 1.4 59 kW; 1.6 74 kW; 2.0 ST 110 kW; 1.4 TDCi 50 kW; 1.4 TDCi 55 kW; 1.6 TDCi 66 kW
+Fiesta VI|2008|2017|1.0 EcoBoost 74 kW; 1.0 EcoBoost 92 kW; 1.25 44 kW; 1.25 60 kW; 1.4 71 kW; 1.6 88 kW; 1.6 EcoBoost 134 kW; 1.4 TDCi 50 kW; 1.5 TDCi 55 kW; 1.5 TDCi 70 kW; 1.6 TDCi 66 kW; 1.6 TDCi 70 kW
+Fiesta VII|2017|2023|1.0 EcoBoost 70 kW; 1.0 EcoBoost 74 kW; 1.0 EcoBoost 92 kW; 1.0 EcoBoost Hybrid 92 kW; 1.1 52 kW; 1.1 63 kW; 1.5 EcoBoost 147 kW; 1.5 TDCi 63 kW; 1.5 TDCi 70 kW
+Fusion|2002|2012|1.25 55 kW; 1.4 59 kW; 1.6 74 kW; 1.4 TDCi 50 kW; 1.6 TDCi 66 kW
+B-Max|2012|2017|1.0 EcoBoost 74 kW; 1.0 EcoBoost 88 kW; 1.4 66 kW; 1.6 77 kW; 1.5 TDCi 55 kW; 1.6 TDCi 70 kW
+Puma (1997)|1997|2002|1.4 66 kW; 1.6 76 kW; 1.7 92 kW
+Puma (J2K)|2019|-|1.0 EcoBoost 70 kW; 1.0 EcoBoost Hybrid 92 kW; 1.0 EcoBoost Hybrid 114 kW; 1.5 EcoBoost 147 kW; 1.5 EcoBlue 88 kW; Puma Gen-E Elektro 125 kW
+EcoSport|2013|2022|1.0 EcoBoost 74 kW; 1.0 EcoBoost 92 kW; 1.5 82 kW; 1.5 TDCi 70 kW; 1.5 TDCi 74 kW; 1.5 EcoBlue 74 kW
+Escort VII|1995|2000|1.3 44 kW; 1.4 55 kW; 1.6 66 kW; 1.8 77 kW; 1.8 D 44 kW; 1.8 TD 51 kW
+Focus I|1998|2004|1.4 55 kW; 1.6 74 kW; 1.8 85 kW; 2.0 96 kW; 2.0 ST170 127 kW; 2.0 RS 158 kW; 1.8 TDDi 66 kW; 1.8 TDCi 74 kW; 1.8 TDCi 85 kW
+Focus II|2004|2011|1.4 59 kW; 1.6 74 kW; 1.6 85 kW; 1.6 Ti-VCT 85 kW; 1.8 92 kW; 1.8 Flexifuel 92 kW; 2.0 107 kW; 2.5 ST 166 kW; 2.5 RS 224 kW; 1.6 TDCi 66 kW; 1.6 TDCi 80 kW; 1.8 TDCi 85 kW; 2.0 TDCi 81 kW; 2.0 TDCi 100 kW
+Focus III|2010|2018|1.0 EcoBoost 74 kW; 1.0 EcoBoost 92 kW; 1.5 EcoBoost 110 kW; 1.5 EcoBoost 134 kW; 1.6 63 kW; 1.6 77 kW; 1.6 92 kW; 1.6 EcoBoost 110 kW; 1.6 EcoBoost 134 kW; 2.0 EcoBoost ST 184 kW; 2.3 EcoBoost RS 257 kW; 1.5 TDCi 70 kW; 1.5 TDCi 88 kW; 1.6 TDCi 70 kW; 1.6 TDCi 77 kW; 1.6 TDCi 85 kW; 2.0 TDCi 85 kW; 2.0 TDCi 103 kW; 2.0 TDCi 110 kW; 2.0 TDCi 136 kW
+Focus IV|2018|2025|1.0 EcoBoost 63 kW; 1.0 EcoBoost 74 kW; 1.0 EcoBoost 92 kW; 1.0 EcoBoost Hybrid 92 kW; 1.0 EcoBoost Hybrid 114 kW; 1.5 EcoBoost 110 kW; 1.5 EcoBoost 134 kW; 2.3 EcoBoost ST 206 kW; 1.5 EcoBlue 70 kW; 1.5 EcoBlue 88 kW; 2.0 EcoBlue 110 kW; 2.0 EcoBlue ST 140 kW
+Focus C-Max / C-Max I|2003|2010|1.6 74 kW; 1.6 85 kW; 1.8 88 kW; 2.0 107 kW; 1.6 TDCi 66 kW; 1.6 TDCi 80 kW; 1.8 TDCi 85 kW; 2.0 TDCi 100 kW
+C-Max II / Grand C-Max|2010|2019|1.0 EcoBoost 74 kW; 1.0 EcoBoost 92 kW; 1.5 EcoBoost 110 kW; 1.6 77 kW; 1.6 92 kW; 1.6 EcoBoost 110 kW; 1.6 EcoBoost 134 kW; 1.5 TDCi 70 kW; 1.5 TDCi 88 kW; 1.6 TDCi 70 kW; 1.6 TDCi 85 kW; 2.0 TDCi 85 kW; 2.0 TDCi 103 kW; 2.0 TDCi 120 kW
+Mondeo II|1996|2000|1.6 66 kW; 1.8 85 kW; 2.0 96 kW; 2.5 V6 125 kW; 1.8 TD 65 kW
+Mondeo III|2000|2007|1.8 81 kW; 1.8 92 kW; 2.0 107 kW; 2.5 V6 125 kW; 3.0 V6 ST220 166 kW; 2.0 TDCi 66 kW; 2.0 TDCi 85 kW; 2.0 TDCi 96 kW; 2.2 TDCi 114 kW
+Mondeo IV|2007|2014|1.6 81 kW; 1.6 88 kW; 1.6 EcoBoost 118 kW; 2.0 107 kW; 2.0 EcoBoost 149 kW; 2.0 EcoBoost 176 kW; 2.3 118 kW; 2.5 Turbo 162 kW; 1.6 TDCi 85 kW; 1.8 TDCi 74 kW; 1.8 TDCi 92 kW; 2.0 TDCi 85 kW; 2.0 TDCi 96 kW; 2.0 TDCi 103 kW; 2.0 TDCi 120 kW; 2.2 TDCi 129 kW; 2.2 TDCi 147 kW
+Mondeo V|2014|2022|1.0 EcoBoost 92 kW; 1.5 EcoBoost 118 kW; 1.5 EcoBoost 121 kW; 2.0 EcoBoost 149 kW; 2.0 EcoBoost 177 kW; 2.0 Hybrid 138 kW; 1.5 TDCi 88 kW; 1.6 TDCi 85 kW; 2.0 TDCi 110 kW; 2.0 TDCi 132 kW; 2.0 TDCi BiTurbo 154 kW; 2.0 EcoBlue 110 kW; 2.0 EcoBlue 140 kW
+Galaxy I|1995|2006|2.0 85 kW; 2.3 107 kW; 2.8 V6 128 kW; 1.9 TDI 66 kW; 1.9 TDI 85 kW; 1.9 TDI 96 kW
+Galaxy II|2006|2015|1.6 EcoBoost 118 kW; 2.0 107 kW; 2.0 EcoBoost 149 kW; 2.3 118 kW; 1.6 TDCi 85 kW; 1.8 TDCi 74 kW; 1.8 TDCi 92 kW; 2.0 TDCi 85 kW; 2.0 TDCi 96 kW; 2.0 TDCi 103 kW; 2.0 TDCi 120 kW; 2.2 TDCi 147 kW
+Galaxy III|2015|2023|1.5 EcoBoost 121 kW; 2.0 EcoBoost 177 kW; 2.5 Hybrid 140 kW; 2.0 TDCi 88 kW; 2.0 TDCi 110 kW; 2.0 TDCi 132 kW; 2.0 TDCi BiTurbo 154 kW; 2.0 EcoBlue 110 kW; 2.0 EcoBlue 140 kW
+S-Max I|2006|2015|1.6 EcoBoost 118 kW; 2.0 107 kW; 2.0 EcoBoost 149 kW; 2.0 EcoBoost 176 kW; 2.3 118 kW; 2.5 Turbo 162 kW; 1.6 TDCi 85 kW; 1.8 TDCi 92 kW; 2.0 TDCi 96 kW; 2.0 TDCi 103 kW; 2.0 TDCi 120 kW; 2.2 TDCi 147 kW
+S-Max II|2015|2023|1.5 EcoBoost 118 kW; 1.5 EcoBoost 121 kW; 2.0 EcoBoost 177 kW; 2.5 Hybrid 140 kW; 2.0 TDCi 88 kW; 2.0 TDCi 110 kW; 2.0 TDCi 132 kW; 2.0 TDCi BiTurbo 154 kW; 2.0 EcoBlue 110 kW; 2.0 EcoBlue 140 kW
+Kuga I|2008|2012|2.5 Turbo 147 kW; 2.0 TDCi 100 kW; 2.0 TDCi 120 kW
+Kuga II|2012|2019|1.5 EcoBoost 88 kW; 1.5 EcoBoost 110 kW; 1.5 EcoBoost 134 kW; 1.6 EcoBoost 110 kW; 1.6 EcoBoost 134 kW; 2.0 EcoBoost 179 kW; 1.5 TDCi 88 kW; 2.0 TDCi 85 kW; 2.0 TDCi 103 kW; 2.0 TDCi 110 kW; 2.0 TDCi 120 kW; 2.0 TDCi 132 kW
+Kuga III|2019|-|1.5 EcoBoost 88 kW; 1.5 EcoBoost 110 kW; 2.5 Hybrid 140 kW; 2.5 PHEV 165 kW; 1.5 EcoBlue 88 kW; 2.0 EcoBlue 110 kW; 2.0 EcoBlue Hybrid 110 kW
+Maverick|1993|2007|2.0 100 kW; 2.4 91 kW; 2.7 TD 74 kW; 3.0 V6 150 kW
+Edge|2016|2020|2.0 TDCi 132 kW; 2.0 TDCi BiTurbo 154 kW; 2.0 EcoBlue 175 kW
+Explorer (2019)|2019|2023|3.0 V6 PHEV 336 kW
+Explorer EV|2024|-|Elektro 125 kW; Elektro 210 kW; Elektro 250 kW
+Capri (2024)|2024|-|Elektro 210 kW; Elektro 250 kW
+Mustang Mach-E|2020|-|Elektro 198 kW; Elektro 216 kW; Elektro 258 kW; Elektro 358 kW
+Mustang (S550/S650)|2015|-|2.3 EcoBoost 213 kW; 5.0 V8 331 kW; 5.0 V8 330 kW
+Ranger (2011)|2011|2022|2.2 TDCi 88 kW; 2.2 TDCi 110 kW; 2.0 EcoBlue 125 kW; 2.0 EcoBlue BiTurbo 157 kW; 3.2 TDCi 147 kW
+Ranger (2022)|2022|-|2.0 EcoBlue 125 kW; 2.0 EcoBlue BiTurbo 151 kW; 3.0 V6 Diesel 177 kW; 2.3 PHEV 207 kW
+Ranger (1998)|1998|2011|2.5 TD 80 kW; 2.5 TDCi 105 kW; 3.0 TDCi 115 kW
+Tourneo / Transit Connect I|2002|2013|1.8 85 kW; 1.8 TDCi 55 kW; 1.8 TDCi 66 kW; 1.8 TDCi 81 kW; 1.8 Di 55 kW
+Tourneo / Transit Connect II|2013|2022|1.0 EcoBoost 74 kW; 1.6 EcoBoost 110 kW; 1.5 TDCi 74 kW; 1.5 TDCi 88 kW; 1.6 TDCi 70 kW; 1.6 TDCi 85 kW; 1.5 EcoBlue 55 kW; 1.5 EcoBlue 74 kW; 1.5 EcoBlue 88 kW
+Tourneo / Transit Connect III|2022|-|1.5 EcoBoost 84 kW; 2.0 TDI 75 kW; 2.0 TDI 90 kW; 1.5 PHEV 110 kW
+Tourneo / Transit Courier|2014|2023|1.0 EcoBoost 74 kW; 1.5 TDCi 55 kW; 1.5 TDCi 70 kW; 1.6 TDCi 70 kW
+Tourneo / Transit Courier II|2023|-|1.0 EcoBoost 92 kW; 1.5 EcoBlue 74 kW; Elektro 100 kW
+Transit (V184/V347)|2000|2014|2.0 TDCi 63 kW; 2.0 TDCi 92 kW; 2.2 TDCi 63 kW; 2.2 TDCi 85 kW; 2.2 TDCi 103 kW; 2.4 TDCi 74 kW; 2.4 TDCi 85 kW; 2.4 TDCi 103 kW; 2.4 TDCi 115 kW; 3.2 TDCi 147 kW
+Transit (V363)|2014|-|2.2 TDCi 74 kW; 2.2 TDCi 92 kW; 2.2 TDCi 114 kW; 2.0 EcoBlue 77 kW; 2.0 EcoBlue 96 kW; 2.0 EcoBlue 110 kW; 2.0 EcoBlue 125 kW; 2.0 EcoBlue 136 kW; E-Transit Elektro 198 kW
+Transit / Tourneo Custom I|2012|2023|2.2 TDCi 74 kW; 2.2 TDCi 92 kW; 2.2 TDCi 114 kW; 2.0 EcoBlue 77 kW; 2.0 EcoBlue 96 kW; 2.0 EcoBlue 125 kW; 2.0 EcoBlue 136 kW; 1.0 EcoBoost PHEV 93 kW
+Transit / Tourneo Custom II|2023|-|2.0 EcoBlue 81 kW; 2.0 EcoBlue 100 kW; 2.0 EcoBlue 125 kW; 2.5 PHEV 171 kW; E-Transit Custom Elektro 160 kW
+Cougar|1998|2002|2.0 96 kW; 2.5 V6 125 kW
+Probe II|1993|1997|2.0 85 kW; 2.5 V6 120 kW
+Scorpio II|1994|1998|2.0 85 kW; 2.3 108 kW; 2.9 V6 107 kW; 2.5 TD 85 kW

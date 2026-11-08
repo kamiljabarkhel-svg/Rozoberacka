@@ -5,8 +5,8 @@
 //   a s ukážkovými inzerátmi z prototypu.
 // Do prehliadača ide len verejný anon kľúč. Tajné kľúče sem nepatria.
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
-import demoCatalogJson from "./demo/catalog.json";
-import { buildDemoListings } from "./demo/listings";
+import { pickCatalog, sortCatalog } from "./catalogSort";
+import type { buildDemoListings } from "./demo/listings";
 import { allVehicles, buildOemIndex, search as localSearch } from "./search";
 import type { Catalog, Condition, Filters, Listing, Vehicle } from "./types";
 import { emptyFilters } from "./types";
@@ -21,22 +21,21 @@ export const IS_DEMO = STATIC_PREVIEW || !URL_ || !KEY_;
 export const PHOTO_BUCKET = "listing-photos";
 
 // ---------- DEMO ----------
-const demoCatalog: Catalog = {
-  brands: demoCatalogJson.brands,
-  models: demoCatalogJson.models,
-  engines: demoCatalogJson.engines,
-  categories: demoCatalogJson.categories,
-  subcategories: demoCatalogJson.subcategories,
-};
-let demoCache: ReturnType<typeof buildDemoListings> | null = null;
-function demo() {
-  if (!demoCache) demoCache = buildDemoListings(demoCatalog);
-  return demoCache;
+// Ukážkové údaje sa načítajú až v ukážkovom režime (samostatný súbor), aby sa katalóg z demo nebalil do kódu ostrého webu.
+type DemoData = { catalog: Catalog } & ReturnType<typeof buildDemoListings>;
+let demoP: Promise<DemoData> | null = null;
+function demoData(): Promise<DemoData> {
+  if (!demoP) demoP = (async () => {
+    const [{ default: j }, { buildDemoListings }] = await Promise.all([import("./demo/catalog.json"), import("./demo/listings")]);
+    const catalog = sortCatalog({ brands: j.brands, models: j.models, engines: j.engines, categories: j.categories, subcategories: j.subcategories });
+    return { catalog, ...buildDemoListings(catalog) };
+  })();
+  return demoP;
 }
 
 /** Údaje, ktoré sa dajú vykresliť hneď (len v demo režime), aby stránka nebola prázdna. */
 export function initialData(): { catalog: Catalog; listings: Listing[] } | null {
-  return IS_DEMO ? { catalog: demoCatalog, listings: demo().listings } : null;
+  return null; // ukážkové údaje sa načítajú asynchrónne (demoData), ostrý web dostáva katalóg zo servera
 }
 
 // ---------- SUPABASE ----------
@@ -109,8 +108,16 @@ function toListing(r: Row): Listing {
 // ---------- VEREJNÉ FUNKCIE ----------
 
 /** Katalóg áut a kategórie dielov. */
+let catalogP: Promise<Catalog> | null = null; // v prehliadači sa katalóg stiahne raz za návštevu
 export async function getCatalog(): Promise<Catalog> {
-  if (IS_DEMO) return demoCatalog;
+  if (IS_DEMO) return (await demoData()).catalog;
+  if (typeof window !== "undefined") {
+    if (!catalogP) catalogP = fetchCatalog().catch((e) => { catalogP = null; throw e; });
+    return catalogP;
+  }
+  return fetchCatalog();
+}
+async function fetchCatalog(): Promise<Catalog> {
   const [b, m, e, c, s] = await Promise.all([
     selectAll<Row>("brands", "id,name,popular", "id"),
     selectAll<Row>("models", "id,brand_id,name,year_from,year_to", "id"),
@@ -118,13 +125,13 @@ export async function getCatalog(): Promise<Catalog> {
     selectAll<Row>("categories", "id,name,sort", "sort"),
     selectAll<Row>("subcategories", "id,category_id,name,sort", "sort"),
   ]);
-  return {
+  return sortCatalog({
     brands: b.map((x) => ({ id: x.id as number, name: String(x.name), popular: Boolean(x.popular) })),
     models: m.map((x) => ({ id: x.id as number, brandId: x.brand_id as number, name: String(x.name), yearFrom: x.year_from as number, yearTo: (x.year_to as number) ?? null })),
     engines: e.map((x) => ({ id: x.id as number, modelId: x.model_id as number, name: String(x.name) })),
     categories: c.map((x) => ({ id: String(x.id), name: String(x.name), sort: x.sort as number })),
     subcategories: s.map((x) => ({ id: x.id as number, categoryId: String(x.category_id), name: String(x.name), sort: x.sort as number })),
-  };
+  });
 }
 
 /** Filtre v tvare pre databázovú funkciu search_listings (aj pre strážcu e-mailom). */
@@ -140,11 +147,11 @@ export type SearchPage = { items: Listing[]; total: number; base: number; cats: 
 /** Hľadanie inzerátov. So Supabase beží v databáze (funkcia search_listings), v ukážke v prehliadači. */
 export async function searchListings(f: Filters, favs: number[], offset: number, limit: number, extra: { exclude?: number; seller?: string; donor?: number } = {}): Promise<SearchPage> {
   if (IS_DEMO) {
-    let all = demo().listings;
+    let all = (await demoData()).listings;
     if (extra.exclude != null) all = all.filter((l) => l.id !== extra.exclude);
     if (extra.seller) all = all.filter((l) => l.sellerId === extra.seller);
     if (extra.donor != null) all = all.filter((l) => l.donorId === extra.donor);
-    const r = localSearch(all, f, demoCatalog, favs);
+    const r = localSearch(all, f, (await demoData()).catalog, favs);
     return { items: r.items.slice(offset, offset + limit), total: r.total, base: r.facets.base, cats: r.facets.cat, subs: r.facets.sub };
   }
   const p: Record<string, unknown> = { ...filterParams(f), sort: f.sort, limit, offset, ...extra };
@@ -161,7 +168,7 @@ export async function searchListings(f: Filters, favs: number[], offset: number,
 
 /** Mestá, v ktorých sú aktívne inzeráty (filter Mesto). */
 export async function getCities(): Promise<string[]> {
-  if (IS_DEMO) return [...new Set(demo().listings.map((l) => l.city).filter((c): c is string => !!c))].sort((a, b) => a.localeCompare(b, "sk"));
+  if (IS_DEMO) return [...new Set((await demoData()).listings.map((l) => l.city).filter((c): c is string => !!c))].sort((a, b) => a.localeCompare(b, "sk"));
   const { data, error } = await client().rpc("listing_cities");
   if (error) throw new Error("cities: " + error.message);
   return ((data || []) as unknown[]).map((x) => String(typeof x === "object" && x ? Object.values(x)[0] : x));
@@ -193,7 +200,7 @@ export async function reportListing(id: number, reason: string, note: string, co
 
 /** Jeden inzerát (len aktívny). */
 export async function getListing(id: number): Promise<Listing | null> {
-  if (IS_DEMO) return demo().listings.find((l) => l.id === id) || null;
+  if (IS_DEMO) return (await demoData()).listings.find((l) => l.id === id) || null;
   const { data, error } = await client().from("listings").select(LISTING_COLS).eq("id", id).eq("status", "active").maybeSingle();
   if (error) throw new Error("listing: " + error.message);
   return data ? toListing(data as unknown as Row) : null;
@@ -201,7 +208,7 @@ export async function getListing(id: number): Promise<Listing | null> {
 
 /** Všetky autá, na ktoré diel pasuje (vlastné auto + „pasuje aj na“ + rovnaké OEM). */
 export async function getListingVehicles(listing: Listing): Promise<Vehicle[]> {
-  if (IS_DEMO) return allVehicles(listing, buildOemIndex(demo().listings));
+  if (IS_DEMO) return allVehicles(listing, buildOemIndex((await demoData()).listings));
   const { data, error } = await client().rpc("listing_vehicles", { p_listing: listing.id });
   if (error) throw new Error("listing_vehicles: " + error.message);
   return ((data || []) as Row[]).map((r) => ({ brandId: r.brand_id as number, modelId: (r.model_id as number) ?? null, engineId: (r.engine_id as number) ?? null }));
@@ -212,7 +219,7 @@ export async function revealPhone(id: number): Promise<string | null> {
   const key = "rz-tel-" + id;
   try { const c = sessionStorage.getItem(key); if (c) return c; } catch {}
   let phone: string | null;
-  if (IS_DEMO) phone = demo().phones[id] || null;
+  if (IS_DEMO) phone = (await demoData()).phones[id] || null;
   else {
     const { data, error } = await client().rpc("reveal_phone", { p_listing: id });
     if (error) throw new Error("reveal_phone: " + error.message);
@@ -233,7 +240,7 @@ export async function logView(id: number): Promise<void> {
 
 /** Počet aktívnych dielov a predajcov (číslo na úvode). */
 export async function getStats(): Promise<{ parts: number; sellers: number }> {
-  if (IS_DEMO) { const l = demo().listings; return { parts: l.length, sellers: new Set(l.map((x) => x.seller.name)).size }; }
+  if (IS_DEMO) { const l = (await demoData()).listings; return { parts: l.length, sellers: new Set(l.map((x) => x.seller.name)).size }; }
   const { data, error } = await client().rpc("public_stats");
   if (error) throw new Error("public_stats: " + error.message);
   const r = ((data || []) as Row[])[0] || {};
@@ -248,21 +255,23 @@ export async function sendMessage(id: number, name: string, contact: string, bod
 }
 
 /** Id ukážkových inzerátov (pre statické stránky detailu). */
-export function demoListingIds(): number[] {
-  return demo().listings.map((l) => l.id);
+export async function demoListingIds(): Promise<number[]> {
+  return (await demoData()).listings.map((l) => l.id);
 }
 
 /** Všetko pre detail inzerátu naraz (používa server aj prehliadač). null = inzerát nie je aktívny. */
 export type DetailData = { l: Listing; cat: Catalog; vehicles: Vehicle[]; similar: Listing[]; more: { items: Listing[]; total: number }; sameCar: Listing[]; seller: SellerPublic | null };
-export async function loadDetail(id: number): Promise<DetailData | null> {
-  const [cat, l] = await Promise.all([getCatalog(), getListing(id)]);
+export async function loadDetail(id: number, catalog?: Catalog): Promise<DetailData | null> {
+  const [full, l] = await Promise.all([catalog ? Promise.resolve(catalog) : getCatalog(), getListing(id)]);
   if (!l) return null;
   const [vehicles, more, seller] = await Promise.all([getListingVehicles(l), getSellerListings(l).catch(() => ({ items: [] as Listing[], total: 0 })),
     l.sellerId ? getSellerPublic(l.sellerId).catch(() => null) : Promise.resolve(null)]);
   const sameCar = l.donorId != null ? (await searchListings({ ...emptyFilters }, [], 0, 7, { exclude: l.id, donor: l.donorId }).catch(() => null))?.items || [] : [];
   const seen = new Set([...more.items, ...sameCar].map((x) => x.id));
   const similar = (await getSimilar(l).catch(() => [] as Listing[])).filter((x) => !seen.has(x.id));
-  return { l, cat, vehicles, similar, more: { ...more, items: more.items.filter((x) => !sameCar.some((y) => y.id === x.id)) }, sameCar, seller };
+  const items = more.items.filter((x) => !sameCar.some((y) => y.id === x.id));
+  const cat = pickCatalog(full, [l, ...similar, ...items, ...sameCar], vehicles); // stránka dielu nepotrebuje celý katalóg
+  return { l, cat, vehicles, similar, more: { ...more, items }, sameCar, seller };
 }
 
 // ---------- PREDANÝ / POZASTAVENÝ DIEL ----------
@@ -294,7 +303,7 @@ export type Review = { id: number; stars: number; body: string; author: string; 
 export async function getSellerPublic(id: string): Promise<SellerPublic | null> {
   if (!/^[0-9a-f-]{36}$/i.test(id)) return null;
   if (IS_DEMO) {
-    const l = demo().listings.find((x) => x.sellerId === id);
+    const l = (await demoData()).listings.find((x) => x.sellerId === id);
     return l ? { id, name: l.seller.name, type: l.seller.type, city: l.seller.city, verified: l.seller.verified, since: l.createdAt, ratingAvg: null, ratingCount: 0, ico: l.seller.ico ?? null, address: l.seller.address ?? null } : null;
   }
   const { data, error } = await client().from("sellers").select("id,name,seller_type,city,verified,blocked,created_at,rating_avg,rating_count,ico,address").eq("id", id).maybeSingle();
@@ -310,7 +319,7 @@ export async function getSellerReviews(id: string): Promise<Review[]> {
 }
 /** Predajcovia s aspoň jedným aktívnym inzerátom (pre sitemap). */
 export async function getActiveSellers(): Promise<{ id: string; name: string }[]> {
-  if (IS_DEMO) { const m = new Map<string, string>(); for (const l of demo().listings) if (l.sellerId) m.set(l.sellerId, l.seller.name); return [...m].map(([id, name]) => ({ id, name })); }
+  if (IS_DEMO) { const m = new Map<string, string>(); for (const l of (await demoData()).listings) if (l.sellerId) m.set(l.sellerId, l.seller.name); return [...m].map(([id, name]) => ({ id, name })); }
   const rows = await selectAllWhere<Row>("listings", "seller_id,sellers(name,blocked)", "id", { status: "active" });
   const m = new Map<string, string>();
   for (const r of rows) { const s = r.sellers as Row | null; if (s && !s.blocked) m.set(String(r.seller_id), String(s.name)); }
@@ -331,7 +340,7 @@ export async function suggestNames(q: string): Promise<{ name: string; n: number
     const norm = (s: string) => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
     const words = norm(t).split(/[^a-z0-9]+/).filter((w) => w.length >= 2);
     const m = new Map<string, { name: string; n: number }>();
-    for (const l of demo().listings) { const k = norm(l.name); if (words.length && words.every((w) => k.includes(w))) { const c = m.get(k) || { name: l.name, n: 0 }; c.n++; m.set(k, c); } }
+    for (const l of (await demoData()).listings) { const k = norm(l.name); if (words.length && words.every((w) => k.includes(w))) { const c = m.get(k) || { name: l.name, n: 0 }; c.n++; m.set(k, c); } }
     return [...m.values()].sort((a, b) => b.n - a.n || a.name.localeCompare(b.name, "sk")).slice(0, 6);
   }
   const { data, error } = await client().rpc("search_suggest", { p_q: t });
@@ -364,7 +373,7 @@ export type SeoCount = { brandId: number; modelId: number; categoryId: string; s
 export async function getSeoCounts(): Promise<SeoCount[]> {
   if (IS_DEMO) {
     const m = new Map<string, SeoCount>();
-    for (const l of demo().listings) {
+    for (const l of (await demoData()).listings) {
       if (l.brandId == null || l.modelId == null) continue;
       const k = `${l.brandId}|${l.modelId}|${l.categoryId}|${l.subcategoryId}`;
       const c = m.get(k) || { brandId: l.brandId, modelId: l.modelId, categoryId: l.categoryId, subcategoryId: l.subcategoryId, n: 0 };
@@ -379,7 +388,7 @@ export async function getSeoCounts(): Promise<SeoCount[]> {
 
 /** Aktívne inzeráty pre sitemap (id, názov, auto, posledná zmena). */
 export async function getSitemapListings(): Promise<{ id: number; name: string; brandId: number | null; modelId: number | null; engineId: number | null; updatedAt: string }[]> {
-  if (IS_DEMO) return demo().listings.map((l) => ({ id: l.id, name: l.name, brandId: l.brandId, modelId: l.modelId, engineId: l.engineId, updatedAt: l.updatedAt }));
+  if (IS_DEMO) return (await demoData()).listings.map((l) => ({ id: l.id, name: l.name, brandId: l.brandId, modelId: l.modelId, engineId: l.engineId, updatedAt: l.updatedAt }));
   const rows = await selectAllWhere<Row>("listings", "id,name,brand_id,model_id,updated_at", "id", { status: "active" });
   return rows.map((r) => ({ id: Number(r.id), name: String(r.name), brandId: (r.brand_id as number) ?? null, modelId: (r.model_id as number) ?? null, engineId: null, updatedAt: String(r.updated_at) }));
 }

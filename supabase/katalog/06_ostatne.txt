@@ -1,0 +1,189 @@
+# Volvo, Saab, Polestar, SsangYong/KGM, Daewoo, Chevrolet, Genesis, Tesla, Jeep, Chrysler, Dodge, Cadillac, Lada, BYD, Omoda, Jaecoo, Leapmotor, Xpeng, NIO, Lynk & Co, Iveco, Ineos
+# Údaje z pamäte (8. 11. 2026), nie overený katalóg.
+
+@Volvo|1
+S40 / V40 (1995)|1995|2004|1.6 80 kW; 1.8 85 kW; 2.0 100 kW; 1.9 T4 147 kW; 1.9 TD 70 kW; 1.9 D 75 kW; 1.9 D 85 kW
+S40 II / V50|2004|2012|1.6 74 kW; 1.8 92 kW; 2.0 107 kW; 2.4 103 kW; 2.4 125 kW; 2.5 T5 162 kW; 1.6 D 81 kW; 2.0 D 100 kW; 2.0 D3 110 kW; 2.0 D4 130 kW
+C30|2006|2013|1.6 74 kW; 1.8 92 kW; 2.0 107 kW; 2.4 125 kW; 2.5 T5 169 kW; 1.6 D 80 kW; 2.0 D 100 kW; 2.0 D3 110 kW; 2.4 D5 132 kW; Electric 82 kW
+C70 II|2006|2013|2.4 125 kW; 2.5 T5 162 kW; 2.0 D 100 kW; 2.4 D5 132 kW
+V40 II|2012|2019|1.5 T2 90 kW; 1.5 T3 112 kW; 1.6 T3 110 kW; 2.0 T4 140 kW; 2.0 T5 180 kW; 1.6 D2 84 kW; 2.0 D2 88 kW; 2.0 D3 110 kW; 2.0 D4 130 kW; 2.0 D4 140 kW
+S60 I|2000|2009|2.0 T 132 kW; 2.4 103 kW; 2.4 125 kW; 2.5 T 154 kW; 2.3 T5 184 kW; 2.4 D 96 kW; 2.4 D5 120 kW; 2.4 D5 136 kW
+S60 II / V60 I|2010|2018|1.6 T3 110 kW; 1.6 T4 132 kW; 2.0 T5 180 kW; 3.0 T6 224 kW; 1.6 D2 84 kW; 2.0 D3 100 kW; 2.0 D3 110 kW; 2.0 D4 120 kW; 2.0 D4 133 kW; 2.4 D5 151 kW; 2.4 D6 PHEV 158 kW
+S60 III / V60 II|2018|2026|2.0 B3 120 kW; 2.0 B4 145 kW; 2.0 B5 184 kW; 2.0 T4 140 kW; 2.0 T5 184 kW; 2.0 T6 Recharge 251 kW; 2.0 T8 Recharge 287 kW; 2.0 D3 110 kW; 2.0 D4 140 kW
+S70 / V70 I|1996|2000|2.0 93 kW; 2.4 103 kW; 2.4 T 142 kW; 2.3 T5 176 kW; 2.5 TDI 103 kW
+V70 II / XC70 I|2000|2007|2.0 T 132 kW; 2.4 103 kW; 2.4 125 kW; 2.5 T 154 kW; 2.3 T5 184 kW; 2.4 D 96 kW; 2.4 D5 120 kW; 2.4 D5 136 kW
+V70 III / XC70 II|2007|2016|1.6 T4 132 kW; 2.0 T5 180 kW; 2.5 T 147 kW; 3.0 T6 224 kW; 3.2 175 kW; 1.6 D2 84 kW; 2.0 D3 100 kW; 2.0 D3 120 kW; 2.0 D4 133 kW; 2.4 D 129 kW; 2.4 D5 151 kW
+S80 I|1998|2006|2.4 103 kW; 2.4 125 kW; 2.0 T 132 kW; 2.5 T 154 kW; 2.9 145 kW; 2.9 T6 200 kW; 2.4 D 96 kW; 2.4 D5 120 kW
+S80 II|2006|2016|2.0 107 kW; 2.0 T 149 kW; 2.5 T 147 kW; 3.2 175 kW; 3.0 T6 224 kW; 4.4 V8 232 kW; 1.6 D2 84 kW; 2.0 D3 120 kW; 2.0 D4 133 kW; 2.4 D 120 kW; 2.4 D5 151 kW
+S90 / V90 II|2016|2026|2.0 B4 145 kW; 2.0 B5 184 kW; 2.0 T4 140 kW; 2.0 T5 187 kW; 2.0 T6 228 kW; 2.0 T8 Recharge 287 kW; 2.0 D3 110 kW; 2.0 D4 140 kW; 2.0 D5 173 kW
+XC40|2017|-|1.5 T2 95 kW; 1.5 T3 120 kW; 2.0 T4 140 kW; 2.0 T5 182 kW; 2.0 B3 120 kW; 2.0 B4 145 kW; 1.5 T4 Recharge 155 kW; 1.5 T5 Recharge 192 kW; 2.0 D3 110 kW; 2.0 D4 140 kW; EX40 / XC40 Recharge Elektro 170 kW; Elektro 300 kW
+C40 / EC40|2021|-|Elektro 170 kW; Elektro 185 kW; Elektro 300 kW
+XC60 I|2008|2017|2.0 T5 180 kW; 3.0 T6 224 kW; 3.2 175 kW; 2.0 D3 100 kW; 2.0 D3 120 kW; 2.0 D4 133 kW; 2.4 D3 120 kW; 2.4 D4 133 kW; 2.4 D5 151 kW; 2.4 D5 162 kW
+XC60 II|2017|-|2.0 B4 145 kW; 2.0 B5 184 kW; 2.0 T5 187 kW; 2.0 T6 228 kW; 2.0 T6 Recharge 257 kW; 2.0 T8 Recharge 287 kW; 2.0 D3 110 kW; 2.0 D4 140 kW; 2.0 D5 173 kW
+XC90 I|2002|2014|2.5 T 154 kW; 2.9 T6 200 kW; 3.2 175 kW; 4.4 V8 232 kW; 2.4 D5 120 kW; 2.4 D5 136 kW; 2.4 D5 147 kW
+XC90 II|2014|-|2.0 B5 184 kW; 2.0 B6 220 kW; 2.0 T5 187 kW; 2.0 T6 235 kW; 2.0 T8 Recharge 287 kW; 2.0 D4 140 kW; 2.0 D5 173 kW
+EX30|2023|-|Elektro 200 kW; Elektro 315 kW
+EX90|2024|-|Elektro 300 kW; Elektro 380 kW
+ES90|2025|-|Elektro 245 kW; Elektro 330 kW
+440 / 460|1987|1997|1.6 61 kW; 1.7 72 kW; 1.8 66 kW; 2.0 81 kW; 1.9 TD 66 kW
+850|1991|1997|2.0 93 kW; 2.4 103 kW; 2.5 T5 165 kW; 2.5 TDI 103 kW
+
+@Saab|0
+900 II|1993|1998|2.0 96 kW; 2.0 Turbo 136 kW; 2.3 110 kW; 2.5 V6 125 kW
+9-3 I|1998|2002|2.0 96 kW; 2.0 Turbo 110 kW; 2.0 Turbo 136 kW; 2.3 Turbo 147 kW; 2.2 TiD 85 kW
+9-3 II|2002|2014|1.8 90 kW; 1.8t 110 kW; 2.0t 129 kW; 2.0 T 154 kW; 2.8 V6 Turbo 184 kW; 1.9 TiD 88 kW; 1.9 TTiD 132 kW; 1.9 TiD 110 kW; 2.2 TiD 92 kW
+9-5 I|1997|2010|2.0t 110 kW; 2.3t 125 kW; 2.3 T 162 kW; 3.0 V6t 147 kW; 1.9 TiD 110 kW; 2.2 TiD 88 kW; 3.0 TiD 129 kW
+9-5 II|2010|2012|1.6 T 132 kW; 2.0 T 162 kW; 2.8 V6 T 221 kW; 2.0 TiD 118 kW; 2.0 TTiD 140 kW
+
+@Polestar|0
+Polestar 2|2020|-|Elektro 165 kW; Elektro 200 kW; Elektro 220 kW; Elektro 310 kW
+Polestar 3|2023|-|Elektro 360 kW; Elektro 380 kW
+Polestar 4|2024|-|Elektro 200 kW; Elektro 400 kW
+
+@SsangYong (KGM)|0
+Korando (C200)|2010|2019|2.0 110 kW; 2.0 e-XDi 129 kW; 2.2 e-XDi 131 kW
+Korando (C300)|2019|-|1.5 T-GDI 120 kW; 1.6 e-XDi 100 kW; e-Motion Elektro 140 kW
+Tivoli|2015|-|1.2 T-GDI 94 kW; 1.5 T-GDI 120 kW; 1.6 94 kW; 1.6 e-XDi 85 kW; 1.6 e-XDi 100 kW
+XLV|2016|2022|1.6 94 kW; 1.6 e-XDi 85 kW; 1.6 e-XDi 100 kW
+Rexton (Y200/Y250)|2001|2017|2.3 110 kW; 2.7 XDi 121 kW; 2.0 e-XDi 114 kW; 2.2 e-XDi 131 kW
+Rexton (Y400)|2017|-|2.0 T-GDI 165 kW; 2.2 e-XDi 133 kW; 2.2 e-XDi 149 kW
+Kyron|2005|2014|2.0 XDi 104 kW; 2.3 110 kW; 2.7 XDi 121 kW
+Actyon / Musso|2006|-|2.0 XDi 104 kW; 2.2 e-XDi 133 kW
+Torres|2022|-|1.5 T-GDI 120 kW; EVX Elektro 152 kW
+Rodius|2004|2019|2.7 XDi 121 kW; 2.0 e-XDi 114 kW; 2.2 e-XDi 131 kW
+
+@Daewoo|0
+Matiz|1998|2008|0.8 38 kW; 1.0 47 kW
+Kalos|2002|2008|1.2 53 kW; 1.4 61 kW; 1.4 16V 69 kW
+Lanos|1997|2004|1.3 55 kW; 1.5 63 kW; 1.6 78 kW
+Nubira|1997|2004|1.6 78 kW; 1.8 90 kW; 2.0 98 kW
+Lacetti|2003|2004|1.4 70 kW; 1.6 80 kW; 1.8 90 kW
+Leganza|1997|2002|2.0 98 kW; 2.2 100 kW
+Tacuma|2000|2004|1.6 77 kW; 1.8 90 kW; 2.0 89 kW
+Espero|1991|1999|1.5 66 kW; 1.8 70 kW; 2.0 77 kW
+
+@Chevrolet|0
+Spark (M200/M300)|2005|2015|0.8 38 kW; 1.0 50 kW; 1.2 60 kW
+Aveo (T200/T250)|2005|2011|1.2 53 kW; 1.4 61 kW; 1.4 74 kW
+Aveo (T300)|2011|2015|1.2 51 kW; 1.2 63 kW; 1.4 74 kW; 1.6 85 kW; 1.3 D 55 kW; 1.3 D 70 kW
+Lacetti / Nubira|2004|2011|1.4 70 kW; 1.6 80 kW; 1.8 90 kW; 2.0 VCDi 89 kW
+Cruze|2009|2015|1.6 83 kW; 1.8 104 kW; 1.4 Turbo 103 kW; 2.0 VCDi 92 kW; 2.0 VCDi 120 kW; 1.7 VCDi 96 kW
+Orlando|2010|2015|1.8 104 kW; 1.4 Turbo 103 kW; 2.0 VCDi 96 kW; 2.0 VCDi 120 kW
+Captiva|2006|2015|2.4 100 kW; 2.4 123 kW; 3.2 V6 169 kW; 2.0 VCDi 93 kW; 2.0 VCDi 110 kW; 2.2 VCDi 120 kW; 2.2 VCDi 135 kW
+Epica|2006|2011|2.0 105 kW; 2.5 115 kW; 2.0 VCDi 110 kW
+Kalos|2005|2008|1.2 53 kW; 1.4 61 kW; 1.4 69 kW
+Matiz|2005|2010|0.8 38 kW; 1.0 47 kW
+Trax|2012|2015|1.6 85 kW; 1.4 Turbo 103 kW; 1.7 VCDi 96 kW
+Volt|2011|2015|1.4 Range Extender 111 kW
+Camaro (2016)|2016|2024|2.0 Turbo 202 kW; 6.2 V8 333 kW
+Corvette (C7/C8)|2014|-|6.2 V8 343 kW; 6.2 V8 369 kW
+
+@Genesis|0
+G70|2018|-|2.0 T-GDI 180 kW; 2.2 CRDi 147 kW
+G80|2020|-|2.5 T-GDI 224 kW; 2.2 CRDi 154 kW; Electrified Elektro 272 kW
+GV60|2021|-|Elektro 168 kW; Elektro 234 kW; Elektro 320 kW
+GV70|2020|-|2.5 T-GDI 224 kW; 2.2 CRDi 154 kW; Electrified Elektro 360 kW
+GV80|2020|-|2.5 T-GDI 224 kW; 3.0 CRDi 204 kW; 3.5 T-GDI 279 kW
+
+@Tesla|0
+Model S|2012|-|Elektro 245 kW; Elektro 285 kW; Elektro 311 kW; Elektro 500 kW; Elektro 750 kW
+Model X|2015|-|Elektro 245 kW; Elektro 311 kW; Elektro 500 kW; Elektro 750 kW
+Model 3|2017|2023|Elektro 208 kW; Elektro 239 kW; Elektro 324 kW; Elektro 377 kW
+Model 3 (Highland)|2023|-|Elektro 208 kW; Elektro 235 kW; Elektro 366 kW; Elektro 460 kW
+Model Y|2020|2025|Elektro 220 kW; Elektro 255 kW; Elektro 378 kW
+Model Y (Juniper)|2025|-|Elektro 220 kW; Elektro 255 kW; Elektro 378 kW
+
+@Jeep|0
+Cherokee (KJ)|2001|2008|2.4 110 kW; 3.7 V6 150 kW; 2.5 CRD 105 kW; 2.8 CRD 110 kW; 2.8 CRD 120 kW
+Cherokee (KK)|2008|2013|3.7 V6 150 kW; 2.8 CRD 130 kW; 2.8 CRD 147 kW
+Cherokee (KL)|2013|2023|2.0 Turbo 200 kW; 2.4 130 kW; 3.2 V6 200 kW; 2.0 MultiJet 103 kW; 2.0 MultiJet 125 kW; 2.2 MultiJet 147 kW
+Grand Cherokee (WJ)|1999|2004|4.0 140 kW; 4.7 V8 165 kW; 2.7 CRD 120 kW; 3.1 TD 103 kW
+Grand Cherokee (WK)|2005|2010|3.7 V6 155 kW; 4.7 V8 170 kW; 5.7 V8 240 kW; 3.0 CRD 160 kW
+Grand Cherokee (WK2)|2010|2021|3.6 V6 210 kW; 5.7 V8 259 kW; 6.4 V8 SRT 344 kW; 3.0 CRD 140 kW; 3.0 CRD 177 kW; 3.0 CRD 184 kW
+Grand Cherokee (WL)|2021|-|2.0 4xe PHEV 280 kW
+Compass (MK49)|2006|2016|2.0 115 kW; 2.4 125 kW; 2.0 CRD 103 kW; 2.2 CRD 120 kW
+Compass (MP)|2017|-|1.3 T4 96 kW; 1.3 T4 110 kW; 1.4 MultiAir 103 kW; 1.4 MultiAir 125 kW; 1.3 4xe PHEV 140 kW; 1.3 4xe PHEV 177 kW; 1.5 e-Hybrid 96 kW; 1.6 MultiJet 88 kW; 2.0 MultiJet 103 kW; 2.0 MultiJet 125 kW
+Compass (2025)|2025|-|1.2 Hybrid 107 kW; Elektro 157 kW; Elektro 237 kW
+Renegade|2014|-|1.0 T3 88 kW; 1.3 T4 110 kW; 1.4 MultiAir 103 kW; 1.4 MultiAir 125 kW; 1.6 81 kW; 1.3 4xe PHEV 140 kW; 1.5 e-Hybrid 96 kW; 1.6 MultiJet 88 kW; 2.0 MultiJet 103 kW; 2.0 MultiJet 125 kW
+Avenger|2023|-|1.2 Turbo 74 kW; 1.2 e-Hybrid 74 kW; Elektro 115 kW
+Wrangler (TJ)|1996|2006|2.4 108 kW; 4.0 130 kW; 2.8 CRD 110 kW
+Wrangler (JK)|2007|2018|3.6 V6 209 kW; 3.8 V6 146 kW; 2.8 CRD 130 kW; 2.8 CRD 147 kW
+Wrangler (JL)|2018|-|2.0 Turbo 200 kW; 2.0 4xe PHEV 280 kW; 2.2 CRD 147 kW
+Patriot|2007|2017|2.0 115 kW; 2.4 125 kW; 2.0 CRD 103 kW; 2.2 CRD 120 kW
+Commander|2006|2010|4.7 V8 170 kW; 5.7 V8 240 kW; 3.0 CRD 160 kW
+
+@Chrysler|0
+PT Cruiser|2000|2010|1.6 85 kW; 2.0 104 kW; 2.4 105 kW; 2.4 Turbo 165 kW; 2.2 CRD 89 kW
+Voyager (RG/RS)|2000|2008|2.4 108 kW; 3.3 V6 128 kW; 2.5 CRD 104 kW; 2.8 CRD 110 kW
+Grand Voyager (RT)|2008|2016|3.6 V6 209 kW; 3.8 V6 145 kW; 2.8 CRD 120 kW; 2.8 CRD 131 kW
+300C|2004|2012|2.7 V6 141 kW; 3.5 V6 183 kW; 5.7 V8 250 kW; 3.0 CRD 160 kW
+300C (LX2)|2011|2015|3.6 V6 210 kW; 3.0 CRD 177 kW
+Sebring|2007|2010|2.0 115 kW; 2.4 125 kW; 2.7 V6 137 kW; 2.0 CRD 103 kW
+Crossfire|2003|2007|3.2 V6 160 kW
+
+@Dodge|0
+Caliber|2006|2012|1.8 110 kW; 2.0 115 kW; 2.4 125 kW; 2.0 CRD 103 kW; 2.2 CRD 120 kW
+Journey|2008|2011|2.4 125 kW; 2.7 V6 136 kW; 2.0 CRD 103 kW
+Nitro|2007|2011|3.7 V6 151 kW; 4.0 V6 191 kW; 2.8 CRD 130 kW
+RAM 1500 (DS/DT)|2009|-|3.6 V6 227 kW; 5.7 V8 291 kW; 3.0 EcoDiesel 179 kW
+Challenger / Charger|2008|2023|3.6 V6 227 kW; 5.7 V8 276 kW; 6.4 V8 362 kW; 6.2 V8 SC 527 kW
+
+@Cadillac|0
+CTS|2003|2019|2.8 V6 156 kW; 3.6 V6 190 kW; 2.0 Turbo 203 kW
+Escalade|2002|-|6.2 V8 300 kW; 6.2 V8 313 kW
+Lyriq|2024|-|Elektro 251 kW; Elektro 388 kW
+
+@Lada|0
+Niva / 4x4|1977|-|1.7 59 kW; 1.7 61 kW
+Samara|1984|2013|1.3 47 kW; 1.5 51 kW; 1.5 55 kW
+Kalina|2004|2018|1.4 66 kW; 1.6 59 kW; 1.6 72 kW
+Priora|2007|2018|1.6 72 kW; 1.6 79 kW
+Granta|2011|-|1.6 64 kW; 1.6 72 kW; 1.6 78 kW
+Vesta|2015|-|1.6 78 kW; 1.8 90 kW
+
+@BYD|0
+Dolphin|2023|-|Elektro 70 kW; Elektro 150 kW
+Dolphin Surf|2025|-|Elektro 65 kW; Elektro 115 kW
+Atto 2|2025|-|Elektro 130 kW
+Atto 3|2022|-|Elektro 150 kW
+Seal|2023|-|Elektro 230 kW; Elektro 390 kW
+Seal U|2023|-|Elektro 160 kW; 1.5 DM-i PHEV 160 kW; 1.5 DM-i PHEV 238 kW
+Seal 6|2025|-|1.5 DM-i PHEV 135 kW; Elektro 160 kW
+Sealion 7|2024|-|Elektro 230 kW; Elektro 390 kW
+Han|2022|-|Elektro 380 kW
+Tang|2022|-|Elektro 380 kW
+
+@Omoda|0
+Omoda 5|2024|-|1.6 TGDI 137 kW; E5 Elektro 150 kW
+Omoda 9|2025|-|1.5 TGDI PHEV 395 kW
+
+@Jaecoo|0
+Jaecoo 7|2024|-|1.6 TGDI 108 kW; 1.5 TGDI PHEV 255 kW
+
+@Leapmotor|0
+T03|2024|-|Elektro 70 kW
+C10|2024|-|Elektro 160 kW; REEV 1.5 160 kW
+B10|2025|-|Elektro 160 kW
+
+@Xpeng|0
+G6|2024|-|Elektro 190 kW; Elektro 358 kW
+G9|2024|-|Elektro 230 kW; Elektro 405 kW
+P7|2024|-|Elektro 203 kW; Elektro 348 kW
+
+@NIO|0
+ET5 / ET5 Touring|2022|-|Elektro 360 kW
+ET7|2022|-|Elektro 480 kW
+EL6 / EL7 / EL8|2022|-|Elektro 360 kW; Elektro 480 kW
+
+@Lynk & Co|0
+01|2021|-|1.5 Hybrid 145 kW; 1.5 PHEV 192 kW
+02|2025|-|Elektro 200 kW
+
+@Iveco|0
+Daily III|1999|2006|2.3 HPI 85 kW; 2.8 TD 76 kW; 2.8 JTD 93 kW; 3.0 HPI 107 kW; 2.3 JTD 70 kW
+Daily IV|2006|2011|2.3 HPI 79 kW; 2.3 HPT 100 kW; 3.0 HPI 107 kW; 3.0 HPT 130 kW
+Daily V|2011|2014|2.3 HPI 78 kW; 2.3 HPT 93 kW; 2.3 HPT 107 kW; 3.0 HPI 107 kW; 3.0 HPT 125 kW; 3.0 HPT 150 kW
+Daily VI|2014|-|2.3 Diesel 85 kW; 2.3 Diesel 100 kW; 2.3 Diesel 115 kW; 3.0 Diesel 132 kW; 3.0 Diesel 155 kW; 3.0 CNG 100 kW; eDaily Elektro 140 kW
+
+@Ineos|0
+Grenadier|2022|-|3.0 Benzín 210 kW; 3.0 Diesel 183 kW

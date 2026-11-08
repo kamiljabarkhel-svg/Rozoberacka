@@ -2,6 +2,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getCatalog, getCities, getSeoCounts, searchListings } from "@/lib/data";
+import { pickCatalog } from "@/lib/catalogSort";
 import { emptyFilters, type Catalog } from "@/lib/types";
 import { jeSu, pieces, sk } from "@/lib/format";
 import { JsonLd, SITE_NAME, SITE_URL, breadcrumbLd, carName, landingCrumbs, landingPath, landingTitle, listingPath, type Landing } from "@/lib/seo";
@@ -94,7 +95,7 @@ export default async function LandingPage({ x }: { x: Landing }) {
           : <>Zatiaľ tu nie sú žiadne ponuky. Nové diely pribúdajú každý deň – zadajte dopyt a predajcovia sa vám ozvú sami.</>}
       </p>
       {res.total > 0 && <p><Link className="btn2" href={`/?${qs.toString()}#vysledky`}>Filtrovať podľa ceny, stavu a mesta</Link></p>}
-      {res.items.length ? <LandingGrid items={res.items} cat={cat} /> : <div className="empty">Pre tento výber zatiaľ nemáme diely. <Link href={`/?${qs.toString()}#vysledky`}>Uložte si hľadanie</Link> a pri ďalšej návšteve uvidíte, či pribudol vhodný diel.</div>}
+      {res.items.length ? <LandingGrid items={res.items} cat={pickCatalog(cat, res.items)} /> : <div className="empty">Pre tento výber zatiaľ nemáme diely. <Link href={`/?${qs.toString()}#vysledky`}>Uložte si hľadanie</Link> a pri ďalšej návšteve uvidíte, či pribudol vhodný diel.</div>}
       {res.total > res.items.length && <p className="landing-more"><Link className="btn2" href={`/?${qs.toString()}#vysledky`}>Zobraziť všetkých {res.total}</Link></p>}
       <div className="rq-cta"><p><b>Nenašli ste diel{car ? ` na auto ${car}` : ""}?</b> Zadajte dopyt – vrakoviská vám pošlú ponuku. Bez registrácie.</p>
         <Link className="btn2" href={`/dopyt?${new URLSearchParams({ ...(x.brandId != null ? { znacka: String(x.brandId) } : {}), ...(x.modelId != null ? { model: String(x.modelId) } : {}) }).toString()}`}>Zadať dopyt na diel</Link></div>

@@ -3,6 +3,7 @@ import Link from "next/link";
 import Home, { type HomeSsr } from "@/components/Home";
 import { IS_DEMO, getCatalog, getCities, getSeoCounts, getStats, searchListings } from "@/lib/data";
 import { emptyFilters } from "@/lib/types";
+import { packCatalog, unpackCatalog } from "@/lib/catalogSort";
 import { sk } from "@/lib/format";
 import { JsonLd, landingPath, siteLd } from "@/lib/seo";
 
@@ -19,13 +20,13 @@ async function ssrData(): Promise<HomeSsr | null> {
   if (IS_DEMO) return null;
   try {
     const [catalog, res, stats, cities] = await Promise.all([getCatalog(), searchListings(emptyFilters, [], 0, 12), getStats(), getCities()]);
-    return { catalog, res, stats, cities };
+    return { catalog: packCatalog(catalog), res, stats, cities };
   } catch { return null; } // pri výpadku databázy sa stránka načíta v prehliadači
 }
 
 export default async function Page() {
   const [ssr, counts, cityList] = await Promise.all([ssrData(), getSeoCounts().catch(() => []), getCities().catch(() => [] as string[])]);
-  const cat = ssr?.catalog || (IS_DEMO ? await getCatalog() : null);
+  const cat = ssr ? unpackCatalog(ssr.catalog) : (IS_DEMO ? await getCatalog() : null);
   // Interné odkazy na stránky áut a kategórií (len tie, kde sú inzeráty)
   const byModel = new Map<number, number>(), byCat = new Map<string, number>();
   for (const c of counts) { byModel.set(c.modelId, (byModel.get(c.modelId) || 0) + c.n); byCat.set(c.categoryId, (byCat.get(c.categoryId) || 0) + c.n); }

@@ -1,0 +1,186 @@
+# Fiat, Abarth, Alfa Romeo, Lancia, Maserati, Ferrari, Lamborghini, Land Rover, Jaguar, Mini, Rover, MG, Bentley, Aston Martin, Rolls-Royce, Lotus, McLaren
+# Údaje z pamäte (8. 11. 2026), nie overený katalóg.
+
+@Fiat|1
+Cinquecento|1991|1998|0.9 29 kW; 1.1 Sporting 40 kW
+Seicento|1998|2010|0.9 29 kW; 1.1 40 kW
+Panda II (169)|2003|2012|1.1 40 kW; 1.2 44 kW; 1.2 51 kW; 1.4 74 kW; 1.4 Natural Power 57 kW; 1.3 Multijet 51 kW; 1.3 Multijet 55 kW
+Panda III (319)|2012|2024|0.9 TwinAir 48 kW; 0.9 TwinAir 63 kW; 1.2 51 kW; 1.0 Hybrid 51 kW; 1.3 Multijet 55 kW; 1.3 Multijet 70 kW
+Grande Panda|2024|-|1.2 Hybrid 74 kW; Elektro 83 kW
+Punto I (176)|1993|1999|1.1 40 kW; 1.2 44 kW; 1.2 16V 63 kW; 1.4 GT 98 kW; 1.7 D 42 kW; 1.7 TD 52 kW
+Punto II (188)|1999|2012|1.2 44 kW; 1.2 16V 59 kW; 1.4 70 kW; 1.8 96 kW; 1.3 Multijet 51 kW; 1.3 Multijet 55 kW; 1.9 D 44 kW; 1.9 JTD 63 kW; 1.9 JTD 74 kW
+Grande Punto / Punto Evo / Punto (199)|2005|2018|1.2 48 kW; 1.4 57 kW; 1.4 16V 70 kW; 1.4 T-Jet 88 kW; 1.4 MultiAir 77 kW; 0.9 TwinAir 63 kW; 1.3 Multijet 55 kW; 1.3 Multijet 66 kW; 1.3 Multijet 70 kW; 1.6 Multijet 88 kW; 1.9 Multijet 88 kW
+500 (312)|2007|2024|1.2 51 kW; 1.4 74 kW; 0.9 TwinAir 48 kW; 0.9 TwinAir 63 kW; 0.9 TwinAir 77 kW; 1.0 Hybrid 51 kW; 1.3 Multijet 55 kW; 1.3 Multijet 70 kW
+500e (332)|2020|-|Elektro 70 kW; Elektro 87 kW
+500 Hybrid (2025)|2025|-|1.2 Hybrid 48 kW
+500L|2012|2022|0.9 TwinAir 77 kW; 1.4 70 kW; 1.4 T-Jet 88 kW; 1.3 Multijet 62 kW; 1.3 Multijet 70 kW; 1.6 Multijet 77 kW; 1.6 Multijet 88 kW
+500X|2014|2024|1.0 FireFly 88 kW; 1.3 FireFly 110 kW; 1.4 MultiAir 103 kW; 1.4 MultiAir 125 kW; 1.6 81 kW; 1.5 Hybrid 96 kW; 1.3 Multijet 70 kW; 1.6 Multijet 88 kW; 2.0 Multijet 103 kW
+600|2023|-|1.2 Hybrid 74 kW; 600e Elektro 115 kW
+Bravo / Brava (182)|1995|2001|1.2 60 kW; 1.4 59 kW; 1.6 76 kW; 1.8 83 kW; 2.0 20V 108 kW; 1.9 TD 55 kW; 1.9 TD 74 kW; 1.9 JTD 77 kW
+Bravo II (198)|2007|2014|1.4 66 kW; 1.4 T-Jet 88 kW; 1.4 T-Jet 110 kW; 1.6 Multijet 66 kW; 1.6 Multijet 77 kW; 1.6 Multijet 88 kW; 1.9 Multijet 88 kW; 1.9 Multijet 110 kW; 2.0 Multijet 121 kW
+Stilo|2001|2010|1.2 59 kW; 1.4 70 kW; 1.6 76 kW; 1.8 98 kW; 2.4 125 kW; 1.9 JTD 59 kW; 1.9 JTD 85 kW; 1.9 Multijet 74 kW; 1.9 Multijet 88 kW; 1.9 Multijet 110 kW
+Marea|1996|2002|1.2 60 kW; 1.4 59 kW; 1.6 76 kW; 1.8 83 kW; 2.0 20V 108 kW; 1.9 TD 55 kW; 1.9 TD 74 kW; 1.9 JTD 77 kW; 2.4 JTD 96 kW
+Tipo (356)|2015|2025|1.4 70 kW; 1.4 T-Jet 88 kW; 1.0 FireFly 74 kW; 1.6 81 kW; 1.5 Hybrid 96 kW; 1.3 Multijet 70 kW; 1.6 Multijet 88 kW
+Idea|2003|2012|1.2 59 kW; 1.4 57 kW; 1.4 70 kW; 1.3 Multijet 51 kW; 1.3 Multijet 66 kW; 1.9 Multijet 74 kW
+Multipla|1998|2010|1.6 76 kW; 1.6 Natural Power 68 kW; 1.9 JTD 77 kW; 1.9 Multijet 85 kW
+Croma (194)|2005|2010|1.8 103 kW; 2.2 108 kW; 1.9 Multijet 88 kW; 1.9 Multijet 110 kW; 1.9 Multijet 132 kW; 2.4 Multijet 147 kW
+Sedici|2006|2014|1.6 79 kW; 1.6 88 kW; 1.9 Multijet 88 kW; 2.0 Multijet 99 kW
+Freemont|2011|2016|2.4 125 kW; 3.6 V6 206 kW; 2.0 Multijet 103 kW; 2.0 Multijet 125 kW
+Ulysse (179)|2002|2010|2.0 100 kW; 3.0 V6 150 kW; 2.0 JTD 79 kW; 2.0 JTD 88 kW; 2.0 JTD 100 kW; 2.2 JTD 94 kW; 2.2 JTD 125 kW
+Coupé|1993|2000|1.8 96 kW; 2.0 16V 102 kW; 2.0 20V 108 kW; 2.0 20V Turbo 162 kW
+Barchetta|1995|2005|1.8 96 kW
+Doblò I|2000|2010|1.2 48 kW; 1.4 57 kW; 1.6 76 kW; 1.6 Natural Power 68 kW; 1.3 Multijet 62 kW; 1.9 D 46 kW; 1.9 JTD 74 kW; 1.9 Multijet 88 kW
+Doblò II (263)|2010|2022|1.4 70 kW; 1.4 T-Jet 88 kW; 1.4 Natural Power 88 kW; 1.3 Multijet 66 kW; 1.6 Multijet 66 kW; 1.6 Multijet 77 kW; 2.0 Multijet 99 kW
+Doblò III|2022|-|1.2 PureTech 81 kW; 1.5 BlueHDi 75 kW; 1.5 BlueHDi 96 kW; e-Doblò Elektro 100 kW
+Fiorino / Qubo|2007|2021|1.4 54 kW; 1.4 Natural Power 52 kW; 1.3 Multijet 55 kW; 1.3 Multijet 59 kW; 1.3 Multijet 70 kW
+Scudo I|1995|2006|1.6 58 kW; 2.0 101 kW; 1.9 D 51 kW; 1.9 TD 66 kW; 2.0 JTD 69 kW; 2.0 JTD 80 kW
+Scudo II|2007|2016|1.6 Multijet 66 kW; 2.0 Multijet 88 kW; 2.0 Multijet 100 kW; 2.0 Multijet 120 kW
+Scudo III|2022|-|1.5 BlueHDi 88 kW; 2.0 BlueHDi 106 kW; 2.0 BlueHDi 130 kW; e-Scudo Elektro 100 kW
+Talento|2016|2021|1.6 Multijet 70 kW; 1.6 Multijet 88 kW; 1.6 EcoJet 92 kW; 1.6 EcoJet 107 kW; 2.0 Multijet 107 kW
+Ducato II (230/244)|1994|2006|2.0 80 kW; 1.9 TD 66 kW; 2.0 JTD 62 kW; 2.3 JTD 81 kW; 2.5 D 63 kW; 2.8 TDI 90 kW; 2.8 JTD 94 kW; 2.8 JTD 107 kW
+Ducato III (250)|2006|2014|2.2 Multijet 74 kW; 2.3 Multijet 88 kW; 2.3 Multijet 96 kW; 2.3 Multijet 107 kW; 3.0 Multijet 115 kW; 3.0 Multijet 130 kW; 3.0 Natural Power 100 kW
+Ducato IV (250 facelift/290)|2014|-|2.0 Multijet 85 kW; 2.3 Multijet 96 kW; 2.3 Multijet 103 kW; 2.3 Multijet 110 kW; 2.3 Multijet 118 kW; 2.3 Multijet 130 kW; 2.2 Multijet 88 kW; 2.2 Multijet 103 kW; 2.2 Multijet 132 kW; 3.0 Multijet 132 kW; e-Ducato Elektro 90 kW
+Fullback|2016|2019|2.4 Diesel 113 kW; 2.4 Diesel 133 kW
+Strada|1996|2010|1.2 44 kW; 1.9 D 46 kW; 1.9 JTD 59 kW
+
+@Abarth|0
+500 / 595 / 695|2008|2024|1.4 T-Jet 99 kW; 1.4 T-Jet 103 kW; 1.4 T-Jet 118 kW; 1.4 T-Jet 132 kW
+Grande Punto / Punto Evo|2007|2014|1.4 T-Jet 114 kW; 1.4 MultiAir 120 kW
+124 Spider|2016|2019|1.4 T-Jet 125 kW
+500e / 600e|2023|-|Elektro 114 kW; Elektro 175 kW
+
+@Alfa Romeo|0
+145 / 146|1994|2001|1.4 66 kW; 1.6 76 kW; 1.8 103 kW; 2.0 110 kW; 1.9 TD 66 kW; 1.9 JTD 77 kW
+147|2000|2010|1.6 77 kW; 1.6 88 kW; 2.0 110 kW; 3.2 V6 GTA 184 kW; 1.9 JTD 74 kW; 1.9 JTD 85 kW; 1.9 JTDM 88 kW; 1.9 JTDM 110 kW
+156|1997|2006|1.6 88 kW; 1.8 103 kW; 2.0 114 kW; 2.0 JTS 121 kW; 2.5 V6 140 kW; 3.2 V6 GTA 184 kW; 1.9 JTD 77 kW; 1.9 JTD 85 kW; 1.9 JTDM 103 kW; 2.4 JTD 100 kW; 2.4 JTDM 129 kW
+159|2005|2011|1.75 TBi 147 kW; 1.8 103 kW; 1.9 JTS 118 kW; 2.2 JTS 136 kW; 3.2 V6 191 kW; 1.9 JTDM 88 kW; 1.9 JTDM 110 kW; 2.0 JTDM 125 kW; 2.4 JTDM 147 kW
+166|1998|2007|2.0 114 kW; 2.5 V6 138 kW; 3.0 V6 166 kW; 3.2 V6 177 kW; 2.4 JTD 103 kW; 2.4 JTDM 136 kW
+GT|2003|2010|1.8 103 kW; 2.0 JTS 121 kW; 3.2 V6 177 kW; 1.9 JTDM 110 kW
+Brera / Spider (939)|2005|2010|1.75 TBi 147 kW; 2.2 JTS 136 kW; 3.2 V6 191 kW; 2.0 JTDM 125 kW; 2.4 JTDM 154 kW
+MiTo|2008|2018|0.9 TwinAir 77 kW; 1.4 57 kW; 1.4 70 kW; 1.4 MultiAir 99 kW; 1.4 T-Jet 88 kW; 1.4 MultiAir 125 kW; 1.3 JTDM 62 kW; 1.3 JTDM 70 kW; 1.6 JTDM 88 kW
+Giulietta (940)|2010|2020|1.4 T-Jet 88 kW; 1.4 MultiAir 125 kW; 1.75 TBi 173 kW; 1.6 JTDM 77 kW; 1.6 JTDM 88 kW; 2.0 JTDM 103 kW; 2.0 JTDM 125 kW
+Giulia (952)|2016|-|2.0 Turbo 147 kW; 2.0 Turbo 206 kW; 2.9 V6 BiTurbo 375 kW; 2.2 JTDM 100 kW; 2.2 JTDM 132 kW; 2.2 JTDM 154 kW
+Stelvio|2017|-|2.0 Turbo 147 kW; 2.0 Turbo 206 kW; 2.9 V6 BiTurbo 375 kW; 2.2 JTDM 118 kW; 2.2 JTDM 154 kW
+Tonale|2022|-|1.5 Hybrid 96 kW; 1.5 Hybrid 118 kW; 1.3 PHEV Q4 206 kW; 1.6 JTDM 96 kW
+Junior|2024|-|1.2 Hybrid 107 kW; Elektro 115 kW; Elektro 207 kW
+GTV / Spider (916)|1995|2006|1.8 106 kW; 2.0 TS 110 kW; 2.0 V6 Turbo 148 kW; 3.0 V6 162 kW; 3.2 V6 176 kW
+
+@Lancia|0
+Ypsilon (843)|2003|2011|1.2 44 kW; 1.2 59 kW; 1.4 66 kW; 1.4 70 kW; 1.3 Multijet 51 kW; 1.3 Multijet 66 kW
+Ypsilon (846)|2011|2024|0.9 TwinAir 63 kW; 1.2 51 kW; 1.0 Hybrid 51 kW; 1.3 Multijet 70 kW
+Ypsilon (2024)|2024|-|1.2 Hybrid 74 kW; Elektro 115 kW
+Musa|2004|2012|1.4 57 kW; 1.4 70 kW; 1.3 Multijet 66 kW; 1.6 Multijet 88 kW; 1.9 Multijet 74 kW
+Delta III|2008|2014|1.4 T-Jet 88 kW; 1.4 T-Jet 110 kW; 1.8 Di 147 kW; 1.6 Multijet 88 kW; 1.9 Multijet 140 kW; 2.0 Multijet 121 kW
+Lybra|1999|2005|1.6 76 kW; 1.8 96 kW; 2.0 110 kW; 1.9 JTD 77 kW; 2.4 JTD 100 kW
+Thesis|2002|2009|2.0 Turbo 136 kW; 2.4 125 kW; 3.0 V6 158 kW; 3.2 V6 169 kW; 2.4 JTD 129 kW
+Phedra|2002|2010|2.0 100 kW; 3.0 V6 150 kW; 2.0 JTD 79 kW; 2.0 JTD 88 kW; 2.2 JTD 94 kW; 2.2 JTD 125 kW
+Voyager (2011)|2011|2015|3.6 V6 209 kW; 2.8 CRD 120 kW; 2.8 CRD 131 kW
+
+@Maserati|0
+Ghibli (M157)|2013|2024|2.0 Hybrid 243 kW; 3.0 V6 257 kW; 3.0 V6 301 kW; 3.0 V6 Diesel 202 kW
+Quattroporte V/VI|2003|2024|4.2 V8 294 kW; 4.7 V8 316 kW; 3.0 V6 301 kW; 3.8 V8 390 kW; 3.0 V6 Diesel 202 kW
+Levante|2016|2024|2.0 Hybrid 243 kW; 3.0 V6 257 kW; 3.0 V6 316 kW; 3.8 V8 405 kW; 3.0 V6 Diesel 202 kW
+Grecale|2022|-|2.0 Hybrid 221 kW; 2.0 Hybrid 243 kW; 3.0 V6 390 kW; Folgore Elektro 410 kW
+GranTurismo / GranCabrio|2007|-|4.2 V8 298 kW; 4.7 V8 323 kW; 3.0 V6 360 kW; 3.0 V6 405 kW; Folgore Elektro 560 kW
+MC20|2020|-|3.0 V6 463 kW
+
+@Ferrari|0
+360 / F430|1999|2009|3.6 V8 294 kW; 4.3 V8 360 kW
+California / Portofino / Roma|2008|-|4.3 V8 338 kW; 3.9 V8 Turbo 441 kW; 3.9 V8 Turbo 456 kW
+458 / 488 / F8|2009|2023|4.5 V8 419 kW; 3.9 V8 Turbo 492 kW; 3.9 V8 Turbo 530 kW
+296 GTB / GTS|2021|-|3.0 V6 Hybrid 610 kW
+Purosangue|2022|-|6.5 V12 533 kW
+
+@Lamborghini|0
+Gallardo / Huracán|2003|2024|5.0 V10 368 kW; 5.2 V10 412 kW; 5.2 V10 449 kW
+Urus|2018|-|4.0 V8 478 kW; 4.0 V8 Hybrid 588 kW
+Aventador / Revuelto|2011|-|6.5 V12 515 kW; 6.5 V12 Hybrid 747 kW
+
+@Land Rover|0
+Freelander I|1997|2006|1.8 86 kW; 2.5 V6 130 kW; 2.0 Di 72 kW; 2.0 Td4 82 kW
+Freelander II|2006|2014|2.0 Si4 177 kW; 3.2 i6 171 kW; 2.2 TD4 110 kW; 2.2 eD4 110 kW; 2.2 SD4 140 kW
+Discovery Sport|2014|-|2.0 Si4 177 kW; 2.0 P200 147 kW; 2.0 P250 183 kW; 1.5 P300e 227 kW; 2.0 TD4 110 kW; 2.0 TD4 132 kW; 2.0 SD4 177 kW; 2.0 D165 120 kW; 2.0 D200 150 kW
+Discovery I/II|1989|2004|3.9 V8 136 kW; 4.0 V8 136 kW; 2.5 Tdi 83 kW; 2.5 Td5 102 kW
+Discovery 3|2004|2009|4.0 V6 160 kW; 4.4 V8 220 kW; 2.7 TDV6 140 kW
+Discovery 4|2009|2016|5.0 V8 276 kW; 2.7 TDV6 140 kW; 3.0 TDV6 155 kW; 3.0 SDV6 180 kW; 3.0 SDV6 188 kW
+Discovery 5|2016|-|2.0 Si4 221 kW; 3.0 V6 250 kW; 2.0 Sd4 177 kW; 3.0 Td6 190 kW; 3.0 D250 183 kW; 3.0 D300 221 kW
+Defender (L316)|1983|2016|2.5 Tdi 83 kW; 2.5 Td5 90 kW; 2.4 TDCi 90 kW; 2.2 TDCi 90 kW
+Defender (L663)|2020|-|2.0 P300 221 kW; 3.0 P400 294 kW; 2.0 P400e 297 kW; 5.0 V8 386 kW; 2.0 D200 147 kW; 2.0 D240 177 kW; 3.0 D250 183 kW; 3.0 D300 221 kW
+Range Rover II (P38)|1994|2002|4.0 V8 140 kW; 4.6 V8 165 kW; 2.5 DT 100 kW
+Range Rover III (L322)|2002|2012|4.4 V8 210 kW; 4.2 V8 SC 291 kW; 5.0 V8 276 kW; 5.0 V8 SC 375 kW; 3.0 Td6 130 kW; 3.6 TDV8 200 kW; 4.4 TDV8 230 kW
+Range Rover IV (L405)|2012|2021|5.0 V8 SC 375 kW; 3.0 V6 SC 250 kW; 2.0 P400e 297 kW; 3.0 TDV6 190 kW; 3.0 SDV6 215 kW; 4.4 SDV8 250 kW
+Range Rover V (L460)|2021|-|3.0 P400 294 kW; 3.0 P440e 324 kW; 3.0 P550e 405 kW; 4.4 V8 P530 390 kW; 3.0 D300 221 kW; 3.0 D350 258 kW
+Range Rover Sport I (L320)|2005|2013|4.2 V8 SC 287 kW; 4.4 V8 220 kW; 5.0 V8 276 kW; 5.0 V8 SC 375 kW; 2.7 TDV6 140 kW; 3.0 TDV6 155 kW; 3.0 SDV6 180 kW; 3.6 TDV8 200 kW
+Range Rover Sport II (L494)|2013|2022|3.0 V6 SC 250 kW; 5.0 V8 SC 375 kW; 2.0 Si4 221 kW; 2.0 P400e 297 kW; 3.0 TDV6 190 kW; 3.0 SDV6 215 kW; 4.4 SDV8 250 kW; 2.0 SD4 177 kW
+Range Rover Sport III (L461)|2022|-|3.0 P400 294 kW; 3.0 P440e 324 kW; 3.0 P510e 375 kW; 4.4 V8 P530 390 kW; 3.0 D250 183 kW; 3.0 D300 221 kW; 3.0 D350 258 kW
+Range Rover Evoque I (L538)|2011|2018|2.0 Si4 177 kW; 2.0 Si4 213 kW; 2.2 eD4 110 kW; 2.2 TD4 110 kW; 2.2 SD4 140 kW; 2.0 eD4 110 kW; 2.0 TD4 110 kW; 2.0 TD4 132 kW
+Range Rover Evoque II (L551)|2018|-|2.0 P200 147 kW; 2.0 P250 183 kW; 1.5 P300e 227 kW; 2.0 D150 110 kW; 2.0 D165 120 kW; 2.0 D200 150 kW; 2.0 D240 177 kW
+Range Rover Velar|2017|-|2.0 P250 184 kW; 2.0 P400e 297 kW; 3.0 P380 280 kW; 2.0 D180 132 kW; 2.0 D240 177 kW; 3.0 D300 221 kW
+
+@Jaguar|0
+X-Type|2001|2009|2.0 V6 115 kW; 2.5 V6 145 kW; 3.0 V6 172 kW; 2.0 D 96 kW; 2.2 D 107 kW; 2.2 D 114 kW
+S-Type|1999|2007|2.5 V6 147 kW; 3.0 V6 175 kW; 4.2 V8 219 kW; 4.2 V8 SC 291 kW; 2.7 D 152 kW
+XF (X250)|2007|2015|2.0 Si4 177 kW; 3.0 V6 175 kW; 5.0 V8 283 kW; 2.2 D 140 kW; 2.7 D 152 kW; 3.0 D 177 kW; 3.0 D 202 kW
+XF (X260)|2015|-|2.0 P250 184 kW; 2.0 P300 221 kW; 3.0 V6 S 280 kW; 2.0 D 120 kW; 2.0 D 132 kW; 2.0 D 177 kW; 3.0 D 221 kW
+XE|2015|-|2.0 P250 184 kW; 2.0 P300 221 kW; 3.0 V6 S 250 kW; 2.0 D 120 kW; 2.0 D 132 kW; 2.0 D 177 kW
+XJ (X350/X358)|2003|2009|3.0 V6 175 kW; 3.5 V8 193 kW; 4.2 V8 219 kW; 4.2 V8 SC 291 kW; 2.7 D 152 kW
+XJ (X351)|2009|2019|3.0 V6 SC 250 kW; 5.0 V8 283 kW; 5.0 V8 SC 375 kW; 3.0 D 202 kW; 3.0 D 221 kW
+F-Pace|2016|-|2.0 P250 184 kW; 2.0 P400e 297 kW; 3.0 V6 S 280 kW; 5.0 V8 SVR 405 kW; 2.0 D 120 kW; 2.0 D 132 kW; 2.0 D 177 kW; 3.0 D 221 kW
+E-Pace|2017|-|2.0 P200 147 kW; 2.0 P250 183 kW; 1.5 P300e 227 kW; 2.0 D150 110 kW; 2.0 D165 120 kW; 2.0 D200 150 kW
+I-Pace|2018|2024|Elektro 294 kW
+F-Type|2013|2024|2.0 P300 221 kW; 3.0 V6 S 280 kW; 5.0 V8 331 kW; 5.0 V8 R 423 kW
+XK (X150)|2006|2014|4.2 V8 219 kW; 5.0 V8 283 kW; 5.0 V8 SC 375 kW
+
+@Mini|0
+Mini (R50/R52/R53)|2001|2006|One 1.6 66 kW; Cooper 1.6 85 kW; Cooper S 1.6 120 kW; One D 1.4 55 kW
+Mini (R56/R55/R57)|2006|2014|One 1.4 55 kW; One 1.6 72 kW; Cooper 1.6 88 kW; Cooper S 1.6 128 kW; JCW 1.6 155 kW; One D 1.6 66 kW; Cooper D 1.6 82 kW; Cooper SD 2.0 105 kW
+Mini (F55/F56/F57)|2014|2024|One 1.2 75 kW; One 1.5 75 kW; Cooper 1.5 100 kW; Cooper S 2.0 141 kW; JCW 2.0 170 kW; One D 1.5 70 kW; Cooper D 1.5 85 kW; Cooper SD 2.0 125 kW; Cooper SE Elektro 135 kW
+Mini Cooper (F66/J01)|2024|-|C 1.5 115 kW; S 2.0 150 kW; Cooper E Elektro 135 kW; Cooper SE Elektro 160 kW
+Clubman (R55)|2007|2014|One 1.6 72 kW; Cooper 1.6 88 kW; Cooper S 1.6 128 kW; Cooper D 1.6 82 kW
+Clubman (F54)|2015|2024|One 1.5 75 kW; Cooper 1.5 100 kW; Cooper S 2.0 141 kW; JCW 2.0 225 kW; One D 1.5 85 kW; Cooper D 2.0 110 kW; Cooper SD 2.0 140 kW
+Countryman (R60)|2010|2016|One 1.6 72 kW; Cooper 1.6 90 kW; Cooper S 1.6 135 kW; One D 1.6 66 kW; Cooper D 1.6 82 kW; Cooper D 2.0 82 kW; Cooper SD 2.0 105 kW
+Countryman (F60)|2017|2024|One 1.5 75 kW; Cooper 1.5 100 kW; Cooper S 2.0 141 kW; Cooper SE 1.5 PHEV 165 kW; One D 1.5 85 kW; Cooper D 2.0 110 kW; Cooper SD 2.0 140 kW
+Countryman (U25)|2024|-|C 1.5 125 kW; S ALL4 2.0 160 kW; D 2.0 120 kW; E Elektro 150 kW; SE ALL4 Elektro 230 kW
+Paceman (R61)|2012|2016|Cooper 1.6 90 kW; Cooper S 1.6 135 kW; Cooper D 2.0 82 kW; Cooper SD 2.0 105 kW
+Aceman|2024|-|E Elektro 135 kW; SE Elektro 160 kW
+
+@Rover|0
+25 / Streetwise|1999|2005|1.1 55 kW; 1.4 62 kW; 1.4 76 kW; 1.6 80 kW; 1.8 86 kW; 2.0 iDT 74 kW
+45|1999|2005|1.4 76 kW; 1.6 80 kW; 1.8 86 kW; 2.0 V6 110 kW; 2.0 iDT 74 kW; 2.0 iDT 83 kW
+75|1999|2005|1.8 88 kW; 1.8 Turbo 110 kW; 2.0 V6 110 kW; 2.5 V6 130 kW; 2.0 CDT 85 kW; 2.0 CDTi 96 kW
+200 / 400|1995|2000|1.4 76 kW; 1.6 82 kW; 1.8 85 kW; 2.0 D 63 kW
+600|1993|1999|2.0 85 kW; 2.3 116 kW; 2.0 D 77 kW
+
+@MG|0
+MG ZR / ZS / ZT (Rover)|2001|2005|1.4 76 kW; 1.8 86 kW; 2.5 V6 130 kW; 2.0 TD 74 kW; 2.0 CDTi 96 kW
+MG TF / MGF|1995|2011|1.6 85 kW; 1.8 88 kW; 1.8 VVC 107 kW
+MG3|2013|-|1.5 78 kW; 1.5 Hybrid+ 143 kW
+MG ZS (2017)|2017|-|1.0 T-GDI 82 kW; 1.5 78 kW; 1.5 Hybrid+ 145 kW; ZS EV Elektro 115 kW; ZS EV Elektro 130 kW
+MG HS|2019|-|1.5 T-GDI 119 kW; 1.5 T-GDI 125 kW; 1.5 PHEV 190 kW
+MG4 Electric|2022|-|Elektro 125 kW; Elektro 150 kW; Elektro 180 kW; Elektro 320 kW
+MG5 Electric|2020|-|Elektro 115 kW; Elektro 130 kW
+Marvel R|2021|2024|Elektro 132 kW; Elektro 212 kW
+Cyberster|2024|-|Elektro 250 kW; Elektro 375 kW
+MG S5 EV|2025|-|Elektro 125 kW; Elektro 170 kW
+
+@Bentley|0
+Continental GT / GTC / Flying Spur|2003|-|4.0 V8 373 kW; 6.0 W12 412 kW; 6.0 W12 467 kW; 2.9 V6 Hybrid 400 kW
+Bentayga|2015|-|4.0 V8 404 kW; 6.0 W12 447 kW; 3.0 V6 Hybrid 330 kW; 4.0 V8 Diesel 320 kW
+
+@Aston Martin|0
+Vantage|2005|-|4.3 V8 283 kW; 4.7 V8 313 kW; 4.0 V8 Turbo 375 kW; 4.0 V8 Turbo 485 kW
+DB9 / DB11 / DB12|2004|-|5.9 V12 335 kW; 4.0 V8 Turbo 375 kW; 5.2 V12 Turbo 470 kW; 4.0 V8 Turbo 500 kW
+DBX|2020|-|4.0 V8 Turbo 405 kW; 4.0 V8 Turbo 520 kW
+
+@Rolls-Royce|0
+Ghost / Wraith / Dawn|2009|-|6.6 V12 420 kW; 6.75 V12 420 kW
+Phantom / Cullinan|2003|-|6.75 V12 338 kW; 6.75 V12 420 kW
+Spectre|2023|-|Elektro 430 kW
+
+@Lotus|0
+Elise / Exige|1996|2021|1.8 88 kW; 1.8 100 kW; 1.8 SC 162 kW; 3.5 V6 SC 257 kW
+Evora / Emira|2009|-|3.5 V6 206 kW; 3.5 V6 SC 298 kW; 2.0 Turbo 268 kW
+Eletre / Emeya|2023|-|Elektro 450 kW; Elektro 675 kW
+
+@McLaren|0
+570S / 720S / 750S / Artura|2015|-|3.8 V8 Turbo 419 kW; 4.0 V8 Turbo 530 kW; 3.0 V6 Hybrid 500 kW

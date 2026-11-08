@@ -1,0 +1,179 @@
+# Renault, Dacia, Peugeot, Citroën, DS, Alpine – údaje z pamäte (8. 11. 2026), nie overený katalóg.
+
+@Renault|1
+Twingo I|1993|2007|1.2 40 kW; 1.2 43 kW; 1.2 16V 55 kW
+Twingo II|2007|2014|1.2 43 kW; 1.2 55 kW; 1.2 TCe 74 kW; 1.6 RS 98 kW; 1.5 dCi 47 kW; 1.5 dCi 55 kW
+Twingo III|2014|2024|1.0 SCe 52 kW; 0.9 TCe 66 kW; 0.9 TCe 81 kW; Electric 60 kW
+Clio II|1998|2012|1.2 43 kW; 1.2 16V 55 kW; 1.4 55 kW; 1.4 16V 72 kW; 1.6 66 kW; 1.6 16V 79 kW; 2.0 RS 124 kW; 1.5 dCi 48 kW; 1.5 dCi 60 kW; 1.5 dCi 74 kW; 1.9 D 47 kW
+Clio III|2005|2014|1.2 43 kW; 1.2 55 kW; 1.2 TCe 74 kW; 1.4 72 kW; 1.6 65 kW; 1.6 82 kW; 2.0 RS 145 kW; 1.5 dCi 50 kW; 1.5 dCi 63 kW; 1.5 dCi 76 kW; 1.5 dCi 78 kW
+Clio IV|2012|2019|0.9 TCe 66 kW; 1.2 54 kW; 1.2 TCe 87 kW; 1.6 RS 147 kW; 1.5 dCi 55 kW; 1.5 dCi 66 kW; 1.5 dCi 81 kW
+Clio V|2019|-|1.0 SCe 49 kW; 1.0 SCe 54 kW; 1.0 TCe 67 kW; 1.0 TCe 74 kW; 1.3 TCe 96 kW; 1.6 E-Tech Hybrid 103 kW; 1.5 dCi 63 kW; 1.5 dCi 70 kW; 1.2 TCe 85 kW
+Clio VI|2025|-|1.2 TCe 85 kW; 1.8 E-Tech Hybrid 118 kW
+Thalia / Symbol|1999|2013|1.2 55 kW; 1.4 55 kW; 1.4 72 kW; 1.5 dCi 48 kW; 1.5 dCi 63 kW
+Modus|2004|2012|1.2 55 kW; 1.4 72 kW; 1.6 82 kW; 1.5 dCi 48 kW; 1.5 dCi 63 kW; 1.5 dCi 76 kW
+Zoe|2012|2024|Elektro 65 kW; Elektro 68 kW; Elektro 80 kW; Elektro 100 kW
+Captur I|2013|2019|0.9 TCe 66 kW; 1.2 TCe 87 kW; 1.3 TCe 96 kW; 1.3 TCe 110 kW; 1.5 dCi 66 kW; 1.5 dCi 81 kW
+Captur II|2019|-|1.0 TCe 67 kW; 1.0 TCe 74 kW; 1.3 TCe 103 kW; 1.3 TCe 116 kW; 1.6 E-Tech Hybrid 105 kW; 1.6 E-Tech Plug-in 117 kW; 1.5 dCi 70 kW; 1.5 dCi 85 kW
+Mégane I|1995|2003|1.4 55 kW; 1.4 16V 70 kW; 1.6 66 kW; 1.6 16V 79 kW; 1.8 66 kW; 2.0 84 kW; 2.0 16V 108 kW; 1.9 D 47 kW; 1.9 dT 66 kW; 1.9 dTi 59 kW; 1.9 dTi 72 kW; 1.9 dCi 75 kW
+Mégane II|2002|2009|1.4 72 kW; 1.6 83 kW; 2.0 99 kW; 2.0 Turbo 120 kW; 2.0 RS 165 kW; 1.5 dCi 63 kW; 1.5 dCi 74 kW; 1.5 dCi 78 kW; 1.9 dCi 88 kW; 1.9 dCi 96 kW; 2.0 dCi 110 kW
+Mégane III|2008|2016|1.2 TCe 85 kW; 1.4 TCe 96 kW; 1.6 74 kW; 1.6 81 kW; 2.0 103 kW; 2.0 RS 184 kW; 1.5 dCi 63 kW; 1.5 dCi 78 kW; 1.5 dCi 81 kW; 1.6 dCi 96 kW; 1.9 dCi 96 kW; 2.0 dCi 118 kW
+Mégane IV|2016|2023|1.2 TCe 74 kW; 1.2 TCe 96 kW; 1.3 TCe 85 kW; 1.3 TCe 103 kW; 1.3 TCe 117 kW; 1.6 TCe 151 kW; 1.8 RS 205 kW; 1.6 E-Tech Plug-in 118 kW; 1.5 dCi 66 kW; 1.5 dCi 81 kW; 1.6 dCi 96 kW; 1.6 dCi 120 kW; 1.7 dCi 110 kW
+Mégane E-Tech Electric|2022|-|Elektro 96 kW; Elektro 160 kW
+Scénic I|1996|2003|1.4 55 kW; 1.6 66 kW; 1.6 16V 79 kW; 1.8 85 kW; 2.0 102 kW; 1.9 dTi 72 kW; 1.9 dCi 75 kW
+Scénic II|2003|2009|1.4 72 kW; 1.6 82 kW; 2.0 99 kW; 1.5 dCi 63 kW; 1.5 dCi 78 kW; 1.9 dCi 88 kW; 1.9 dCi 96 kW; 2.0 dCi 110 kW
+Scénic III|2009|2016|1.2 TCe 85 kW; 1.4 TCe 96 kW; 1.6 81 kW; 2.0 103 kW; 1.5 dCi 78 kW; 1.5 dCi 81 kW; 1.6 dCi 96 kW; 1.9 dCi 96 kW; 2.0 dCi 110 kW
+Scénic IV|2016|2022|1.2 TCe 85 kW; 1.3 TCe 103 kW; 1.3 TCe 116 kW; 1.5 dCi 81 kW; 1.6 dCi 96 kW; 1.6 dCi 118 kW; 1.7 dCi 88 kW; 1.7 dCi 110 kW
+Scénic E-Tech Electric|2024|-|Elektro 125 kW; Elektro 160 kW
+Laguna I|1993|2001|1.6 79 kW; 1.8 66 kW; 2.0 83 kW; 3.0 V6 125 kW; 2.2 D 61 kW; 1.9 dTi 72 kW; 2.2 dT 83 kW
+Laguna II|2001|2007|1.6 79 kW; 1.8 88 kW; 2.0 99 kW; 2.0 Turbo 120 kW; 3.0 V6 152 kW; 1.9 dCi 74 kW; 1.9 dCi 88 kW; 2.2 dCi 110 kW
+Laguna III|2007|2015|1.5 dCi 81 kW; 2.0 103 kW; 2.0 TCe 125 kW; 2.0 TCe 150 kW; 2.0 dCi 96 kW; 2.0 dCi 110 kW; 2.0 dCi 127 kW; 3.0 dCi 173 kW
+Talisman|2015|2022|1.3 TCe 117 kW; 1.6 TCe 110 kW; 1.6 TCe 147 kW; 1.8 TCe 165 kW; 1.5 dCi 81 kW; 1.6 dCi 96 kW; 1.6 dCi 118 kW; 1.7 dCi 110 kW; 2.0 dCi 118 kW; 2.0 dCi 147 kW
+Espace III|1996|2002|2.0 84 kW; 3.0 V6 140 kW; 2.2 dT 83 kW; 1.9 dTi 72 kW
+Espace IV|2002|2015|2.0 100 kW; 2.0 Turbo 120 kW; 3.5 V6 177 kW; 1.9 dCi 88 kW; 2.0 dCi 110 kW; 2.0 dCi 127 kW; 2.2 dCi 110 kW; 3.0 dCi 130 kW
+Espace V|2015|2023|1.6 TCe 147 kW; 1.8 TCe 165 kW; 1.6 dCi 96 kW; 1.6 dCi 118 kW; 2.0 dCi 118 kW; 2.0 dCi 147 kW
+Espace VI|2023|-|1.2 E-Tech Hybrid 147 kW
+Austral|2022|-|1.3 TCe 103 kW; 1.3 TCe 117 kW; 1.2 E-Tech Hybrid 147 kW
+Arkana|2019|-|1.3 TCe 103 kW; 1.3 TCe 116 kW; 1.6 E-Tech Hybrid 105 kW
+Kadjar|2015|2022|1.2 TCe 96 kW; 1.3 TCe 103 kW; 1.3 TCe 117 kW; 1.6 TCe 120 kW; 1.5 dCi 81 kW; 1.5 dCi 85 kW; 1.6 dCi 96 kW; 1.7 dCi 110 kW
+Koleos I|2008|2015|2.5 126 kW; 2.0 dCi 110 kW; 2.0 dCi 127 kW
+Koleos II|2016|2023|2.0 106 kW; 2.5 126 kW; 1.3 TCe 116 kW; 1.7 dCi 110 kW; 2.0 dCi 130 kW
+Rafale|2024|-|1.2 E-Tech Hybrid 147 kW; 1.2 E-Tech 4x4 Plug-in 220 kW
+Symbioz|2024|-|1.6 E-Tech Hybrid 107 kW
+Renault 5 E-Tech|2024|-|Elektro 70 kW; Elektro 90 kW; Elektro 110 kW
+Renault 4 E-Tech|2025|-|Elektro 90 kW; Elektro 110 kW
+Kangoo I|1997|2009|1.2 43 kW; 1.2 55 kW; 1.4 55 kW; 1.6 70 kW; 1.5 dCi 42 kW; 1.5 dCi 48 kW; 1.5 dCi 63 kW; 1.9 D 40 kW; 1.9 D 47 kW; 1.9 dTi 59 kW; 1.9 dCi 59 kW
+Kangoo II|2008|2021|1.2 TCe 85 kW; 1.6 66 kW; 1.6 78 kW; 1.5 dCi 50 kW; 1.5 dCi 55 kW; 1.5 dCi 63 kW; 1.5 dCi 66 kW; 1.5 dCi 81 kW; Z.E. Elektro 44 kW
+Kangoo III|2021|-|1.3 TCe 75 kW; 1.3 TCe 96 kW; 1.5 dCi 55 kW; 1.5 dCi 70 kW; 1.5 dCi 85 kW; E-Tech Electric 90 kW
+Trafic I|1980|2001|2.0 62 kW; 2.2 D 48 kW; 2.5 D 55 kW; 2.1 D 44 kW
+Trafic II|2001|2014|1.9 dCi 60 kW; 1.9 dCi 74 kW; 2.0 dCi 66 kW; 2.0 dCi 84 kW; 2.0 dCi 86 kW; 2.0 dCi 107 kW; 2.5 dCi 99 kW; 2.5 dCi 107 kW; 2.0 macro 88 kW
+Trafic III|2014|-|1.6 dCi 66 kW; 1.6 dCi 70 kW; 1.6 dCi 85 kW; 1.6 dCi 92 kW; 1.6 dCi 107 kW; 2.0 dCi 88 kW; 2.0 dCi 107 kW; 2.0 dCi 125 kW; 2.0 dCi 130 kW
+Master II|1998|2010|1.9 dCi 60 kW; 2.2 dCi 66 kW; 2.2 dCi 74 kW; 2.5 dCi 74 kW; 2.5 dCi 88 kW; 2.5 dCi 107 kW; 2.8 dTi 84 kW; 3.0 dCi 100 kW; 3.0 dCi 116 kW
+Master III|2010|2024|2.3 dCi 74 kW; 2.3 dCi 81 kW; 2.3 dCi 92 kW; 2.3 dCi 100 kW; 2.3 dCi 107 kW; 2.3 dCi 120 kW; 2.3 dCi 132 kW; Z.E. Elektro 57 kW
+Master IV|2024|-|2.0 Blue dCi 77 kW; 2.0 Blue dCi 96 kW; 2.0 Blue dCi 110 kW; 2.0 Blue dCi 125 kW; E-Tech Electric 105 kW; E-Tech Electric 151 kW
+Vel Satis|2001|2009|2.0 Turbo 120 kW; 3.5 V6 177 kW; 2.2 dCi 110 kW; 3.0 dCi 130 kW
+Avantime|2001|2003|2.0 Turbo 120 kW; 3.0 V6 152 kW
+Fluence|2009|2016|1.6 81 kW; 2.0 103 kW; 1.5 dCi 66 kW; 1.5 dCi 78 kW; Z.E. Elektro 70 kW
+Wind|2010|2013|1.2 TCe 74 kW; 1.6 98 kW
+
+@Dacia|1
+Logan I|2004|2012|1.4 55 kW; 1.6 64 kW; 1.6 16V 77 kW; 1.5 dCi 50 kW; 1.5 dCi 63 kW; 1.5 dCi 65 kW
+Logan II|2012|2020|1.0 SCe 54 kW; 1.2 54 kW; 0.9 TCe 66 kW; 1.5 dCi 55 kW; 1.5 dCi 66 kW
+Logan III|2020|-|1.0 SCe 48 kW; 1.0 TCe 67 kW; 1.0 TCe ECO-G 74 kW
+Logan MCV / Van|2006|2013|1.4 55 kW; 1.6 64 kW; 1.6 16V 77 kW; 1.5 dCi 50 kW; 1.5 dCi 63 kW
+Sandero I|2008|2012|1.2 55 kW; 1.4 55 kW; 1.6 62 kW; 1.6 16V 77 kW; 1.5 dCi 50 kW; 1.5 dCi 63 kW
+Sandero II|2012|2020|1.0 SCe 54 kW; 1.2 54 kW; 0.9 TCe 66 kW; 1.5 dCi 55 kW; 1.5 dCi 66 kW
+Sandero III|2020|-|1.0 SCe 48 kW; 1.0 TCe 67 kW; 1.0 TCe 74 kW; 1.0 TCe ECO-G 74 kW; 1.2 TCe 81 kW
+Sandero Stepway (I-III)|2009|-|1.6 62 kW; 0.9 TCe 66 kW; 1.0 TCe 67 kW; 1.0 TCe ECO-G 74 kW; 1.5 dCi 66 kW
+Duster I|2010|2017|1.6 77 kW; 1.2 TCe 92 kW; 1.5 dCi 63 kW; 1.5 dCi 66 kW; 1.5 dCi 79 kW
+Duster II|2017|2024|1.0 TCe 67 kW; 1.0 TCe 74 kW; 1.2 TCe 92 kW; 1.3 TCe 96 kW; 1.3 TCe 110 kW; 1.6 SCe 84 kW; 1.5 dCi 66 kW; 1.5 dCi 81 kW; 1.5 Blue dCi 85 kW
+Duster III|2024|-|1.0 TCe ECO-G 74 kW; 1.2 TCe Hybrid 96 kW; 1.6 Hybrid 104 kW
+Lodgy|2012|2022|1.2 TCe 85 kW; 1.3 TCe 96 kW; 1.6 61 kW; 1.6 SCe 75 kW; 1.5 dCi 66 kW; 1.5 dCi 79 kW
+Dokker|2012|2021|1.2 TCe 85 kW; 1.6 61 kW; 1.6 SCe 75 kW; 1.5 dCi 55 kW; 1.5 dCi 66 kW
+Jogger|2021|-|1.0 TCe 81 kW; 1.0 TCe ECO-G 74 kW; 1.6 Hybrid 103 kW
+Spring|2021|-|Elektro 33 kW; Elektro 48 kW
+Bigster|2025|-|1.2 TCe Hybrid 96 kW; 1.8 Hybrid 114 kW
+
+@Peugeot|1
+106|1991|2003|1.0 37 kW; 1.1 44 kW; 1.4 55 kW; 1.6 65 kW; 1.6 16V 88 kW; 1.5 D 40 kW; 1.4 HDi 50 kW
+107|2005|2014|1.0 50 kW; 1.4 HDi 40 kW
+108|2014|2021|1.0 50 kW; 1.2 60 kW
+205|1983|1998|1.1 40 kW; 1.4 55 kW; 1.6 77 kW; 1.8 D 44 kW
+206|1998|2012|1.1 44 kW; 1.4 55 kW; 1.4 16V 65 kW; 1.6 65 kW; 1.6 16V 80 kW; 2.0 GTi 100 kW; 1.4 HDi 50 kW; 1.6 HDi 66 kW; 1.6 HDi 80 kW; 1.9 D 51 kW; 2.0 HDi 66 kW
+206+|2009|2013|1.1 44 kW; 1.4 55 kW; 1.4 HDi 50 kW
+207|2006|2014|1.4 54 kW; 1.4 VTi 70 kW; 1.4 16V 65 kW; 1.6 VTi 88 kW; 1.6 THP 110 kW; 1.6 THP 128 kW; 1.4 HDi 50 kW; 1.6 HDi 66 kW; 1.6 HDi 80 kW
+208 I|2012|2019|1.0 VTi 50 kW; 1.2 VTi 60 kW; 1.2 PureTech 61 kW; 1.2 PureTech 81 kW; 1.2 PureTech 96 kW; 1.4 VTi 70 kW; 1.6 VTi 88 kW; 1.6 THP 115 kW; 1.6 THP 147 kW; 1.4 HDi 50 kW; 1.6 HDi 68 kW; 1.6 e-HDi 68 kW; 1.6 e-HDi 84 kW; 1.6 BlueHDi 55 kW; 1.6 BlueHDi 73 kW; 1.6 BlueHDi 88 kW
+208 II|2019|-|1.2 PureTech 55 kW; 1.2 PureTech 74 kW; 1.2 PureTech 96 kW; 1.2 Hybrid 74 kW; 1.2 Hybrid 100 kW; 1.5 BlueHDi 74 kW; e-208 Elektro 100 kW; e-208 Elektro 115 kW
+306|1993|2002|1.4 55 kW; 1.6 65 kW; 1.8 74 kW; 2.0 99 kW; 2.0 S16 110 kW; 1.9 D 51 kW; 1.9 TD 66 kW; 2.0 HDi 66 kW
+307|2001|2009|1.4 55 kW; 1.4 16V 65 kW; 1.6 80 kW; 2.0 100 kW; 2.0 103 kW; 1.4 HDi 50 kW; 1.6 HDi 66 kW; 1.6 HDi 80 kW; 2.0 HDi 66 kW; 2.0 HDi 79 kW; 2.0 HDi 100 kW
+308 I|2007|2013|1.4 VTi 70 kW; 1.6 VTi 88 kW; 1.6 THP 103 kW; 1.6 THP 115 kW; 1.6 THP 147 kW; 1.6 HDi 66 kW; 1.6 HDi 80 kW; 1.6 e-HDi 82 kW; 2.0 HDi 100 kW; 2.0 HDi 120 kW
+308 II|2013|2021|1.2 PureTech 60 kW; 1.2 PureTech 81 kW; 1.2 PureTech 96 kW; 1.6 THP 92 kW; 1.6 THP 115 kW; 1.6 THP 200 kW; 1.6 e-HDi 68 kW; 1.6 e-HDi 84 kW; 1.6 BlueHDi 73 kW; 1.6 BlueHDi 88 kW; 1.5 BlueHDi 75 kW; 1.5 BlueHDi 96 kW; 2.0 BlueHDi 110 kW; 2.0 BlueHDi 133 kW
+308 III|2021|-|1.2 PureTech 81 kW; 1.2 PureTech 96 kW; 1.2 Hybrid 100 kW; 1.6 Hybrid 132 kW; 1.6 Hybrid 165 kW; 1.5 BlueHDi 96 kW; e-308 Elektro 115 kW
+406|1995|2004|1.6 66 kW; 1.8 66 kW; 1.8 16V 81 kW; 2.0 97 kW; 2.2 116 kW; 3.0 V6 140 kW; 1.9 TD 66 kW; 2.0 HDi 66 kW; 2.0 HDi 80 kW; 2.1 TD 80 kW; 2.2 HDi 98 kW
+407|2004|2011|1.8 85 kW; 2.0 100 kW; 2.2 117 kW; 3.0 V6 155 kW; 1.6 HDi 80 kW; 2.0 HDi 100 kW; 2.0 HDi 120 kW; 2.2 HDi 125 kW; 2.7 HDi 150 kW; 3.0 HDi 177 kW
+508 I|2010|2018|1.6 VTi 88 kW; 1.6 THP 115 kW; 1.6 THP 121 kW; 1.6 e-HDi 82 kW; 1.6 BlueHDi 88 kW; 2.0 HDi 103 kW; 2.0 HDi 120 kW; 2.0 BlueHDi 110 kW; 2.0 BlueHDi 133 kW; 2.2 HDi 150 kW; 2.0 HDi Hybrid4 147 kW
+508 II|2018|-|1.2 PureTech 96 kW; 1.6 PureTech 133 kW; 1.6 PureTech 165 kW; 1.6 Hybrid 165 kW; 1.6 Hybrid4 220 kW; 1.5 BlueHDi 96 kW; 2.0 BlueHDi 120 kW; 2.0 BlueHDi 130 kW
+607|1999|2010|2.2 116 kW; 3.0 V6 152 kW; 2.0 HDi 100 kW; 2.2 HDi 98 kW; 2.2 HDi 125 kW; 2.7 HDi 150 kW
+806 / 807|1994|2014|2.0 89 kW; 2.0 103 kW; 2.2 116 kW; 3.0 V6 150 kW; 1.9 TD 66 kW; 2.0 HDi 79 kW; 2.0 HDi 88 kW; 2.0 HDi 100 kW; 2.2 HDi 94 kW; 2.2 HDi 125 kW
+1007|2005|2009|1.4 55 kW; 1.6 80 kW; 1.4 HDi 50 kW; 1.6 HDi 80 kW
+2008 I|2013|2019|1.2 VTi 60 kW; 1.2 PureTech 61 kW; 1.2 PureTech 81 kW; 1.2 PureTech 96 kW; 1.6 VTi 88 kW; 1.4 HDi 50 kW; 1.6 e-HDi 68 kW; 1.6 e-HDi 84 kW; 1.6 BlueHDi 55 kW; 1.6 BlueHDi 73 kW; 1.6 BlueHDi 88 kW; 1.5 BlueHDi 75 kW
+2008 II|2019|-|1.2 PureTech 74 kW; 1.2 PureTech 96 kW; 1.2 PureTech 115 kW; 1.2 Hybrid 100 kW; 1.5 BlueHDi 81 kW; 1.5 BlueHDi 96 kW; e-2008 Elektro 100 kW; e-2008 Elektro 115 kW
+3008 I|2009|2016|1.2 PureTech 96 kW; 1.6 VTi 88 kW; 1.6 THP 115 kW; 1.6 THP 121 kW; 1.6 HDi 80 kW; 1.6 e-HDi 82 kW; 1.6 BlueHDi 88 kW; 2.0 HDi 110 kW; 2.0 HDi 120 kW; 2.0 BlueHDi 110 kW; 2.0 HDi Hybrid4 147 kW
+3008 II|2016|2024|1.2 PureTech 96 kW; 1.6 PureTech 133 kW; 1.6 Hybrid 165 kW; 1.6 Hybrid4 220 kW; 1.5 BlueHDi 96 kW; 1.6 BlueHDi 88 kW; 1.6 BlueHDi 96 kW; 2.0 BlueHDi 110 kW; 2.0 BlueHDi 130 kW
+3008 III|2024|-|1.2 Hybrid 100 kW; 1.2 Hybrid 107 kW; 1.6 Plug-in Hybrid 143 kW; e-3008 Elektro 157 kW; e-3008 Elektro 240 kW
+4007|2007|2012|2.2 HDi 115 kW
+4008|2012|2017|1.6 86 kW; 1.6 HDi 84 kW; 1.8 HDi 110 kW
+5008 I|2009|2017|1.2 PureTech 96 kW; 1.6 VTi 88 kW; 1.6 THP 115 kW; 1.6 THP 121 kW; 1.6 HDi 80 kW; 1.6 e-HDi 82 kW; 1.6 BlueHDi 88 kW; 2.0 HDi 110 kW; 2.0 HDi 120 kW
+5008 II|2017|2024|1.2 PureTech 96 kW; 1.6 PureTech 133 kW; 1.5 BlueHDi 96 kW; 1.6 BlueHDi 88 kW; 2.0 BlueHDi 110 kW; 2.0 BlueHDi 133 kW
+5008 III|2024|-|1.2 Hybrid 107 kW; 1.6 Plug-in Hybrid 143 kW; e-5008 Elektro 157 kW; e-5008 Elektro 240 kW
+RCZ|2010|2015|1.6 THP 115 kW; 1.6 THP 147 kW; 1.6 THP 199 kW; 2.0 HDi 120 kW
+iOn|2010|2020|Elektro 49 kW
+Partner I|1996|2008|1.1 44 kW; 1.4 55 kW; 1.6 80 kW; 1.6 HDi 55 kW; 1.6 HDi 66 kW; 1.9 D 51 kW; 2.0 HDi 66 kW
+Partner II (Tepee)|2008|2018|1.6 66 kW; 1.6 VTi 72 kW; 1.6 HDi 55 kW; 1.6 HDi 66 kW; 1.6 HDi 80 kW; 1.6 BlueHDi 55 kW; 1.6 BlueHDi 73 kW; 1.6 BlueHDi 88 kW; Electric 49 kW
+Partner III / Rifter|2018|-|1.2 PureTech 81 kW; 1.2 PureTech 96 kW; 1.5 BlueHDi 55 kW; 1.5 BlueHDi 75 kW; 1.5 BlueHDi 96 kW; 1.6 BlueHDi 73 kW; e-Partner / e-Rifter Elektro 100 kW
+Bipper|2008|2017|1.4 54 kW; 1.3 HDi 55 kW; 1.4 HDi 50 kW
+Expert I|1995|2006|1.6 58 kW; 2.0 101 kW; 1.9 D 51 kW; 1.9 TD 66 kW; 2.0 HDi 69 kW; 2.0 HDi 80 kW
+Expert II|2007|2016|1.6 HDi 66 kW; 2.0 HDi 88 kW; 2.0 HDi 100 kW; 2.0 HDi 120 kW
+Expert III / Traveller|2016|-|1.5 BlueHDi 75 kW; 1.5 BlueHDi 88 kW; 1.6 BlueHDi 70 kW; 1.6 BlueHDi 85 kW; 2.0 BlueHDi 90 kW; 2.0 BlueHDi 110 kW; 2.0 BlueHDi 130 kW; e-Expert Elektro 100 kW
+Boxer I|1994|2006|2.0 80 kW; 1.9 D 50 kW; 2.0 HDi 62 kW; 2.2 HDi 74 kW; 2.5 D 63 kW; 2.8 HDi 94 kW; 2.8 HDi 107 kW
+Boxer II|2006|2014|2.2 HDi 74 kW; 2.2 HDi 88 kW; 2.2 HDi 96 kW; 3.0 HDi 115 kW; 3.0 HDi 130 kW
+Boxer III|2014|-|2.0 BlueHDi 81 kW; 2.0 BlueHDi 96 kW; 2.0 BlueHDi 120 kW; 2.2 BlueHDi 88 kW; 2.2 BlueHDi 103 kW; 2.2 BlueHDi 120 kW; 2.2 BlueHDi 132 kW; e-Boxer Elektro 90 kW
+408 (2022)|2022|-|1.2 PureTech 96 kW; 1.2 Hybrid 100 kW; 1.6 Hybrid 132 kW; 1.6 Hybrid 165 kW; e-408 Elektro 157 kW
+
+@Citroën|1
+Saxo|1996|2004|1.0 37 kW; 1.1 44 kW; 1.4 55 kW; 1.6 65 kW; 1.6 16V 88 kW; 1.5 D 42 kW
+C1 I|2005|2014|1.0 50 kW; 1.4 HDi 40 kW
+C1 II|2014|2022|1.0 VTi 50 kW; 1.2 PureTech 60 kW
+C2|2003|2009|1.1 44 kW; 1.4 54 kW; 1.4 16V 65 kW; 1.6 16V 80 kW; 1.6 VTS 90 kW; 1.4 HDi 50 kW; 1.6 HDi 80 kW
+C3 I|2002|2010|1.1 44 kW; 1.4 54 kW; 1.4 16V 65 kW; 1.6 16V 80 kW; 1.4 HDi 50 kW; 1.4 HDi 16V 66 kW; 1.6 HDi 66 kW; 1.6 HDi 80 kW
+C3 Pluriel|2003|2010|1.4 54 kW; 1.6 80 kW; 1.4 HDi 50 kW
+C3 II|2009|2016|1.0 VTi 50 kW; 1.1 44 kW; 1.2 VTi 60 kW; 1.4 54 kW; 1.4 VTi 70 kW; 1.6 VTi 88 kW; 1.4 HDi 50 kW; 1.6 HDi 66 kW; 1.6 e-HDi 68 kW; 1.6 HDi 82 kW; 1.6 BlueHDi 73 kW
+C3 III|2016|2024|1.2 PureTech 50 kW; 1.2 PureTech 60 kW; 1.2 PureTech 61 kW; 1.2 PureTech 81 kW; 1.2 PureTech 96 kW; 1.5 BlueHDi 75 kW; 1.6 BlueHDi 55 kW; 1.6 BlueHDi 73 kW
+C3 IV / ë-C3|2024|-|1.2 PureTech 74 kW; 1.2 Hybrid 100 kW; ë-C3 Elektro 83 kW
+C3 Picasso|2009|2017|1.2 PureTech 81 kW; 1.4 VTi 70 kW; 1.6 VTi 88 kW; 1.6 HDi 66 kW; 1.6 HDi 80 kW; 1.6 BlueHDi 73 kW
+C3 Aircross|2017|2024|1.2 PureTech 60 kW; 1.2 PureTech 81 kW; 1.2 PureTech 96 kW; 1.5 BlueHDi 81 kW; 1.5 BlueHDi 88 kW; 1.6 BlueHDi 73 kW; 1.6 BlueHDi 88 kW
+C3 Aircross (2024)|2024|-|1.2 PureTech 74 kW; 1.2 Hybrid 100 kW; ë-C3 Aircross Elektro 83 kW
+DS3|2009|2015|1.2 VTi 60 kW; 1.4 VTi 70 kW; 1.6 VTi 88 kW; 1.6 THP 115 kW; 1.6 THP 152 kW; 1.4 HDi 50 kW; 1.6 HDi 66 kW; 1.6 e-HDi 82 kW
+DS4|2011|2015|1.6 VTi 88 kW; 1.6 THP 115 kW; 1.6 THP 147 kW; 1.6 HDi 82 kW; 1.6 e-HDi 82 kW; 2.0 HDi 120 kW
+DS5|2011|2015|1.6 THP 115 kW; 1.6 THP 147 kW; 1.6 HDi 82 kW; 2.0 HDi 120 kW; 2.0 HDi Hybrid4 147 kW
+Xsara|1997|2006|1.4 55 kW; 1.6 65 kW; 1.6 16V 80 kW; 1.8 66 kW; 1.8 16V 81 kW; 2.0 16V 100 kW; 1.4 HDi 50 kW; 1.6 HDi 80 kW; 1.9 D 51 kW; 1.9 TD 66 kW; 2.0 HDi 66 kW; 2.0 HDi 80 kW
+Xsara Picasso|1999|2012|1.6 70 kW; 1.6 16V 80 kW; 1.8 16V 85 kW; 2.0 16V 100 kW; 1.6 HDi 66 kW; 1.6 HDi 80 kW; 2.0 HDi 66 kW
+C4 I|2004|2010|1.4 65 kW; 1.6 80 kW; 1.6 VTi 88 kW; 1.6 THP 103 kW; 2.0 103 kW; 2.0 VTS 132 kW; 1.6 HDi 66 kW; 1.6 HDi 80 kW; 2.0 HDi 100 kW; 2.0 HDi 120 kW
+C4 II|2010|2018|1.2 PureTech 96 kW; 1.4 VTi 70 kW; 1.6 VTi 88 kW; 1.6 THP 115 kW; 1.6 THP 120 kW; 1.6 HDi 66 kW; 1.6 HDi 80 kW; 1.6 e-HDi 82 kW; 1.6 BlueHDi 73 kW; 1.6 BlueHDi 88 kW; 2.0 HDi 110 kW
+C4 III / ë-C4|2020|-|1.2 PureTech 74 kW; 1.2 PureTech 96 kW; 1.2 PureTech 114 kW; 1.2 Hybrid 100 kW; 1.5 BlueHDi 81 kW; 1.5 BlueHDi 96 kW; ë-C4 Elektro 100 kW; ë-C4 Elektro 115 kW
+C4 X|2022|-|1.2 PureTech 96 kW; 1.2 Hybrid 100 kW; 1.5 BlueHDi 96 kW; ë-C4 X Elektro 100 kW
+C4 Picasso I|2006|2013|1.6 VTi 88 kW; 1.6 THP 115 kW; 1.8 92 kW; 2.0 103 kW; 1.6 HDi 80 kW; 1.6 e-HDi 82 kW; 2.0 HDi 100 kW; 2.0 HDi 110 kW; 2.0 HDi 120 kW
+C4 Picasso II / SpaceTourer|2013|2022|1.2 PureTech 96 kW; 1.2 PureTech 96 kW; 1.6 THP 115 kW; 1.6 THP 121 kW; 1.6 e-HDi 66 kW; 1.6 e-HDi 85 kW; 1.6 BlueHDi 88 kW; 1.5 BlueHDi 96 kW; 2.0 BlueHDi 110 kW; 2.0 BlueHDi 120 kW
+C4 Cactus|2014|2020|1.2 PureTech 60 kW; 1.2 PureTech 81 kW; 1.2 PureTech 96 kW; 1.6 e-HDi 68 kW; 1.6 BlueHDi 73 kW; 1.6 BlueHDi 88 kW; 1.5 BlueHDi 75 kW
+C4 Aircross|2012|2017|1.6 86 kW; 1.6 HDi 84 kW; 1.8 HDi 110 kW
+C5 I|2001|2008|1.8 85 kW; 2.0 100 kW; 2.0 103 kW; 3.0 V6 152 kW; 1.6 HDi 80 kW; 2.0 HDi 66 kW; 2.0 HDi 79 kW; 2.0 HDi 100 kW; 2.2 HDi 98 kW; 2.2 HDi 125 kW
+C5 II|2008|2017|1.6 VTi 88 kW; 1.6 THP 115 kW; 1.8 92 kW; 2.0 103 kW; 3.0 V6 155 kW; 1.6 HDi 80 kW; 1.6 e-HDi 84 kW; 2.0 HDi 100 kW; 2.0 HDi 120 kW; 2.0 BlueHDi 110 kW; 2.0 BlueHDi 133 kW; 2.2 HDi 125 kW; 2.2 HDi 150 kW; 2.7 HDi 150 kW; 3.0 HDi 177 kW
+C5 Aircross|2018|-|1.2 PureTech 96 kW; 1.6 PureTech 133 kW; 1.6 Hybrid 165 kW; 1.5 BlueHDi 96 kW; 2.0 BlueHDi 130 kW
+C5 X|2021|-|1.2 PureTech 96 kW; 1.6 PureTech 133 kW; 1.6 Hybrid 165 kW
+C6|2005|2012|3.0 V6 155 kW; 2.2 HDi 125 kW; 2.7 HDi 150 kW; 3.0 HDi 177 kW
+C8|2002|2014|2.0 100 kW; 2.2 116 kW; 3.0 V6 150 kW; 2.0 HDi 79 kW; 2.0 HDi 88 kW; 2.0 HDi 100 kW; 2.2 HDi 94 kW; 2.2 HDi 125 kW
+C-Crosser|2007|2012|2.4 125 kW; 2.2 HDi 115 kW
+C-Zero|2010|2020|Elektro 49 kW
+Berlingo I|1996|2011|1.1 44 kW; 1.4 55 kW; 1.6 80 kW; 1.6 HDi 55 kW; 1.6 HDi 66 kW; 1.6 HDi 80 kW; 1.9 D 51 kW; 2.0 HDi 66 kW
+Berlingo II|2008|2018|1.6 66 kW; 1.6 VTi 72 kW; 1.6 HDi 55 kW; 1.6 HDi 66 kW; 1.6 HDi 80 kW; 1.6 BlueHDi 55 kW; 1.6 BlueHDi 73 kW; 1.6 BlueHDi 88 kW; Electric 49 kW
+Berlingo III|2018|-|1.2 PureTech 81 kW; 1.2 PureTech 96 kW; 1.5 BlueHDi 55 kW; 1.5 BlueHDi 75 kW; 1.5 BlueHDi 96 kW; 1.6 BlueHDi 73 kW; ë-Berlingo Elektro 100 kW
+Nemo|2008|2017|1.4 54 kW; 1.3 HDi 55 kW; 1.4 HDi 50 kW
+Jumpy I|1995|2006|1.6 58 kW; 2.0 101 kW; 1.9 D 51 kW; 1.9 TD 66 kW; 2.0 HDi 69 kW; 2.0 HDi 80 kW
+Jumpy II|2007|2016|1.6 HDi 66 kW; 2.0 HDi 88 kW; 2.0 HDi 100 kW; 2.0 HDi 120 kW
+Jumpy III / SpaceTourer|2016|-|1.5 BlueHDi 75 kW; 1.5 BlueHDi 88 kW; 1.6 BlueHDi 70 kW; 1.6 BlueHDi 85 kW; 2.0 BlueHDi 90 kW; 2.0 BlueHDi 110 kW; 2.0 BlueHDi 130 kW; ë-Jumpy Elektro 100 kW
+Jumper I|1994|2006|2.0 80 kW; 1.9 D 50 kW; 2.0 HDi 62 kW; 2.2 HDi 74 kW; 2.5 D 63 kW; 2.8 HDi 94 kW; 2.8 HDi 107 kW
+Jumper II|2006|2014|2.2 HDi 74 kW; 2.2 HDi 88 kW; 2.2 HDi 96 kW; 3.0 HDi 115 kW; 3.0 HDi 130 kW
+Jumper III|2014|-|2.0 BlueHDi 81 kW; 2.0 BlueHDi 96 kW; 2.0 BlueHDi 120 kW; 2.2 BlueHDi 88 kW; 2.2 BlueHDi 103 kW; 2.2 BlueHDi 120 kW; 2.2 BlueHDi 132 kW; ë-Jumper Elektro 90 kW
+Ami|2020|-|Elektro 6 kW
+
+@DS|0
+DS 3 Crossback / DS 3|2019|-|1.2 PureTech 74 kW; 1.2 PureTech 96 kW; 1.2 PureTech 114 kW; 1.5 BlueHDi 75 kW; 1.5 BlueHDi 96 kW; E-Tense Elektro 100 kW; E-Tense Elektro 115 kW
+DS 4 (2021)|2021|-|1.2 PureTech 96 kW; 1.6 PureTech 133 kW; 1.6 PureTech 165 kW; 1.6 E-Tense 165 kW; 1.5 BlueHDi 96 kW; E-Tense Elektro 156 kW
+DS 5 (2015)|2015|2018|1.6 THP 121 kW; 1.6 THP 155 kW; 1.6 BlueHDi 88 kW; 2.0 BlueHDi 110 kW; 2.0 BlueHDi 133 kW
+DS 7 (Crossback)|2017|-|1.2 PureTech 96 kW; 1.6 PureTech 133 kW; 1.6 PureTech 165 kW; 1.6 E-Tense 165 kW; 1.6 E-Tense 4x4 220 kW; 1.5 BlueHDi 96 kW; 2.0 BlueHDi 130 kW
+DS 9|2020|2025|1.6 PureTech 165 kW; 1.6 E-Tense 165 kW; 1.6 E-Tense 184 kW
+DS N°8|2025|-|Elektro 170 kW; Elektro 180 kW; Elektro 257 kW
+
+@Alpine|0
+A110 (2017)|2017|-|1.8 Turbo 185 kW; 1.8 Turbo 221 kW
+A290|2024|-|Elektro 130 kW; Elektro 160 kW
+A390|2025|-|Elektro 295 kW; Elektro 345 kW

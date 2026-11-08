@@ -7,6 +7,7 @@ import Stars from "@/components/Stars";
 import SellerNotice from "@/components/SellerNotice";
 import { sellerKind } from "@/lib/legal";
 import { getCatalog, getSellerPublic, getSellerReviews, searchListings } from "@/lib/data";
+import { pickCatalog } from "@/lib/catalogSort";
 import { emptyFilters } from "@/lib/types";
 import { pieces } from "@/lib/format";
 import { JsonLd, SITE_NAME, SITE_URL, breadcrumbLd, sellerPath } from "@/lib/seo";
@@ -58,7 +59,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
           : <p className="mute">Zatiaľ bez hodnotení.</p>}
         <SellerNotice type={s.type} name={s.name} ico={s.ico} address={s.address} />
       </div>
-      <SellerStock seller={s.id} cat={cat} initial={{ items: res.items, total: res.total, cats: [...res.cats] }} />
+      <SellerStock seller={s.id} cat={pickCatalog(cat, res.items)} initial={{ items: res.items, total: res.total, cats: [...res.cats] }} />
       <section id="hodnotenia" className="reviews">
         <h2>Hodnotenia kupujúcich</h2>
         <p className="mute small">Hodnotiť môže len kupujúci, ktorému predajca poslal ponuku na jeho dopyt. Hodnotenia nekontrolujeme vopred; nevhodné môžete nahlásiť na <Link href="/ochrana-osobnych-udajov#kontakt">kontakte prevádzkovateľa</Link>.</p>

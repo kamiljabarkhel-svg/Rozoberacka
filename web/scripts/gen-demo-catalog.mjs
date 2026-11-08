@@ -7,7 +7,7 @@ import { dirname, join } from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const kat = readFileSync(join(root, "supabase", "02_kategorie.sql"), "utf8");
-const cat = readFileSync(join(root, "supabase", "03_katalog.sql"), "utf8") + "\n" + readFileSync(join(root, "supabase", "09_katalog_opravy.sql"), "utf8");
+const cat = ["03_katalog.sql", "09_katalog_opravy.sql", "16_katalog_europa.sql"].map((f) => readFileSync(join(root, "supabase", f), "utf8")).join("\n");
 
 const categories = [];
 const subcategories = [];
@@ -23,7 +23,7 @@ const models = [];
 const engines = [];
 for (const line of cat.split("\n")) {
   let m = line.match(/insert into public\.brands \(name, popular\) values \('([^']+)', (true|false)\)/);
-  if (m) { brands.push({ id: brands.length + 1, name: m[1], popular: m[2] === "true" }); continue; }
+  if (m) { if (!brands.some((x) => x.name === m[1])) brands.push({ id: brands.length + 1, name: m[1], popular: m[2] === "true" }); continue; }
   m = line.match(/insert into public\.models \(brand_id, name, year_from, year_to\) select id, '([^']+)', (\d+), (\d+|null) from public\.brands where name = '([^']+)'/);
   if (m) {
     const b = brands.find((x) => x.name === m[4]);
@@ -46,6 +46,6 @@ for (const line of cat.split("\n")) {
   }
 }
 
-const out = { source: "supabase/02_kategorie.sql + supabase/03_katalog.sql", categories, subcategories, brands, models, engines };
+const out = { source: "supabase/02_kategorie.sql + 03_katalog.sql + 09_katalog_opravy.sql + 16_katalog_europa.sql", categories, subcategories, brands, models, engines };
 writeFileSync(join(root, "web", "lib", "demo", "catalog.json"), JSON.stringify(out, null, 1) + "\n");
 console.log(`kategórie ${categories.length}, podkategórie ${subcategories.length}, značky ${brands.length}, modely ${models.length}, motorizácie ${engines.length}`);

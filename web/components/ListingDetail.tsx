@@ -2,6 +2,7 @@
 // Detail inzerátu: galéria, cena, telefón, predajca, popis, parametre, „Pasuje na“, podobné inzeráty.
 import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { loadDetail, logView, type DetailData } from "@/lib/data";
+import type { Catalog } from "@/lib/types";
 import { groupVehicles } from "@/lib/search";
 import { agoText, condDot, price } from "@/lib/format";
 import { useFavs } from "@/lib/favs";
@@ -35,7 +36,7 @@ function Mini({ x, cat }: { x: MiniItem; cat: DetailData["cat"] }) {
   </>;
 }
 
-export default function ListingDetail({ id, onClose, initial }: { id: number; onClose?: () => void; initial?: DetailData | null }) {
+export default function ListingDetail({ id, onClose, initial, catalog }: { id: number; onClose?: () => void; initial?: DetailData | null; catalog?: Catalog | null }) {
   const [s, setS] = useState<State>(initial ? { st: "ok", ...initial } : { st: "loading" });
   const [gi, setGi] = useState(0);
   const { favs, toggle } = useFavs();
@@ -50,13 +51,14 @@ export default function ListingDetail({ id, onClose, initial }: { id: number; on
     return () => o.disconnect();
   }, [s.st]);
 
+  const catRef = useRef(catalog); catRef.current = catalog; // katalóg z úvodu – zmena katalógu nemá znova načítať diel
   useEffect(() => {
     let off = false;
     if (initial && initial.l.id === id) { logView(id); return; } // údaje pripravil server (rýchlejšie a viditeľné pre Google)
     setS({ st: "loading" }); setGi(0);
     (async () => {
       try {
-        const d = await loadDetail(id);
+        const d = await loadDetail(id, catRef.current || undefined);
         if (off) return;
         if (!d) { setS({ st: "missing" }); return; }
         setS({ st: "ok", ...d });
