@@ -185,3 +185,8 @@ Overené na Slov-Lexe: Občiansky zákonník § 597, 599, 612, 618, 619 (znenie 
 - Vercel Hobby je len na nekomerčné použitie a DPA dáva len k Pro – majiteľ chce iný hosting (porovnanie v chate 8. 11. 2026). Funkcie bežia vo Frankfurte (`web/vercel.json`).
 - E-maily prihlasovania (potvrdenie, obnova hesla…) sú po slovensky v `supabase/emaily/`. Supabase ich dovolí vložiť až po napojení vlastného SMTP (Brevo alebo Websupport) a domény; dovtedy chodia anglicky od Supabase.
 
+## Katalóg pre celú Európu (8. 11. 2026, 19:00)
+- Majiteľ chce všetky značky, modely a motorizácie európskeho trhu (mení rozhodnutie z 2. 11. o 6 značkách). Údaje: `supabase/katalog/*.txt` (formát v hlavičke súboru) → `python3 supabase/katalog/generuj.py` → `supabase/16_katalog_europa.sql` (needitovať ručne) → `npm run gen:catalog` (demo). Z pamäte – nahradiť TecDoc.
+- Web: modely triedi `lib/catalogSort.ts` (rad + rok). Stránky dielov, áut, miest a predajcov posielajú do prehliadača len časť katalógu (`pickCatalog`), úvod kompaktne (`packCatalog`). Ukážkové údaje sa načítajú len v ukážkovom režime (`demoData()` v `lib/data.ts`).
+- Next.js si pamätá odpovede databázy (fetch cache) – po zmene katalógu sa web obnoví do 5 minút; lokálne pred buildom zmazať `.next/cache/fetch-cache`.
+
