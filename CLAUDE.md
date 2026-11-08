@@ -172,3 +172,8 @@ Overené na Slov-Lexe: Občiansky zákonník § 597, 599, 612, 618, 619 (znenie 
 - Cookies: `lib/consent.ts` + `components/CookieBar.tsx`. Bez voliteľných nástrojov len informačná lišta „Nesledujeme vás“; s `NEXT_PUBLIC_ANALYTICS_SRC` tri rovnocenné tlačidlá (Prijať všetky / Odmietnuť / Nastavenia), skript až po súhlase, odvolanie v pätičke („Nastavenia cookies“) zmaže cookies tretích strán.
 - Overiť s právnikom: znenie poučení, repasovaný diel ako použitá vec, či je portál „online trhom“ aj bez platieb (zvolili sme bezpečnejší výklad – áno).
 
+
+## Spustenie (8. 11. 2026, 15:25)
+- Ostrý web: https://rozoberacka.vercel.app (Vercel Hobby, projekt `rozoberacka`, Root Directory `web`). Každý push do `main` sa nasadí sám.
+- Kľúč v `NEXT_PUBLIC_SUPABASE_ANON_KEY` je nový „Publishable key“ (`sb_publishable_…`). „Secret key“ nikdy do Vercelu ani do kódu.
+- Supabase Auth: Site URL https://rozoberacka.vercel.app, Redirect URLs https://rozoberacka.vercel.app/**. Po kúpe domény doplniť doménu aj sem a nastaviť `NEXT_PUBLIC_SITE_URL`.

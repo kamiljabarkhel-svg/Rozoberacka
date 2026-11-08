@@ -38,6 +38,7 @@ Vercel je služba, ktorá web zverejní na internete. Plán **Hobby** je zadarmo
 5. **Framework Preset**: má sa sám nastaviť na **Next.js**. Build príkazy nemeňte.
 6. Rozbaľte **Environment Variables** a pridajte dve premenné (Key = názov, Value = hodnota):
    - `NEXT_PUBLIC_SUPABASE_URL` = **Project URL** zo Supabase
+   - Pozn.: v novom Supabase je verejný kľúč „anon“ pod názvom **Publishable key** (`sb_publishable_…`) v Project Settings → API Keys. Ten patrí do `NEXT_PUBLIC_SUPABASE_ANON_KEY`. **Secret key** nikdy.
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY` = **anon public** kľúč zo Supabase
 
    Kde ich nájdete: Supabase → váš projekt → **Project Settings** (ozubené koliesko) → **API** (v novšom vzhľade **Data API** a **API Keys**). Kopírujte len **anon / public** kľúč. Kľúč **service_role** (secret) sem ani nikam inam NIKDY nedávajte.
