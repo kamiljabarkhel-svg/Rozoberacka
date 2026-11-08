@@ -140,7 +140,7 @@ Test `testy/23_test_10.sql` prešiel priamo na nej v transakcii, ktorá sa zruš
 E-maily posiela Edge Function `supabase/functions/strazca` (otestovaná lokálne: `testy-e2e/test_strazca.mjs`, 7/7).
 1. V Brevo overte doménu odosielateľa (napr. `upozornenia@vasadomena.sk`) a vytvorte API kľúč (SMTP & API → API Keys).
 2. Supabase → **Edge Functions** → **Deploy a new function** → názov `strazca`, vložte obsah `index.ts` a `handler.ts` (dva súbory; ak editor dovolí len jeden, vložte `handler.ts` nad `index.ts`, zmažte riadok `import { run } …` a slovo `export` pred `type Env` a `async function run` nechajte) → Deploy. Pri funkcii vypnite „Verify JWT“ (chráni ju vlastné heslo `CRON_SECRET`).
-3. Supabase → Edge Functions → **Secrets**: `BREVO_API_KEY`, `SITE_URL` (napr. https://vasadomena.sk), `MAIL_FROM`, `MAIL_FROM_NAME` (Rozoberačka), `OPERATOR` (KJ Trade s.r.o., IČO 57598142, Kvetná 1505/4D, 900 41 Rovinka) a `CRON_SECRET` (dlhé náhodné heslo).
+3. Supabase → Edge Functions → **Secrets**: `BREVO_API_KEY`, `SITE_URL` (napr. https://vasadomena.sk), `MAIL_FROM`, `MAIL_FROM_NAME` (Rozoberačka), `OPERATOR` (KJ trade s. r. o., IČO 57598142, Kvetná 1505/4D, 900 41 Rovinka) a `CRON_SECRET` (dlhé náhodné heslo).
 4. SQL Editor – spúšťanie každých 10 minút (heslo uložené vo Vault, nie v kóde):
    ```sql
    create extension if not exists pg_net;

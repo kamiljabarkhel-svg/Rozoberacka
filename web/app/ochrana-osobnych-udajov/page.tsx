@@ -14,7 +14,7 @@ export default function Page() {
       <p>Zodpovednú osobu sme neurčili, zákon nám to neukladá. So všetkými otázkami k osobným údajom nám píšte na {OPERATOR.email || fill("")}.</p>
 
       <h2>2. Aké údaje, prečo a na akom základe</h2>
-      <table className="legal-t">
+      <table className="legal-t lt-gdpr">
         <thead><tr><th>Koho sa týka</th><th>Údaje</th><th>Účel</th><th>Právny základ</th><th>Ako dlho</th></tr></thead>
         <tbody>
           <tr><td>Predajca</td><td>e-mail, heslo (uložené len ako nečitateľný odtlačok), názov alebo meno, vyhlásenie o type predajcu (podnikateľ / súkromná osoba) a jeho čas, mesto, telefón, čas súhlasu s podmienkami</td><td>účet predajcu a zverejňovanie inzerátov</td><td>zmluva (čl. 6 ods. 1 písm. b GDPR)</td><td>kým účet nezrušíte</td></tr>

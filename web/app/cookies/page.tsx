@@ -15,7 +15,7 @@ export default function Page() {
         <li>Svoju voľbu môžete kedykoľvek zmeniť alebo odvolať: <CookieSettingsLink /> (odkaz je aj v pätičke každej stránky). Pri odvolaní súhlasu cookies voliteľných nástrojov zmažeme.</li>
       </ul>
       <h2>Čo ukladáme vo vašom prehliadači</h2>
-      <table className="legal-t">
+      <table className="legal-t lt-ck">
         <thead><tr><th>Názov</th><th>Druh</th><th>Načo slúži</th><th>Kategória</th><th>Ako dlho</th></tr></thead>
         <tbody>
           <tr><td>rozoberacka-auth*</td><td>localStorage</td><td>prihlásenie predajcu (len po prihlásení)</td><td>nevyhnutné</td><td>do odhlásenia</td></tr>

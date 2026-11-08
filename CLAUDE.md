@@ -183,4 +183,5 @@ Overené na Slov-Lexe: Občiansky zákonník § 597, 599, 612, 618, 619 (znenie 
 - Podmienky (verzia 2026-11-08): 18+, licencia na fotky, prístup k údajom a 30-dňová výpoveď (nariadenie P2B 2019/1150), moderovanie rozhoduje človek, nahlásenie s vyhlásením o dobrej viere (DSA čl. 16), orgán dozoru SOI.
 - Zákon 22/2004 § 4: na webe chýba telefón prevádzkovateľa (`OPERATOR.phone`, doplní majiteľ). Firma nie je platiteľ DPH.
 - Vercel Hobby je len na nekomerčné použitie a DPA dáva len k Pro – majiteľ chce iný hosting (porovnanie v chate 8. 11. 2026). Funkcie bežia vo Frankfurte (`web/vercel.json`).
+- E-maily prihlasovania (potvrdenie, obnova hesla…) sú po slovensky v `supabase/emaily/`. Supabase ich dovolí vložiť až po napojení vlastného SMTP (Brevo alebo Websupport) a domény; dovtedy chodia anglicky od Supabase.
 
