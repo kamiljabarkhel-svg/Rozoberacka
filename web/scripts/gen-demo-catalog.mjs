@@ -7,7 +7,7 @@ import { dirname, join } from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const kat = readFileSync(join(root, "supabase", "02_kategorie.sql"), "utf8");
-const cat = ["03_katalog.sql", "09_katalog_opravy.sql", "16_katalog_europa.sql"].map((f) => readFileSync(join(root, "supabase", f), "utf8")).join("\n");
+const cat = ["03_katalog.sql", "09_katalog_opravy.sql", "16_katalog_europa.sql", "17_katalog_opravy.sql"].map((f) => readFileSync(join(root, "supabase", f), "utf8")).join("\n");
 
 const categories = [];
 const subcategories = [];
