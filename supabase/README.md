@@ -176,3 +176,6 @@ Spustené na ostrej Supabase (obsah overený odtlačkom SHA-256 c78b732b…), te
 - Podnikateľ bez IČO a sídla nemôže zverejniť ani aktivovať inzerát (`guard_listing`).
 - Test `testy/26_test_14.sql` (10 kontrol). Staršie testy 20–25 dávajú testovacím firmám IČO a sídlo.
 
+## Spevnenie práv návštevníka (8. 11. 2026)
+`15_spevnenie_prav.sql` – druhá vrstva ochrany popri RLS: anonym nemá ani právo na súkromné tabuľky (telefóny, správy, nahlásenia, záznamy správcu, odtlačky IP), nezapisuje priamo do žiadnej tabuľky (len cez funkcie) a nevidí čas vyhlásenia predajcu. Nikto okrem správcu databázy nemôže použiť TRUNCATE. Test `testy/27_test_15.sql` (12 kontrol); testy 20 a 26 upravené. Spustiť v SQL Editore (New query → vložiť celý súbor → Run).
+

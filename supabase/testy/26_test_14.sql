@@ -18,7 +18,9 @@ insert into auth.users (id, email) values ('c1111111-0000-0000-0000-0000000000c1
 
 select pg_temp.as_user('c1111111-0000-0000-0000-0000000000c1'); set role authenticated;
 insert into public.sellers (id, name, city, seller_type) values ('c1111111-0000-0000-0000-0000000000c1', 'Firma 14 s.r.o.', 'Senica', 'Firma');
+reset role; -- čas vyhlásenia verejnosť ani iní predajcovia nevidia (supabase/15), kontrolujeme ako správca databázy
 select pg_temp.ok((select type_declared_at is not null from public.sellers where id = 'c1111111-0000-0000-0000-0000000000c1'), 'registrácia: čas vyhlásenia zapísaný');
+select pg_temp.as_user('c1111111-0000-0000-0000-0000000000c1'); set role authenticated;
 do $$ begin
   begin perform pg_temp.add('c1111111-0000-0000-0000-0000000000c1', 'Bez IČO'); raise exception 'x';
   exception when others then perform pg_temp.ok(sqlerrm like 'Ako podnikateľ doplňte%', 'podnikateľ bez IČO a sídla nezverejní inzerát'); end;

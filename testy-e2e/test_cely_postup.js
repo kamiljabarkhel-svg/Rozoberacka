@@ -250,7 +250,8 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
   await step("nahlasenie inzeratu", async () => {
     await b2.click(".card:has-text('LED Octavia') h2 a"); await b2.waitForURL("**/diel/**");
     await b2.click("text=Nahlásiť inzerát"); await b2.selectOption(".rep select", "Podvod"); await b2.fill(".rep textarea", "Chce zálohu vopred.");
-    await b2.click("text=Odoslať nahlásenie"); await b2.waitForSelector("text=nahlásenie sme prijali");
+    await b2.click("text=Odoslať nahlásenie"); await b2.waitForSelector(".rep .ferr2:has-text('pravdivé')");
+    await b2.check(".rep .pp-chk input"); await b2.click("text=Odoslať nahlásenie"); await b2.waitForSelector("text=nahlásenie sme prijali");
   });
   await step("zaruka firmy bez moznosti Bez zaruky", async () => {
     await pg.click(".pp-nav >> text=Pridať inzerát"); await pg.click(".pp-steps >> text=Stav, cena");
@@ -278,7 +279,7 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
     for (const [t, h] of [["Obchodné podmienky", "/obchodne-podmienky"], ["Ochrana osobných údajov", "/ochrana-osobnych-udajov"], ["Cookies", "/cookies"]]) {
       await b2.goto(B + "/"); await b2.click(`.foot-l >> text=${t}`); await b2.waitForURL("**" + h); await b2.waitForSelector("h1:has-text('" + t.split(" ")[0] + "')");
     }
-    await b2.waitForSelector("text=KJ Trade s.r.o.");
+    await b2.waitForSelector("text=KJ trade s. r. o.");
   });
   await step("export mojich udajov", async () => {
     await pg.goto(B + "/pre-predajcov"); await pg.fill("input[type=email]", "test@rz.sk"); await pg.fill("input[type=password]", "heslo1234"); await pg.click("form button.btn"); await pg.waitForSelector(".pp-dash");

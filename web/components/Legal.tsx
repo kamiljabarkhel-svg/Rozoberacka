@@ -21,6 +21,8 @@ export function OperatorBox() {
       <dt>Sídlo</dt><dd>{fill(OPERATOR.address)}</dd>
       <dt>Zápis</dt><dd>{fill(OPERATOR.register)}</dd>
       <dt>E-mail</dt><dd>{OPERATOR.email ? <a href={"mailto:" + OPERATOR.email}>{OPERATOR.email}</a> : fill("")}</dd>
+      <dt>Telefón</dt><dd>{OPERATOR.phone ? <a href={"tel:" + OPERATOR.phone.replace(/\s/g, "")}>{OPERATOR.phone}</a> : fill("")}</dd>
+      <dt>Orgán dozoru</dt><dd>{OPERATOR.supervisor}</dd>
     </dl>
   );
 }

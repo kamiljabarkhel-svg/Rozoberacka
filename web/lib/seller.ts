@@ -101,7 +101,7 @@ export async function ensureProfile(s: Session): Promise<Profile> {
   const cols = "id,name,seller_type,city,verified,rating_avg,rating_count,ico,address";
   let { data: sel } = await c.from("sellers").select(cols).eq("id", uid).maybeSingle();
   if (!sel) {
-    const raw = String(s.user.user_metadata?.name || s.user.email?.split("@")[0] || "").trim().slice(0, 120);
+    const raw = String(s.user.user_metadata?.name || "").trim().slice(0, 120); // nikdy nie časť e-mailu – názov je verejný
     // upsert + ignoreDuplicates: dve otvorené karty naraz nespôsobia chybu „duplicate key“
     const md = s.user.user_metadata || {};
     const type = md.seller_type === "Súkromná osoba" ? "Súkromná osoba" : "Firma"; // vyhlásenie z registrácie

@@ -87,7 +87,10 @@ do $$ begin
 end $$;
 select pg_temp.ok(public.send_message((select id from listings where name='Predné ľavé svetlo LED'), 'Jano', '0911 222 333', 'Je diel dostupný?'), 'správa odoslaná');
 select pg_temp.ok(public.report_listing((select id from listings where name='Zadné svetlo pravé'), 'Podvod', 'Chce zálohu vopred', null), 'nahlásenie');
-select pg_temp.ok((select count(*) from reports) = 0, 'anon nevidí nahlásenia');
+do $$ declare n int; begin
+  begin select count(*) into n from reports; exception when insufficient_privilege then n := 0; end; -- od 15 anon nemá ani právo
+  perform pg_temp.ok(n = 0, 'anon nevidí nahlásenia');
+end $$;
 do $$ begin
   begin perform public.admin_stats(); raise exception 'x';
   exception when insufficient_privilege then perform pg_temp.ok(true, 'anon nevolá funkcie správcu'); end;

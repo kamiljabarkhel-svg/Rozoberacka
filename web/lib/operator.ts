@@ -7,7 +7,10 @@ export const OPERATOR = {
   address: "Kvetná 1505/4D, 900 41 Rovinka",
   register: "Obchodný register Mestského súdu Bratislava III, oddiel: Sro, vložka č. 198932/B",
   email: "autosuciastky24@gmail.com",
+  phone: "",   // telefón prevádzkovateľa – vyžaduje § 4 ods. 1 písm. c) zákona č. 22/2004 Z. z.; doplní majiteľ
+  /** Orgán dozoru podľa § 4 ods. 1 písm. e) zákona č. 22/2004 Z. z. (adresa overená vo výročnej správe SOI 2025). */
+  supervisor: "Slovenská obchodná inšpekcia, Inšpektorát SOI pre Bratislavský kraj; ústredný inšpektorát: Bajkalská 21/A, 827 99 Bratislava 27",
 };
 /** Verzia podmienok a zásad. Pri zmene textov zvýšiť – uloží sa pri registrácii predajcu. */
-export const TERMS_VERSION = "2026-11-07";
+export const TERMS_VERSION = "2026-11-08";
 export const fill = (v: string) => v || "údaj doplníme pred spustením";

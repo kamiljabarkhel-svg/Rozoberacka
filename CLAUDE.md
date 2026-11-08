@@ -177,3 +177,10 @@ Overené na Slov-Lexe: Občiansky zákonník § 597, 599, 612, 618, 619 (znenie 
 - Ostrý web: https://rozoberacka.vercel.app (Vercel Hobby, projekt `rozoberacka`, Root Directory `web`). Každý push do `main` sa nasadí sám.
 - Kľúč v `NEXT_PUBLIC_SUPABASE_ANON_KEY` je nový „Publishable key“ (`sb_publishable_…`). „Secret key“ nikdy do Vercelu ani do kódu.
 - Supabase Auth: Site URL https://rozoberacka.vercel.app, Redirect URLs https://rozoberacka.vercel.app/**. Po kúpe domény doplniť doménu aj sem a nastaviť `NEXT_PUBLIC_SITE_URL`.
+
+## Kontrola súladu (8. 11. 2026, 17:00)
+- Overené: RLS chráni súkromné tabuľky na ostrej databáze; `15_spevnenie_prav.sql` pridáva druhú vrstvu (spustí majiteľ v SQL Editore). Funkcia hľadania číta celé riadky inzerátov ako návštevník – stĺpce `listings` preto neskrývať pred anon.
+- Podmienky (verzia 2026-11-08): 18+, licencia na fotky, prístup k údajom a 30-dňová výpoveď (nariadenie P2B 2019/1150), moderovanie rozhoduje človek, nahlásenie s vyhlásením o dobrej viere (DSA čl. 16), orgán dozoru SOI.
+- Zákon 22/2004 § 4: na webe chýba telefón prevádzkovateľa (`OPERATOR.phone`, doplní majiteľ). Firma nie je platiteľ DPH.
+- Vercel Hobby je len na nekomerčné použitie a DPA dáva len k Pro – majiteľ chce iný hosting (porovnanie v chate 8. 11. 2026). Funkcie bežia vo Frankfurte (`web/vercel.json`).
+

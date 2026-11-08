@@ -32,7 +32,8 @@ export default function Page() {
           <tr><td>Správca portálu</td><td>záznam o akciách správcu (skrytie inzerátu, overenie predajcu)</td><td>kontrola a preukázanie zásahov</td><td>oprávnený záujem a nariadenie o digitálnych službách</td><td>3 roky</td></tr>
         </tbody>
       </table>
-      <p>Údaje predajcu, ktoré sú súčasťou inzerátu (názov alebo meno, či je podnikateľ alebo súkromná osoba, mesto a telefón v inzeráte), sú verejné. Pri podnikateľovi sú verejné aj IČO a sídlo, lebo zákon vyžaduje, aby kupujúci vedel, s kým uzatvára zmluvu. Telefón sa zobrazí až po kliknutí na „Zobraziť telefón“ a počet odkrytí z jedného pripojenia je obmedzený. Telefón z profilu nevidí nikto okrem predajcu a správcu portálu.</p>
+      <p>Údaje predajcu, ktoré sú súčasťou inzerátu (názov alebo meno, či je podnikateľ alebo súkromná osoba, mesto a telefón v inzeráte), sú verejné a verejné stránky portálu indexujú aj vyhľadávače (napr. Google). Pri podnikateľovi sú verejné aj IČO a sídlo, lebo zákon vyžaduje, aby kupujúci vedel, s kým uzatvára zmluvu. Telefón sa zobrazí až po kliknutí na „Zobraziť telefón“, nie je v kóde stránky (vyhľadávače ho nevidia) a počet odkrytí z jedného pripojenia je obmedzený. E-mail predajcu ani telefón z profilu nevidí nikto okrem predajcu a správcu portálu.</p>
+      <p><b>Musíte údaje poskytnúť?</b> Bez e-mailu a hesla nevytvoríte účet predajcu; bez mena, mesta a telefónu nezverejníte inzerát, lebo kupujúci by vás nemal ako kontaktovať (zmluvná požiadavka). IČO a sídlo podnikateľa vyžaduje zákon. Kupujúci nemusí poskytnúť nič – bez kontaktu však predajca nemôže odpovedať na správu alebo dopyt.</p>
       <p>Pri nahratí fotky web odstráni skryté údaje súboru vrátane polohy GPS.</p>
       <p>Kupujúci sa neregistruje. Obľúbené inzeráty, uložené hľadania a „Moje auto“ sa ukladajú len vo vašom prehliadači a my ich nevidíme.</p>
       <p>Pri odfotení OEM čísla alebo VIN sa text z fotky číta priamo vo vašom zariadení. Fotka sa nikam neposiela ani neukladá.</p>
@@ -41,7 +42,8 @@ export default function Page() {
       <ul>
         <li><b>Predajcovi</b>: meno, kontakt a text vašej správy dostane len predajca, ktorému píšete.</li>
         <li><b>Registrovaným predajcom</b>: dopyt na diel vrátane mena a kontaktu vidia prihlásení predajcovia na portáli (nie verejnosť), aby vám mohli poslať ponuku.</li>
-        <li><b>Sprostredkovateľom</b>, ktorí pre nás zabezpečujú techniku na základe zmluvy o spracúvaní údajov: Supabase Inc. (databáza, prihlásenie a fotky; údaje sú uložené v dátovom centre vo Frankfurte, Nemecko), Vercel Inc. (zobrazovanie webu) a poskytovateľ odosielania e-mailov (Brevo, Sendinblue SAS, Francúzsko – potvrdenia registrácie a upozornenia strážcu).</li>
+        <li><b>Kupujúcemu, ktorý zadal dopyt</b>: ponuku predajcu (názov predajcu, typ, mesto, cenu, telefón a poznámku) vidí len tento kupujúci na svojej neverejnej adrese dopytu.</li>
+        <li><b>Sprostredkovateľom</b>, ktorí pre nás zabezpečujú techniku: Supabase Inc. (databáza, prihlásenie, fotky a zatiaľ aj odosielanie potvrdzovacích e-mailov; údaje sú uložené v dátovom centre vo Frankfurte, Nemecko; zmluva o spracúvaní údajov je súčasťou zmluvy so Supabase), poskytovateľ hostingu Vercel Inc. (zobrazovanie webu; stránky sa pripravujú na serveroch vo Frankfurte) a po zapojení aj Brevo (Sendinblue SAS, Francúzsko – odosielanie e-mailov a upozornení strážcu).</li>
         <li><b>Orgánom verejnej moci</b>, ak nám to ukladá zákon.</li>
       </ul>
       <p>Supabase a Vercel sú spoločnosti so sídlom v USA. Ak by pri ich službách došlo k prenosu údajov mimo EÚ, deje sa na základe štandardných zmluvných doložiek Európskej komisie, prípadne rámca EÚ – USA na ochranu údajov. Údaje nepredávame a nepoužívame na reklamu.</p>

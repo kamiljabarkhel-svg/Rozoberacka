@@ -645,3 +645,5 @@ p.mute a,div.mute a,.pp-mf a,.msgbox a{color:var(--link)}
 .ckbtn.ghost:hover{background:var(--chip)}
 .pp-typeo input[type=radio]{width:18px!important;height:18px;flex:none;padding:0}
 .pnote{margin:-6px 0 0;font-size:.85rem}
+
+.rep .pp-chk{font-weight:500!important}.rep .pp-chk input{width:18px!important;height:18px;flex:none;padding:0}
