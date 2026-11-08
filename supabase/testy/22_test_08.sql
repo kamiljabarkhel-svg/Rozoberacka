@@ -33,7 +33,7 @@ do $$ begin
     insert into public.listings (seller_id,name,brand_id,model_id,year,category_id,oem,price,city,description,donor_id)
     select 'd2222222-0000-0000-0000-000000000002','Cudzí diel',1,(select id from models where brand_id=1 limit 1),2016,'kar','12345678',10,'Trnava','Popis dielu dlhší ako dvadsať znakov.',current_setting('rz.donor')::bigint;
     raise exception 'x';
-  exception when others then perform pg_temp.ok(sqlerrm like 'Darcovské auto nepatrí vám%', 'diel nejde priradiť k cudziemu autu'); end;
+  exception when others then perform pg_temp.ok(sqlerrm like 'Auto na diely nepatrí vám%', 'diel nejde priradiť k cudziemu autu'); end;
 end $$;
 reset role;
 select pg_temp.as_user(null, '7.7.7.9'); set role anon;

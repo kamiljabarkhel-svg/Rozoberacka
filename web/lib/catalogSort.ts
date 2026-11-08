@@ -1,6 +1,6 @@
 // Poradie modelov v ponuke: podľa modelového radu (abecedne) a v rade podľa roku od.
 // Bez toho by sa nové generácie pridané neskôr (napr. Golf III) zobrazili až za Golf VIII.
-import type { Catalog, Model } from "./types";
+import type { Catalog, Model, VehicleType } from "./types";
 
 const sk = new Intl.Collator("sk", { numeric: true, sensitivity: "base" });
 
@@ -33,14 +33,14 @@ export function pickCatalog(cat: Catalog, items: Ref[], vehicles: Ref[] = []): C
 
 /** Kompaktný tvar katalógu na prenos do prehliadača (polia namiesto objektov – asi polovičná veľkosť). */
 export type PackedCatalog = {
-  b: [number, string, 0 | 1][]; m: [number, number, string, number, number | null][]; e: [number, number, string][];
+  b: [number, string, 0 | 1][]; m: [number, number, string, number, number | null, string?][]; e: [number, number, string][];
   c: Catalog["categories"]; s: Catalog["subcategories"];
 };
 export function packCatalog(c: Catalog): PackedCatalog {
-  return { b: c.brands.map((x) => [x.id, x.name, x.popular ? 1 : 0]), m: c.models.map((x) => [x.id, x.brandId, x.name, x.yearFrom, x.yearTo]),
+  return { b: c.brands.map((x) => [x.id, x.name, x.popular ? 1 : 0]), m: c.models.map((x) => (x.vehicleType && x.vehicleType !== "osobne" ? [x.id, x.brandId, x.name, x.yearFrom, x.yearTo, x.vehicleType] : [x.id, x.brandId, x.name, x.yearFrom, x.yearTo])),
     e: c.engines.map((x) => [x.id, x.modelId, x.name]), c: c.categories, s: c.subcategories };
 }
 export function unpackCatalog(p: PackedCatalog): Catalog {
-  return { brands: p.b.map(([id, name, pop]) => ({ id, name, popular: pop === 1 })), models: p.m.map(([id, brandId, name, yearFrom, yearTo]) => ({ id, brandId, name, yearFrom, yearTo })),
+  return { brands: p.b.map(([id, name, pop]) => ({ id, name, popular: pop === 1 })), models: p.m.map(([id, brandId, name, yearFrom, yearTo, vt]) => ({ id, brandId, name, yearFrom, yearTo, vehicleType: (vt || "osobne") as VehicleType })),
     engines: p.e.map(([id, modelId, name]) => ({ id, modelId, name })), categories: p.c, subcategories: p.s };
 }

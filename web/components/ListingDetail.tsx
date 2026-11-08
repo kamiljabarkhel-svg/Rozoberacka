@@ -6,10 +6,11 @@ import type { Catalog } from "@/lib/types";
 import { groupVehicles } from "@/lib/search";
 import { agoText, condDot, price } from "@/lib/format";
 import { useFavs } from "@/lib/favs";
-import { condLabel } from "@/lib/types";
+import { condLabel, specsLine } from "@/lib/types";
 import { STATIC_PREVIEW, homeHref } from "@/lib/paths";
 import { Icon, catIcon } from "./Icons";
 import PhoneButton from "./PhoneButton";
+import OemBox from "./OemBox";
 import ListingLink from "./ListingLink";
 import Link from "next/link";
 import Tags from "./Tags";
@@ -21,6 +22,7 @@ import Stars from "./Stars";
 import MyCarFit from "./MyCarFit";
 import SellerNotice from "./SellerNotice";
 import { isTrader, liabilityText, sellerKind, withdrawalText } from "@/lib/legal";
+import Disclaimer from "./Disclaimer";
 
 type State =
   | { st: "loading" }
@@ -99,7 +101,7 @@ export default function ListingDetail({ id, onClose, initial, catalog }: { id: n
   const fav = favs.includes(l.id);
   const rows: [string, string][] = [
     ["Značka", bName || "neuvedené"], ["Model", mName || "neuvedené"], ["Motorizácia", eName || "Pasuje na všetky motorizácie"],
-    ["Ročník", l.year ? String(l.year) : "neuvedené"], ["OEM číslo", l.oem || "neuvedené"], ["Kategória", cName + (sName ? " · " + sName : "")],
+    ["Ročník", l.year ? String(l.year) : "neuvedené"], ["Číslo dielu (OEM)", l.oem || "neuvedené"], ["Kategória", cName + (sName ? " · " + sName : "")],
     ["Stav", condLabel(l.condition)], ["Zodpovednosť za vady", liabilityText(l)], ["Odovzdanie", l.shipping || "Len osobný odber"], ["Mesto", l.city || "neuvedené"],
   ];
   if (l.side) rows.splice(5, 0, ["Strana auta", l.side]);
@@ -144,6 +146,8 @@ export default function ListingDetail({ id, onClose, initial, catalog }: { id: n
           <div className="dpr"><span className="price">{price(l.price)}</span><span className="cond"><i className={"dot " + condDot(l.condition)} />{condLabel(l.condition)}</span></div>
           {isTrader(l.seller.type) && <p className="mute pnote">Konečná cena vrátane DPH. Cenu dopravy si dohodnite s predajcom pred kúpou.</p>}
           <p className="car">{[bName, mName, eName].filter(Boolean).join(" ")}{l.year ? ", " + l.year : ""}</p>
+          <OemBox oem={l.oem} />
+          {specsLine(l.specs) && <p className="specs-line">{specsLine(l.specs)}</p>}
           <div className="dacts" ref={actsRef}>
             <PhoneButton id={l.id} />
             <button className="fav" aria-pressed={fav} onClick={() => toggle(l.id)}>{fav ? "♥" : "♡"} Obľúbené</button>
@@ -177,11 +181,12 @@ export default function ListingDetail({ id, onClose, initial, catalog }: { id: n
       </>}
 
       <SellerNotice type={l.seller.type} name={l.seller.name} ico={l.seller.ico} address={l.seller.address} />
-      <div className="warn">Pred nákupom porovnajte OEM číslo so starým dielom a vyžiadajte si od predajcu ďalšie fotky. Neposielajte zálohy vopred neznámym predajcom.</div>
+      <div className="warn">Pred nákupom porovnajte číslo dielu (OEM) so starým dielom a vyžiadajte si od predajcu ďalšie fotky. Neposielajte zálohy vopred neznámym predajcom.</div>
+      <Disclaimer kind="part" />
       <ReportBox id={l.id} />
 
       {sameCar.length > 0 && <>
-        <h2 className="sh">Ďalšie diely z toho istého auta</h2>
+        <h2 className="sh">Ďalšie diely z toho istého vozidla</h2>
         <p className="mute">Rovnaké auto ({[carName(l, cat, true), l.year].filter(Boolean).join(", ")}{l.km ? `, ${l.km.toLocaleString("sk-SK")} km` : ""}) rozoberá predajca {l.seller.name}.</p>
         <div className="sim">
           {sameCar.slice(0, 6).map((x) => (

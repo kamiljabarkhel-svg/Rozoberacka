@@ -1,6 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
-import type { Catalog, Listing } from "@/lib/types";
+import { specsLine, type Catalog, type Listing } from "@/lib/types";
 import { condDot, photosText, price } from "@/lib/format";
 import { STATIC_PREVIEW, listingHref } from "@/lib/paths";
 import { Icon, catIcon } from "./Icons";
@@ -35,6 +35,8 @@ export default function ListingCard({ l, cat, fav, onFav }: { l: Listing; cat: C
       <div className="cb">
         <h2><ListingLink id={l.id} name={l.name} car={carName(l, cat)}>{l.name}</ListingLink></h2>
         <p className="car">{carText(l, cat)}</p>
+        <p className="cardoem">{l.oem ? <>Číslo dielu: <b>{l.oem}</b></> : <span className="mute">Číslo dielu neuvedené</span>}</p>
+        {specsLine(l.specs) && <p className="specs-line">{specsLine(l.specs)}</p>}
         <Tags l={l} />
         <div className="meta">
           <span className="cond"><i className={"dot " + condDot(l.condition)} />{l.condition}</span>
@@ -44,7 +46,6 @@ export default function ListingCard({ l, cat, fav, onFav }: { l: Listing; cat: C
         </div>
       </div>
       <div className="side">
-        <span className="oem">{l.oem || "bez OEM"}</span>
         <span className="price">{price(l.price)}</span>
         <PhoneButton id={l.id} />
       </div>

@@ -3,8 +3,8 @@
 // Správanie podľa prototyp.html. Filtre sa ukladajú do adresy (?znacka=…), dá sa ich poslať ďalej.
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import type { Catalog, Filters } from "@/lib/types";
-import { CONDITIONS, condLabel, emptyFilters } from "@/lib/types";
+import type { Catalog, Filters, Specs, VehicleType } from "@/lib/types";
+import { cleanSpecs, CONDITIONS, condLabel, emptyFilters, PCDS, RIM_DIAMETERS, SEASONS, VEHICLE_TYPES, WHEEL_CAT } from "@/lib/types";
 import { getCatalog, getCities, getStats, initialData, searchListings, type SearchPage } from "@/lib/data";
 import { decodeVin } from "@/lib/vin";
 import { pieces, sk } from "@/lib/format";
@@ -19,6 +19,7 @@ import { type PackedCatalog, unpackCatalog } from "@/lib/catalogSort";
 import { STATIC_PREVIEW, sellersHref } from "@/lib/paths";
 import { Icon, catIcon } from "./Icons";
 import ListingCard from "./ListingCard";
+import Disclaimer from "./Disclaimer";
 import ListingDetail from "./ListingDetail";
 import SellersSoon from "./SellersSoon";
 
@@ -33,10 +34,13 @@ const POP: { label: string; cat?: string; sub?: string; q?: string }[] = [
   { label: "Riadiaca jednotka", q: "Riadiaca jednotka" }, { label: "Alternátor", cat: "el", sub: "Alternátory" },
   { label: "Turbo", cat: "motor", sub: "Turbodúchadlá" }, { label: "Motor", cat: "motor", sub: "Motory kompletné" },
   { label: "Prevodovka", cat: "pr" }, { label: "Volant", cat: "int", sub: "Volanty a airbagy" },
+  { label: "Disky", cat: "kol", sub: "Disky hliníkové" }, { label: "Pneumatiky", cat: "kol" },
 ];
 
 // Krátke názvy parametrov v adrese
-const P = { q: "q", brand: "znacka", model: "model", engine: "motor", year: "rok", cat: "kat", sub: "pod", max: "cena", cond: "stav", city: "mesto", sort: "zoradit", fav: "oblubene", side: "strana", tested: "odskusane", ret: "vratenie" } as const;
+const P = { q: "q", brand: "znacka", model: "model", engine: "motor", year: "rok", cat: "kat", sub: "pod", max: "cena", cond: "stav", city: "mesto", sort: "zoradit", fav: "oblubene", side: "strana", tested: "odskusane", ret: "vratenie", vtype: "druh" } as const;
+// Parametre kolies v adrese (len pri kategórii Pneumatiky a disky)
+const SP: [keyof Specs, string][] = [["pcd", "roztec"], ["rd", "priemer"], ["tw", "sirka"], ["tp", "profil"], ["season", "sezona"], ["rw", "disk"], ["et", "et"], ["mat", "material"]];
 
 function readUrl(): Filters {
   const f = { ...emptyFilters };
@@ -51,6 +55,8 @@ function readUrl(): Filters {
   f.fav = s.get(P.fav) === "1";
   const sd = s.get(P.side); f.side = sd === "Ľavá" || sd === "Pravá" ? sd : "";
   f.tested = s.get(P.tested) === "1"; f.ret = s.get(P.ret) === "1";
+  const vt = s.get(P.vtype); f.vtype = VEHICLE_TYPES.some((t) => t.id === vt) ? (vt as VehicleType) : "";
+  if (f.cat === WHEEL_CAT) { const sp: Specs = {}; for (const [k, n] of SP) { const v = s.get(n); if (v) sp[k] = v; } f.specs = cleanSpecs(sp); }
   return f;
 }
 
@@ -61,7 +67,8 @@ function writeUrl(f: Filters) {
   put(P.q, f.q.trim()); put(P.brand, f.brand); put(P.model, f.model); put(P.engine, f.engine); put(P.year, f.year);
   put(P.cat, f.cat); put(P.sub, f.sub); put(P.max, f.max); put(P.cond, f.cond); put(P.city, f.city);
   if (f.sort !== "new") put(P.sort, f.sort);
-  put(P.fav, f.fav); put(P.side, f.side); put(P.tested, f.tested); put(P.ret, f.ret);
+  put(P.fav, f.fav); put(P.side, f.side); put(P.tested, f.tested); put(P.ret, f.ret); put(P.vtype, f.vtype);
+  if (f.cat === WHEEL_CAT) for (const [k, n] of SP) put(n, f.specs?.[k] || "");
   const qs = s.toString();
   const url = window.location.pathname + (qs ? "?" + qs : "") + window.location.hash;
   window.history.replaceState(window.history.state, "", url);
@@ -171,17 +178,32 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
       .finally(() => { if (my === seq.current) setBusy(false); });
   };
 
-  const brands = useMemo(() => (catalog ? [...catalog.brands].sort((a, b) => sk(a.name, b.name)) : []), [catalog]);
+  const vtOk = useCallback((m: { vehicleType?: VehicleType }) => !f.vtype || (m.vehicleType || "osobne") === f.vtype, [f.vtype]);
+  const brands = useMemo(() => {
+    if (!catalog) return [];
+    const ids = f.vtype ? new Set(catalog.models.filter(vtOk).map((m) => m.brandId)) : null;
+    return catalog.brands.filter((b) => !ids || ids.has(b.id)).sort((a, b) => sk(a.name, b.name));
+  }, [catalog, f.vtype, vtOk]);
   // Rýchle značky v poradí ako v prototype (najčastejšie na SK), potom ostatné obľúbené
   const quick = useMemo(() => {
     const order = ["Škoda", "Volkswagen", "BMW", "Audi", "Hyundai", "Kia", "Ford", "Opel", "Mercedes-Benz", "Toyota", "Peugeot", "Renault", "Citroën", "Dacia", "Fiat", "Volvo"];
     const rank = (n: string) => { const i = order.indexOf(n); return i < 0 ? 99 : i; };
+    if (f.vtype && f.vtype !== "osobne") return brands.slice(0, 16); // pri iných druhoch ukážeme značky toho druhu
     return brands.filter((b) => b.popular).sort((a, b) => rank(a.name) - rank(b.name) || sk(a.name, b.name));
-  }, [brands]);
-  const models = useMemo(() => (catalog && f.brand != null ? catalog.models.filter((m) => m.brandId === f.brand) : []), [catalog, f.brand]);
+  }, [brands, f.vtype]);
+  const models = useMemo(() => (catalog && f.brand != null ? catalog.models.filter((m) => m.brandId === f.brand && vtOk(m)) : []), [catalog, f.brand, vtOk]);
   const model = models.find((m) => m.id === f.model) || null;
   const engines = useMemo(() => (catalog && model ? catalog.engines.filter((e) => e.modelId === model.id) : []), [catalog, model]);
-  const cats = useMemo(() => (catalog ? [...catalog.categories].sort((a, b) => a.sort - b.sort) : []), [catalog]);
+  const cats = useMemo(() => (catalog ? catalog.categories.filter((c) => !f.vtype || !c.vtypes?.length || c.vtypes.includes(f.vtype)).sort((a, b) => a.sort - b.sort) : []), [catalog, f.vtype]);
+  const pickVt = (t: VehicleType | "") => {
+    if (t === f.vtype) return;
+    const m = catalog?.models.find((x) => x.id === f.model);
+    const keepCar = !t || (m ? (m.vehicleType || "osobne") === t : f.brand == null || !!catalog?.models.some((x) => x.brandId === f.brand && (x.vehicleType || "osobne") === t));
+    const c = catalog?.categories.find((x) => x.id === f.cat);
+    const keepCat = !t || !c?.vtypes?.length || c.vtypes.includes(t);
+    set({ vtype: t, ...(keepCar ? {} : { brand: null, model: null, engine: null, year: null }), ...(keepCat ? {} : { cat: "", sub: null, specs: {} }) });
+  };
+  const setSpec = (k: keyof Specs, v: string) => setF((x) => { const n = { ...x.specs }; if (v) n[k] = v; else delete n[k]; return { ...x, specs: n }; });
   const subs = useMemo(() => (catalog && f.cat ? catalog.subcategories.filter((s) => s.categoryId === f.cat).sort((a, b) => a.sort - b.sort) : []), [catalog, f.cat]);
   const years = useMemo(() => {
     const to = model?.yearTo || new Date().getFullYear(), from = model?.yearFrom || 1995, r: number[] = [];
@@ -212,8 +234,8 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
   return (
     <main id="pub" tabIndex={-1}>
       <section className="hero"><div className="in"><span id="main" />
-        <h1>Použité autodiely presne na vaše auto</h1>
-        <p className="sub">Vyberte značku, model a motorizáciu a uvidíte len diely, ktoré naň pasujú. Predajcov kontaktujete bez registrácie.</p>
+        <h1>Použité autodiely presne na vaše vozidlo</h1>
+        <p className="sub">Osobné autá, dodávky, nákladné autá, autobusy aj motorky. Vyberte vozidlo alebo zadajte číslo dielu a uvidíte len diely, ktoré pasujú. Predajcov kontaktujete bez registrácie.</p>
         {stats && stats.parts > 0 && <p className="stats"><b>{stats.parts.toLocaleString("sk-SK")}</b> {stats.parts === 1 ? "diel" : stats.parts >= 2 && stats.parts <= 4 ? "diely" : "dielov"} od <b>{stats.sellers}</b> {stats.sellers === 1 ? "predajcu" : "predajcov"} na jednom mieste</p>}
         <div className="qb" aria-label="Najčastejšie značky">
           {quick.map((b) => (
@@ -230,6 +252,10 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
             onAll={() => set({ brand: null, model: null, engine: null, year: null })}
             onSave={() => { if (f.brand != null) { const c = { brand: f.brand, model: f.model, engine: f.engine, year: f.year }; my.save(catalog ? { ...c, label: myCarLabel(c, catalog) } : c); } }}
             onForget={() => my.save(null)} />
+          <div className="vtabs" role="tablist" aria-label="Druh vozidla">
+            <button role="tab" aria-selected={!f.vtype} className={!f.vtype ? "on" : ""} onClick={() => pickVt("")}>Všetky vozidlá</button>
+            {VEHICLE_TYPES.map((t) => <button key={t.id} role="tab" aria-selected={f.vtype === t.id} className={f.vtype === t.id ? "on" : ""} onClick={() => pickVt(t.id)}>{t.short}</button>)}
+          </div>
           <div className="pg">
             <label>Značka
               <select value={f.brand ?? ""} onChange={(e) => set({ brand: numOrNull(e.target.value), model: null, engine: null, year: null })}>
@@ -252,11 +278,21 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
               </select>
             </label>
             <label>Kategória
-              <select value={f.cat} onChange={(e) => set({ cat: e.target.value, sub: null })}>
+              <select value={f.cat} onChange={(e) => set({ cat: e.target.value, sub: null, specs: {} })}>
                 {opt("", "Všetky kategórie")}{cats.map((c) => opt(c.id, c.name))}
               </select>
             </label>
           </div>
+          {f.cat === WHEEL_CAT && <div className="pg wheelf" aria-label="Parametre pneumatík a diskov">
+            <label>Rozteč (PCD)<select value={f.specs.pcd || ""} onChange={(e) => setSpec("pcd", e.target.value)}>{opt("", "Každá")}{PCDS.map((x) => opt(x, x))}</select></label>
+            <label>Priemer<select value={f.specs.rd || ""} onChange={(e) => setSpec("rd", e.target.value)}>{opt("", "Každý")}{RIM_DIAMETERS.map((x) => opt(x, "R" + x))}</select></label>
+            <label>Šírka pneu<input inputMode="numeric" placeholder="205" value={f.specs.tw || ""} onChange={(e) => setSpec("tw", e.target.value.replace(/\D/g, "").slice(0, 3))} /></label>
+            <label>Profil<input inputMode="numeric" placeholder="55" value={f.specs.tp || ""} onChange={(e) => setSpec("tp", e.target.value.replace(/\D/g, "").slice(0, 3))} /></label>
+            <label>Sezóna<select value={f.specs.season || ""} onChange={(e) => setSpec("season", e.target.value)}>{opt("", "Každá")}{SEASONS.map((x) => opt(x, x))}</select></label>
+            <label>Šírka disku (J)<input inputMode="decimal" placeholder="7" value={f.specs.rw || ""} onChange={(e) => setSpec("rw", e.target.value.replace(",", ".").slice(0, 4))} /></label>
+            <label>ET<input inputMode="numeric" placeholder="49" value={f.specs.et || ""} onChange={(e) => setSpec("et", e.target.value.replace(/[^\d-]/g, "").slice(0, 4))} /></label>
+            <label>Materiál<select value={f.specs.mat || ""} onChange={(e) => setSpec("mat", e.target.value)}>{opt("", "Hliník aj oceľ")}{opt("Hliník", "Hliník")}{opt("Oceľ", "Oceľ")}</select></label>
+          </div>}
           <div className="adv" hidden={!adv}>
             <label>Podkategória
               <select value={f.sub ?? ""} disabled={!f.cat} onChange={(e) => set({ sub: numOrNull(e.target.value) })}>
@@ -388,6 +424,9 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
           <div className="rq-cta"><p><b>Nenašli ste svoj diel?</b> Zadajte dopyt – vrakoviská vám pošlú ponuku. Bez registrácie.</p>
             <a className="btn2" href={`/dopyt?${new URLSearchParams({ ...(f.brand ? { znacka: String(f.brand) } : {}), ...(f.model ? { model: String(f.model) } : {}), ...(f.q.trim() ? { q: f.q.trim() } : {}) }).toString()}`}>Zadať dopyt na diel</a></div>
         )}
+        {!STATIC_PREVIEW && <div className="rq-cta"><p><b>Hľadáte celé vozidlo na diely?</b> Havarované a nepojazdné autá, dodávky, kamióny aj motorky od vrakovísk.</p>
+          <Link className="btn2" href="/havarovane-vozidla">Havarované vozidlá</Link></div>}
+        <Disclaimer kind="short" />
 
         <section className="how" aria-label="Ako to funguje">
           <div><b>1</b><h3>Vyberte svoje auto</h3><p>Značka, model a motorizácia, alebo VIN číslo. Diely, ktoré naň pasujú, uvidíte hneď.</p></div>

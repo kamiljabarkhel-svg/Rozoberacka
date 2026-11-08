@@ -19,5 +19,7 @@ export async function POST(req: Request) {
   revalidatePath("/diely/[...path]", "page");
   revalidatePath("/kategoria/[...path]", "page");
   revalidatePath("/mesto/[...path]", "page");
+  revalidatePath("/havarovane-vozidla");
+  revalidatePath("/vozidlo/[slug]", "page");
   return Response.json({ ok: true });
 }

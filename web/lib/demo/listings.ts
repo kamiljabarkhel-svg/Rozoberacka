@@ -17,7 +17,7 @@ const RAW: Raw[] = [
     desc: "Predný nárazník v pôvodnej farbe, bez prasklín. Drobné škrabance na spodnej hrane. Zahŕňa aj držiaky.\nOEM číslo si overte podľa vášho auta." },
   { id: 3, cat: "motor", sub: "Riadiace jednotky motora", name: "Riadiaca jednotka motora", brand: "Volkswagen", model: "Golf VI", engine: "1.6 TDI 77 kW", year: 2011, oem: "03L906023", price: 120, city: "Košice", cond: "Dobrý", phone: "+421900333444", seller: ["Peter K.", "Súkromná osoba", false], ago: 5, warranty: "Bez záruky", shipping: "Len osobný odber", photos: 2,
     desc: "Riadiaca jednotka motora 1.6 TDI. Vyberaná z funkčného auta, bez zásahov. Pri montáži treba kódovanie u servisu." },
-  { id: 4, cat: "sv", sub: "Predné svetlá", name: "Pravé predné svetlo", brand: "BMW", model: "3 (E90)", year: 2008, oem: "63117161666", price: 70, city: "Bratislava", cond: "Na opravu", phone: "+421900444555", seller: ["Rozoberačka Bratislava", "Firma", true], ago: 1, warranty: "14 dní", shipping: "Zasielam kuriérom", photos: 1,
+  { id: 4, cat: "sv", sub: "Predné svetlá", name: "Pravé predné svetlo", brand: "BMW", model: "3 (E90)", year: 2008, oem: "63117161666", price: 70, city: "Bratislava", cond: "Na opravu", phone: "+421900444555", seller: ["Vrakovisko Bratislava", "Firma", true], ago: 1, warranty: "14 dní", shipping: "Zasielam kuriérom", photos: 1,
     desc: "Pravé predné svetlo, halogén. Praskliny na jednom úchyte, sklo bez poškodenia. Vhodné na opravu alebo ako náhrada." },
   { id: 7, cat: "int", sub: "Sedadlá", name: "Sedadlo vodiča, koža", brand: "Audi", model: "A4 B8", year: 2012, oem: "8K0881105", price: 150, city: "Banská Bystrica", cond: "Dobrý", phone: "+421900777888", seller: ["Auto Banská Bystrica", "Firma", true], ago: 4, warranty: "3 mesiace", shipping: "Zasielam kuriérom", photos: 4,
     desc: "Sedadlo vodiča, čierna koža, elektrické nastavenie. Bez rozpárania, mierne sedenie na boku." },
@@ -27,7 +27,7 @@ const RAW: Raw[] = [
     desc: "Zadné svetlo ľavé LED, plne funkčné, bez vlhkosti. Z auta po náraze spredu." },
   { id: 11, cat: "motor", sub: "Motory kompletné", name: "Motor 1.9 TDI 77 kW", brand: "Volkswagen", model: "Passat B6", engine: "1.9 TDI 77 kW", year: 2007, oem: "BXE", price: 480, city: "Nitra", cond: "Dobrý", phone: "+421900345678", seller: ["Motory Nitra", "Firma", true], ago: 6, warranty: "3 mesiace", shipping: "Len osobný odber", photos: 2,
     desc: "Kompletný motor 1.9 TDI 77 kW (BXE) bez príslušenstva. Počet kilometrov podľa predajcu 220 000. Možnosť prehliadky." },
-  { id: 12, cat: "int", sub: "Volanty a airbagy", name: "Volant multifunkčný", brand: "BMW", model: "5 (F10)", year: 2012, oem: "32306854480", price: 140, city: "Košice", cond: "Veľmi dobrý", phone: "+421900456789", seller: ["Rozoberačka Košice", "Firma", false], ago: 2, warranty: "14 dní", shipping: "Zasielam kuriérom", photos: 3,
+  { id: 12, cat: "int", sub: "Volanty a airbagy", name: "Volant multifunkčný", brand: "BMW", model: "5 (F10)", year: 2012, oem: "32306854480", price: 140, city: "Košice", cond: "Veľmi dobrý", phone: "+421900456789", seller: ["Autodiely Východ Košice", "Firma", false], ago: 2, warranty: "14 dní", shipping: "Zasielam kuriérom", photos: 3,
     desc: "Multifunkčný volant s ovládaním tempomatu a rádia. Koža v dobrom stave, bez airbagu." },
   // Ukážka zhody OEM: dva inzeráty s rovnakým (vymysleným) OEM v rôznom zápise.
   { id: 13, cat: "kar", sub: "Spätné zrkadlá", name: "Spätné zrkadlo pravé, elektrické", brand: "Škoda", model: "Octavia III", year: 2015, oem: "UKAZKA-0001", price: 65, city: "Trnava", cond: "Veľmi dobrý", phone: "+421900000013", seller: ["Vrakovisko Trnava", "Firma", false], ago: 3, warranty: "14 dní", shipping: "Zasielam kuriérom", photos: 2,
@@ -98,7 +98,7 @@ export function buildDemoListings(cat: Catalog): { listings: Listing[]; phones: 
       createdAt: created, updatedAt: created, photos, thumbs: photos, mediums: photos,
       fits, sellerId: demoSellerId(r.seller[0]), donorId: null, seller: { name: r.seller[0], type: r.seller[1], city: r.city, verified: r.seller[2] },
       side: EXTRA[r.id]?.side ?? null, gearbox: EXTRA[r.id]?.gearbox ?? null, km: EXTRA[r.id]?.km ?? null,
-      tested: !!EXTRA[r.id]?.tested, returns14: firm || !!EXTRA[r.id]?.returns14, top: !!EXTRA[r.id]?.top, partMaker: null,
+      tested: !!EXTRA[r.id]?.tested, returns14: firm || !!EXTRA[r.id]?.returns14, top: !!EXTRA[r.id]?.top, partMaker: null, specs: {},
     };
   });
   return { listings, phones };

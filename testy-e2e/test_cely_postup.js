@@ -157,18 +157,50 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
     await pg.waitForSelector(".pp-pre li.err"); const okc = await pg.locator(".pp-pre li.ok").count(); if (okc !== 1) throw new Error("ok rows " + okc + " :: " + (await pg.locator(".pp-pre").innerText()));
     await pg.click("text=Importovať 1"); await pg.waitForSelector(".pp-toast:has-text('Importované: 1')", { timeout: 15000 });
   });
-  await step("darcovske auto + rychle pridanie dielov", async () => {
-    await pg.click(".pp-nav >> text=Darcovské autá"); await pg.click("text=+ Pridať auto");
+  await step("auto na diely + rychle pridanie dielov", async () => {
+    await pg.click(".pp-nav >> text=Autá na diely"); await pg.click("text=+ Pridať vozidlo");
     await pg.selectOption("label:has-text('Značka') select", { label: "Škoda" });
     const m = pg.locator("label:has-text('Model') select"); const o = (await m.locator("option").allTextContents()).find((t) => /^Octavia III/.test(t)); await m.selectOption({ label: o });
     await pg.selectOption("label:has-text('Ročník') select", "2016"); await pg.fill("label:has-text('Najazdené km') input", "150000");
     await pg.fill("label:has-text('VIN') input:not([type=file])", "TMBJJ7NE0G0123456");
-    await pg.click("text=Uložiť a pridať diely"); await pg.waitForSelector("text=Diely z auta");
+    await pg.click("text=Uložiť a pridať diely"); await pg.waitForSelector("text=Diely z vozidla");
     const row = (n) => pg.locator(".pp-qr", { has: pg.locator(`input[value="${n}"]`) });
     await row("Kapota").locator("input[aria-label^='OEM']").fill("5E0823031"); await row("Kapota").locator("input[aria-label^='Cena']").fill("90");
     await row("Alternátor").locator("input[aria-label^='OEM']").fill("04L903023"); await row("Alternátor").locator("input[aria-label^='Cena']").fill("70");
     await pg.click("text=Vytvoriť 2 inzeráty"); await pg.waitForSelector(".pp-toast:has-text('Vytvorené: 2')", { timeout: 20000 });
-    await pg.waitForSelector(".pp-row:has-text('Diely z auta: 2')");
+    await pg.waitForSelector(".pp-row:has-text('Diely z vozidla: 2')");
+  });
+  await step("havarovane vozidlo: predajca prida z auta na diely", async () => {
+    await pg.click(".pp-row:has-text('Diely z vozidla: 2') >> text=Predať celé vozidlo"); await pg.waitForSelector("h1:has-text('Predať havarované vozidlo')");
+    await pg.waitForSelector(".pp-donor-note:has-text('Octavia III')");
+    await pg.click("text=Zverejniť vozidlo"); await pg.waitForSelector(".pp-err:has-text('Vyberte stav vozidla')");
+    await pg.selectOption("label:has-text('Stav vozidla') select", "Havarované – nepojazdné"); await pg.selectOption("label:has-text('Doklady') select", "S dokladmi – odhlásené");
+    await pg.check(".pp-dmg label:has-text('Predok') input"); await pg.check(".pp-dmg label:has-text('Motor') input");
+    await pg.fill("label:has-text('Cena (€)') input", "1800"); await pg.fill("label:has-text('Popis') textarea", "Čelný náraz, airbagy vystrelené, zadná časť a interiér v poriadku.");
+    await pg.setInputFiles(".pp-add input[type=file]", ["a.png"]); await pg.waitForSelector(".pp-phl figure");
+    await pg.click("text=Zverejniť vozidlo"); await pg.waitForSelector(".pp-toast:has-text('je zverejnené')", { timeout: 20000 });
+    await pg.waitForSelector(".car-row:has-text('Octavia III') >> text=Havarované – nepojazdné");
+  });
+  await step("havarovane vozidla: zoznam, detail, telefon, sprava", async () => {
+    global.CUR = b2;
+    await b2.goto(B + "/havarovane-vozidla"); await b2.waitForSelector(".carcard:has-text('Octavia III')");
+    await b2.click(".vtabs >> text=Motorky"); await b2.waitForSelector("text=0 vozidiel"); await b2.click(".vtabs >> text=Osobné"); await b2.waitForSelector(".carcard");
+    await b2.click(".carcard a"); await b2.waitForURL("**/vozidlo/**"); await b2.waitForSelector("h1:has-text('Havarované – nepojazdné')");
+    const h = await b2.content(); if (/TMBJJ7NE0G0123456/.test(h)) throw new Error("VIN je verejne");
+    // diely z auta na diely sú zatiaľ pozastavené (bez fotiek) – kupujúci ich nevidí
+    if (await b2.locator("h2:has-text('Diely z tohto vozidla')").count()) throw new Error("pozastavené diely sú verejné"); await b2.waitForSelector(".disclaimer:has-text('KJ trade')");
+    await b2.click(".cd-box >> text=Zobraziť telefón"); await b2.waitForSelector(".cd-box >> text=0905 111 222");
+    await b2.click(".cd-box >> text=Napísať predajcovi"); await b2.fill(".msgbox label:has-text('Vaše meno') input", "Jano"); await b2.fill(".msgbox label:has-text('Telefón alebo e-mail') input", "jano@test.sk");
+    await b2.click(".msgbox >> text=Odoslať správu"); await b2.waitForSelector("text=Správa bola odoslaná");
+    global.CUR = pg; await pg.goto(B + "/predajca#msg"); await pg.reload(); await pg.waitForSelector(".pp-msgs li:has-text('Celé vozidlo')");
+  });
+  await step("pneumatiky a disky: parametre vo formulari a filtri", async () => {
+    await pg.click(".pp-nav >> text=Pridať inzerát"); await pg.fill(".pp-form label:has-text('Názov dielu') input", "Disky 16 Škoda 5x112");
+    await pg.selectOption(".pp-form select:has(option:text-is('Pneumatiky a disky'))", { label: "Pneumatiky a disky" }); await pg.waitForSelector(".pp-specs");
+    await pg.fill(".pp-specg label:has-text('Rozteč') input", "5x112"); await pg.selectOption(".pp-specg label:has-text('Priemer') select", "16");
+    await pg.fill(".pp-specg label:has-text('Zális') input", "abc"); await pg.fill(".pp-form label:has-text('OEM') input", "5E0601025");
+    await pg.click("text=Ďalej →"); await pg.waitForSelector(".pp-ferr:has-text('parameter kolesa')");
+    await pg.fill(".pp-specg label:has-text('Zális') input", "46"); await pg.click("text=Ďalej →"); await pg.waitForSelector(".pp-form label:has-text('Značka auta')");
   });
   await step("export CSV a hromadna cena", async () => {
     await pg.click(".pp-nav >> text=Moje inzeráty"); await pg.waitForSelector(".pp-row");
@@ -230,7 +262,7 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
     await t("/navody/oem-cislo", /"@type":"Article"/);
     // produkčný web obnovuje mapu webu raz za hodinu – mestá a predajcov kontrolujeme len vo vývojovom režime
     const sm = await t("/sitemap.xml", /\/navody\/vin/); if (process.env.RZ_PROD !== "1" && (!/\/predajci\//.test(sm) || !/\/mesto\/zilina/.test(sm))) throw new Error("sitemap");
-    await t("/manifest.webmanifest", /"short_name":"Rozoberačka"/);
+    await t("/manifest.webmanifest", /"short_name":"autosuciastky.eu"/);
     await t("/sw.js", /Ste bez internetu/);
     await t("/ocr/worker.min.js", /./);
     const r = await fetch(B + "/mesto/neexistuje"); if (r.status !== 404) throw new Error("mesto 404 " + r.status);

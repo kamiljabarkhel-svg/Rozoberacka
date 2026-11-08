@@ -31,7 +31,7 @@ export default function AlertForm({ f, cat }: { f: Filters; cat: Catalog | null 
         <button type="button" className="lnk" onClick={() => setOpen(false)}>Zrušiť</button>
       </span>
       <label className="pp-chk"><input type="checkbox" checked={ok} onChange={(e) => setOk(e.target.checked)} />
-        <span>Súhlasím, aby mi Rozoberačka raz denne posielala nové diely pre toto hľadanie (najviac 6 mesiacov, zrušiť sa dá jedným klikom v každom e-maile). <Link href="/ochrana-osobnych-udajov#strazca">Ochrana osobných údajov</Link></span></label>
+        <span>Súhlasím, aby mi portál autosuciastky.eu raz denne posielal nové diely pre toto hľadanie (najviac 6 mesiacov, zrušiť sa dá jedným klikom v každom e-maile). <Link href="/ochrana-osobnych-udajov#strazca">Ochrana osobných údajov</Link></span></label>
       {err && <p className="pp-err">{err}</p>}
     </form>
   );

@@ -15,5 +15,5 @@ export default function Pwa() {
     return () => { window.removeEventListener("beforeinstallprompt", h); window.removeEventListener("appinstalled", done); };
   }, []);
   if (!evt) return null;
-  return <button className="lnk" onClick={async () => { await evt.prompt(); await evt.userChoice.catch(() => null); setEvt(null); }}>📱 Pridať Rozoberačku na plochu</button>;
+  return <button className="lnk" onClick={async () => { await evt.prompt(); await evt.userChoice.catch(() => null); setEvt(null); }}>📱 Pridať autosuciastky.eu na plochu</button>;
 }

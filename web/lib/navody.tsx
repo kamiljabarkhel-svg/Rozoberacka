@@ -21,11 +21,11 @@ export const NAVODY: Navod[] = [
       </ul>
       <h2>Ako ho porovnať</h2>
       <ul>
-        <li>Medzery, bodky a pomlčky nehrajú rolu: <code>5E0 823 031</code> a <code>5E0823031</code> je to isté číslo. Rozoberačka ich pri hľadaní porovnáva bez nich.</li>
+        <li>Medzery, bodky a pomlčky nehrajú rolu: <code>5E0 823 031</code> a <code>5E0823031</code> je to isté číslo. autosuciastky.eu ich pri hľadaní porovnáva bez nich.</li>
         <li>Písmeno na konci (napr. <code>…031A</code>, <code>…031B</code>) často označuje novšiu verziu dielu. Niekedy je zameniteľná, niekedy nie – opýtajte sa predajcu alebo servisu.</li>
         <li>Číslo výrobcu dielu (Bosch, Valeo, Hella…) nie je OEM číslo auta. Ak ho predajca uvádza, nájdete ho v inzeráte ako „Výrobca dielu“.</li>
       </ul>
-      <h2>Hľadanie na Rozoberačke</h2>
+      <h2>Hľadanie na autosuciastky.eu</h2>
       <p>Na úvodnej stránke napíšte číslo do poľa <Link href="/#hladat">Hľadať podľa čísla dielu</Link>. Na mobile ho môžete aj odfotiť – text sa prečíta priamo v telefóne, fotka sa nikam neposiela.</p>
       <p className="mute">Zoznam „Pasuje na“ v inzerátoch zostavujeme z údajov predajcov a zo zhody OEM čísel. Nie je to overený katalóg výrobcu.</p>
     </>,
@@ -49,7 +49,7 @@ export const NAVODY: Navod[] = [
         <li><b>Prvé 3 znaky</b> označujú výrobcu, napríklad <code>TMB</code> Škoda, <code>WVW</code> Volkswagen, <code>WAU</code> Audi, <code>WBA</code> BMW.</li>
         <li><b>10. znak</b> je u väčšiny výrobcov modelový rok: … <code>G</code> 2016, <code>H</code> 2017, <code>J</code> 2018, <code>K</code> 2019, <code>L</code> 2020, <code>M</code> 2021, <code>N</code> 2022, <code>P</code> 2023, <code>R</code> 2024, <code>S</code> 2025. Modelový rok sa môže líšiť od roku výroby.</li>
       </ul>
-      <p>Na úvodnej stránke zadajte VIN do poľa <Link href="/#vin">VIN</Link> a Rozoberačka podľa neho predvyplní značku a ročník. Presný model a motorizáciu vyberte sami. VIN môžete aj odfotiť – číta sa priamo v telefóne.</p>
+      <p>Na úvodnej stránke zadajte VIN do poľa <Link href="/#vin">VIN</Link> a autosuciastky.eu podľa neho predvyplní značku a ročník. Presný model a motorizáciu vyberte sami. VIN môžete aj odfotiť – číta sa priamo v telefóne.</p>
       <p>VIN pomôže aj predajcovi pri dopyte: <Link href="/dopyt">zadajte dopyt na diel</Link> a VIN pripíšte – predajca ho uvidí, verejne sa nezobrazuje.</p>
     </>,
   },
@@ -60,7 +60,7 @@ export const NAVODY: Navod[] = [
     description: "Ako overiť, že použitý diel pasuje, na čo sa pýtať predajcu, ako platiť a aké máte práva pri kúpe od firmy a od súkromnej osoby.",
     updated: "2026-11-07",
     body: <>
-      <p><b>Najprv overte diel, potom plaťte.</b> Rozoberačka je inzertný portál – diel kupujete priamo od predajcu, my platby nesprostredkúvame.</p>
+      <p><b>Najprv overte diel, potom plaťte.</b> autosuciastky.eu je inzertný portál – diel kupujete priamo od predajcu, my platby nesprostredkúvame.</p>
       <h2>Pred kúpou</h2>
       <ol>
         <li>Porovnajte <Link href="/navody/oem-cislo">OEM číslo</Link> so starým dielom. Ak ho inzerát nemá, vypýtajte si fotku štítku.</li>

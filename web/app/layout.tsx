@@ -22,12 +22,12 @@ import { SITE_URL } from "@/lib/seo";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: { default: "Rozoberačka – použité autodiely", template: "%s | Rozoberačka" },
+  title: { default: "autosuciastky.eu – použité autodiely", template: "%s | autosuciastky.eu" },
   description: "Použité autodiely presne na vaše auto. Hľadajte podľa značky, modelu a motorizácie, predajcovi zavoláte bez registrácie.",
-  applicationName: "Rozoberačka",
-  openGraph: { siteName: "Rozoberačka", locale: "sk_SK", type: "website" },
+  applicationName: "autosuciastky.eu",
+  openGraph: { siteName: "autosuciastky.eu", locale: "sk_SK", type: "website" },
   formatDetection: { telephone: false },
-  appleWebApp: { capable: true, title: "Rozoberačka", statusBarStyle: "default" },
+  appleWebApp: { capable: true, title: "autosuciastky.eu", statusBarStyle: "default" },
 };
 export const viewport: Viewport = { width: "device-width", initialScale: 1, viewportFit: "cover",
   themeColor: [{ media: "(prefers-color-scheme: light)", color: "#0a3b44" }, { media: "(prefers-color-scheme: dark)", color: "#0a2f37" }] };
@@ -42,12 +42,12 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         {IS_DEMO && <div className="demo" role="note">Ukážkový režim – údaje nie sú skutočné <span>· inzeráty, predajcovia a telefóny sú vymyslené</span></div>}
         {children}
         <footer className="foot2">
-          <b>Rozoberačka</b>
-          <span>Inzertný portál na použité autodiely. Portál sprostredkúva inzerciu a nie je účastníkom predaja. Za správnosť údajov a zhodu dielu s vozidlom zodpovedá predajca, pred nákupom preto vždy porovnajte OEM číslo.</span>
-          <span>Katalóg áut je zatiaľ predbežný (6 značiek) a môže obsahovať chyby.</span>
+          <b>autosuciastky.eu</b>
+          <span><b>Inzertný portál</b> na autodiely a havarované vozidlá. Prevádzkovateľ {OPERATOR.name} tovar nepredáva, neoveruje ho a nie je stranou kúpnej zmluvy. Za inzeráty, správnosť údajov, zhodu dielu s vozidlom, vady a reklamácie zodpovedá predajca – pred nákupom preto vždy porovnajte číslo dielu (OEM). <Link href="/obchodne-podmienky#zodpovednost">Zodpovednosť</Link></span>
+          <span>Katalóg vozidiel je predbežný (zostavený bez licencovaných dát) a môže obsahovať chyby.</span>
           <Pwa />
           <nav className="foot-l" aria-label="Pomoc">
-            <Link href="/navody/oem-cislo">Kde nájdem OEM číslo</Link><Link href="/navody/vin">Kde nájdem VIN</Link><Link href="/navody/bezpecny-nakup">Bezpečný nákup</Link><Link href="/dopyt">Dopyt na diel</Link><Link href="/pre-predajcov">Pre predajcov</Link><Link href="/ako-zoradujeme">Ako zoraďujeme ponuky</Link>
+            <Link href="/navody/oem-cislo">Kde nájdem OEM číslo</Link><Link href="/navody/vin">Kde nájdem VIN</Link><Link href="/navody/bezpecny-nakup">Bezpečný nákup</Link><Link href="/dopyt">Dopyt na diel</Link><Link href="/havarovane-vozidla">Havarované vozidlá</Link><Link href="/pre-predajcov">Pre predajcov</Link><Link href="/ako-zoradujeme">Ako zoraďujeme ponuky</Link>
           </nav>
           <nav className="foot-l" aria-label="Právne informácie">
             <a href="/obchodne-podmienky">Obchodné podmienky</a><a href="/ochrana-osobnych-udajov">Ochrana osobných údajov</a><a href="/cookies">Cookies</a><CookieSettingsLink />

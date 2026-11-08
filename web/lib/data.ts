@@ -8,8 +8,8 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { pickCatalog, sortCatalog } from "./catalogSort";
 import type { buildDemoListings } from "./demo/listings";
 import { allVehicles, buildOemIndex, search as localSearch } from "./search";
-import type { Catalog, Condition, Filters, Listing, Vehicle } from "./types";
-import { emptyFilters } from "./types";
+import type { Catalog, Condition, Filters, Listing, Vehicle, Specs, VehicleType, CarListing, CarFilters } from "./types";
+import { cleanSpecs, emptyFilters } from "./types";
 import { mediumPath, thumbPath } from "./photos";
 
 const URL_ = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
@@ -27,7 +27,7 @@ let demoP: Promise<DemoData> | null = null;
 function demoData(): Promise<DemoData> {
   if (!demoP) demoP = (async () => {
     const [{ default: j }, { buildDemoListings }] = await Promise.all([import("./demo/catalog.json"), import("./demo/listings")]);
-    const catalog = sortCatalog({ brands: j.brands, models: j.models, engines: j.engines, categories: j.categories, subcategories: j.subcategories });
+    const catalog = sortCatalog({ brands: j.brands, models: j.models as Catalog["models"], engines: j.engines, categories: j.categories as Catalog["categories"], subcategories: j.subcategories });
     return { catalog, ...buildDemoListings(catalog) };
   })();
   return demoP;
@@ -79,7 +79,7 @@ export { thumbPath, mediumPath } from "./photos";
 
 const LISTING_COLS =
   "id,name,brand_id,model_id,engine_id,year,category_id,subcategory_id,oem,price,city,condition,description,warranty,shipping,created_at,updated_at,seller_id,donor_id," +
-  "side,donor_gearbox,donor_km,tested,returns_14d,top_until,part_maker," +
+  "side,donor_gearbox,donor_km,tested,returns_14d,top_until,part_maker,specs," +
   "sellers(name,seller_type,city,verified,ico,address),listing_photos(path,position),listing_fits(brand_id,model_id,engine_id)";
 
 function toListing(r: Row): Listing {
@@ -101,7 +101,7 @@ function toListing(r: Row): Listing {
     seller: { name: String(s.name || "Predajca"), type: String(s.seller_type || "Firma"), city: (s.city as string) ?? null, verified: Boolean(s.verified), ico: (s.ico as string) ?? null, address: (s.address as string) ?? null },
     side: (r.side as Listing["side"]) ?? null, gearbox: (r.donor_gearbox as string) ?? null, km: (r.donor_km as number) ?? null,
     tested: Boolean(r.tested), returns14: Boolean(r.returns_14d),
-    top: !!r.top_until && Date.parse(String(r.top_until)) > Date.now(), partMaker: (r.part_maker as string) ?? null,
+    top: !!r.top_until && Date.parse(String(r.top_until)) > Date.now(), partMaker: (r.part_maker as string) ?? null, specs: (r.specs as Specs) || {},
   };
 }
 
@@ -120,23 +120,23 @@ export async function getCatalog(): Promise<Catalog> {
 async function fetchCatalog(): Promise<Catalog> {
   const [b, m, e, c, s] = await Promise.all([
     selectAll<Row>("brands", "id,name,popular", "id"),
-    selectAll<Row>("models", "id,brand_id,name,year_from,year_to", "id"),
+    selectAll<Row>("models", "id,brand_id,name,year_from,year_to,vehicle_type", "id"),
     selectAll<Row>("engines", "id,model_id,name", "id"),
-    selectAll<Row>("categories", "id,name,sort", "sort"),
+    selectAll<Row>("categories", "id,name,sort,vtypes", "sort"),
     selectAll<Row>("subcategories", "id,category_id,name,sort", "sort"),
   ]);
   return sortCatalog({
     brands: b.map((x) => ({ id: x.id as number, name: String(x.name), popular: Boolean(x.popular) })),
-    models: m.map((x) => ({ id: x.id as number, brandId: x.brand_id as number, name: String(x.name), yearFrom: x.year_from as number, yearTo: (x.year_to as number) ?? null })),
+    models: m.map((x) => ({ id: x.id as number, brandId: x.brand_id as number, name: String(x.name), yearFrom: x.year_from as number, yearTo: (x.year_to as number) ?? null, vehicleType: ((x.vehicle_type as VehicleType) || "osobne") })),
     engines: e.map((x) => ({ id: x.id as number, modelId: x.model_id as number, name: String(x.name) })),
-    categories: c.map((x) => ({ id: String(x.id), name: String(x.name), sort: x.sort as number })),
+    categories: c.map((x) => ({ id: String(x.id), name: String(x.name), sort: x.sort as number, vtypes: (x.vtypes as VehicleType[]) ?? null })),
     subcategories: s.map((x) => ({ id: x.id as number, categoryId: String(x.category_id), name: String(x.name), sort: x.sort as number })),
   });
 }
 
 /** Filtre v tvare pre databázovú funkciu search_listings (aj pre strážcu e-mailom). */
 export function filterParams(f: Filters): Record<string, unknown> {
-  const p: Record<string, unknown> = { q: f.q.trim(), brand: f.brand, model: f.model, engine: f.engine, year: f.year, cat: f.cat, sub: f.sub,
+  const p: Record<string, unknown> = { vtype: f.vtype, specs: Object.keys(cleanSpecs(f.specs)).length ? cleanSpecs(f.specs) : null, q: f.q.trim(), brand: f.brand, model: f.model, engine: f.engine, year: f.year, cat: f.cat, sub: f.sub,
     max: f.max, cond: f.cond, city: f.city, side: f.side, tested: f.tested, ret: f.ret };
   for (const k of Object.keys(p)) if (p[k] === null || p[k] === "" || p[k] === false) delete p[k];
   return p;
@@ -426,4 +426,60 @@ export async function getRequest(token: string): Promise<RequestView | null> {
 export async function closeRequest(token: string): Promise<void> {
   const { error } = await client().rpc("close_part_request", { p_token: token });
   if (error) throw new Error(error.message);
+}
+
+// ---------- HAVAROVANÉ VOZIDLÁ ----------
+function toCar(r: Row): CarListing {
+  const s = (r.seller || {}) as Row;
+  return {
+    id: Number(r.id), vehicleType: (r.vehicle_type as VehicleType) || "osobne", brandId: Number(r.brand_id), modelId: (r.model_id as number) ?? null,
+    engineId: (r.engine_id as number) ?? null, year: Number(r.year), km: (r.km as number) ?? null, fuel: (r.fuel as string) ?? null,
+    gearbox: (r.gearbox as string) ?? null, color: (r.color as string) ?? null, condition: String(r.condition), damage: (r.damage as string[]) || [],
+    starts: (r.starts as boolean) ?? null, docs: String(r.docs), stkUntil: (r.stk_until as string) ?? null, price: Number(r.price), city: String(r.city),
+    description: String(r.description || ""), donorId: (r.donor_id as number) ?? null, createdAt: String(r.created_at), updatedAt: String(r.updated_at),
+    sellerId: String(r.seller_id), seller: { name: String(s.name || ""), type: String(s.seller_type || ""), city: (s.city as string) ?? null, verified: !!s.verified, ico: (s.ico as string) ?? null, address: (s.address as string) ?? null },
+    photos: ((r.photos || []) as string[]).map((p) => photoUrl(p)), thumbs: ((r.photos || []) as string[]).map((p) => photoUrl(thumbPath(p))),
+    mediums: ((r.photos || []) as string[]).map((p) => photoUrl(mediumPath(p))), parts: Number(r.parts || 0), status: (r.status as string) ?? undefined,
+  };
+}
+export type CarPage = { items: CarListing[]; total: number; conds: Record<string, number> };
+export async function searchCars(f: CarFilters, offset: number, limit: number, extra: { seller?: string; exclude?: number } = {}): Promise<CarPage> {
+  if (IS_DEMO) return { items: [], total: 0, conds: {} };
+  const p: Record<string, unknown> = { vtype: f.vtype, brand: f.brand, model: f.model, yfrom: f.yfrom, yto: f.yto, max: f.max, cond: f.cond, fuel: f.fuel,
+    docs: f.docs, city: f.city, q: f.q.trim(), sort: f.sort, limit, offset, ...extra };
+  for (const k of Object.keys(p)) if (p[k] === null || p[k] === "" || p[k] === false || p[k] === undefined) delete p[k];
+  const { data, error } = await client().rpc("search_cars", { p });
+  if (error) throw new Error("cars: " + error.message);
+  const d = data as Row;
+  return { items: ((d.items || []) as Row[]).map(toCar), total: Number(d.total || 0), conds: (d.conds as Record<string, number>) || {} };
+}
+export type CarGone = { id: number; gone: true; status: string; vehicleType: VehicleType; brandId: number; modelId: number | null; year: number };
+export async function getCar(id: number): Promise<CarListing | CarGone | null> {
+  if (IS_DEMO) return null;
+  const { data, error } = await client().rpc("get_car", { p_id: id });
+  if (error) throw new Error("car: " + error.message);
+  if (!data) return null;
+  const r = data as Row;
+  if (r.gone) return { id: Number(r.id), gone: true, status: String(r.status), vehicleType: (r.vehicle_type as VehicleType) || "osobne", brandId: Number(r.brand_id), modelId: (r.model_id as number) ?? null, year: Number(r.year) };
+  return toCar(r);
+}
+export async function revealCarPhone(id: number): Promise<string | null> {
+  const { data, error } = await client().rpc("reveal_car_phone", { p_id: id });
+  if (error) throw new Error(error.message);
+  return (data as string) ?? null;
+}
+export async function logCarView(id: number): Promise<void> { if (!IS_DEMO) await client().rpc("log_car_view", { p_id: id }); }
+export async function sendCarMessage(id: number, name: string, contact: string, body: string): Promise<void> {
+  const { error } = await client().rpc("send_car_message", { p_id: id, p_name: name, p_contact: contact, p_body: body });
+  if (error) throw new Error(error.message);
+}
+export async function reportCar(id: number, reason: string, note: string, contact: string): Promise<void> {
+  const { error } = await client().rpc("report_car", { p_id: id, p_reason: reason, p_note: note, p_contact: contact });
+  if (error) throw new Error(error.message);
+}
+export async function sitemapCars(): Promise<{ id: number; brandId: number; modelId: number | null; year: number; condition: string; updatedAt: string }[]> {
+  if (IS_DEMO) return [];
+  const { data, error } = await client().rpc("sitemap_cars");
+  if (error) return [];
+  return ((data || []) as Row[]).map((r) => ({ id: Number(r.id), brandId: Number(r.brand_id), modelId: (r.model_id as number) ?? null, year: Number(r.year), condition: String(r.condition || ""), updatedAt: String(r.updated_at) }));
 }

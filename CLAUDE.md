@@ -190,3 +190,13 @@ Overené na Slov-Lexe: Občiansky zákonník § 597, 599, 612, 618, 619 (znenie 
 - Web: modely triedi `lib/catalogSort.ts` (rad + rok). Stránky dielov, áut, miest a predajcov posielajú do prehliadača len časť katalógu (`pickCatalog`), úvod kompaktne (`packCatalog`). Ukážkové údaje sa načítajú len v ukážkovom režime (`demoData()` v `lib/data.ts`).
 - Next.js si pamätá odpovede databázy (fetch cache) – po zmene katalógu sa web obnoví do 5 minút; lokálne pred buildom zmazať `.next/cache/fetch-cache`.
 
+
+## autosuciastky.eu – vozidlá, kategórie, pneumatiky, havarované vozidlá (8. 11. 2026, 21:00)
+- Nový názov portálu: **autosuciastky.eu** (všade na webe, v e-mailoch a podmienkach). Interné kľúče `rozoberacka-*` v prehliadači a názov projektu/repozitára ostávajú.
+- **Číslo dielu (OEM)** je hlavný údaj: veľký box s kopírovaním v detaile (`components/OemBox.tsx`), riadok „Číslo dielu“ na každej karte, vo formulári vysvetlenie. Rozhoduje číslo dielu, nie len model auta.
+- **Druhy vozidiel**: `models.vehicle_type` (osobne, dodavky, nakladne, autobusy, motorky), `categories.vtypes` (kategórie len pre niektoré druhy). Záložky na úvode, v dopyte, vo formulári, pri autách na diely. Katalóg: `supabase/katalog/1*.txt` (`!druh`) → `generuj.py` → `supabase/20_katalog_vozidla.sql`.
+- **Kategórie**: 21 kategórií, 260 podkategórií (`supabase/18`) – od karosérie po interiér, airbagy, multimédiá, elektropohon, výbava, nadstavby, autobus, motorky.
+- **Pneumatiky a disky** (kategória `kol`): `listings.specs` jsonb (šírka, profil, priemer, sezóna, dezén, DOT, indexy, šírka disku, rozteč, ET, stredový otvor, kusy, materiál), kontrola v DB `specs_ok()` aj vo formulári (`cleanSpecs`), filtre na úvode, stĺpce v CSV.
+- **Autá na diely** (predtým „darcovské autá“, v DB stále `donor_cars`): predajca zapíše rozoberané vozidlo a pridá z neho veľa dielov naraz; zoznamy bežných dielov podľa druhu vozidla; tlačidlo „Predať celé vozidlo“.
+- **Havarované vozidlá** (`supabase/19`, `car_listings`, `car_contacts`, `car_photos`): len havarované, nepojazdné, po požiari/povodni alebo na diely – nie bežný autobazár. Verejnosť číta len cez funkcie (`search_cars`, `get_car`); telefón na klik, VIN nikdy verejne. Stránky `/havarovane-vozidla` a `/vozidlo/<id>-<nazov>`, portál „Havarované vozidlá“, správy a nahlásenia (aj „Podozrenie na kradnuté vozidlo“), v mape webu.
+- **Inzertný portál – zodpovednosť**: `components/Disclaimer.tsx` v detaile dielu, vozidla, dopytoch, na úvode, stránke predajcu, vo formulároch a pri registrácii; pätička; obchodné podmienky časť 6 „Zodpovednosť“ (`#zodpovednost`) a 3a1 „Predaj celých vozidiel“ (zákon 79/2015 o starých vozidlách). `TERMS_VERSION` 2026-11-09. Overiť s právnikom.

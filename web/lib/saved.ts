@@ -3,7 +3,7 @@
 // Pri návrate na web ukáže, koľko nových dielov pribudlo od poslednej návštevy daného hľadania.
 import { useCallback, useEffect, useState } from "react";
 import type { Catalog, Filters } from "./types";
-import { emptyFilters } from "./types";
+import { emptyFilters, specsLine, VEHICLE_TYPES } from "./types";
 
 const KEY = "rozoberacka-hladania";
 const EVT = "rz-saved";
@@ -11,7 +11,7 @@ export const MAX_SAVED = 10;
 export type Saved = { id: string; f: Filters; seenAt: string };
 
 function read(): Saved[] {
-  try { const a = JSON.parse(localStorage.getItem(KEY) || "[]"); return Array.isArray(a) ? a.filter((x) => x && x.f) : []; } catch { return []; }
+  try { const a = JSON.parse(localStorage.getItem(KEY) || "[]"); return Array.isArray(a) ? a.filter((x) => x && x.f).map((x) => ({ ...x, f: { ...emptyFilters, ...x.f, specs: x.f.specs || {} } })) : []; } catch { return []; }
 }
 function write(v: Saved[]) {
   try { localStorage.setItem(KEY, JSON.stringify(v)); } catch {}
@@ -28,11 +28,13 @@ export function hasCriteria(f: Filters): boolean {
 /** Čitateľný názov hľadania, napr. „Škoda Octavia III · Svetlá · do 100 €“. */
 export function describe(f: Filters, cat: Catalog | null): string {
   const p: string[] = [];
+  if (f.vtype) p.push(VEHICLE_TYPES.find((t) => t.id === f.vtype)?.short || f.vtype);
   const car = [cat?.brands.find((x) => x.id === f.brand)?.name, cat?.models.find((x) => x.id === f.model)?.name, cat?.engines.find((x) => x.id === f.engine)?.name].filter(Boolean).join(" ");
   if (car) p.push(car + (f.year ? `, ${f.year}` : ""));
   if (f.q.trim()) p.push(`„${f.q.trim()}“`);
   const c = cat?.categories.find((x) => x.id === f.cat)?.name, s = cat?.subcategories.find((x) => x.id === f.sub)?.name;
   if (c) p.push(s ? `${c} – ${s}` : c);
+  const sp = specsLine(f.specs); if (sp) p.push(sp);
   if (f.max != null) p.push(`do ${f.max} €`);
   if (f.cond) p.push(f.cond);
   if (f.city) p.push(f.city);

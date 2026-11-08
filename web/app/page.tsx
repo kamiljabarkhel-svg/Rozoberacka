@@ -11,7 +11,7 @@ import { JsonLd, landingPath, siteLd } from "@/lib/seo";
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: { absolute: "Rozoberačka – použité autodiely z vrakovísk na vaše auto" },
+  title: { absolute: "autosuciastky.eu – použité autodiely z vrakovísk na vaše auto" },
   description: "Použité autodiely z vrakovísk a od predajcov z celého Slovenska. Hľadajte podľa značky, modelu, motorizácie, VIN alebo OEM čísla. Predajcovi zavoláte bez registrácie.",
   alternates: { canonical: "/" },
 };

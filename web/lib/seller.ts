@@ -5,7 +5,7 @@
 import { createClient, type Session, type SupabaseClient } from "@supabase/supabase-js";
 import { IS_DEMO, PHOTO_BUCKET } from "./data";
 import { filesOf, mediumPath, thumbPath } from "./photos";
-import type { Condition } from "./types";
+import { cleanSpecs, WHEEL_CAT, type Condition, type Specs, type VehicleType } from "./types";
 import { TERMS_VERSION } from "./operator";
 
 const URL_ = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
@@ -25,10 +25,11 @@ export type MyListing = {
   condition: Condition; description: string; warranty: string; shipping: string; status: Status;
   views: number; calls: number; createdAt: string; updatedAt: string; phone: string;
   side: string; gearbox: string; km: number | null; tested: boolean; returns14: boolean; top: boolean; moderationNote: string; donorId: number | null;
+  specs: Specs;
   photos: { path: string; url: string }[]; fits: { brandId: number; modelId: number | null; engineId: number | null }[];
 };
 export type ListingInput = Omit<MyListing, "id" | "status" | "views" | "calls" | "createdAt" | "updatedAt" | "top" | "photos" | "moderationNote">;
-export type Message = { id: number; listingId: number; listingName: string; name: string; contact: string; body: string; createdAt: string; read: boolean };
+export type Message = { id: number; listingId: number; carId?: number | null; listingName: string; name: string; contact: string; body: string; createdAt: string; read: boolean };
 
 const SKMSG: [RegExp, string][] = [
   [/Invalid login credentials/i, "Nesprávny e-mail alebo heslo."],
@@ -131,7 +132,7 @@ export async function saveProfile(p: Profile) {
 
 // ---------- INZERÁTY ----------
 const COLS = "id,name,brand_id,model_id,engine_id,year,category_id,subcategory_id,oem,part_maker,price,city,condition,description,warranty,shipping,status,views,calls,created_at,updated_at,moderation_note,donor_id," +
-  "side,donor_gearbox,donor_km,tested,returns_14d,top_until,listing_contacts(phone),listing_photos(path,position),listing_fits(brand_id,model_id,engine_id)";
+  "side,donor_gearbox,donor_km,tested,returns_14d,top_until,specs,listing_contacts(phone),listing_photos(path,position),listing_fits(brand_id,model_id,engine_id)";
 
 type Row = Record<string, unknown>;
 export function photoUrl(path: string) {
@@ -149,6 +150,7 @@ function toMine(r: Row): MyListing {
     views: Number(r.views || 0), calls: Number(r.calls || 0), createdAt: String(r.created_at), updatedAt: String(r.updated_at || r.created_at), phone,
     side: String(r.side || ""), gearbox: String(r.donor_gearbox || ""), km: (r.donor_km as number) ?? null, tested: !!r.tested, returns14: !!r.returns_14d,
     top: !!r.top_until && Date.parse(String(r.top_until)) > Date.now(), moderationNote: String(r.moderation_note || ""), donorId: (r.donor_id as number) ?? null,
+    specs: (r.specs && typeof r.specs === "object" ? r.specs : {}) as Specs,
     photos: ph.map((p) => ({ path: String(p.path), url: photoUrl(String(p.path)) })),
     fits: ((r.listing_fits || []) as Row[]).map((f) => ({ brandId: Number(f.brand_id), modelId: (f.model_id as number) ?? null, engineId: (f.engine_id as number) ?? null })),
   };
@@ -165,6 +167,7 @@ function dbRow(x: ListingInput) {
     category_id: x.categoryId, subcategory_id: x.subcategoryId, oem: x.oem.trim(), part_maker: x.partMaker.trim() || null,
     price: x.price, city: x.city.trim(), condition: x.condition, description: x.description.trim(), warranty: x.warranty, shipping: x.shipping,
     side: x.side || null, donor_gearbox: x.gearbox || null, donor_km: x.km, tested: x.tested, returns_14d: x.returns14, donor_id: x.donorId ?? null,
+    specs: x.categoryId === WHEEL_CAT ? cleanSpecs(x.specs) : {},
   };
 }
 
@@ -283,10 +286,14 @@ export async function importMany(uid: string, rows: ListingInput[]): Promise<{ o
 
 // ---------- SPRÁVY ----------
 export async function myMessages(): Promise<Message[]> {
-  const { data, error } = await sellerClient().from("messages").select("id,listing_id,sender_name,sender_contact,body,created_at,read_at,listings(name)").order("created_at", { ascending: false }).limit(300);
+  const sel = "id,listing_id,car_id,sender_name,sender_contact,body,created_at,read_at,listings(name)";
+  let r: { data: unknown; error: { message: string } | null } = await sellerClient().from("messages").select(sel).order("created_at", { ascending: false }).limit(300);
+  if (r.error && /car_id/.test(r.error.message)) r = await sellerClient().from("messages").select(sel.replace("car_id,", "")).order("created_at", { ascending: false }).limit(300); // pred migráciou 19
+  const { data, error } = r;
   if (error) throw new Error(skError(error));
   return ((data || []) as unknown as Row[]).map((m) => ({
-    id: Number(m.id), listingId: Number(m.listing_id), listingName: String((m.listings as Row | null)?.name || "zmazaný inzerát"),
+    id: Number(m.id), listingId: Number(m.listing_id || 0), carId: (m.car_id as number) ?? null,
+    listingName: m.car_id ? "Celé vozidlo (inzerát č. " + m.car_id + ")" : String((m.listings as Row | null)?.name || "zmazaný inzerát"),
     name: String(m.sender_name), contact: String(m.sender_contact), body: String(m.body), createdAt: String(m.created_at), read: !!m.read_at,
   }));
 }
@@ -395,4 +402,93 @@ export async function myOffers(): Promise<MyOffer[]> {
 export async function sendOffer(uid: string, requestId: number, o: { price: number; phone: string; listingId: number | null; note: string }) {
   const { error } = await sellerClient().from("part_offers").insert({ request_id: requestId, seller_id: uid, price: o.price, phone: o.phone.trim(), listing_id: o.listingId, note: o.note.trim() || null });
   if (error) throw new Error(/duplicate|unique/i.test(error.message) ? "Na tento dopyt ste už ponuku poslali." : skError(error));
+}
+
+// ---------- HAVAROVANÉ A NEPOJAZDNÉ VOZIDLÁ (celé vozidlá na predaj, 19) ----------
+export type MyCar = {
+  id: number; vehicleType: VehicleType; brandId: number; modelId: number | null; engineId: number | null; year: number; km: number | null;
+  fuel: string; gearbox: string; color: string; condition: string; damage: string[]; starts: boolean | null; docs: string; stkUntil: string;
+  price: number; city: string; description: string; donorId: number | null; status: Status; moderationNote: string;
+  views: number; calls: number; createdAt: string; updatedAt: string; phone: string; vin: string; photos: { path: string; url: string }[];
+};
+export type CarInput = Omit<MyCar, "id" | "status" | "moderationNote" | "views" | "calls" | "createdAt" | "updatedAt" | "photos">;
+const CAR_COLS = "id,vehicle_type,brand_id,model_id,engine_id,year,km,fuel,gearbox,color,condition,damage,starts,docs,stk_until,price,city,description,donor_id," +
+  "status,moderation_note,views,calls,created_at,updated_at,car_contacts(phone,vin),car_photos(path,position)";
+function toMyCar(r: Row): MyCar {
+  const ct = r.car_contacts as Row | Row[] | null; const c0 = (Array.isArray(ct) ? ct[0] : ct) || {};
+  const ph = ((r.car_photos || []) as Row[]).slice().sort((a, b) => Number(a.position) - Number(b.position));
+  return {
+    id: Number(r.id), vehicleType: (r.vehicle_type as VehicleType) || "osobne", brandId: Number(r.brand_id), modelId: (r.model_id as number) ?? null,
+    engineId: (r.engine_id as number) ?? null, year: Number(r.year), km: (r.km as number) ?? null, fuel: String(r.fuel || ""), gearbox: String(r.gearbox || ""),
+    color: String(r.color || ""), condition: String(r.condition), damage: (r.damage as string[]) || [], starts: (r.starts as boolean) ?? null, docs: String(r.docs),
+    stkUntil: String(r.stk_until || ""), price: Number(r.price), city: String(r.city || ""), description: String(r.description || ""), donorId: (r.donor_id as number) ?? null,
+    status: r.status as Status, moderationNote: String(r.moderation_note || ""), views: Number(r.views || 0), calls: Number(r.calls || 0),
+    createdAt: String(r.created_at), updatedAt: String(r.updated_at || r.created_at), phone: String((c0 as Row).phone || ""), vin: String((c0 as Row).vin || ""),
+    photos: ph.map((p) => ({ path: String(p.path), url: photoUrl(String(p.path)) })),
+  };
+}
+export async function myCars(uid: string): Promise<MyCar[]> {
+  const { data, error } = await sellerClient().from("car_listings").select(CAR_COLS).eq("seller_id", uid).order("created_at", { ascending: false });
+  if (error) throw new Error(skError(error));
+  return ((data || []) as unknown as Row[]).map(toMyCar);
+}
+function refreshCars() {
+  if (IS_DEMO || typeof window === "undefined") return;
+  fetch("/api/obnovit", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ids: [1] }) }).catch(() => {});
+}
+export async function saveCar(uid: string, id: number | null, x: CarInput, photos: PhotoItem[], oldPaths: string[]): Promise<number> {
+  const c = sellerClient();
+  const row = {
+    vehicle_type: x.vehicleType, brand_id: x.brandId, model_id: x.modelId, engine_id: x.engineId, year: x.year, km: x.km, fuel: x.fuel || null,
+    gearbox: x.gearbox || null, color: x.color.trim() || null, condition: x.condition, damage: x.damage, starts: x.starts, docs: x.docs,
+    stk_until: x.stkUntil || null, price: x.price, city: x.city.trim(), description: x.description.trim(), donor_id: x.donorId,
+  };
+  let cid = id;
+  if (cid == null) {
+    const r = await c.from("car_listings").insert({ seller_id: uid, ...row }).select("id").single();
+    if (r.error) throw new Error(skError(r.error));
+    cid = Number(r.data.id);
+  } else {
+    const r = await c.from("car_listings").update(row).eq("id", cid);
+    if (r.error) throw new Error(skError(r.error));
+  }
+  const ct = await c.from("car_contacts").upsert({ car_id: cid, phone: x.phone.trim(), vin: x.vin.replace(/\s/g, "").toUpperCase() || null });
+  if (ct.error) throw new Error(skError(ct.error));
+  const paths: string[] = [];
+  for (let k = 0; k < photos.length; k++) {
+    const p = photos[k];
+    if (p.path) { paths.push(p.path); continue; }
+    if (!p.file) continue;
+    const { big, medium, thumb, small } = await shrink(p.file);
+    const path = `${uid}/a${cid}/${Date.now()}-${k}${small === "webp" ? ".w" : ""}.jpg`;
+    const up = await c.storage.from(PHOTO_BUCKET).upload(path, big, { contentType: "image/jpeg", upsert: false });
+    if (up.error) throw new Error("Fotku sa nepodarilo nahrať: " + up.error.message);
+    const st = small === "webp" ? "image/webp" : "image/jpeg";
+    await c.storage.from(PHOTO_BUCKET).upload(thumbPath(path), thumb, { contentType: st, upsert: false });
+    await c.storage.from(PHOTO_BUCKET).upload(mediumPath(path), medium, { contentType: st, upsert: false });
+    paths.push(path);
+  }
+  const gone = oldPaths.filter((p) => !paths.includes(p));
+  if (gone.length) await c.storage.from(PHOTO_BUCKET).remove(gone.flatMap(filesOf));
+  const dp = await c.from("car_photos").delete().eq("car_id", cid);
+  if (dp.error) throw new Error(skError(dp.error));
+  if (paths.length) {
+    const ip = await c.from("car_photos").insert(paths.map((path, position) => ({ car_id: cid, path, position })));
+    if (ip.error) throw new Error(skError(ip.error));
+  }
+  refreshCars();
+  return cid;
+}
+export async function setCarStatus(id: number, status: Status) {
+  const { error } = await sellerClient().from("car_listings").update({ status }).eq("id", id).neq("status", "blocked");
+  if (error) throw new Error(skError(error));
+  refreshCars();
+}
+export async function deleteCar(car: MyCar) {
+  const c = sellerClient();
+  const files = car.photos.flatMap((p) => filesOf(p.path));
+  if (files.length) await c.storage.from(PHOTO_BUCKET).remove(files);
+  const { error } = await c.from("car_listings").delete().eq("id", car.id);
+  if (error) throw new Error(skError(error));
+  refreshCars();
 }

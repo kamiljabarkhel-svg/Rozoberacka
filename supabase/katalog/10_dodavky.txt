@@ -1,0 +1,133 @@
+# Dodávky – údaje z pamäte (8. 11. 2026), nie overený katalóg.
+# Súbory 10_* až 19_* sa generujú do supabase/20_katalog_vozidla.sql (druh vozidla podľa riadku !druh).
+# Riadok „Model|=“ znamená: model už v katalógu je (03 alebo 16), len sa mu nastaví druh vozidla.
+!druh dodavky
+
+@Volkswagen|1
+Caddy II|=
+Caddy III|=
+Caddy IV|=
+Caddy V|=
+Transporter T4|=
+Transporter T5|=
+Transporter T6|=
+Transporter T6.1|=
+Transporter 7 (2024)|=
+Crafter I|=
+Crafter II|=
+LT II|1996|2006|2.5 TDI 65 kW; 2.5 TDI 80 kW; 2.5 TDI 115 kW; 2.8 TDI 116 kW
+
+@Mercedes-Benz|1
+Vito / V (W638)|=
+Vito / Viano (W639)|=
+Vito / V (W447)|=
+Sprinter (T1N)|=
+Sprinter (NCV3, W906)|=
+Sprinter (W907/W910)|=
+Citan (W415)|=
+Citan (W420)|=
+
+@Opel|1
+Combo C|=
+Combo D|=
+Combo E|=
+Vivaro A|=
+Vivaro B|=
+Vivaro C|=
+Movano A|=
+Movano B|=
+Movano C|=
+
+@Ford|1
+Tourneo / Transit Connect I|=
+Tourneo / Transit Connect II|=
+Tourneo / Transit Connect III|=
+Tourneo / Transit Courier|=
+Tourneo / Transit Courier II|=
+Transit (V184/V347)|=
+Transit (V363)|=
+Transit / Tourneo Custom I|=
+Transit / Tourneo Custom II|=
+
+@Renault|1
+Kangoo I|=
+Kangoo II|=
+Kangoo III|=
+Trafic I|=
+Trafic II|=
+Trafic III|=
+Master II|=
+Master III|=
+Master IV|=
+
+@Dacia|1
+Dokker|=
+
+@Peugeot|1
+Partner I|=
+Partner II (Tepee)|=
+Partner III / Rifter|=
+Bipper|=
+Expert I|=
+Expert II|=
+Expert III / Traveller|=
+Boxer I|=
+Boxer II|=
+Boxer III|=
+
+@Citroën|1
+Berlingo I|=
+Berlingo II|=
+Berlingo III|=
+Nemo|=
+Jumpy I|=
+Jumpy II|=
+Jumpy III / SpaceTourer|=
+Jumper I|=
+Jumper II|=
+Jumper III|=
+
+@Fiat|1
+Doblò I|=
+Doblò II (263)|=
+Doblò III|=
+Fiorino / Qubo|=
+Scudo I|=
+Scudo II|=
+Scudo III|=
+Talento|=
+Ducato II (230/244)|=
+Ducato III (250)|=
+Ducato IV (250 facelift/290)|=
+
+@Toyota|1
+Proace I|=
+Proace II|=
+Proace City|=
+Hiace|=
+
+@Nissan|0
+Townstar|=
+NV200 / e-NV200|=
+Primastar|=
+NV300 / Primastar (2016)|=
+NV400 / Interstar|=
+Cabstar|=
+
+@Hyundai|1
+H-1 / H-1 Starex|=
+H-1 (TQ)|=
+
+@Iveco|0
+Daily III|=
+Daily IV|=
+Daily V|=
+Daily VI|=
+
+@MAN|0
+TGE|2017|-|2.0 TDI 75 kW; 2.0 TDI 103 kW; 2.0 TDI 130 kW; eTGE Elektro 100 kW
+
+@Maxus|0
+Deliver 9|2020|-|2.0 D 105 kW; 2.0 D 120 kW
+eDeliver 3|2020|-|Elektro 90 kW
+eDeliver 9|2021|-|Elektro 150 kW

@@ -2,12 +2,13 @@
 // Import inzerátov z CSV (Excel → Uložiť ako CSV). Najprv náhľad s chybami, potom import.
 import { useState } from "react";
 import type { Catalog, Condition } from "@/lib/types";
-import { CONDITIONS, condLabel } from "@/lib/types";
+import { CONDITIONS, condLabel, cleanSpecs, specsErrors, SPEC_LABEL, WHEEL_CAT, type Specs } from "@/lib/types";
+import { SPEC_COLS } from "@/lib/csvExport";
 import { importMany, type ListingInput, type Profile } from "@/lib/seller";
 
 const MAX = 500;
 const REQ = ["nazov", "znacka", "model", "oem", "cena", "kategoria"];
-const OPT = ["motorizacia", "rocnik", "podkategoria", "stav", "zaruka", "popis", "mesto", "telefon", "pasuje", "strana", "odskusany", "vratenie", "km", "vyrobca"];
+const OPT = ["motorizacia", "rocnik", "podkategoria", "stav", "zaruka", "popis", "mesto", "telefon", "pasuje", "strana", "odskusany", "vratenie", "km", "vyrobca", ...SPEC_COLS.map(([c]) => c)];
 const norm = (s: string) => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/\s+/g, " ").trim();
 
 function parse(text: string): string[][] {
@@ -83,13 +84,17 @@ export default function CsvImport({ uid, cat, prof, onDone }: { uid: string; cat
       const yes = (s: string) => /^(ano|a|1|x|yes|true)$/.test(norm(s));
       const side = /^l/.test(norm(g("strana"))) ? "Ľavá" : /^p/.test(norm(g("strana"))) ? "Pravá" : "";
       const km = parseInt(g("km").replace(/\D/g, ""), 10);
+      const rawSpecs: Specs = {};
+      if (c?.id === WHEEL_CAT) for (const [colName, k] of SPEC_COLS) { let x = g(colName); if (k === "season") x = x.toLowerCase(); if (k === "mat") x = /^hl|^al/i.test(x) ? "Hliník" : /^oc|^st/i.test(norm(x)) ? "Oceľ" : x; if (x) rawSpecs[k] = x; }
+      for (const k of specsErrors(rawSpecs)) warns.push(`${SPEC_LABEL[k].toLowerCase()} „${rawSpecs[k]}“ má zlý tvar – vynechané`);
+      const specs = cleanSpecs(rawSpecs);
       warns.push("bez fotky – doplňte cez Upraviť");
       const ok = !errors.length;
       return {
         row: k + 2, name: name || "(bez názvu)", ok, errors, warns,
         data: ok ? { name, brandId: brand!.id, modelId: model!.id, engineId: engine?.id ?? null, year, categoryId: c!.id, subcategoryId: sub?.id ?? null,
           oem, partMaker: g("vyrobca"), price, city, condition, description, warranty, shipping: "Len osobný odber", phone,
-          side, gearbox: "", km: Number.isFinite(km) ? km : null, tested: yes(g("odskusany")), returns14: yes(g("vratenie")), fits, donorId: null } : undefined,
+          side, gearbox: "", km: Number.isFinite(km) ? km : null, tested: yes(g("odskusany")), returns14: yes(g("vratenie")), fits, specs, donorId: null } : undefined,
       };
     }));
   }
@@ -107,9 +112,10 @@ export default function CsvImport({ uid, cat, prof, onDone }: { uid: string; cat
 
   return (
     <div>
-      <header className="pp-h"><h1>Import z CSV</h1><a className="ubtn" href={sampleHref} download="vzor-rozoberacka.csv">Stiahnuť vzorový súbor</a></header>
+      <header className="pp-h"><h1>Import z CSV</h1><a className="ubtn" href={sampleHref} download="vzor-autosuciastky.csv">Stiahnuť vzorový súbor</a></header>
       <div className="pp-box">
         <p>Povinné stĺpce: <b>{REQ.join(", ")}</b>. Voliteľné: {OPT.join(", ")}. Oddeľovač <b>;</b> alebo <b>,</b>, najviac {MAX} riadkov. Stav: Nový, Repasovaný, Veľmi dobrý, Dobrý alebo Na opravu. V stĺpci <b>pasuje</b> oddeľte autá znakom | (napr. „Škoda Octavia III | VW Golf VII“).</p>
+        <p className="mute">Pneumatiky a disky (kategória „Pneumatiky a disky“): stĺpce pneu_sirka (205), pneu_profil (55), priemer (16), sezona (letné/zimné/celoročné), dezen_mm, dot (rok), index_nosnosti, index_rychlosti, sirka_disku (7), roztec (5x112), et (49), stredovy_otvor (57.1), kusy, material (Hliník/Oceľ).</p>
         <p className="mute">Popis musí mať aspoň 20 znakov. Mesto a telefón sa doplnia z profilu, ak ich v súbore nemáte. Importované inzeráty sú bez fotiek – doplníte ich cez Upraviť.</p>
         <label className="pp-add pp-file"><input type="file" accept=".csv,text/csv" onChange={async (e) => { const f = e.target.files?.[0]; if (f) load(await f.text()); e.target.value = ""; }} /><span>Vybrať CSV súbor</span></label>
         {head && <p className="pp-err">{head}</p>}

@@ -5,7 +5,7 @@ import { LegalPage } from "@/components/Legal";
 // § 16 ods. 1 písm. a) zákona č. 108/2024 Z. z.: hlavné parametre poradia ponúk vo výsledkoch hľadania.
 export const metadata: Metadata = {
   title: "Ako zoraďujeme ponuky",
-  description: "Podľa čoho Rozoberačka zoraďuje inzeráty vo výsledkoch hľadania: TOP inzeráty, najnovšie, cena, zhoda s hľadaným textom a autom.",
+  description: "Podľa čoho autosuciastky.eu zoraďuje inzeráty vo výsledkoch hľadania: TOP inzeráty, najnovšie, cena, zhoda s hľadaným textom a autom.",
   alternates: { canonical: "/ako-zoradujeme" },
 };
 

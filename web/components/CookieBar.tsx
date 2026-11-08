@@ -24,7 +24,7 @@ export default function CookieBar() {
       </div>
     ) : (
       <div className="ckbar" role="region" aria-label="Informácia o cookies">
-        <p><b>Nesledujeme vás.</b> Rozoberačka nepoužíva reklamné ani analytické cookies. V prehliadači ukladáme len to, čo potrebujete na fungovanie (prihlásenie predajcu, obľúbené diely, uložené hľadania, Moje auto). <Link href="/cookies">Podrobnosti</Link></p>
+        <p><b>Nesledujeme vás.</b> autosuciastky.eu nepoužíva reklamné ani analytické cookies. V prehliadači ukladáme len to, čo potrebujete na fungovanie (prihlásenie predajcu, obľúbené diely, uložené hľadania, Moje auto). <Link href="/cookies">Podrobnosti</Link></p>
         <div className="ckb"><button className="ckbtn" onClick={() => done(false)}>Rozumiem</button></div>
       </div>
     ))}

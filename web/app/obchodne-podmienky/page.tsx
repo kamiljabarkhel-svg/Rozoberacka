@@ -7,7 +7,7 @@ export const metadata: Metadata = { title: "Obchodné podmienky", alternates: { 
 export default function Page() {
   return (
     <LegalPage title="Obchodné podmienky">
-      <p>Tieto podmienky upravujú používanie inzertného portálu Rozoberačka. Prehliadanie inzerátov a kontaktovanie predajcov je bez registrácie a zadarmo. Predajca registráciou potvrdzuje, že s podmienkami súhlasí.</p>
+      <p>Tieto podmienky upravujú používanie inzertného portálu autosuciastky.eu. Prehliadanie inzerátov a kontaktovanie predajcov je bez registrácie a zadarmo. Predajca registráciou potvrdzuje, že s podmienkami súhlasí.</p>
 
       <h2>1. Prevádzkovateľ</h2>
       <OperatorBox />
@@ -15,12 +15,13 @@ export default function Page() {
 
       <h2>2. Čo portál robí a čo nie</h2>
       <ul>
-        <li>Portál zverejňuje inzeráty predajcov použitých autodielov a sprostredkúva kontakt medzi predajcom a kupujúcim.</li>
+        <li>Portál zverejňuje inzeráty predajcov autodielov (vrátane pneumatík a diskov) na osobné autá, dodávky, nákladné autá, autobusy a motorky a inzeráty celých <b>havarovaných, nepojazdných alebo na diely určených vozidiel</b>. Sprostredkúva len kontakt medzi predajcom a kupujúcim.</li>
         <li>Prevádzkovateľ <b>nie je predávajúcim ani účastníkom</b> kúpnej zmluvy. Zmluva vzniká priamo medzi predajcom a kupujúcim, ktorí sa dohodnú na cene, platbe, odovzdaní aj reklamácii.</li>
         <li>Portál neprijíma platby a neposiela tovar.</li>
         <li>Inzeráty zverejňujeme len na tomto portáli. Neposielame ich na iné weby ani do partnerských programov; vyhľadávače (napr. Google) však verejné stránky portálu indexujú.</li>
         <li>So všetkými predajcami zaobchádzame rovnako. Prevádzkovateľ sám na portáli nepredáva a vlastné ponuky neuprednostňuje.</li>
-        <li>Zoznam „Pasuje na“ skladáme z údajov predajcov (vlastné auto, „pasuje aj na“ a inzeráty s rovnakým OEM číslom). Nie je to overený katalóg. Pred kúpou porovnajte OEM číslo s pôvodným dielom.</li>
+        <li>Zoznam „Pasuje na“ skladáme z údajov predajcov (vlastné auto, „pasuje aj na“ a inzeráty s rovnakým OEM číslom). Nie je to overený katalóg. Aj pri rovnakom modeli auta sa diely líšia podľa motora, výbavy či roku – pred kúpou preto porovnajte <b>číslo dielu (OEM)</b> s pôvodným dielom.</li>
+        <li>Katalóg značiek, modelov a motorizácií je pomôcka na hľadanie, zostavená bez licencovaných dát, a môže obsahovať chyby.</li>
       </ul>
 
       <h2>3. Podnikateľ alebo súkromná osoba – vyhlásenie predajcu</h2>
@@ -41,8 +42,17 @@ export default function Page() {
         <li>Predajca zodpovedá za obsah inzerátu, fotky (musia byť jeho alebo ich smie použiť) a za vybavenie reklamácie.</li>
         <li>Autorské práva k fotkám a textom ostávajú predajcovi. Zverejnením inzerátu udeľuje prevádzkovateľovi bezplatný, nevýhradný súhlas ich zobrazovať na portáli, zmenšovať a upravovať ich formát (napr. náhľady) po dobu, kým je inzerát na portáli. Zmazaním inzerátu alebo účtu súhlas zaniká.</li>
         <li>Predajca neposiela kupujúcim nevyžiadanú reklamu a kontakty kupujúcich (zo správ aj z dopytov na diely) používa len na ponuku a dohodu o danom diele.</li>
-        <li>VIN darcovského auta, ktorý predajca zadá v portáli, je neverejný a predajca ho smie zadať len pre svoju evidenciu.</li>
+        <li>VIN vozidla na diely alebo havarovaného vozidla, ktorý predajca zadá v portáli, je neverejný; portál ho kupujúcim nezobrazuje a predajca ho zadáva len pre svoju evidenciu.</li>
+        <li>Pri pneumatikách a diskoch predajca uvádza rozmery a parametre (napr. šírka, profil, priemer, rozteč, ET) podľa skutočnosti a pri pneumatikách aj hĺbku dezénu a rok výroby (DOT), ak ich pozná.</li>
         <li>Prístup k účtu chráni heslom a nezdieľa ho.</li>
+      </ul>
+
+      <h2>3a1. Predaj celých vozidiel</h2>
+      <ul>
+        <li>Celé vozidlá sa na portáli predávajú len ako <b>havarované, nepojazdné, po požiari alebo povodni alebo určené na diely</b>. Bežné jazdené vozidlá sem nepatria a môžeme ich skryť.</li>
+        <li>Predajca smie ponúkať len vozidlo, ktoré vlastní alebo ktoré smie predať. Zakázané sú kradnuté vozidlá, vozidlá s pozmeneným identifikačným číslom (VIN) a vozidlá, ktorých predaj zakazuje zákon. Kupujúcemu na požiadanie umožní porovnať VIN na vozidle s dokladmi.</li>
+        <li>Predajca pravdivo uvedie stav, rozsah poškodenia, najazdené kilometre a doklady (prihlásené, odhlásené, bez dokladov). Vozidlo bez dokladov sa ponúka len na diely.</li>
+        <li>Vozidlo, ktoré je odpadom (staré vozidlo), smie držiteľ odovzdať len osobe oprávnenej na spracovanie starých vozidiel podľa zákona č. 79/2015 Z. z. o odpadoch. Za dodržanie týchto pravidiel, prepis vozidla a ďalšie povinnosti voči úradom zodpovedajú predajca a kupujúci, nie prevádzkovateľ.</li>
       </ul>
 
       <h2>3b. Údaje predajcu a prístup k nim</h2>
@@ -75,8 +85,13 @@ export default function Page() {
       <h2>5. Poplatky</h2>
       <p>Registrácia, inzeráty aj zvýraznenie TOP (najviac 3 inzeráty naraz na 30 dní) sú počas skúšobnej prevádzky zadarmo. Ak zavedieme platené služby, oznámime to vopred a bez súhlasu predajcu nič nespoplatníme.</p>
 
-      <h2>6. Zodpovednosť</h2>
-      <p>Prevádzkovateľ nezodpovedá za obsah inzerátov, správnosť údajov od predajcov, kvalitu dielov ani za priebeh obchodu medzi predajcom a kupujúcim. Neposielajte zálohy neznámym predajcom. Portál sa snažíme prevádzkovať bez výpadkov, nezaručujeme však nepretržitú dostupnosť.</p>
+      <h2 id="zodpovednost">6. Zodpovednosť – portál je len inzertný</h2>
+      <ul>
+        <li>autosuciastky.eu je <b>inzertný portál</b>. Prevádzkovateľ {OPERATOR.name} uchováva a zobrazuje inzeráty, ktoré pridávajú predajcovia (služba „hostingu“ podľa čl. 6 nariadenia (EÚ) 2022/2065). Diely ani vozidlá nepredáva, nekupuje, neskladuje, neoveruje ich stav ani pôvod a nie je stranou kúpnej zmluvy.</li>
+        <li>Za obsah inzerátu, správnosť údajov (aj čísla dielu, zhody s vozidlom, parametrov, kilometrov a dokladov), za vady tovaru, <b>reklamácie</b>, vrátenie peňazí, odstúpenie od zmluvy a doručenie <b>zodpovedá predajca</b>. Reklamáciu a ďalšie nároky z kúpy uplatňuje kupujúci priamo u predajcu.</li>
+        <li>Prevádzkovateľ preto nezodpovedá za chyby v inzerátoch, za kvalitu a vady dielov a vozidiel, za to, či diel pasuje na vozidlo kupujúceho, ani za priebeh a následky obchodu medzi predajcom a kupujúcim – v rozsahu, v akom to dovoľujú právne predpisy. Ak sa dozvie o nezákonnom inzeráte (napr. z nahlásenia), bez zbytočného odkladu ho posúdi a prípadne skryje.</li>
+        <li>Neposielajte zálohy neznámym predajcom a diel alebo vozidlo si pred zaplatením pozrite. Portál sa snažíme prevádzkovať bez výpadkov, nezaručujeme však nepretržitú dostupnosť.</li>
+      </ul>
 
       <h2>7. Zrušenie účtu</h2>
       <p>Predajca môže účet kedykoľvek zrušiť v portáli (Profil → Zrušiť účet). Zmažú sa jeho inzeráty, fotky, správy a osobné údaje podľa <a href="/ochrana-osobnych-udajov">zásad ochrany osobných údajov</a>. Pred zrušením si môže údaje stiahnuť (Profil → Moje údaje).</p>

@@ -57,7 +57,7 @@ export default function Auth() {
         <button type="button" role="tab" aria-selected={mode === "in"} onClick={() => { setMode("in"); setErr(""); setOk(""); }}>Prihlásiť sa</button>
         <button type="button" role="tab" aria-selected={mode === "up"} onClick={() => { setMode("up"); setErr(""); setOk(""); }}>Registrácia</button>
       </div>
-      {mode === "up" && <ul className="pp-why"><li>Inzeráty zadarmo, bez provízie z predaja</li><li>Kupujúci vám volajú alebo píšu priamo</li><li>Hromadný import skladu z CSV a diely z darcovského auta naraz</li></ul>}
+      {mode === "up" && <ul className="pp-why"><li>Inzeráty zadarmo, bez provízie z predaja</li><li>Kupujúci vám volajú alebo píšu priamo</li><li>Hromadný import skladu z CSV a diely z rozoberaného auta naraz</li></ul>}
       <form className="pp-form" onSubmit={submit} noValidate>
         {mode === "up" && <fieldset className="pp-type">
           <legend>Ako predávate?</legend>
@@ -76,7 +76,7 @@ export default function Auth() {
         {mode === "up" && type && <label className="pp-chk"><input type="checkbox" checked={decl} onChange={(e) => setDecl(e.target.checked)} /> <span>{firm
           ? "Vyhlasujem, že diely predávam ako podnikateľ (obchodník) a uvedené údaje sú pravdivé. Kupujúcim – spotrebiteľom zodpovedám za vady a pri predaji na diaľku majú právo odstúpiť od zmluvy do 14 dní."
           : "Vyhlasujem, že diely nepredávam v rámci podnikania. Ak by som predával pravidelne za účelom zisku, zaregistrujem sa ako podnikateľ."}</span></label>}
-        {mode === "up" && <label className="pp-chk"><input type="checkbox" checked={agree} onChange={(e) => setAgree(e.target.checked)} /> <span>Mám aspoň 18 rokov a súhlasím s <a href="/obchodne-podmienky" target="_blank">obchodnými podmienkami</a>. Beriem na vedomie, že {OPERATOR.name} spracúva moje údaje podľa <a href="/ochrana-osobnych-udajov" target="_blank">zásad ochrany osobných údajov</a> a že moje meno alebo obchodné meno, typ predajcu, mesto a telefón z inzerátu (pri podnikateľovi aj IČO a sídlo) budú verejné a nájdu sa aj cez vyhľadávače. Telefón sa zobrazí až po kliknutí. E-mail verejný nebude.</span></label>}
+        {mode === "up" && <label className="pp-chk"><input type="checkbox" checked={agree} onChange={(e) => setAgree(e.target.checked)} /> <span>Mám aspoň 18 rokov a súhlasím s <a href="/obchodne-podmienky" target="_blank">obchodnými podmienkami</a>. Beriem na vedomie, že {OPERATOR.name} spracúva moje údaje podľa <a href="/ochrana-osobnych-udajov" target="_blank">zásad ochrany osobných údajov</a> a že moje meno alebo obchodné meno, typ predajcu, mesto a telefón z inzerátu (pri podnikateľovi aj IČO a sídlo) budú verejné a nájdu sa aj cez vyhľadávače. Telefón sa zobrazí až po kliknutí. E-mail verejný nebude. Beriem na vedomie, že autosuciastky.eu je inzertný portál: <b>za svoje inzeráty, tovar, jeho vady a reklamácie zodpovedám ja</b> ako predajca a {OPERATOR.name} nie je stranou mojich zmlúv s kupujúcimi.</span></label>}
         {err && <p className="pp-err" role="alert">{err}</p>}
         {ok && <p className="pp-ok" role="status">{ok}</p>}
         <button className="btn" disabled={busy}>{busy ? "Čakajte…" : mode === "up" ? "Vytvoriť účet" : mode === "reset" ? "Poslať odkaz" : "Prihlásiť sa"}</button>

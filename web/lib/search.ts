@@ -1,5 +1,6 @@
 // Hľadanie a zhoda dielov s autami. Rovnaká logika ako v prototype a ako funkcia listing_vehicles v databáze.
 import type { Catalog, Filters, Listing, Vehicle } from "./types";
+import { cleanSpecs } from "./types";
 
 /** Normalizované OEM: bez medzier, pomlčiek a iných znakov, veľkými písmenami (ako stĺpec oem_key). */
 export function oemKey(oem: string | null | undefined): string {
@@ -69,6 +70,8 @@ export function search(listings: Listing[], f: Filters, cat: Catalog, favs: numb
     if (withCat && f.sub != null && l.subcategoryId !== f.sub) return false;
     if (f.year != null && own && l.year !== f.year) return false;
     if (f.cond && l.condition !== f.cond) return false;
+    if (f.vtype && (cat.models.find((m) => m.id === l.modelId)?.vehicleType || "osobne") !== f.vtype) return false;
+    if (f.specs && Object.entries(cleanSpecs(f.specs)).some(([k, v]) => v && (l.specs as Record<string, string | undefined>)?.[k] !== v)) return false;
     if (f.city && l.city !== f.city) return false;
     if (f.max != null && l.price > f.max) return false;
     if (f.fav && !favs.includes(l.id)) return false;

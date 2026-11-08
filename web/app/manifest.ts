@@ -3,8 +3,8 @@ import type { MetadataRoute } from "next";
 // Web sa dá pridať na plochu mobilu ako aplikácia (ikona, celá obrazovka, skratky).
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Rozoberačka – použité autodiely",
-    short_name: "Rozoberačka",
+    name: "autosuciastky.eu – použité autodiely",
+    short_name: "autosuciastky.eu",
     description: "Použité autodiely z vrakovísk presne na vaše auto.",
     lang: "sk",
     start_url: "/",

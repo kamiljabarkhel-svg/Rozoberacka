@@ -23,7 +23,7 @@ export async function mfaState(): Promise<MfaState> {
 export async function enrollTotp(): Promise<{ factorId: string; qr: string; secret: string }> {
   const fs = await c().auth.mfa.listFactors();
   for (const f of fs.data?.all || []) if (f.status !== "verified") await c().auth.mfa.unenroll({ factorId: f.id }); // staré nedokončené pokusy
-  const r = await c().auth.mfa.enroll({ factorType: "totp", friendlyName: "Rozoberačka " + new Date().toLocaleDateString("sk-SK"), issuer: "Rozoberačka" });
+  const r = await c().auth.mfa.enroll({ factorType: "totp", friendlyName: "autosuciastky.eu " + new Date().toLocaleDateString("sk-SK"), issuer: "autosuciastky.eu" });
   if (r.error || !r.data) throw new Error(skError(r.error || { message: "Nepodarilo sa začať nastavenie" }));
   return { factorId: r.data.id, qr: r.data.totp.qr_code, secret: r.data.totp.secret };
 }
@@ -36,12 +36,15 @@ export async function verifyTotp(factorId: string, code: string): Promise<void> 
 }
 export async function adminStats(): Promise<Record<string, number>> { return must(await c().rpc("admin_stats")) as Record<string, number>; }
 
-export type Report = { id: number; listingId: number; listingName: string; listingStatus: string; reason: string; note: string; contact: string; status: string; createdAt: string };
+export type Report = { id: number; listingId: number; carId: number | null; listingName: string; listingStatus: string; reason: string; note: string; contact: string; status: string; createdAt: string };
 export async function reports(status: string): Promise<Report[]> {
-  let q = c().from("reports").select("id,listing_id,reason,note,contact,status,created_at,listings(name,status)").order("created_at", { ascending: false }).limit(200);
-  if (status) q = q.eq("status", status);
-  return (must(await q) as Row[]).map((r) => ({
-    id: Number(r.id), listingId: Number(r.listing_id), listingName: String((r.listings as Row)?.name || "zmazaný"), listingStatus: String((r.listings as Row)?.status || ""),
+  const run = (sel: string) => { let q = c().from("reports").select(sel).order("created_at", { ascending: false }).limit(200); if (status) q = q.eq("status", status); return q; };
+  let res: { data: unknown; error: { message: string } | null } = await run("id,listing_id,car_id,reason,note,contact,status,created_at,listings(name,status),car_listings(year,status)");
+  if (res.error && /car_id|car_listings/.test(res.error.message)) res = await run("id,listing_id,reason,note,contact,status,created_at,listings(name,status)"); // pred migráciou 19
+  return (must(res as never) as Row[]).map((r) => ({
+    id: Number(r.id), listingId: Number(r.listing_id || 0), carId: (r.car_id as number) ?? null,
+    listingName: r.car_id ? `Celé vozidlo #${r.car_id}${(r.car_listings as Row)?.year ? ", " + (r.car_listings as Row).year : ""}` : String((r.listings as Row)?.name || "zmazaný"),
+    listingStatus: String((r.car_id ? (r.car_listings as Row)?.status : (r.listings as Row)?.status) || ""),
     reason: String(r.reason), note: String(r.note || ""), contact: String(r.contact || ""), status: String(r.status), createdAt: String(r.created_at),
   }));
 }
@@ -67,6 +70,11 @@ export async function listings(q: string, status: string): Promise<AdminListing[
 export async function setListing(id: number, block: boolean, note: string) {
   must(await c().rpc("admin_set_listing", { p_listing: id, p_block: block, p_note: note }));
   fetch("/api/obnovit", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ids: [id] }) }).catch(() => {}); // skrytý inzerát hneď zmizne
+}
+
+export async function setCar(id: number, block: boolean, note: string) {
+  must(await c().rpc("admin_set_car", { p_id: id, p_block: block, p_note: note }));
+  fetch("/api/obnovit", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ids: [id] }) }).catch(() => {});
 }
 
 export type LogRow = { id: number; action: string; target: string; detail: string; createdAt: string };

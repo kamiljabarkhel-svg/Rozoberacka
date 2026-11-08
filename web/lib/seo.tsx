@@ -1,11 +1,11 @@
 // Pomôcky pre vyhľadávače: adresa webu, „slug“ adries, názvy stránok a štruktúrované údaje.
-import type { Catalog, Listing } from "./types";
+import type { CarListing, Catalog, Listing } from "./types";
 import { OPERATOR } from "./operator";
 
 /** Verejná adresa webu. Na Verceli sa doplní sama; po kúpe domény nastaviť NEXT_PUBLIC_SITE_URL. */
 export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL
   || (process.env.VERCEL_PROJECT_PRODUCTION_URL ? "https://" + process.env.VERCEL_PROJECT_PRODUCTION_URL : "http://localhost:3000")).replace(/\/$/, "");
-export const SITE_NAME = "Rozoberačka";
+export const SITE_NAME = "autosuciastky.eu";
 
 /** „Predné ľavé svetlo LED“ → „predne-lave-svetlo-led“. */
 export function slugify(s: string): string {
@@ -158,4 +158,29 @@ export function JsonLd({ data }: { data: unknown }) {
 export function cut(s: string, n = 155): string {
   const t = s.replace(/\s+/g, " ").trim();
   return t.length <= n ? t : t.slice(0, n - 1).replace(/\s+\S*$/, "") + "…";
+}
+
+// ---------- havarované vozidlá ----------
+/** „Škoda Octavia III, 2014“ (bez motora). */
+export function vehicleTitle(c: { brandId: number; modelId: number | null; year: number }, cat: Catalog | null): string {
+  const b = cat?.brands.find((x) => x.id === c.brandId)?.name || "";
+  const m = c.modelId ? cat?.models.find((x) => x.id === c.modelId)?.name || "" : "";
+  return `${[b, m].filter(Boolean).join(" ")}, ${c.year}`;
+}
+/** /vozidlo/12-skoda-octavia-iii-2014-havarovane */
+export function vehiclePath(id: number, title = "", condition = ""): string {
+  const s = slugify(`${title} ${condition.split(" ")[0] || ""}`);
+  return `/vozidlo/${id}${s ? "-" + s : ""}`;
+}
+export function vehicleLd(c: CarListing, title: string, path: string) {
+  return {
+    "@context": "https://schema.org", "@type": "Product", name: `${title} – ${c.condition}`, sku: "a" + c.id,
+    description: c.description, ...(c.photos.length ? { image: c.photos } : {}),
+    category: "Havarované a nepojazdné vozidlá",
+    offers: {
+      "@type": "Offer", url: SITE_URL + path, price: c.price.toFixed(2), priceCurrency: "EUR", availability: "https://schema.org/InStock",
+      itemCondition: "https://schema.org/DamagedCondition",
+      seller: { "@type": c.seller.type === "Firma" ? "Organization" : "Person", name: c.seller.name },
+    },
+  };
 }

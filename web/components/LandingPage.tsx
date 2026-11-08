@@ -89,8 +89,8 @@ export default async function LandingPage({ x }: { x: Landing }) {
       <Crumbs items={crumbs.slice(0, -1)} last={crumbs[crumbs.length - 1]?.name} />
       <h1>{title}</h1>
       <p className="landing-lead">
-        {res.total ? <>{x.city ? <>V meste {x.city} {jeSu(res.total)} na Rozoberačke {pieces(res.total)} od miestnych vrakovísk a predajcov – diel si môžete prevziať osobne. </>
-          : <>Na Rozoberačke {jeSu(res.total)} {pieces(res.total)}{car ? ` na auto ${car}` : ""} od vrakovísk a predajcov z celého Slovenska. </>}
+        {res.total ? <>{x.city ? <>V meste {x.city} {jeSu(res.total)} na autosuciastky.eu {pieces(res.total)} od miestnych vrakovísk a predajcov – diel si môžete prevziať osobne. </>
+          : <>Na autosuciastky.eu {jeSu(res.total)} {pieces(res.total)}{car ? ` na auto ${car}` : ""} od vrakovísk a predajcov z celého Slovenska. </>}
         Zoznam zahŕňa aj diely, ktoré podľa predajcov pasujú cez rovnaké OEM číslo. Predajcovi zavoláte bez registrácie – pred kúpou porovnajte OEM číslo so starým dielom.</>
           : <>Zatiaľ tu nie sú žiadne ponuky. Nové diely pribúdajú každý deň – zadajte dopyt a predajcovia sa vám ozvú sami.</>}
       </p>

@@ -42,9 +42,10 @@ export default function Header() {
 
   const Brand = STATIC_PREVIEW ? "a" : Link;
   return (
+    <>
     <header className="site-header">
       <div className="tb">
-        <Brand className="brand" href={homeHref}><Icon id="i-pr" />Rozoberačka</Brand>
+        <Brand className="brand" href={homeHref}><Icon id="i-pr" />autosuciastky.eu</Brand>
         <form className="gs" role="search" onSubmit={(e) => { e.preventDefault(); send(q, true); }}>
           <HeaderSearch value={q} onChange={(v) => { setQ(v); if (onHome) send(v, false); }} onPick={pick} />
         </form>
@@ -53,5 +54,12 @@ export default function Header() {
         </div>
       </div>
     </header>
+      {!STATIC_PREVIEW && <nav className="snav" aria-label="Sekcie">
+        <Link href="/" aria-current={path === "/" ? "page" : undefined}>Autodiely</Link>
+        <Link href="/?kat=kol#vysledky">Pneumatiky a disky</Link>
+        <Link href="/havarovane-vozidla" aria-current={path?.startsWith("/havarovane-vozidla") || path?.startsWith("/vozidlo/") ? "page" : undefined}>Havarované vozidlá</Link>
+        <Link href="/dopyt" aria-current={path?.startsWith("/dopyt") ? "page" : undefined}>Dopyt na diel</Link>
+      </nav>}
+    </>
   );
 }

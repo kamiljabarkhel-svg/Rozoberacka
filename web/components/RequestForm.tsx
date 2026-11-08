@@ -3,11 +3,13 @@
 // Ponuky uvidí na súkromnej adrese /dopyt/<kód>, ktorú si uloží (pamätáme si ju aj v tomto prehliadači).
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import type { Catalog } from "@/lib/types";
+import type { Catalog, VehicleType } from "@/lib/types";
+import { VEHICLE_TYPES } from "@/lib/types";
 import { IS_DEMO, createRequest, getCatalog } from "@/lib/data";
 import { decodeVin } from "@/lib/vin";
 import { sk } from "@/lib/format";
 import ScanText from "./ScanText";
+import Disclaimer from "./Disclaimer";
 
 const KEY = "rozoberacka-dopyty";
 export type SavedReq = { token: string; part: string; car: string; at: string };
@@ -24,8 +26,20 @@ export default function RequestForm() {
     getCatalog().then(setCat).catch((e) => setErr(String(e.message || e))); setMine(readReqs());
     try { const s = new URLSearchParams(window.location.search); setV((o) => ({ ...o, brand: Number(s.get("znacka")) || 0, model: Number(s.get("model")) || 0, part: (s.get("diel") || s.get("q") || "").slice(0, 120) })); } catch {}
   }, []);
-  const brands = useMemo(() => (cat ? [...cat.brands].sort((a, b) => sk(a.name, b.name)) : []), [cat]);
-  const models = cat?.models.filter((m) => m.brandId === v.brand) || [];
+  const [vt, setVt] = useState<VehicleType>("osobne");
+  const vtm = (m: { vehicleType?: VehicleType }) => (m.vehicleType || "osobne") === vt;
+  // auto z adresy (napr. z úvodu pre nákladné auto) → nastav aj druh vozidla
+  useEffect(() => {
+    if (!cat || !v.brand) return;
+    const m = cat.models.find((x) => x.id === v.model) || cat.models.find((x) => x.brandId === v.brand && (x.vehicleType || "osobne") === vt) || cat.models.find((x) => x.brandId === v.brand);
+    if (m && (m.vehicleType || "osobne") !== vt) setVt(m.vehicleType || "osobne");
+  }, [cat]); // eslint-disable-line react-hooks/exhaustive-deps
+  const brands = useMemo(() => {
+    if (!cat) return [];
+    const ids = new Set(cat.models.filter((m) => (m.vehicleType || "osobne") === vt).map((m) => m.brandId));
+    return cat.brands.filter((b) => ids.has(b.id)).sort((a, b) => sk(a.name, b.name));
+  }, [cat, vt]);
+  const models = cat?.models.filter((m) => m.brandId === v.brand && vtm(m)) || [];
   const model = models.find((m) => m.id === v.model);
   const engines = cat?.engines.filter((e) => e.modelId === v.model) || [];
   const years: number[] = []; for (let y = Math.min(model?.yearTo ?? new Date().getFullYear(), new Date().getFullYear()); y >= (model?.yearFrom ?? 1990); y--) years.push(y);
@@ -70,7 +84,8 @@ export default function RequestForm() {
       {mine.length > 0 && <div className="saved"><b>Moje dopyty</b>{mine.map((r) => <Link key={r.token} className="chip" href={"/dopyt/" + r.token}>{r.part}{r.car ? ` · ${r.car}` : ""}</Link>)}</div>}
       <form className="pp-form pp-grid pp-card" onSubmit={submit} noValidate>
         {IS_DEMO && <p className="full pp-err">Ukážkový režim: dopyt sa nedá odoslať.</p>}
-        <h2 className="full rq-h">Auto</h2>
+        <h2 className="full rq-h">Vozidlo</h2>
+        <div className="full pp-vt" role="radiogroup" aria-label="Druh vozidla">{VEHICLE_TYPES.map((t) => <button key={t.id} type="button" role="radio" aria-checked={vt === t.id} className={vt === t.id ? "on" : ""} onClick={() => { if (t.id !== vt) { setVt(t.id); set({ brand: 0, model: 0, engine: 0, year: 0 }); } }}>{t.short}</button>)}</div>
         <label className="full">VIN (nepovinné – pomôže predajcovi nájsť presný diel)<span className="oemin"><input value={v.vin} maxLength={20} onChange={(e) => onVin(e.target.value)} placeholder="napr. TMBJJ7NE0G0123456" autoComplete="off" />
           <ScanText kind="vin" onResult={(x) => onVin(x)} /></span></label>
         <label>Značka *<select value={v.brand || ""} onChange={(e) => set({ brand: Number(e.target.value), model: 0, engine: 0, year: 0 })}><option value="">Vyberte…</option>{brands.map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}</select></label>
@@ -79,15 +94,16 @@ export default function RequestForm() {
         <label>Ročník<select value={v.year || ""} onChange={(e) => set({ year: Number(e.target.value) })}><option value="">Neviem</option>{years.map((y) => <option key={y}>{y}</option>)}</select></label>
         <h2 className="full rq-h">Diel</h2>
         <label className="full">Aký diel hľadáte? *<input value={v.part} maxLength={120} onChange={(e) => set({ part: e.target.value })} placeholder="napr. ľavé predné svetlo LED, OEM 5E1941015" /></label>
-        <label>Kategória<select value={v.cat} onChange={(e) => set({ cat: e.target.value })}><option value="">Neviem</option>{cat?.categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}</select></label>
+        <label>Kategória<select value={v.cat} onChange={(e) => set({ cat: e.target.value })}><option value="">Neviem</option>{cat?.categories.filter((c) => !c.vtypes?.length || c.vtypes.includes(vt)).map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}</select></label>
         <label>Mesto<input value={v.city} maxLength={60} onChange={(e) => set({ city: e.target.value })} placeholder="kde diel prevezmete" /></label>
         <label className="full">Poznámka<textarea value={v.note} maxLength={500} rows={3} onChange={(e) => set({ note: e.target.value })} placeholder="farba, strana, stav, termín…" /></label>
         <h2 className="full rq-h">Kontakt</h2>
         <label>Meno *<input value={v.name} maxLength={80} onChange={(e) => set({ name: e.target.value })} autoComplete="name" /></label>
         <label>Telefón alebo e-mail *<input value={v.contact} maxLength={120} onChange={(e) => set({ contact: e.target.value })} autoComplete="tel" /></label>
         <label className="pp-chk full"><input type="checkbox" checked={agree} onChange={(e) => setAgree(e.target.checked)} />
-          <span>Súhlasím, aby môj dopyt vrátane mena a kontaktu videli registrovaní predajcovia na Rozoberačke a ozvali sa mi s ponukou. Dopyt sa po 60 dňoch zmaže. <a href="/ochrana-osobnych-udajov" target="_blank">Ochrana osobných údajov</a></span></label>
+          <span>Súhlasím, aby môj dopyt vrátane mena a kontaktu videli registrovaní predajcovia na autosuciastky.eu a ozvali sa mi s ponukou. Dopyt sa po 60 dňoch zmaže. <a href="/ochrana-osobnych-udajov" target="_blank">Ochrana osobných údajov</a></span></label>
         {err && <p className="full pp-err" role="alert">{err}</p>}
+        <div className="full"><Disclaimer kind="short" /></div>
         <div className="full pp-actions"><button className="btn" disabled={busy || IS_DEMO}>{busy ? "Odosielam…" : "Odoslať dopyt predajcom"}</button></div>
       </form>
     </>

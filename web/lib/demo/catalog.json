@@ -1,60 +1,149 @@
 {
- "source": "supabase/02_kategorie.sql + 03_katalog.sql + 09_katalog_opravy.sql + 16_katalog_europa.sql",
+ "source": "supabase/02 + 18 (kategórie), 03 + 09 + 16 + 17 + 20 (katalóg)",
  "categories": [
   {
    "id": "motor",
    "name": "Motor",
-   "sort": 4
+   "sort": 4,
+   "vtypes": null
   },
   {
    "id": "pr",
    "name": "Prevodovka",
-   "sort": 6
+   "sort": 6,
+   "vtypes": null
   },
   {
    "id": "kar",
    "name": "Karoséria",
-   "sort": 1
+   "sort": 1,
+   "vtypes": null
   },
   {
    "id": "sv",
    "name": "Svetlá",
-   "sort": 2
+   "sort": 2,
+   "vtypes": null
   },
   {
    "id": "kol",
-   "name": "Kolesá a disky",
-   "sort": 5
+   "name": "Pneumatiky a disky",
+   "sort": 5,
+   "vtypes": null
   },
   {
    "id": "el",
    "name": "Elektro",
-   "sort": 3
+   "sort": 3,
+   "vtypes": null
   },
   {
    "id": "pod",
    "name": "Podvozok a riadenie",
-   "sort": 7
+   "sort": 7,
+   "vtypes": null
   },
   {
    "id": "brz",
    "name": "Brzdy",
-   "sort": 9
+   "sort": 9,
+   "vtypes": null
   },
   {
    "id": "chl",
    "name": "Chladenie a klimatizácia",
-   "sort": 8
+   "sort": 8,
+   "vtypes": null
   },
   {
    "id": "pal",
    "name": "Palivo a výfuk",
-   "sort": 10
+   "sort": 10,
+   "vtypes": null
   },
   {
    "id": "int",
    "name": "Interiér",
-   "sort": 11
+   "sort": 11,
+   "vtypes": [
+    "osobne",
+    "dodavky",
+    "nakladne",
+    "autobusy"
+   ]
+  },
+  {
+   "id": "bez",
+   "name": "Airbagy a bezpečnosť",
+   "sort": 12,
+   "vtypes": null
+  },
+  {
+   "id": "mm",
+   "name": "Audio, navigácia a multimédiá",
+   "sort": 13,
+   "vtypes": null
+  },
+  {
+   "id": "ev",
+   "name": "Hybrid a elektropohon",
+   "sort": 14,
+   "vtypes": null
+  },
+  {
+   "id": "vyb",
+   "name": "Príslušenstvo a výbava",
+   "sort": 15,
+   "vtypes": null
+  },
+  {
+   "id": "nad",
+   "name": "Nadstavby a hydraulika",
+   "sort": 16,
+   "vtypes": [
+    "dodavky",
+    "nakladne"
+   ]
+  },
+  {
+   "id": "bus",
+   "name": "Vybavenie autobusu",
+   "sort": 17,
+   "vtypes": [
+    "autobusy"
+   ]
+  },
+  {
+   "id": "mrm",
+   "name": "Rám, kapotáž a sedlo",
+   "sort": 18,
+   "vtypes": [
+    "motorky"
+   ]
+  },
+  {
+   "id": "mpo",
+   "name": "Pohon a reťaz",
+   "sort": 19,
+   "vtypes": [
+    "motorky"
+   ]
+  },
+  {
+   "id": "mri",
+   "name": "Riadidlá a ovládanie",
+   "sort": 20,
+   "vtypes": [
+    "motorky"
+   ]
+  },
+  {
+   "id": "mvi",
+   "name": "Vidlice a tlmiče",
+   "sort": 21,
+   "vtypes": [
+    "motorky"
+   ]
   }
  ],
  "subcategories": [
@@ -375,6 +464,1248 @@
    "categoryId": "int",
    "name": "Pásy",
    "sort": 5
+  },
+  {
+   "id": 54,
+   "categoryId": "kar",
+   "name": "Prahy a podlahy",
+   "sort": 20
+  },
+  {
+   "id": 55,
+   "categoryId": "kar",
+   "name": "Strechy a strešné okná",
+   "sort": 21
+  },
+  {
+   "id": 56,
+   "categoryId": "kar",
+   "name": "Zámky a kľučky",
+   "sort": 22
+  },
+  {
+   "id": 57,
+   "categoryId": "kar",
+   "name": "Lišty a spojlery",
+   "sort": 23
+  },
+  {
+   "id": 58,
+   "categoryId": "kar",
+   "name": "Výstuhy nárazníkov",
+   "sort": 24
+  },
+  {
+   "id": 59,
+   "categoryId": "kar",
+   "name": "Predné čelá a nosníky chladiča",
+   "sort": 25
+  },
+  {
+   "id": 60,
+   "categoryId": "kar",
+   "name": "Podbehy",
+   "sort": 26
+  },
+  {
+   "id": 61,
+   "categoryId": "kar",
+   "name": "Kryty motora a podvozku",
+   "sort": 27
+  },
+  {
+   "id": 62,
+   "categoryId": "kar",
+   "name": "Zadné panely a štvrte",
+   "sort": 28
+  },
+  {
+   "id": 63,
+   "categoryId": "kar",
+   "name": "Stĺpiky a skelet",
+   "sort": 29
+  },
+  {
+   "id": 64,
+   "categoryId": "kar",
+   "name": "Pánty a dorazy dverí",
+   "sort": 30
+  },
+  {
+   "id": 65,
+   "categoryId": "kar",
+   "name": "Mechanizmy okien",
+   "sort": 31
+  },
+  {
+   "id": 66,
+   "categoryId": "kar",
+   "name": "Tesnenia",
+   "sort": 32
+  },
+  {
+   "id": 67,
+   "categoryId": "kar",
+   "name": "Palivové dvierka",
+   "sort": 33
+  },
+  {
+   "id": 68,
+   "categoryId": "kar",
+   "name": "Emblémy a nápisy",
+   "sort": 34
+  },
+  {
+   "id": 69,
+   "categoryId": "kar",
+   "name": "Stierače a ostrekovače",
+   "sort": 35
+  },
+  {
+   "id": 70,
+   "categoryId": "kar",
+   "name": "Kabíny (nákladné)",
+   "sort": 36
+  },
+  {
+   "id": 71,
+   "categoryId": "kar",
+   "name": "Rámy a podvozky (nákladné)",
+   "sort": 37
+  },
+  {
+   "id": 72,
+   "categoryId": "sv",
+   "name": "Brzdové svetlá",
+   "sort": 20
+  },
+  {
+   "id": 73,
+   "categoryId": "sv",
+   "name": "Denné svietenie",
+   "sort": 21
+  },
+  {
+   "id": 74,
+   "categoryId": "sv",
+   "name": "Osvetlenie ŠPZ",
+   "sort": 22
+  },
+  {
+   "id": 75,
+   "categoryId": "sv",
+   "name": "Vnútorné osvetlenie",
+   "sort": 23
+  },
+  {
+   "id": 76,
+   "categoryId": "sv",
+   "name": "Xenónové výbojky a zapaľovače",
+   "sort": 24
+  },
+  {
+   "id": 77,
+   "categoryId": "sv",
+   "name": "LED a xenónové moduly",
+   "sort": 25
+  },
+  {
+   "id": 78,
+   "categoryId": "sv",
+   "name": "Riadiace jednotky svetiel",
+   "sort": 26
+  },
+  {
+   "id": 79,
+   "categoryId": "sv",
+   "name": "Pracovné a výstražné svetlá",
+   "sort": 27
+  },
+  {
+   "id": 80,
+   "categoryId": "sv",
+   "name": "Odrazky",
+   "sort": 28
+  },
+  {
+   "id": 81,
+   "categoryId": "sv",
+   "name": "Ostrekovače svetlometov",
+   "sort": 29
+  },
+  {
+   "id": 82,
+   "categoryId": "el",
+   "name": "Snímače a senzory",
+   "sort": 20
+  },
+  {
+   "id": 83,
+   "categoryId": "el",
+   "name": "Poistkové skrine a relé",
+   "sort": 21
+  },
+  {
+   "id": 84,
+   "categoryId": "el",
+   "name": "Motorčeky stieračov",
+   "sort": 22
+  },
+  {
+   "id": 85,
+   "categoryId": "el",
+   "name": "Motorčeky okien",
+   "sort": 23
+  },
+  {
+   "id": 86,
+   "categoryId": "el",
+   "name": "Akumulátory 12 V / 24 V",
+   "sort": 24
+  },
+  {
+   "id": 87,
+   "categoryId": "el",
+   "name": "Zapaľovacie cievky",
+   "sort": 25
+  },
+  {
+   "id": 88,
+   "categoryId": "el",
+   "name": "Zapaľovacie a žeraviace sviečky",
+   "sort": 26
+  },
+  {
+   "id": 89,
+   "categoryId": "el",
+   "name": "Klaksóny",
+   "sort": 27
+  },
+  {
+   "id": 90,
+   "categoryId": "el",
+   "name": "Centrálne zamykanie",
+   "sort": 28
+  },
+  {
+   "id": 91,
+   "categoryId": "el",
+   "name": "Kľúče a imobilizéry",
+   "sort": 29
+  },
+  {
+   "id": 92,
+   "categoryId": "el",
+   "name": "Komfortné jednotky (BCM)",
+   "sort": 30
+  },
+  {
+   "id": 93,
+   "categoryId": "el",
+   "name": "Ovládače na volante",
+   "sort": 31
+  },
+  {
+   "id": 94,
+   "categoryId": "el",
+   "name": "Snímače dažďa a svetla",
+   "sort": 32
+  },
+  {
+   "id": 95,
+   "categoryId": "el",
+   "name": "Tachografy",
+   "sort": 33
+  },
+  {
+   "id": 96,
+   "categoryId": "motor",
+   "name": "Bloky motora",
+   "sort": 20
+  },
+  {
+   "id": 97,
+   "categoryId": "motor",
+   "name": "Kľukové hriadele",
+   "sort": 21
+  },
+  {
+   "id": 98,
+   "categoryId": "motor",
+   "name": "Vačkové hriadele",
+   "sort": 22
+  },
+  {
+   "id": 99,
+   "categoryId": "motor",
+   "name": "Piesty a ojnice",
+   "sort": 23
+  },
+  {
+   "id": 100,
+   "categoryId": "motor",
+   "name": "Olejové čerpadlá",
+   "sort": 24
+  },
+  {
+   "id": 101,
+   "categoryId": "motor",
+   "name": "Olejové vane",
+   "sort": 25
+  },
+  {
+   "id": 102,
+   "categoryId": "motor",
+   "name": "Chladiče oleja",
+   "sort": 26
+  },
+  {
+   "id": 103,
+   "categoryId": "motor",
+   "name": "Sacie potrubia",
+   "sort": 27
+  },
+  {
+   "id": 104,
+   "categoryId": "motor",
+   "name": "Výfukové zvody",
+   "sort": 28
+  },
+  {
+   "id": 105,
+   "categoryId": "motor",
+   "name": "Škrtiace klapky",
+   "sort": 29
+  },
+  {
+   "id": 106,
+   "categoryId": "motor",
+   "name": "EGR ventily a chladiče",
+   "sort": 30
+  },
+  {
+   "id": 107,
+   "categoryId": "motor",
+   "name": "Uloženia motora",
+   "sort": 31
+  },
+  {
+   "id": 108,
+   "categoryId": "motor",
+   "name": "Veká ventilov",
+   "sort": 32
+  },
+  {
+   "id": 109,
+   "categoryId": "motor",
+   "name": "Kryty rozvodov",
+   "sort": 33
+  },
+  {
+   "id": 110,
+   "categoryId": "motor",
+   "name": "Remenice a napínače",
+   "sort": 34
+  },
+  {
+   "id": 111,
+   "categoryId": "motor",
+   "name": "Vákuové pumpy",
+   "sort": 35
+  },
+  {
+   "id": 112,
+   "categoryId": "motor",
+   "name": "Snímače motora",
+   "sort": 36
+  },
+  {
+   "id": 113,
+   "categoryId": "motor",
+   "name": "Motory s prevodovkou (sady)",
+   "sort": 37
+  },
+  {
+   "id": 114,
+   "categoryId": "pr",
+   "name": "Rozdeľovacie prevodovky",
+   "sort": 20
+  },
+  {
+   "id": 115,
+   "categoryId": "pr",
+   "name": "Diferenciály",
+   "sort": 21
+  },
+  {
+   "id": 116,
+   "categoryId": "pr",
+   "name": "Kardany",
+   "sort": 22
+  },
+  {
+   "id": 117,
+   "categoryId": "pr",
+   "name": "Radiace páky a lanká",
+   "sort": 23
+  },
+  {
+   "id": 118,
+   "categoryId": "pr",
+   "name": "Mechatroniky a riadiace jednotky prevodovky",
+   "sort": 24
+  },
+  {
+   "id": 119,
+   "categoryId": "pr",
+   "name": "Meniče momentu",
+   "sort": 25
+  },
+  {
+   "id": 120,
+   "categoryId": "pr",
+   "name": "Retardéry",
+   "sort": 26
+  },
+  {
+   "id": 121,
+   "categoryId": "pr",
+   "name": "Ložiská a hriadele prevodovky",
+   "sort": 27
+  },
+  {
+   "id": 122,
+   "categoryId": "pod",
+   "name": "Stabilizátory a tyčky",
+   "sort": 20
+  },
+  {
+   "id": 123,
+   "categoryId": "pod",
+   "name": "Riadiace tyče a čapy",
+   "sort": 21
+  },
+  {
+   "id": 124,
+   "categoryId": "pod",
+   "name": "Hrebeňové riadenie",
+   "sort": 22
+  },
+  {
+   "id": 125,
+   "categoryId": "pod",
+   "name": "Servočerpadlá",
+   "sort": 23
+  },
+  {
+   "id": 126,
+   "categoryId": "pod",
+   "name": "Elektrické posilňovače riadenia",
+   "sort": 24
+  },
+  {
+   "id": 127,
+   "categoryId": "pod",
+   "name": "Nápravnice",
+   "sort": 25
+  },
+  {
+   "id": 128,
+   "categoryId": "pod",
+   "name": "Pneumatické pruženie",
+   "sort": 26
+  },
+  {
+   "id": 129,
+   "categoryId": "pod",
+   "name": "Silentbloky",
+   "sort": 27
+  },
+  {
+   "id": 130,
+   "categoryId": "pod",
+   "name": "Listové pružiny (nákladné)",
+   "sort": 28
+  },
+  {
+   "id": 131,
+   "categoryId": "pod",
+   "name": "Nápravy (nákladné)",
+   "sort": 29
+  },
+  {
+   "id": 132,
+   "categoryId": "brz",
+   "name": "Brzdové doštičky",
+   "sort": 20
+  },
+  {
+   "id": 133,
+   "categoryId": "brz",
+   "name": "Brzdové čeľuste",
+   "sort": 21
+  },
+  {
+   "id": 134,
+   "categoryId": "brz",
+   "name": "Bubny",
+   "sort": 22
+  },
+  {
+   "id": 135,
+   "categoryId": "brz",
+   "name": "Brzdové valčeky",
+   "sort": 23
+  },
+  {
+   "id": 136,
+   "categoryId": "brz",
+   "name": "Hadice a potrubia",
+   "sort": 24
+  },
+  {
+   "id": 137,
+   "categoryId": "brz",
+   "name": "Ručná brzda a lanká",
+   "sort": 25
+  },
+  {
+   "id": 138,
+   "categoryId": "brz",
+   "name": "Elektrická parkovacia brzda",
+   "sort": 26
+  },
+  {
+   "id": 139,
+   "categoryId": "brz",
+   "name": "Posilňovače bŕzd",
+   "sort": 27
+  },
+  {
+   "id": 140,
+   "categoryId": "brz",
+   "name": "Hlavné brzdové valce",
+   "sort": 28
+  },
+  {
+   "id": 141,
+   "categoryId": "brz",
+   "name": "Snímače ABS",
+   "sort": 29
+  },
+  {
+   "id": 142,
+   "categoryId": "brz",
+   "name": "Vzduchové brzdy a kompresory",
+   "sort": 30
+  },
+  {
+   "id": 143,
+   "categoryId": "chl",
+   "name": "Kondenzátory",
+   "sort": 20
+  },
+  {
+   "id": 144,
+   "categoryId": "chl",
+   "name": "Výparníky",
+   "sort": 21
+  },
+  {
+   "id": 145,
+   "categoryId": "chl",
+   "name": "Termostaty",
+   "sort": 22
+  },
+  {
+   "id": 146,
+   "categoryId": "chl",
+   "name": "Vodné čerpadlá",
+   "sort": 23
+  },
+  {
+   "id": 147,
+   "categoryId": "chl",
+   "name": "Výmenníky kúrenia",
+   "sort": 24
+  },
+  {
+   "id": 148,
+   "categoryId": "chl",
+   "name": "Ventilátory kúrenia",
+   "sort": 25
+  },
+  {
+   "id": 149,
+   "categoryId": "chl",
+   "name": "Nezávislé kúrenie (Webasto, Eberspächer)",
+   "sort": 26
+  },
+  {
+   "id": 150,
+   "categoryId": "chl",
+   "name": "Medzichladiče (intercooler)",
+   "sort": 27
+  },
+  {
+   "id": 151,
+   "categoryId": "chl",
+   "name": "Hadice chladenia",
+   "sort": 28
+  },
+  {
+   "id": 152,
+   "categoryId": "chl",
+   "name": "Expanzné nádobky",
+   "sort": 29
+  },
+  {
+   "id": 153,
+   "categoryId": "chl",
+   "name": "Ovládacie panely klimatizácie",
+   "sort": 30
+  },
+  {
+   "id": 154,
+   "categoryId": "chl",
+   "name": "Sušiče a ventily klimatizácie",
+   "sort": 31
+  },
+  {
+   "id": 155,
+   "categoryId": "pal",
+   "name": "Vstrekovacie čerpadlá",
+   "sort": 20
+  },
+  {
+   "id": 156,
+   "categoryId": "pal",
+   "name": "Palivové lišty",
+   "sort": 21
+  },
+  {
+   "id": 157,
+   "categoryId": "pal",
+   "name": "Palivové filtre",
+   "sort": 22
+  },
+  {
+   "id": 158,
+   "categoryId": "pal",
+   "name": "Regulátory tlaku",
+   "sort": 23
+  },
+  {
+   "id": 159,
+   "categoryId": "pal",
+   "name": "AdBlue systém",
+   "sort": 24
+  },
+  {
+   "id": 160,
+   "categoryId": "pal",
+   "name": "Lambda sondy",
+   "sort": 25
+  },
+  {
+   "id": 161,
+   "categoryId": "pal",
+   "name": "Tlmiče výfuku",
+   "sort": 26
+  },
+  {
+   "id": 162,
+   "categoryId": "pal",
+   "name": "Výfukové koncovky",
+   "sort": 27
+  },
+  {
+   "id": 163,
+   "categoryId": "pal",
+   "name": "LPG a CNG zariadenia",
+   "sort": 28
+  },
+  {
+   "id": 164,
+   "categoryId": "pal",
+   "name": "Vzduchové filtre a boxy",
+   "sort": 29
+  },
+  {
+   "id": 165,
+   "categoryId": "pal",
+   "name": "Plniace hrdlá",
+   "sort": 30
+  },
+  {
+   "id": 166,
+   "categoryId": "int",
+   "name": "Zadné sedadlá",
+   "sort": 20
+  },
+  {
+   "id": 167,
+   "categoryId": "int",
+   "name": "Opierky hlavy",
+   "sort": 21
+  },
+  {
+   "id": 168,
+   "categoryId": "int",
+   "name": "Stropy",
+   "sort": 22
+  },
+  {
+   "id": 169,
+   "categoryId": "int",
+   "name": "Slnečné clony",
+   "sort": 23
+  },
+  {
+   "id": 170,
+   "categoryId": "int",
+   "name": "Koberce a podlahy",
+   "sort": 24
+  },
+  {
+   "id": 171,
+   "categoryId": "int",
+   "name": "Stredové konzoly",
+   "sort": 25
+  },
+  {
+   "id": 172,
+   "categoryId": "int",
+   "name": "Lakťové opierky",
+   "sort": 26
+  },
+  {
+   "id": 173,
+   "categoryId": "int",
+   "name": "Radiace kulisy a manžety",
+   "sort": 27
+  },
+  {
+   "id": 174,
+   "categoryId": "int",
+   "name": "Pedále",
+   "sort": 28
+  },
+  {
+   "id": 175,
+   "categoryId": "int",
+   "name": "Vnútorné kľučky",
+   "sort": 29
+  },
+  {
+   "id": 176,
+   "categoryId": "int",
+   "name": "Odkladacie priečinky",
+   "sort": 30
+  },
+  {
+   "id": 177,
+   "categoryId": "int",
+   "name": "Výplne kufra a kryty batožiny",
+   "sort": 31
+  },
+  {
+   "id": 178,
+   "categoryId": "int",
+   "name": "Vnútorné spätné zrkadlá",
+   "sort": 32
+  },
+  {
+   "id": 179,
+   "categoryId": "int",
+   "name": "Výdychy ventilácie",
+   "sort": 33
+  },
+  {
+   "id": 180,
+   "categoryId": "kol",
+   "name": "Pneumatiky letné",
+   "sort": 20
+  },
+  {
+   "id": 181,
+   "categoryId": "kol",
+   "name": "Pneumatiky zimné",
+   "sort": 21
+  },
+  {
+   "id": 182,
+   "categoryId": "kol",
+   "name": "Pneumatiky celoročné",
+   "sort": 22
+  },
+  {
+   "id": 183,
+   "categoryId": "kol",
+   "name": "Pneumatiky nákladné a autobusové",
+   "sort": 23
+  },
+  {
+   "id": 184,
+   "categoryId": "kol",
+   "name": "Pneumatiky na motorky",
+   "sort": 24
+  },
+  {
+   "id": 185,
+   "categoryId": "kol",
+   "name": "Rezervné a dojazdové kolesá",
+   "sort": 25
+  },
+  {
+   "id": 186,
+   "categoryId": "kol",
+   "name": "Puklice",
+   "sort": 26
+  },
+  {
+   "id": 187,
+   "categoryId": "kol",
+   "name": "Skrutky, matice a podložky",
+   "sort": 27
+  },
+  {
+   "id": 188,
+   "categoryId": "kol",
+   "name": "Rozširovacie podložky",
+   "sort": 28
+  },
+  {
+   "id": 189,
+   "categoryId": "kol",
+   "name": "Snímače tlaku (TPMS)",
+   "sort": 29
+  },
+  {
+   "id": 190,
+   "categoryId": "kol",
+   "name": "Snehové reťaze",
+   "sort": 30
+  },
+  {
+   "id": 191,
+   "categoryId": "bez",
+   "name": "Airbagy vodiča",
+   "sort": 20
+  },
+  {
+   "id": 192,
+   "categoryId": "bez",
+   "name": "Airbagy spolujazdca",
+   "sort": 21
+  },
+  {
+   "id": 193,
+   "categoryId": "bez",
+   "name": "Bočné a hlavové airbagy",
+   "sort": 22
+  },
+  {
+   "id": 194,
+   "categoryId": "bez",
+   "name": "Riadiace jednotky airbagov",
+   "sort": 23
+  },
+  {
+   "id": 195,
+   "categoryId": "bez",
+   "name": "Bezpečnostné pásy a predpínače",
+   "sort": 24
+  },
+  {
+   "id": 196,
+   "categoryId": "bez",
+   "name": "Parkovacie senzory",
+   "sort": 25
+  },
+  {
+   "id": 197,
+   "categoryId": "bez",
+   "name": "Cúvacie kamery",
+   "sort": 26
+  },
+  {
+   "id": 198,
+   "categoryId": "bez",
+   "name": "Radary a asistenčné systémy",
+   "sort": 27
+  },
+  {
+   "id": 199,
+   "categoryId": "bez",
+   "name": "Snímače nárazu",
+   "sort": 28
+  },
+  {
+   "id": 200,
+   "categoryId": "mm",
+   "name": "Rádiá a autorádiá",
+   "sort": 20
+  },
+  {
+   "id": 201,
+   "categoryId": "mm",
+   "name": "Navigácie a displeje",
+   "sort": 21
+  },
+  {
+   "id": 202,
+   "categoryId": "mm",
+   "name": "Reproduktory a zosilňovače",
+   "sort": 22
+  },
+  {
+   "id": 203,
+   "categoryId": "mm",
+   "name": "Antény",
+   "sort": 23
+  },
+  {
+   "id": 204,
+   "categoryId": "mm",
+   "name": "Handsfree a moduly telefónu",
+   "sort": 24
+  },
+  {
+   "id": 205,
+   "categoryId": "mm",
+   "name": "USB a AUX vstupy",
+   "sort": 25
+  },
+  {
+   "id": 206,
+   "categoryId": "mm",
+   "name": "Zadné obrazovky",
+   "sort": 26
+  },
+  {
+   "id": 207,
+   "categoryId": "ev",
+   "name": "Trakčné batérie",
+   "sort": 20
+  },
+  {
+   "id": 208,
+   "categoryId": "ev",
+   "name": "Moduly a články batérií",
+   "sort": 21
+  },
+  {
+   "id": 209,
+   "categoryId": "ev",
+   "name": "Elektromotory",
+   "sort": 22
+  },
+  {
+   "id": 210,
+   "categoryId": "ev",
+   "name": "Meniče a nabíjačky",
+   "sort": 23
+  },
+  {
+   "id": 211,
+   "categoryId": "ev",
+   "name": "Nabíjacie zásuvky a káble",
+   "sort": 24
+  },
+  {
+   "id": 212,
+   "categoryId": "ev",
+   "name": "Hybridné moduly a generátory",
+   "sort": 25
+  },
+  {
+   "id": 213,
+   "categoryId": "ev",
+   "name": "Vysokonapäťové káble",
+   "sort": 26
+  },
+  {
+   "id": 214,
+   "categoryId": "ev",
+   "name": "Chladenie batérie",
+   "sort": 27
+  },
+  {
+   "id": 215,
+   "categoryId": "vyb",
+   "name": "Ťažné zariadenia",
+   "sort": 20
+  },
+  {
+   "id": 216,
+   "categoryId": "vyb",
+   "name": "Strešné nosiče a boxy",
+   "sort": 21
+  },
+  {
+   "id": 217,
+   "categoryId": "vyb",
+   "name": "Koberce a vane do kufra",
+   "sort": 22
+  },
+  {
+   "id": 218,
+   "categoryId": "vyb",
+   "name": "Rezervné kolesá a náradie",
+   "sort": 23
+  },
+  {
+   "id": 219,
+   "categoryId": "vyb",
+   "name": "Kryty a plachty",
+   "sort": 24
+  },
+  {
+   "id": 220,
+   "categoryId": "vyb",
+   "name": "Držiaky bicyklov",
+   "sort": 25
+  },
+  {
+   "id": 221,
+   "categoryId": "vyb",
+   "name": "Deliace mreže a siete",
+   "sort": 26
+  },
+  {
+   "id": 222,
+   "categoryId": "vyb",
+   "name": "Lekárničky a výstražné trojuholníky",
+   "sort": 27
+  },
+  {
+   "id": 223,
+   "categoryId": "nad",
+   "name": "Hydraulické ruky a žeriavy",
+   "sort": 20
+  },
+  {
+   "id": 224,
+   "categoryId": "nad",
+   "name": "Sklápače a valníky",
+   "sort": 21
+  },
+  {
+   "id": 225,
+   "categoryId": "nad",
+   "name": "Chladiarenské agregáty",
+   "sort": 22
+  },
+  {
+   "id": 226,
+   "categoryId": "nad",
+   "name": "Hydraulické čerpadlá a valce",
+   "sort": 23
+  },
+  {
+   "id": 227,
+   "categoryId": "nad",
+   "name": "Točnice a ťažné zariadenia",
+   "sort": 24
+  },
+  {
+   "id": 228,
+   "categoryId": "nad",
+   "name": "Plachty a bočnice",
+   "sort": 25
+  },
+  {
+   "id": 229,
+   "categoryId": "nad",
+   "name": "Hydraulické čelá",
+   "sort": 26
+  },
+  {
+   "id": 230,
+   "categoryId": "nad",
+   "name": "Skrine a nadstavby",
+   "sort": 27
+  },
+  {
+   "id": 231,
+   "categoryId": "bus",
+   "name": "Dvere a ovládanie dverí",
+   "sort": 20
+  },
+  {
+   "id": 232,
+   "categoryId": "bus",
+   "name": "Sedadlá pre cestujúcich",
+   "sort": 21
+  },
+  {
+   "id": 233,
+   "categoryId": "bus",
+   "name": "Okná a poklopy",
+   "sort": 22
+  },
+  {
+   "id": 234,
+   "categoryId": "bus",
+   "name": "Informačné panely",
+   "sort": 23
+  },
+  {
+   "id": 235,
+   "categoryId": "bus",
+   "name": "Klimatizácia autobusu",
+   "sort": 24
+  },
+  {
+   "id": 236,
+   "categoryId": "bus",
+   "name": "Rampy pre vozíčkarov",
+   "sort": 25
+  },
+  {
+   "id": 237,
+   "categoryId": "bus",
+   "name": "Označovače a pokladne",
+   "sort": 26
+  },
+  {
+   "id": 238,
+   "categoryId": "mrm",
+   "name": "Rámy",
+   "sort": 20
+  },
+  {
+   "id": 239,
+   "categoryId": "mrm",
+   "name": "Kapotáže a plasty",
+   "sort": 21
+  },
+  {
+   "id": 240,
+   "categoryId": "mrm",
+   "name": "Nádrže",
+   "sort": 22
+  },
+  {
+   "id": 241,
+   "categoryId": "mrm",
+   "name": "Sedlá",
+   "sort": 23
+  },
+  {
+   "id": 242,
+   "categoryId": "mrm",
+   "name": "Blatníky",
+   "sort": 24
+  },
+  {
+   "id": 243,
+   "categoryId": "mrm",
+   "name": "Plexi a štíty",
+   "sort": 25
+  },
+  {
+   "id": 244,
+   "categoryId": "mrm",
+   "name": "Stupačky",
+   "sort": 26
+  },
+  {
+   "id": 245,
+   "categoryId": "mrm",
+   "name": "Kufre a nosiče",
+   "sort": 27
+  },
+  {
+   "id": 246,
+   "categoryId": "mpo",
+   "name": "Reťazové sady",
+   "sort": 20
+  },
+  {
+   "id": 247,
+   "categoryId": "mpo",
+   "name": "Rozety a pastorky",
+   "sort": 21
+  },
+  {
+   "id": 248,
+   "categoryId": "mpo",
+   "name": "Kardany a koncové prevody",
+   "sort": 22
+  },
+  {
+   "id": 249,
+   "categoryId": "mpo",
+   "name": "Spojky",
+   "sort": 23
+  },
+  {
+   "id": 250,
+   "categoryId": "mpo",
+   "name": "Variátory (skútre)",
+   "sort": 24
+  },
+  {
+   "id": 251,
+   "categoryId": "mpo",
+   "name": "Remene (skútre)",
+   "sort": 25
+  },
+  {
+   "id": 252,
+   "categoryId": "mri",
+   "name": "Riadidlá",
+   "sort": 20
+  },
+  {
+   "id": 253,
+   "categoryId": "mri",
+   "name": "Páčky a ovládače",
+   "sort": 21
+  },
+  {
+   "id": 254,
+   "categoryId": "mri",
+   "name": "Zrkadlá",
+   "sort": 22
+  },
+  {
+   "id": 255,
+   "categoryId": "mri",
+   "name": "Prístroje a tachometre",
+   "sort": 23
+  },
+  {
+   "id": 256,
+   "categoryId": "mri",
+   "name": "Plynové rukoväte a lanká",
+   "sort": 24
+  },
+  {
+   "id": 257,
+   "categoryId": "mvi",
+   "name": "Predné vidlice",
+   "sort": 20
+  },
+  {
+   "id": 258,
+   "categoryId": "mvi",
+   "name": "Zadné tlmiče",
+   "sort": 21
+  },
+  {
+   "id": 259,
+   "categoryId": "mvi",
+   "name": "Kyvné vidlice",
+   "sort": 22
+  },
+  {
+   "id": 260,
+   "categoryId": "mvi",
+   "name": "Ložiská riadenia",
+   "sort": 23
   }
  ],
  "brands": [
@@ -722,6 +2053,226 @@
    "id": 69,
    "name": "Ineos",
    "popular": false
+  },
+  {
+   "id": 70,
+   "name": "MAN",
+   "popular": false
+  },
+  {
+   "id": 71,
+   "name": "Maxus",
+   "popular": false
+  },
+  {
+   "id": 72,
+   "name": "Scania",
+   "popular": false
+  },
+  {
+   "id": 73,
+   "name": "DAF",
+   "popular": false
+  },
+  {
+   "id": 74,
+   "name": "Renault Trucks",
+   "popular": false
+  },
+  {
+   "id": 75,
+   "name": "Tatra",
+   "popular": false
+  },
+  {
+   "id": 76,
+   "name": "Avia",
+   "popular": false
+  },
+  {
+   "id": 77,
+   "name": "Mitsubishi Fuso",
+   "popular": false
+  },
+  {
+   "id": 78,
+   "name": "Ford Trucks",
+   "popular": false
+  },
+  {
+   "id": 79,
+   "name": "Liaz",
+   "popular": false
+  },
+  {
+   "id": 80,
+   "name": "Setra",
+   "popular": false
+  },
+  {
+   "id": 81,
+   "name": "Irizar",
+   "popular": false
+  },
+  {
+   "id": 82,
+   "name": "Iveco Bus",
+   "popular": false
+  },
+  {
+   "id": 83,
+   "name": "Karosa",
+   "popular": false
+  },
+  {
+   "id": 84,
+   "name": "SOR",
+   "popular": false
+  },
+  {
+   "id": 85,
+   "name": "Solaris",
+   "popular": false
+  },
+  {
+   "id": 86,
+   "name": "VDL",
+   "popular": false
+  },
+  {
+   "id": 87,
+   "name": "Neoplan",
+   "popular": false
+  },
+  {
+   "id": 88,
+   "name": "Temsa",
+   "popular": false
+  },
+  {
+   "id": 89,
+   "name": "Otokar",
+   "popular": false
+  },
+  {
+   "id": 90,
+   "name": "Van Hool",
+   "popular": false
+  },
+  {
+   "id": 91,
+   "name": "Ikarus",
+   "popular": false
+  },
+  {
+   "id": 92,
+   "name": "Yamaha",
+   "popular": false
+  },
+  {
+   "id": 93,
+   "name": "Kawasaki",
+   "popular": false
+  },
+  {
+   "id": 94,
+   "name": "KTM",
+   "popular": false
+  },
+  {
+   "id": 95,
+   "name": "Ducati",
+   "popular": false
+  },
+  {
+   "id": 96,
+   "name": "Triumph",
+   "popular": false
+  },
+  {
+   "id": 97,
+   "name": "Harley-Davidson",
+   "popular": false
+  },
+  {
+   "id": 98,
+   "name": "Aprilia",
+   "popular": false
+  },
+  {
+   "id": 99,
+   "name": "Piaggio",
+   "popular": false
+  },
+  {
+   "id": 100,
+   "name": "Vespa",
+   "popular": false
+  },
+  {
+   "id": 101,
+   "name": "Husqvarna",
+   "popular": false
+  },
+  {
+   "id": 102,
+   "name": "Royal Enfield",
+   "popular": false
+  },
+  {
+   "id": 103,
+   "name": "Moto Guzzi",
+   "popular": false
+  },
+  {
+   "id": 104,
+   "name": "MV Agusta",
+   "popular": false
+  },
+  {
+   "id": 105,
+   "name": "Benelli",
+   "popular": false
+  },
+  {
+   "id": 106,
+   "name": "CFMoto",
+   "popular": false
+  },
+  {
+   "id": 107,
+   "name": "Kymco",
+   "popular": false
+  },
+  {
+   "id": 108,
+   "name": "SYM",
+   "popular": false
+  },
+  {
+   "id": 109,
+   "name": "Peugeot Motocycles",
+   "popular": false
+  },
+  {
+   "id": 110,
+   "name": "Jawa",
+   "popular": false
+  },
+  {
+   "id": 111,
+   "name": "Indian",
+   "popular": false
+  },
+  {
+   "id": 112,
+   "name": "Can-Am",
+   "popular": false
+  },
+  {
+   "id": 113,
+   "name": "Polaris",
+   "popular": false
   }
  ],
  "models": [
@@ -996,21 +2547,24 @@
    "brandId": 2,
    "name": "Caddy III",
    "yearFrom": 2004,
-   "yearTo": 2015
+   "yearTo": 2015,
+   "vehicleType": "dodavky"
   },
   {
    "id": 40,
    "brandId": 2,
    "name": "Caddy IV",
    "yearFrom": 2015,
-   "yearTo": 2020
+   "yearTo": 2020,
+   "vehicleType": "dodavky"
   },
   {
    "id": 41,
    "brandId": 2,
    "name": "Transporter T5",
    "yearFrom": 2003,
-   "yearTo": 2015
+   "yearTo": 2015,
+   "vehicleType": "dodavky"
   },
   {
    "id": 42,
@@ -1759,35 +3313,40 @@
    "brandId": 2,
    "name": "Caddy II",
    "yearFrom": 1995,
-   "yearTo": 2004
+   "yearTo": 2004,
+   "vehicleType": "dodavky"
   },
   {
    "id": 149,
    "brandId": 2,
    "name": "Caddy V",
    "yearFrom": 2020,
-   "yearTo": null
+   "yearTo": null,
+   "vehicleType": "dodavky"
   },
   {
    "id": 150,
    "brandId": 2,
    "name": "Transporter T4",
    "yearFrom": 1990,
-   "yearTo": 2003
+   "yearTo": 2003,
+   "vehicleType": "dodavky"
   },
   {
    "id": 151,
    "brandId": 2,
    "name": "Transporter T6",
    "yearFrom": 2015,
-   "yearTo": 2019
+   "yearTo": 2019,
+   "vehicleType": "dodavky"
   },
   {
    "id": 152,
    "brandId": 2,
    "name": "Transporter T6.1",
    "yearFrom": 2019,
-   "yearTo": 2024
+   "yearTo": 2024,
+   "vehicleType": "dodavky"
   },
   {
    "id": 153,
@@ -1801,21 +3360,24 @@
    "brandId": 2,
    "name": "Transporter 7 (2024)",
    "yearFrom": 2024,
-   "yearTo": null
+   "yearTo": null,
+   "vehicleType": "dodavky"
   },
   {
    "id": 155,
    "brandId": 2,
    "name": "Crafter I",
    "yearFrom": 2006,
-   "yearTo": 2016
+   "yearTo": 2016,
+   "vehicleType": "dodavky"
   },
   {
    "id": 156,
    "brandId": 2,
    "name": "Crafter II",
    "yearFrom": 2017,
-   "yearTo": null
+   "yearTo": null,
+   "vehicleType": "dodavky"
   },
   {
    "id": 157,
@@ -2655,14 +4217,16 @@
    "brandId": 6,
    "name": "H-1 / H-1 Starex",
    "yearFrom": 1997,
-   "yearTo": 2007
+   "yearTo": 2007,
+   "vehicleType": "dodavky"
   },
   {
    "id": 277,
    "brandId": 6,
    "name": "H-1 (TQ)",
    "yearFrom": 2008,
-   "yearTo": 2021
+   "yearTo": 2021,
+   "vehicleType": "dodavky"
   },
   {
    "id": 278,
@@ -3376,14 +4940,16 @@
    "brandId": 10,
    "name": "Citan (W415)",
    "yearFrom": 2012,
-   "yearTo": 2021
+   "yearTo": 2021,
+   "vehicleType": "dodavky"
   },
   {
    "id": 380,
    "brandId": 10,
    "name": "Citan (W420)",
    "yearFrom": 2021,
-   "yearTo": null
+   "yearTo": null,
+   "vehicleType": "dodavky"
   },
   {
    "id": 381,
@@ -3397,42 +4963,48 @@
    "brandId": 10,
    "name": "Vito / V (W638)",
    "yearFrom": 1996,
-   "yearTo": 2003
+   "yearTo": 2003,
+   "vehicleType": "dodavky"
   },
   {
    "id": 383,
    "brandId": 10,
    "name": "Vito / Viano (W639)",
    "yearFrom": 2003,
-   "yearTo": 2014
+   "yearTo": 2014,
+   "vehicleType": "dodavky"
   },
   {
    "id": 384,
    "brandId": 10,
    "name": "Vito / V (W447)",
    "yearFrom": 2014,
-   "yearTo": null
+   "yearTo": null,
+   "vehicleType": "dodavky"
   },
   {
    "id": 385,
    "brandId": 10,
    "name": "Sprinter (T1N)",
    "yearFrom": 1995,
-   "yearTo": 2006
+   "yearTo": 2006,
+   "vehicleType": "dodavky"
   },
   {
    "id": 386,
    "brandId": 10,
    "name": "Sprinter (NCV3, W906)",
    "yearFrom": 2006,
-   "yearTo": 2018
+   "yearTo": 2018,
+   "vehicleType": "dodavky"
   },
   {
    "id": 387,
    "brandId": 10,
    "name": "Sprinter (W907/W910)",
    "yearFrom": 2018,
-   "yearTo": null
+   "yearTo": null,
+   "vehicleType": "dodavky"
   },
   {
    "id": 388,
@@ -3789,63 +5361,72 @@
    "brandId": 12,
    "name": "Combo C",
    "yearFrom": 2001,
-   "yearTo": 2011
+   "yearTo": 2011,
+   "vehicleType": "dodavky"
   },
   {
    "id": 439,
    "brandId": 12,
    "name": "Combo D",
    "yearFrom": 2011,
-   "yearTo": 2018
+   "yearTo": 2018,
+   "vehicleType": "dodavky"
   },
   {
    "id": 440,
    "brandId": 12,
    "name": "Combo E",
    "yearFrom": 2018,
-   "yearTo": null
+   "yearTo": null,
+   "vehicleType": "dodavky"
   },
   {
    "id": 441,
    "brandId": 12,
    "name": "Vivaro A",
    "yearFrom": 2001,
-   "yearTo": 2014
+   "yearTo": 2014,
+   "vehicleType": "dodavky"
   },
   {
    "id": 442,
    "brandId": 12,
    "name": "Vivaro B",
    "yearFrom": 2014,
-   "yearTo": 2019
+   "yearTo": 2019,
+   "vehicleType": "dodavky"
   },
   {
    "id": 443,
    "brandId": 12,
    "name": "Vivaro C",
    "yearFrom": 2019,
-   "yearTo": null
+   "yearTo": null,
+   "vehicleType": "dodavky"
   },
   {
    "id": 444,
    "brandId": 12,
    "name": "Movano A",
    "yearFrom": 1998,
-   "yearTo": 2010
+   "yearTo": 2010,
+   "vehicleType": "dodavky"
   },
   {
    "id": 445,
    "brandId": 12,
    "name": "Movano B",
    "yearFrom": 2010,
-   "yearTo": 2021
+   "yearTo": 2021,
+   "vehicleType": "dodavky"
   },
   {
    "id": 446,
    "brandId": 12,
    "name": "Movano C",
    "yearFrom": 2021,
-   "yearTo": null
+   "yearTo": null,
+   "vehicleType": "dodavky"
   },
   {
    "id": 447,
@@ -4167,63 +5748,72 @@
    "brandId": 13,
    "name": "Tourneo / Transit Connect I",
    "yearFrom": 2002,
-   "yearTo": 2013
+   "yearTo": 2013,
+   "vehicleType": "dodavky"
   },
   {
    "id": 493,
    "brandId": 13,
    "name": "Tourneo / Transit Connect II",
    "yearFrom": 2013,
-   "yearTo": 2022
+   "yearTo": 2022,
+   "vehicleType": "dodavky"
   },
   {
    "id": 494,
    "brandId": 13,
    "name": "Tourneo / Transit Connect III",
    "yearFrom": 2022,
-   "yearTo": null
+   "yearTo": null,
+   "vehicleType": "dodavky"
   },
   {
    "id": 495,
    "brandId": 13,
    "name": "Tourneo / Transit Courier",
    "yearFrom": 2014,
-   "yearTo": 2023
+   "yearTo": 2023,
+   "vehicleType": "dodavky"
   },
   {
    "id": 496,
    "brandId": 13,
    "name": "Tourneo / Transit Courier II",
    "yearFrom": 2023,
-   "yearTo": null
+   "yearTo": null,
+   "vehicleType": "dodavky"
   },
   {
    "id": 497,
    "brandId": 13,
    "name": "Transit (V184/V347)",
    "yearFrom": 2000,
-   "yearTo": 2014
+   "yearTo": 2014,
+   "vehicleType": "dodavky"
   },
   {
    "id": 498,
    "brandId": 13,
    "name": "Transit (V363)",
    "yearFrom": 2014,
-   "yearTo": null
+   "yearTo": null,
+   "vehicleType": "dodavky"
   },
   {
    "id": 499,
    "brandId": 13,
    "name": "Transit / Tourneo Custom I",
    "yearFrom": 2012,
-   "yearTo": 2023
+   "yearTo": 2023,
+   "vehicleType": "dodavky"
   },
   {
    "id": 500,
    "brandId": 13,
    "name": "Transit / Tourneo Custom II",
    "yearFrom": 2023,
-   "yearTo": null
+   "yearTo": null,
+   "vehicleType": "dodavky"
   },
   {
    "id": 501,
@@ -4531,63 +6121,72 @@
    "brandId": 14,
    "name": "Kangoo I",
    "yearFrom": 1997,
-   "yearTo": 2009
+   "yearTo": 2009,
+   "vehicleType": "dodavky"
   },
   {
    "id": 545,
    "brandId": 14,
    "name": "Kangoo II",
    "yearFrom": 2008,
-   "yearTo": 2021
+   "yearTo": 2021,
+   "vehicleType": "dodavky"
   },
   {
    "id": 546,
    "brandId": 14,
    "name": "Kangoo III",
    "yearFrom": 2021,
-   "yearTo": null
+   "yearTo": null,
+   "vehicleType": "dodavky"
   },
   {
    "id": 547,
    "brandId": 14,
    "name": "Trafic I",
    "yearFrom": 1980,
-   "yearTo": 2001
+   "yearTo": 2001,
+   "vehicleType": "dodavky"
   },
   {
    "id": 548,
    "brandId": 14,
    "name": "Trafic II",
    "yearFrom": 2001,
-   "yearTo": 2014
+   "yearTo": 2014,
+   "vehicleType": "dodavky"
   },
   {
    "id": 549,
    "brandId": 14,
    "name": "Trafic III",
    "yearFrom": 2014,
-   "yearTo": null
+   "yearTo": null,
+   "vehicleType": "dodavky"
   },
   {
    "id": 550,
    "brandId": 14,
    "name": "Master II",
    "yearFrom": 1998,
-   "yearTo": 2010
+   "yearTo": 2010,
+   "vehicleType": "dodavky"
   },
   {
    "id": 551,
    "brandId": 14,
    "name": "Master III",
    "yearFrom": 2010,
-   "yearTo": 2024
+   "yearTo": 2024,
+   "vehicleType": "dodavky"
   },
   {
    "id": 552,
    "brandId": 14,
    "name": "Master IV",
    "yearFrom": 2024,
-   "yearTo": null
+   "yearTo": null,
+   "vehicleType": "dodavky"
   },
   {
    "id": 553,
@@ -4706,7 +6305,8 @@
    "brandId": 15,
    "name": "Dokker",
    "yearFrom": 2012,
-   "yearTo": 2021
+   "yearTo": 2021,
+   "vehicleType": "dodavky"
   },
   {
    "id": 570,
@@ -4965,70 +6565,80 @@
    "brandId": 16,
    "name": "Partner I",
    "yearFrom": 1996,
-   "yearTo": 2008
+   "yearTo": 2008,
+   "vehicleType": "dodavky"
   },
   {
    "id": 607,
    "brandId": 16,
    "name": "Partner II (Tepee)",
    "yearFrom": 2008,
-   "yearTo": 2018
+   "yearTo": 2018,
+   "vehicleType": "dodavky"
   },
   {
    "id": 608,
    "brandId": 16,
    "name": "Partner III / Rifter",
    "yearFrom": 2018,
-   "yearTo": null
+   "yearTo": null,
+   "vehicleType": "dodavky"
   },
   {
    "id": 609,
    "brandId": 16,
    "name": "Bipper",
    "yearFrom": 2008,
-   "yearTo": 2017
+   "yearTo": 2017,
+   "vehicleType": "dodavky"
   },
   {
    "id": 610,
    "brandId": 16,
    "name": "Expert I",
    "yearFrom": 1995,
-   "yearTo": 2006
+   "yearTo": 2006,
+   "vehicleType": "dodavky"
   },
   {
    "id": 611,
    "brandId": 16,
    "name": "Expert II",
    "yearFrom": 2007,
-   "yearTo": 2016
+   "yearTo": 2016,
+   "vehicleType": "dodavky"
   },
   {
    "id": 612,
    "brandId": 16,
    "name": "Expert III / Traveller",
    "yearFrom": 2016,
-   "yearTo": null
+   "yearTo": null,
+   "vehicleType": "dodavky"
   },
   {
    "id": 613,
    "brandId": 16,
    "name": "Boxer I",
    "yearFrom": 1994,
-   "yearTo": 2006
+   "yearTo": 2006,
+   "vehicleType": "dodavky"
   },
   {
    "id": 614,
    "brandId": 16,
    "name": "Boxer II",
    "yearFrom": 2006,
-   "yearTo": 2014
+   "yearTo": 2014,
+   "vehicleType": "dodavky"
   },
   {
    "id": 615,
    "brandId": 16,
    "name": "Boxer III",
    "yearFrom": 2014,
-   "yearTo": null
+   "yearTo": null,
+   "vehicleType": "dodavky"
   },
   {
    "id": 616,
@@ -5273,70 +6883,80 @@
    "brandId": 17,
    "name": "Berlingo I",
    "yearFrom": 1996,
-   "yearTo": 2011
+   "yearTo": 2011,
+   "vehicleType": "dodavky"
   },
   {
    "id": 651,
    "brandId": 17,
    "name": "Berlingo II",
    "yearFrom": 2008,
-   "yearTo": 2018
+   "yearTo": 2018,
+   "vehicleType": "dodavky"
   },
   {
    "id": 652,
    "brandId": 17,
    "name": "Berlingo III",
    "yearFrom": 2018,
-   "yearTo": null
+   "yearTo": null,
+   "vehicleType": "dodavky"
   },
   {
    "id": 653,
    "brandId": 17,
    "name": "Nemo",
    "yearFrom": 2008,
-   "yearTo": 2017
+   "yearTo": 2017,
+   "vehicleType": "dodavky"
   },
   {
    "id": 654,
    "brandId": 17,
    "name": "Jumpy I",
    "yearFrom": 1995,
-   "yearTo": 2006
+   "yearTo": 2006,
+   "vehicleType": "dodavky"
   },
   {
    "id": 655,
    "brandId": 17,
    "name": "Jumpy II",
    "yearFrom": 2007,
-   "yearTo": 2016
+   "yearTo": 2016,
+   "vehicleType": "dodavky"
   },
   {
    "id": 656,
    "brandId": 17,
    "name": "Jumpy III / SpaceTourer",
    "yearFrom": 2016,
-   "yearTo": null
+   "yearTo": null,
+   "vehicleType": "dodavky"
   },
   {
    "id": 657,
    "brandId": 17,
    "name": "Jumper I",
    "yearFrom": 1994,
-   "yearTo": 2006
+   "yearTo": 2006,
+   "vehicleType": "dodavky"
   },
   {
    "id": 658,
    "brandId": 17,
    "name": "Jumper II",
    "yearFrom": 2006,
-   "yearTo": 2014
+   "yearTo": 2014,
+   "vehicleType": "dodavky"
   },
   {
    "id": 659,
    "brandId": 17,
    "name": "Jumper III",
    "yearFrom": 2014,
-   "yearTo": null
+   "yearTo": null,
+   "vehicleType": "dodavky"
   },
   {
    "id": 660,
@@ -5602,77 +7222,88 @@
    "brandId": 20,
    "name": "Doblò I",
    "yearFrom": 2000,
-   "yearTo": 2010
+   "yearTo": 2010,
+   "vehicleType": "dodavky"
   },
   {
    "id": 698,
    "brandId": 20,
    "name": "Doblò II (263)",
    "yearFrom": 2010,
-   "yearTo": 2022
+   "yearTo": 2022,
+   "vehicleType": "dodavky"
   },
   {
    "id": 699,
    "brandId": 20,
    "name": "Doblò III",
    "yearFrom": 2022,
-   "yearTo": null
+   "yearTo": null,
+   "vehicleType": "dodavky"
   },
   {
    "id": 700,
    "brandId": 20,
    "name": "Fiorino / Qubo",
    "yearFrom": 2007,
-   "yearTo": 2021
+   "yearTo": 2021,
+   "vehicleType": "dodavky"
   },
   {
    "id": 701,
    "brandId": 20,
    "name": "Scudo I",
    "yearFrom": 1995,
-   "yearTo": 2006
+   "yearTo": 2006,
+   "vehicleType": "dodavky"
   },
   {
    "id": 702,
    "brandId": 20,
    "name": "Scudo II",
    "yearFrom": 2007,
-   "yearTo": 2016
+   "yearTo": 2016,
+   "vehicleType": "dodavky"
   },
   {
    "id": 703,
    "brandId": 20,
    "name": "Scudo III",
    "yearFrom": 2022,
-   "yearTo": null
+   "yearTo": null,
+   "vehicleType": "dodavky"
   },
   {
    "id": 704,
    "brandId": 20,
    "name": "Talento",
    "yearFrom": 2016,
-   "yearTo": 2021
+   "yearTo": 2021,
+   "vehicleType": "dodavky"
   },
   {
    "id": 705,
    "brandId": 20,
    "name": "Ducato II (230/244)",
    "yearFrom": 1994,
-   "yearTo": 2006
+   "yearTo": 2006,
+   "vehicleType": "dodavky"
   },
   {
    "id": 706,
    "brandId": 20,
    "name": "Ducato III (250)",
    "yearFrom": 2006,
-   "yearTo": 2014
+   "yearTo": 2014,
+   "vehicleType": "dodavky"
   },
   {
    "id": 707,
    "brandId": 20,
    "name": "Ducato IV (250 facelift/290)",
    "yearFrom": 2014,
-   "yearTo": null
+   "yearTo": null,
+   "vehicleType": "dodavky"
   },
   {
    "id": 708,
@@ -6750,28 +8381,32 @@
    "brandId": 37,
    "name": "Proace I",
    "yearFrom": 2013,
-   "yearTo": 2016
+   "yearTo": 2016,
+   "vehicleType": "dodavky"
   },
   {
    "id": 862,
    "brandId": 37,
    "name": "Proace II",
    "yearFrom": 2016,
-   "yearTo": null
+   "yearTo": null,
+   "vehicleType": "dodavky"
   },
   {
    "id": 863,
    "brandId": 37,
    "name": "Proace City",
    "yearFrom": 2019,
-   "yearTo": null
+   "yearTo": null,
+   "vehicleType": "dodavky"
   },
   {
    "id": 864,
    "brandId": 37,
    "name": "Hiace",
    "yearFrom": 1995,
-   "yearTo": 2012
+   "yearTo": 2012,
+   "vehicleType": "dodavky"
   },
   {
    "id": 865,
@@ -7387,42 +9022,48 @@
    "brandId": 40,
    "name": "Townstar",
    "yearFrom": 2022,
-   "yearTo": null
+   "yearTo": null,
+   "vehicleType": "dodavky"
   },
   {
    "id": 953,
    "brandId": 40,
    "name": "NV200 / e-NV200",
    "yearFrom": 2009,
-   "yearTo": 2022
+   "yearTo": 2022,
+   "vehicleType": "dodavky"
   },
   {
    "id": 954,
    "brandId": 40,
    "name": "Primastar",
    "yearFrom": 2002,
-   "yearTo": 2014
+   "yearTo": 2014,
+   "vehicleType": "dodavky"
   },
   {
    "id": 955,
    "brandId": 40,
    "name": "NV300 / Primastar (2016)",
    "yearFrom": 2016,
-   "yearTo": null
+   "yearTo": null,
+   "vehicleType": "dodavky"
   },
   {
    "id": 956,
    "brandId": 40,
    "name": "NV400 / Interstar",
    "yearFrom": 2010,
-   "yearTo": null
+   "yearTo": null,
+   "vehicleType": "dodavky"
   },
   {
    "id": 957,
    "brandId": 40,
    "name": "Cabstar",
    "yearFrom": 2006,
-   "yearTo": 2013
+   "yearTo": 2013,
+   "vehicleType": "dodavky"
   },
   {
    "id": 958,
@@ -9207,28 +10848,32 @@
    "brandId": 68,
    "name": "Daily III",
    "yearFrom": 1999,
-   "yearTo": 2006
+   "yearTo": 2006,
+   "vehicleType": "dodavky"
   },
   {
    "id": 1213,
    "brandId": 68,
    "name": "Daily IV",
    "yearFrom": 2006,
-   "yearTo": 2011
+   "yearTo": 2011,
+   "vehicleType": "dodavky"
   },
   {
    "id": 1214,
    "brandId": 68,
    "name": "Daily V",
    "yearFrom": 2011,
-   "yearTo": 2014
+   "yearTo": 2014,
+   "vehicleType": "dodavky"
   },
   {
    "id": 1215,
    "brandId": 68,
    "name": "Daily VI",
    "yearFrom": 2014,
-   "yearTo": null
+   "yearTo": null,
+   "vehicleType": "dodavky"
   },
   {
    "id": 1216,
@@ -9236,6 +10881,2070 @@
    "name": "Grenadier",
    "yearFrom": 2022,
    "yearTo": null
+  },
+  {
+   "id": 1217,
+   "brandId": 2,
+   "name": "LT II",
+   "yearFrom": 1996,
+   "yearTo": 2006,
+   "vehicleType": "dodavky"
+  },
+  {
+   "id": 1218,
+   "brandId": 10,
+   "name": "Actros MP1",
+   "yearFrom": 1996,
+   "yearTo": 2002,
+   "vehicleType": "nakladne"
+  },
+  {
+   "id": 1219,
+   "brandId": 10,
+   "name": "Actros MP2 / MP3",
+   "yearFrom": 2002,
+   "yearTo": 2011,
+   "vehicleType": "nakladne"
+  },
+  {
+   "id": 1220,
+   "brandId": 10,
+   "name": "Actros MP4",
+   "yearFrom": 2011,
+   "yearTo": 2018,
+   "vehicleType": "nakladne"
+  },
+  {
+   "id": 1221,
+   "brandId": 10,
+   "name": "Actros MP5 / L",
+   "yearFrom": 2018,
+   "yearTo": null,
+   "vehicleType": "nakladne"
+  },
+  {
+   "id": 1222,
+   "brandId": 10,
+   "name": "Arocs",
+   "yearFrom": 2013,
+   "yearTo": null,
+   "vehicleType": "nakladne"
+  },
+  {
+   "id": 1223,
+   "brandId": 10,
+   "name": "Antos",
+   "yearFrom": 2012,
+   "yearTo": null,
+   "vehicleType": "nakladne"
+  },
+  {
+   "id": 1224,
+   "brandId": 10,
+   "name": "Axor",
+   "yearFrom": 2001,
+   "yearTo": 2016,
+   "vehicleType": "nakladne"
+  },
+  {
+   "id": 1225,
+   "brandId": 10,
+   "name": "Atego (1998–2013)",
+   "yearFrom": 1998,
+   "yearTo": 2013,
+   "vehicleType": "nakladne"
+  },
+  {
+   "id": 1226,
+   "brandId": 10,
+   "name": "Atego (2013)",
+   "yearFrom": 2013,
+   "yearTo": null,
+   "vehicleType": "nakladne"
+  },
+  {
+   "id": 1227,
+   "brandId": 10,
+   "name": "Econic",
+   "yearFrom": 1998,
+   "yearTo": null,
+   "vehicleType": "nakladne"
+  },
+  {
+   "id": 1228,
+   "brandId": 10,
+   "name": "Citaro (O530)",
+   "yearFrom": 1997,
+   "yearTo": 2011,
+   "vehicleType": "autobusy"
+  },
+  {
+   "id": 1229,
+   "brandId": 10,
+   "name": "Citaro (C2)",
+   "yearFrom": 2011,
+   "yearTo": null,
+   "vehicleType": "autobusy"
+  },
+  {
+   "id": 1230,
+   "brandId": 10,
+   "name": "Tourismo",
+   "yearFrom": 1994,
+   "yearTo": null,
+   "vehicleType": "autobusy"
+  },
+  {
+   "id": 1231,
+   "brandId": 10,
+   "name": "Travego",
+   "yearFrom": 1999,
+   "yearTo": 2017,
+   "vehicleType": "autobusy"
+  },
+  {
+   "id": 1232,
+   "brandId": 10,
+   "name": "Intouro",
+   "yearFrom": 2006,
+   "yearTo": null,
+   "vehicleType": "autobusy"
+  },
+  {
+   "id": 1233,
+   "brandId": 10,
+   "name": "Integro",
+   "yearFrom": 1996,
+   "yearTo": 2017,
+   "vehicleType": "autobusy"
+  },
+  {
+   "id": 1234,
+   "brandId": 10,
+   "name": "Sprinter City / Travel / Mobility",
+   "yearFrom": 1996,
+   "yearTo": null,
+   "vehicleType": "autobusy"
+  },
+  {
+   "id": 1235,
+   "brandId": 68,
+   "name": "EuroStar / EuroTech",
+   "yearFrom": 1993,
+   "yearTo": 2002,
+   "vehicleType": "nakladne"
+  },
+  {
+   "id": 1236,
+   "brandId": 68,
+   "name": "Stralis",
+   "yearFrom": 2002,
+   "yearTo": 2019,
+   "vehicleType": "nakladne"
+  },
+  {
+   "id": 1237,
+   "brandId": 68,
+   "name": "S-Way",
+   "yearFrom": 2019,
+   "yearTo": null,
+   "vehicleType": "nakladne"
+  },
+  {
+   "id": 1238,
+   "brandId": 68,
+   "name": "Eurocargo",
+   "yearFrom": 1991,
+   "yearTo": null,
+   "vehicleType": "nakladne"
+  },
+  {
+   "id": 1239,
+   "brandId": 68,
+   "name": "Trakker",
+   "yearFrom": 2004,
+   "yearTo": 2021,
+   "vehicleType": "nakladne"
+  },
+  {
+   "id": 1240,
+   "brandId": 68,
+   "name": "X-Way",
+   "yearFrom": 2021,
+   "yearTo": null,
+   "vehicleType": "nakladne"
+  },
+  {
+   "id": 1241,
+   "brandId": 70,
+   "name": "TGE",
+   "yearFrom": 2017,
+   "yearTo": null,
+   "vehicleType": "dodavky"
+  },
+  {
+   "id": 1242,
+   "brandId": 70,
+   "name": "F2000",
+   "yearFrom": 1994,
+   "yearTo": 2001,
+   "vehicleType": "nakladne"
+  },
+  {
+   "id": 1243,
+   "brandId": 70,
+   "name": "L2000 / M2000",
+   "yearFrom": 1993,
+   "yearTo": 2005,
+   "vehicleType": "nakladne"
+  },
+  {
+   "id": 1244,
+   "brandId": 70,
+   "name": "TGA",
+   "yearFrom": 2000,
+   "yearTo": 2009,
+   "vehicleType": "nakladne"
+  },
+  {
+   "id": 1245,
+   "brandId": 70,
+   "name": "TGX",
+   "yearFrom": 2007,
+   "yearTo": 2020,
+   "vehicleType": "nakladne"
+  },
+  {
+   "id": 1246,
+   "brandId": 70,
+   "name": "TGS",
+   "yearFrom": 2007,
+   "yearTo": 2020,
+   "vehicleType": "nakladne"
+  },
+  {
+   "id": 1247,
+   "brandId": 70,
+   "name": "TGL",
+   "yearFrom": 2005,
+   "yearTo": 2020,
+   "vehicleType": "nakladne"
+  },
+  {
+   "id": 1248,
+   "brandId": 70,
+   "name": "TGM",
+   "yearFrom": 2005,
+   "yearTo": 2020,
+   "vehicleType": "nakladne"
+  },
+  {
+   "id": 1249,
+   "brandId": 70,
+   "name": "TGX / TGS (2020)",
+   "yearFrom": 2020,
+   "yearTo": null,
+   "vehicleType": "nakladne"
+  },
+  {
+   "id": 1250,
+   "brandId": 70,
+   "name": "TGL / TGM (2020)",
+   "yearFrom": 2020,
+   "yearTo": null,
+   "vehicleType": "nakladne"
+  },
+  {
+   "id": 1251,
+   "brandId": 70,
+   "name": "Lion’s City (2004)",
+   "yearFrom": 2004,
+   "yearTo": 2018,
+   "vehicleType": "autobusy"
+  },
+  {
+   "id": 1252,
+   "brandId": 70,
+   "name": "Lion’s City (2018)",
+   "yearFrom": 2018,
+   "yearTo": null,
+   "vehicleType": "autobusy"
+  },
+  {
+   "id": 1253,
+   "brandId": 70,
+   "name": "Lion’s Coach",
+   "yearFrom": 1999,
+   "yearTo": null,
+   "vehicleType": "autobusy"
+  },
+  {
+   "id": 1254,
+   "brandId": 70,
+   "name": "Lion’s Intercity",
+   "yearFrom": 2015,
+   "yearTo": null,
+   "vehicleType": "autobusy"
+  },
+  {
+   "id": 1255,
+   "brandId": 71,
+   "name": "Deliver 9",
+   "yearFrom": 2020,
+   "yearTo": null,
+   "vehicleType": "dodavky"
+  },
+  {
+   "id": 1256,
+   "brandId": 71,
+   "name": "eDeliver 3",
+   "yearFrom": 2020,
+   "yearTo": null,
+   "vehicleType": "dodavky"
+  },
+  {
+   "id": 1257,
+   "brandId": 71,
+   "name": "eDeliver 9",
+   "yearFrom": 2021,
+   "yearTo": null,
+   "vehicleType": "dodavky"
+  },
+  {
+   "id": 1258,
+   "brandId": 72,
+   "name": "4-series (P/R 94–164)",
+   "yearFrom": 1995,
+   "yearTo": 2004,
+   "vehicleType": "nakladne"
+  },
+  {
+   "id": 1259,
+   "brandId": 72,
+   "name": "P / G / R (PGRT)",
+   "yearFrom": 2004,
+   "yearTo": 2016,
+   "vehicleType": "nakladne"
+  },
+  {
+   "id": 1260,
+   "brandId": 72,
+   "name": "R / S / G / P (NTG)",
+   "yearFrom": 2016,
+   "yearTo": null,
+   "vehicleType": "nakladne"
+  },
+  {
+   "id": 1261,
+   "brandId": 72,
+   "name": "Irizar / Touring",
+   "yearFrom": 2009,
+   "yearTo": null,
+   "vehicleType": "autobusy"
+  },
+  {
+   "id": 1262,
+   "brandId": 72,
+   "name": "Interlink",
+   "yearFrom": 2015,
+   "yearTo": null,
+   "vehicleType": "autobusy"
+  },
+  {
+   "id": 1263,
+   "brandId": 72,
+   "name": "Citywide",
+   "yearFrom": 2011,
+   "yearTo": null,
+   "vehicleType": "autobusy"
+  },
+  {
+   "id": 1264,
+   "brandId": 48,
+   "name": "FH (1993–2002)",
+   "yearFrom": 1993,
+   "yearTo": 2002,
+   "vehicleType": "nakladne"
+  },
+  {
+   "id": 1265,
+   "brandId": 48,
+   "name": "FH (2002–2012)",
+   "yearFrom": 2002,
+   "yearTo": 2012,
+   "vehicleType": "nakladne"
+  },
+  {
+   "id": 1266,
+   "brandId": 48,
+   "name": "FH (2012–2020)",
+   "yearFrom": 2012,
+   "yearTo": 2020,
+   "vehicleType": "nakladne"
+  },
+  {
+   "id": 1267,
+   "brandId": 48,
+   "name": "FH (2020)",
+   "yearFrom": 2020,
+   "yearTo": null,
+   "vehicleType": "nakladne"
+  },
+  {
+   "id": 1268,
+   "brandId": 48,
+   "name": "FM",
+   "yearFrom": 1998,
+   "yearTo": null,
+   "vehicleType": "nakladne"
+  },
+  {
+   "id": 1269,
+   "brandId": 48,
+   "name": "FMX",
+   "yearFrom": 2010,
+   "yearTo": null,
+   "vehicleType": "nakladne"
+  },
+  {
+   "id": 1270,
+   "brandId": 48,
+   "name": "FL",
+   "yearFrom": 1985,
+   "yearTo": null,
+   "vehicleType": "nakladne"
+  },
+  {
+   "id": 1271,
+   "brandId": 48,
+   "name": "FE",
+   "yearFrom": 2006,
+   "yearTo": null,
+   "vehicleType": "nakladne"
+  },
+  {
+   "id": 1272,
+   "brandId": 48,
+   "name": "B12 / 9700 / 9900",
+   "yearFrom": 2001,
+   "yearTo": 2015,
+   "vehicleType": "autobusy"
+  },
+  {
+   "id": 1273,
+   "brandId": 48,
+   "name": "9700 / 9900 (2018)",
+   "yearFrom": 2018,
+   "yearTo": null,
+   "vehicleType": "autobusy"
+  },
+  {
+   "id": 1274,
+   "brandId": 48,
+   "name": "8900",
+   "yearFrom": 2011,
+   "yearTo": null,
+   "vehicleType": "autobusy"
+  },
+  {
+   "id": 1275,
+   "brandId": 48,
+   "name": "7900 Electric / Hybrid",
+   "yearFrom": 2010,
+   "yearTo": null,
+   "vehicleType": "autobusy"
+  },
+  {
+   "id": 1276,
+   "brandId": 73,
+   "name": "XF95",
+   "yearFrom": 1997,
+   "yearTo": 2006,
+   "vehicleType": "nakladne"
+  },
+  {
+   "id": 1277,
+   "brandId": 73,
+   "name": "XF105",
+   "yearFrom": 2005,
+   "yearTo": 2017,
+   "vehicleType": "nakladne"
+  },
+  {
+   "id": 1278,
+   "brandId": 73,
+   "name": "XF (2017)",
+   "yearFrom": 2017,
+   "yearTo": 2021,
+   "vehicleType": "nakladne"
+  },
+  {
+   "id": 1279,
+   "brandId": 73,
+   "name": "XF / XG / XG+ (2021)",
+   "yearFrom": 2021,
+   "yearTo": null,
+   "vehicleType": "nakladne"
+  },
+  {
+   "id": 1280,
+   "brandId": 73,
+   "name": "CF",
+   "yearFrom": 2001,
+   "yearTo": 2021,
+   "vehicleType": "nakladne"
+  },
+  {
+   "id": 1281,
+   "brandId": 73,
+   "name": "CF (2021)",
+   "yearFrom": 2021,
+   "yearTo": null,
+   "vehicleType": "nakladne"
+  },
+  {
+   "id": 1282,
+   "brandId": 73,
+   "name": "LF",
+   "yearFrom": 2001,
+   "yearTo": null,
+   "vehicleType": "nakladne"
+  },
+  {
+   "id": 1283,
+   "brandId": 74,
+   "name": "Magnum",
+   "yearFrom": 1990,
+   "yearTo": 2013,
+   "vehicleType": "nakladne"
+  },
+  {
+   "id": 1284,
+   "brandId": 74,
+   "name": "Premium",
+   "yearFrom": 1996,
+   "yearTo": 2013,
+   "vehicleType": "nakladne"
+  },
+  {
+   "id": 1285,
+   "brandId": 74,
+   "name": "Kerax",
+   "yearFrom": 1997,
+   "yearTo": 2013,
+   "vehicleType": "nakladne"
+  },
+  {
+   "id": 1286,
+   "brandId": 74,
+   "name": "Midlum",
+   "yearFrom": 2000,
+   "yearTo": 2013,
+   "vehicleType": "nakladne"
+  },
+  {
+   "id": 1287,
+   "brandId": 74,
+   "name": "T",
+   "yearFrom": 2013,
+   "yearTo": null,
+   "vehicleType": "nakladne"
+  },
+  {
+   "id": 1288,
+   "brandId": 74,
+   "name": "C / K",
+   "yearFrom": 2013,
+   "yearTo": null,
+   "vehicleType": "nakladne"
+  },
+  {
+   "id": 1289,
+   "brandId": 74,
+   "name": "D / D Wide",
+   "yearFrom": 2013,
+   "yearTo": null,
+   "vehicleType": "nakladne"
+  },
+  {
+   "id": 1290,
+   "brandId": 75,
+   "name": "T 815",
+   "yearFrom": 1983,
+   "yearTo": null,
+   "vehicleType": "nakladne"
+  },
+  {
+   "id": 1291,
+   "brandId": 75,
+   "name": "T 815-2 / 815-7",
+   "yearFrom": 1994,
+   "yearTo": null,
+   "vehicleType": "nakladne"
+  },
+  {
+   "id": 1292,
+   "brandId": 75,
+   "name": "Phoenix",
+   "yearFrom": 2011,
+   "yearTo": null,
+   "vehicleType": "nakladne"
+  },
+  {
+   "id": 1293,
+   "brandId": 75,
+   "name": "T 158 / Force",
+   "yearFrom": 2013,
+   "yearTo": null,
+   "vehicleType": "nakladne"
+  },
+  {
+   "id": 1294,
+   "brandId": 76,
+   "name": "A 31 / A 75",
+   "yearFrom": 1968,
+   "yearTo": 2006,
+   "vehicleType": "nakladne"
+  },
+  {
+   "id": 1295,
+   "brandId": 76,
+   "name": "D-Line",
+   "yearFrom": 2006,
+   "yearTo": 2012,
+   "vehicleType": "nakladne"
+  },
+  {
+   "id": 1296,
+   "brandId": 77,
+   "name": "Canter",
+   "yearFrom": 1993,
+   "yearTo": null,
+   "vehicleType": "nakladne"
+  },
+  {
+   "id": 1297,
+   "brandId": 47,
+   "name": "N-series (NPR/NQR/NLR)",
+   "yearFrom": 2004,
+   "yearTo": null,
+   "vehicleType": "nakladne"
+  },
+  {
+   "id": 1298,
+   "brandId": 47,
+   "name": "Novo / Novociti / Visigo",
+   "yearFrom": 2008,
+   "yearTo": null,
+   "vehicleType": "autobusy"
+  },
+  {
+   "id": 1299,
+   "brandId": 78,
+   "name": "F-Max",
+   "yearFrom": 2018,
+   "yearTo": null,
+   "vehicleType": "nakladne"
+  },
+  {
+   "id": 1300,
+   "brandId": 79,
+   "name": "100 / 110 / 300",
+   "yearFrom": 1974,
+   "yearTo": 2002,
+   "vehicleType": "nakladne"
+  },
+  {
+   "id": 1301,
+   "brandId": 80,
+   "name": "S 300 (TopClass, ComfortClass)",
+   "yearFrom": 1991,
+   "yearTo": 2002,
+   "vehicleType": "autobusy"
+  },
+  {
+   "id": 1302,
+   "brandId": 80,
+   "name": "S 400 (TopClass, ComfortClass, MultiClass)",
+   "yearFrom": 2001,
+   "yearTo": 2015,
+   "vehicleType": "autobusy"
+  },
+  {
+   "id": 1303,
+   "brandId": 80,
+   "name": "S 500 (TopClass, ComfortClass)",
+   "yearFrom": 2013,
+   "yearTo": null,
+   "vehicleType": "autobusy"
+  },
+  {
+   "id": 1304,
+   "brandId": 80,
+   "name": "MultiClass S 400 LE / S 500 LE",
+   "yearFrom": 2014,
+   "yearTo": null,
+   "vehicleType": "autobusy"
+  },
+  {
+   "id": 1305,
+   "brandId": 81,
+   "name": "Century",
+   "yearFrom": 1993,
+   "yearTo": 2014,
+   "vehicleType": "autobusy"
+  },
+  {
+   "id": 1306,
+   "brandId": 81,
+   "name": "PB",
+   "yearFrom": 2002,
+   "yearTo": 2017,
+   "vehicleType": "autobusy"
+  },
+  {
+   "id": 1307,
+   "brandId": 81,
+   "name": "i4 / i6 / i6S / i8",
+   "yearFrom": 2010,
+   "yearTo": null,
+   "vehicleType": "autobusy"
+  },
+  {
+   "id": 1308,
+   "brandId": 81,
+   "name": "ie bus / ie tram",
+   "yearFrom": 2014,
+   "yearTo": null,
+   "vehicleType": "autobusy"
+  },
+  {
+   "id": 1309,
+   "brandId": 82,
+   "name": "Crossway (Irisbus/Iveco)",
+   "yearFrom": 2006,
+   "yearTo": null,
+   "vehicleType": "autobusy"
+  },
+  {
+   "id": 1310,
+   "brandId": 82,
+   "name": "Evadys / Magelys",
+   "yearFrom": 2007,
+   "yearTo": null,
+   "vehicleType": "autobusy"
+  },
+  {
+   "id": 1311,
+   "brandId": 82,
+   "name": "Citelis / Urbanway",
+   "yearFrom": 2005,
+   "yearTo": null,
+   "vehicleType": "autobusy"
+  },
+  {
+   "id": 1312,
+   "brandId": 82,
+   "name": "Arway / Recreo",
+   "yearFrom": 2003,
+   "yearTo": 2015,
+   "vehicleType": "autobusy"
+  },
+  {
+   "id": 1313,
+   "brandId": 82,
+   "name": "Daily Line / Daily Tourys",
+   "yearFrom": 2005,
+   "yearTo": null,
+   "vehicleType": "autobusy"
+  },
+  {
+   "id": 1314,
+   "brandId": 82,
+   "name": "Ares",
+   "yearFrom": 1996,
+   "yearTo": 2006,
+   "vehicleType": "autobusy"
+  },
+  {
+   "id": 1315,
+   "brandId": 83,
+   "name": "C 734 / B 732",
+   "yearFrom": 1981,
+   "yearTo": 1997,
+   "vehicleType": "autobusy"
+  },
+  {
+   "id": 1316,
+   "brandId": 83,
+   "name": "B 931 / C 934 / LC 936",
+   "yearFrom": 1996,
+   "yearTo": 2002,
+   "vehicleType": "autobusy"
+  },
+  {
+   "id": 1317,
+   "brandId": 83,
+   "name": "B 951 / C 954 / C 955 / C 956",
+   "yearFrom": 2001,
+   "yearTo": 2007,
+   "vehicleType": "autobusy"
+  },
+  {
+   "id": 1318,
+   "brandId": 84,
+   "name": "C 9.5 / C 10.5 / C 12",
+   "yearFrom": 1995,
+   "yearTo": null,
+   "vehicleType": "autobusy"
+  },
+  {
+   "id": 1319,
+   "brandId": 84,
+   "name": "BN 9.5 / BN 12 / NB 12",
+   "yearFrom": 2002,
+   "yearTo": null,
+   "vehicleType": "autobusy"
+  },
+  {
+   "id": 1320,
+   "brandId": 84,
+   "name": "NS 12 / NSG 18 / NS electric",
+   "yearFrom": 2016,
+   "yearTo": null,
+   "vehicleType": "autobusy"
+  },
+  {
+   "id": 1321,
+   "brandId": 84,
+   "name": "EBN 9.5 / EBN 11",
+   "yearFrom": 2010,
+   "yearTo": null,
+   "vehicleType": "autobusy"
+  },
+  {
+   "id": 1322,
+   "brandId": 85,
+   "name": "Urbino (II)",
+   "yearFrom": 1999,
+   "yearTo": 2002,
+   "vehicleType": "autobusy"
+  },
+  {
+   "id": 1323,
+   "brandId": 85,
+   "name": "Urbino (III)",
+   "yearFrom": 2002,
+   "yearTo": 2014,
+   "vehicleType": "autobusy"
+  },
+  {
+   "id": 1324,
+   "brandId": 85,
+   "name": "Urbino (IV)",
+   "yearFrom": 2014,
+   "yearTo": null,
+   "vehicleType": "autobusy"
+  },
+  {
+   "id": 1325,
+   "brandId": 85,
+   "name": "Interurbino",
+   "yearFrom": 2019,
+   "yearTo": 2022,
+   "vehicleType": "autobusy"
+  },
+  {
+   "id": 1326,
+   "brandId": 86,
+   "name": "Futura",
+   "yearFrom": 2010,
+   "yearTo": null,
+   "vehicleType": "autobusy"
+  },
+  {
+   "id": 1327,
+   "brandId": 86,
+   "name": "Citea",
+   "yearFrom": 2010,
+   "yearTo": null,
+   "vehicleType": "autobusy"
+  },
+  {
+   "id": 1328,
+   "brandId": 87,
+   "name": "Cityliner",
+   "yearFrom": 1971,
+   "yearTo": null,
+   "vehicleType": "autobusy"
+  },
+  {
+   "id": 1329,
+   "brandId": 87,
+   "name": "Tourliner",
+   "yearFrom": 2004,
+   "yearTo": null,
+   "vehicleType": "autobusy"
+  },
+  {
+   "id": 1330,
+   "brandId": 87,
+   "name": "Skyliner",
+   "yearFrom": 1967,
+   "yearTo": null,
+   "vehicleType": "autobusy"
+  },
+  {
+   "id": 1331,
+   "brandId": 88,
+   "name": "Safari / HD / MD",
+   "yearFrom": 2007,
+   "yearTo": null,
+   "vehicleType": "autobusy"
+  },
+  {
+   "id": 1332,
+   "brandId": 89,
+   "name": "Vectio / Navigo / Kent",
+   "yearFrom": 2008,
+   "yearTo": null,
+   "vehicleType": "autobusy"
+  },
+  {
+   "id": 1333,
+   "brandId": 90,
+   "name": "TX / EX / Astron",
+   "yearFrom": 2005,
+   "yearTo": 2024,
+   "vehicleType": "autobusy"
+  },
+  {
+   "id": 1334,
+   "brandId": 91,
+   "name": "280 / 260 / 256",
+   "yearFrom": 1971,
+   "yearTo": 2002,
+   "vehicleType": "autobusy"
+  },
+  {
+   "id": 1335,
+   "brandId": 39,
+   "name": "CBR125R",
+   "yearFrom": 2004,
+   "yearTo": 2017,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1336,
+   "brandId": 39,
+   "name": "CBR600F",
+   "yearFrom": 1987,
+   "yearTo": 2013,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1337,
+   "brandId": 39,
+   "name": "CBR600RR",
+   "yearFrom": 2003,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1338,
+   "brandId": 39,
+   "name": "CBR900RR / CBR929RR / CBR954RR Fireblade",
+   "yearFrom": 1992,
+   "yearTo": 2003,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1339,
+   "brandId": 39,
+   "name": "CBR1000RR Fireblade",
+   "yearFrom": 2004,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1340,
+   "brandId": 39,
+   "name": "CBF600 / CBF1000",
+   "yearFrom": 2004,
+   "yearTo": 2013,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1341,
+   "brandId": 39,
+   "name": "CB500 / CB500F / CB500X / CBR500R",
+   "yearFrom": 1993,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1342,
+   "brandId": 39,
+   "name": "CB650F / CB650R / CBR650R",
+   "yearFrom": 2014,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1343,
+   "brandId": 39,
+   "name": "Hornet 600 / CB600F",
+   "yearFrom": 1998,
+   "yearTo": 2013,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1344,
+   "brandId": 39,
+   "name": "CB750 Hornet / XL750 Transalp",
+   "yearFrom": 2023,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1345,
+   "brandId": 39,
+   "name": "CB1000R",
+   "yearFrom": 2008,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1346,
+   "brandId": 39,
+   "name": "Deauville NT650V / NT700V",
+   "yearFrom": 1998,
+   "yearTo": 2013,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1347,
+   "brandId": 39,
+   "name": "Transalp XL600V / XL650V / XL700V",
+   "yearFrom": 1987,
+   "yearTo": 2012,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1348,
+   "brandId": 39,
+   "name": "Africa Twin CRF1000L / CRF1100L",
+   "yearFrom": 2016,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1349,
+   "brandId": 39,
+   "name": "VFR800",
+   "yearFrom": 1998,
+   "yearTo": 2021,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1350,
+   "brandId": 39,
+   "name": "Varadero XL1000V",
+   "yearFrom": 1999,
+   "yearTo": 2012,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1351,
+   "brandId": 39,
+   "name": "Gold Wing GL1800",
+   "yearFrom": 2001,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1352,
+   "brandId": 39,
+   "name": "NC700 / NC750 (X, S, D Integra)",
+   "yearFrom": 2012,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1353,
+   "brandId": 39,
+   "name": "Shadow VT750 / VT600",
+   "yearFrom": 1988,
+   "yearTo": 2016,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1354,
+   "brandId": 39,
+   "name": "PCX125",
+   "yearFrom": 2010,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1355,
+   "brandId": 39,
+   "name": "SH125 / SH150 / SH300",
+   "yearFrom": 2001,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1356,
+   "brandId": 39,
+   "name": "Forza 125 / 300 / 350 / 750",
+   "yearFrom": 2015,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1357,
+   "brandId": 39,
+   "name": "X-ADV",
+   "yearFrom": 2017,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1358,
+   "brandId": 39,
+   "name": "CRF250 / CRF450",
+   "yearFrom": 2004,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1359,
+   "brandId": 92,
+   "name": "YZF-R125",
+   "yearFrom": 2008,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1360,
+   "brandId": 92,
+   "name": "YZF-R6",
+   "yearFrom": 1999,
+   "yearTo": 2020,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1361,
+   "brandId": 92,
+   "name": "YZF-R1",
+   "yearFrom": 1998,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1362,
+   "brandId": 92,
+   "name": "YZF-R3 / R7",
+   "yearFrom": 2015,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1363,
+   "brandId": 92,
+   "name": "MT-03 / MT-07",
+   "yearFrom": 2014,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1364,
+   "brandId": 92,
+   "name": "MT-09 / Tracer 9",
+   "yearFrom": 2013,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1365,
+   "brandId": 92,
+   "name": "MT-10",
+   "yearFrom": 2016,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1366,
+   "brandId": 92,
+   "name": "FZ6 / FZ6 Fazer",
+   "yearFrom": 2004,
+   "yearTo": 2010,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1367,
+   "brandId": 92,
+   "name": "FZ1 / FZ1 Fazer",
+   "yearFrom": 2006,
+   "yearTo": 2015,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1368,
+   "brandId": 92,
+   "name": "XJ6 / Diversion",
+   "yearFrom": 2009,
+   "yearTo": 2016,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1369,
+   "brandId": 92,
+   "name": "Ténéré 700 / XT660Z",
+   "yearFrom": 2008,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1370,
+   "brandId": 92,
+   "name": "XT1200Z Super Ténéré",
+   "yearFrom": 2010,
+   "yearTo": 2021,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1371,
+   "brandId": 92,
+   "name": "TDM850 / TDM900",
+   "yearFrom": 1991,
+   "yearTo": 2011,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1372,
+   "brandId": 92,
+   "name": "FJR1300",
+   "yearFrom": 2001,
+   "yearTo": 2021,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1373,
+   "brandId": 92,
+   "name": "Drag Star XVS650 / XVS1100",
+   "yearFrom": 1996,
+   "yearTo": 2016,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1374,
+   "brandId": 92,
+   "name": "XMAX 125 / 250 / 300 / 400",
+   "yearFrom": 2006,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1375,
+   "brandId": 92,
+   "name": "TMAX 500 / 530 / 560",
+   "yearFrom": 2001,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1376,
+   "brandId": 92,
+   "name": "NMAX 125",
+   "yearFrom": 2015,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1377,
+   "brandId": 92,
+   "name": "YZ250F / YZ450F",
+   "yearFrom": 2001,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1378,
+   "brandId": 92,
+   "name": "Grizzly / Kodiak (štvorkolka)",
+   "yearFrom": 1998,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1379,
+   "brandId": 93,
+   "name": "Ninja 125 / Z125",
+   "yearFrom": 2019,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1380,
+   "brandId": 93,
+   "name": "Ninja 250R / 300 / 400",
+   "yearFrom": 2008,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1381,
+   "brandId": 93,
+   "name": "ZX-6R",
+   "yearFrom": 1995,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1382,
+   "brandId": 93,
+   "name": "ZX-10R",
+   "yearFrom": 2004,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1383,
+   "brandId": 93,
+   "name": "ZX-9R / ZX-12R / ZZR1400",
+   "yearFrom": 1994,
+   "yearTo": 2020,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1384,
+   "brandId": 93,
+   "name": "ER-6n / ER-6f / Ninja 650 / Z650",
+   "yearFrom": 2006,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1385,
+   "brandId": 93,
+   "name": "Versys 650 / 1000",
+   "yearFrom": 2007,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1386,
+   "brandId": 93,
+   "name": "Z750 / Z800 / Z900",
+   "yearFrom": 2004,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1387,
+   "brandId": 93,
+   "name": "Z1000",
+   "yearFrom": 2003,
+   "yearTo": 2020,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1388,
+   "brandId": 93,
+   "name": "Vulcan S / VN900",
+   "yearFrom": 2006,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1389,
+   "brandId": 93,
+   "name": "KX250F / KX450F",
+   "yearFrom": 2004,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1390,
+   "brandId": 45,
+   "name": "GSX-R600 / GSX-R750",
+   "yearFrom": 1996,
+   "yearTo": 2017,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1391,
+   "brandId": 45,
+   "name": "GSX-R1000",
+   "yearFrom": 2001,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1392,
+   "brandId": 45,
+   "name": "GSX-S750 / GSX-S1000",
+   "yearFrom": 2015,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1393,
+   "brandId": 45,
+   "name": "GSF600 / GSF650 / GSF1200 / GSF1250 Bandit",
+   "yearFrom": 1995,
+   "yearTo": 2016,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1394,
+   "brandId": 45,
+   "name": "SV650 / SV1000",
+   "yearFrom": 1999,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1395,
+   "brandId": 45,
+   "name": "V-Strom 650 / 800 / 1000 / 1050",
+   "yearFrom": 2002,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1396,
+   "brandId": 45,
+   "name": "Hayabusa GSX1300R",
+   "yearFrom": 1999,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1397,
+   "brandId": 45,
+   "name": "Burgman 125 / 200 / 400 / 650",
+   "yearFrom": 1998,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1398,
+   "brandId": 45,
+   "name": "Intruder / Boulevard (VS, VL, M800, C800)",
+   "yearFrom": 1985,
+   "yearTo": 2019,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1399,
+   "brandId": 45,
+   "name": "DR-Z400 / DR650",
+   "yearFrom": 1990,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1400,
+   "brandId": 45,
+   "name": "Address / Swift (skúter)",
+   "yearFrom": 2005,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1401,
+   "brandId": 94,
+   "name": "Duke 125 / 200 / 390",
+   "yearFrom": 2011,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1402,
+   "brandId": 94,
+   "name": "690 Duke / 690 Enduro / 690 SMC",
+   "yearFrom": 2008,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1403,
+   "brandId": 94,
+   "name": "790 / 890 Duke",
+   "yearFrom": 2018,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1404,
+   "brandId": 94,
+   "name": "1290 Super Duke / 1290 Super Adventure",
+   "yearFrom": 2014,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1405,
+   "brandId": 94,
+   "name": "790 / 890 Adventure",
+   "yearFrom": 2019,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1406,
+   "brandId": 94,
+   "name": "990 / 1050 / 1090 / 1190 Adventure",
+   "yearFrom": 2006,
+   "yearTo": 2020,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1407,
+   "brandId": 94,
+   "name": "EXC / SX (125–500)",
+   "yearFrom": 1998,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1408,
+   "brandId": 94,
+   "name": "RC 125 / RC 390",
+   "yearFrom": 2014,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1409,
+   "brandId": 4,
+   "name": "R 850 / R 1100 / R 1150 / R 1200 GS",
+   "yearFrom": 1994,
+   "yearTo": 2018,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1410,
+   "brandId": 4,
+   "name": "R 1250 GS / Adventure",
+   "yearFrom": 2018,
+   "yearTo": 2024,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1411,
+   "brandId": 4,
+   "name": "R 1300 GS",
+   "yearFrom": 2023,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1412,
+   "brandId": 4,
+   "name": "R 1200 / R 1250 RT",
+   "yearFrom": 2005,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1413,
+   "brandId": 4,
+   "name": "F 650 / F 700 / F 800 GS",
+   "yearFrom": 1993,
+   "yearTo": 2018,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1414,
+   "brandId": 4,
+   "name": "F 750 / F 850 / F 900 GS",
+   "yearFrom": 2018,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1415,
+   "brandId": 4,
+   "name": "S 1000 RR / S 1000 R / S 1000 XR",
+   "yearFrom": 2009,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1416,
+   "brandId": 4,
+   "name": "K 1200 / K 1300 / K 1600",
+   "yearFrom": 2004,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1417,
+   "brandId": 4,
+   "name": "G 310 R / G 310 GS",
+   "yearFrom": 2016,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1418,
+   "brandId": 4,
+   "name": "C 400 X / C 400 GT / C 650",
+   "yearFrom": 2012,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1419,
+   "brandId": 95,
+   "name": "Monster (600–1200)",
+   "yearFrom": 1993,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1420,
+   "brandId": 95,
+   "name": "Multistrada",
+   "yearFrom": 2003,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1421,
+   "brandId": 95,
+   "name": "Panigale 899 / 959 / V2 / V4",
+   "yearFrom": 2011,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1422,
+   "brandId": 95,
+   "name": "Scrambler",
+   "yearFrom": 2015,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1423,
+   "brandId": 95,
+   "name": "Hypermotard / Hyperstrada",
+   "yearFrom": 2007,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1424,
+   "brandId": 95,
+   "name": "Diavel / XDiavel",
+   "yearFrom": 2011,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1425,
+   "brandId": 95,
+   "name": "SuperSport",
+   "yearFrom": 2017,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1426,
+   "brandId": 96,
+   "name": "Street Triple",
+   "yearFrom": 2007,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1427,
+   "brandId": 96,
+   "name": "Speed Triple",
+   "yearFrom": 1994,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1428,
+   "brandId": 96,
+   "name": "Tiger 800 / 850 / 900",
+   "yearFrom": 2010,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1429,
+   "brandId": 96,
+   "name": "Tiger 1050 / 1200",
+   "yearFrom": 2006,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1430,
+   "brandId": 96,
+   "name": "Bonneville / Street Twin / Thruxton",
+   "yearFrom": 2001,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1431,
+   "brandId": 96,
+   "name": "Daytona 675",
+   "yearFrom": 2006,
+   "yearTo": 2017,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1432,
+   "brandId": 96,
+   "name": "Trident 660 / Tiger Sport 660",
+   "yearFrom": 2021,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1433,
+   "brandId": 96,
+   "name": "Rocket III",
+   "yearFrom": 2004,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1434,
+   "brandId": 97,
+   "name": "Sportster (883, 1200)",
+   "yearFrom": 1986,
+   "yearTo": 2022,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1435,
+   "brandId": 97,
+   "name": "Softail",
+   "yearFrom": 1984,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1436,
+   "brandId": 97,
+   "name": "Touring (Electra Glide, Road King, Street Glide)",
+   "yearFrom": 1980,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1437,
+   "brandId": 97,
+   "name": "Dyna",
+   "yearFrom": 1991,
+   "yearTo": 2017,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1438,
+   "brandId": 97,
+   "name": "Pan America / Sportster S",
+   "yearFrom": 2021,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1439,
+   "brandId": 98,
+   "name": "RS 125 / RS 457 / RS 660",
+   "yearFrom": 1992,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1440,
+   "brandId": 98,
+   "name": "Tuono / RSV4",
+   "yearFrom": 2009,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1441,
+   "brandId": 98,
+   "name": "Shiver / Dorsoduro",
+   "yearFrom": 2007,
+   "yearTo": 2020,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1442,
+   "brandId": 98,
+   "name": "SR 50 / SR GT / SX / RX",
+   "yearFrom": 1992,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1443,
+   "brandId": 99,
+   "name": "Liberty / Medley / Beverly",
+   "yearFrom": 1997,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1444,
+   "brandId": 99,
+   "name": "MP3",
+   "yearFrom": 2006,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1445,
+   "brandId": 99,
+   "name": "X7 / X8 / X9 / X10",
+   "yearFrom": 2000,
+   "yearTo": 2016,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1446,
+   "brandId": 99,
+   "name": "Zip / Typhoon / Fly",
+   "yearFrom": 1992,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1447,
+   "brandId": 99,
+   "name": "Porter (úžitkové)",
+   "yearFrom": 1992,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1448,
+   "brandId": 100,
+   "name": "LX / Primavera / Sprint",
+   "yearFrom": 2005,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1449,
+   "brandId": 100,
+   "name": "GTS / GTV (125–310)",
+   "yearFrom": 2003,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1450,
+   "brandId": 100,
+   "name": "Elettrica",
+   "yearFrom": 2018,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1451,
+   "brandId": 101,
+   "name": "Svartpilen / Vitpilen 401 / 701 / 801",
+   "yearFrom": 2018,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1452,
+   "brandId": 101,
+   "name": "TE / FE / TC / FC (enduro, cross)",
+   "yearFrom": 1990,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1453,
+   "brandId": 102,
+   "name": "Classic / Bullet / Meteor 350",
+   "yearFrom": 2008,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1454,
+   "brandId": 102,
+   "name": "Himalayan / Interceptor 650 / Continental GT 650",
+   "yearFrom": 2016,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1455,
+   "brandId": 103,
+   "name": "V7 / V9 / V85 TT",
+   "yearFrom": 2008,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1456,
+   "brandId": 103,
+   "name": "California / Stelvio / Norge",
+   "yearFrom": 1994,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1457,
+   "brandId": 104,
+   "name": "F3 / Brutale 675 / 800",
+   "yearFrom": 2011,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1458,
+   "brandId": 104,
+   "name": "F4 / Brutale 1000",
+   "yearFrom": 1999,
+   "yearTo": 2019,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1459,
+   "brandId": 105,
+   "name": "TRK 502 / Leoncino / 752S",
+   "yearFrom": 2016,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1460,
+   "brandId": 106,
+   "name": "300NK / 650NK / 650MT / 800MT",
+   "yearFrom": 2014,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1461,
+   "brandId": 106,
+   "name": "CForce (štvorkolka)",
+   "yearFrom": 2010,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1462,
+   "brandId": 107,
+   "name": "Agility / People / Like",
+   "yearFrom": 2005,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1463,
+   "brandId": 107,
+   "name": "Xciting / Downtown / AK 550",
+   "yearFrom": 2005,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1464,
+   "brandId": 107,
+   "name": "MXU (štvorkolka)",
+   "yearFrom": 2004,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1465,
+   "brandId": 108,
+   "name": "Symphony / Fiddle / Jet",
+   "yearFrom": 2008,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1466,
+   "brandId": 108,
+   "name": "Joymax / Cruisym / Maxsym",
+   "yearFrom": 2010,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1467,
+   "brandId": 109,
+   "name": "Kisbee / Tweet / Django",
+   "yearFrom": 2008,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1468,
+   "brandId": 109,
+   "name": "Metropolis / Pulsion / XP400",
+   "yearFrom": 2013,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1469,
+   "brandId": 110,
+   "name": "350 / 640 / 638",
+   "yearFrom": 1984,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1470,
+   "brandId": 111,
+   "name": "Scout / Chief / Chieftain / FTR",
+   "yearFrom": 2014,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1471,
+   "brandId": 112,
+   "name": "Outlander / Renegade (štvorkolka)",
+   "yearFrom": 2003,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1472,
+   "brandId": 112,
+   "name": "Spyder / Ryker (trojkolka)",
+   "yearFrom": 2007,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1473,
+   "brandId": 113,
+   "name": "Sportsman (štvorkolka)",
+   "yearFrom": 1996,
+   "yearTo": null,
+   "vehicleType": "motorky"
+  },
+  {
+   "id": 1474,
+   "brandId": 113,
+   "name": "RZR / Ranger (UTV)",
+   "yearFrom": 2007,
+   "yearTo": null,
+   "vehicleType": "motorky"
   }
  ],
  "engines": [
@@ -39283,6 +42992,3466 @@
    "id": 6009,
    "modelId": 1216,
    "name": "3.0 Diesel 183 kW"
+  },
+  {
+   "id": 6010,
+   "modelId": 1217,
+   "name": "2.5 TDI 65 kW"
+  },
+  {
+   "id": 6011,
+   "modelId": 1217,
+   "name": "2.5 TDI 80 kW"
+  },
+  {
+   "id": 6012,
+   "modelId": 1217,
+   "name": "2.5 TDI 115 kW"
+  },
+  {
+   "id": 6013,
+   "modelId": 1217,
+   "name": "2.8 TDI 116 kW"
+  },
+  {
+   "id": 6014,
+   "modelId": 1218,
+   "name": "12.0 V6 260 kW"
+  },
+  {
+   "id": 6015,
+   "modelId": 1218,
+   "name": "15.9 V8 338 kW"
+  },
+  {
+   "id": 6016,
+   "modelId": 1218,
+   "name": "15.9 V8 420 kW"
+  },
+  {
+   "id": 6017,
+   "modelId": 1219,
+   "name": "12.0 V6 265 kW"
+  },
+  {
+   "id": 6018,
+   "modelId": 1219,
+   "name": "12.0 V6 300 kW"
+  },
+  {
+   "id": 6019,
+   "modelId": 1219,
+   "name": "15.9 V8 350 kW"
+  },
+  {
+   "id": 6020,
+   "modelId": 1219,
+   "name": "15.9 V8 440 kW"
+  },
+  {
+   "id": 6021,
+   "modelId": 1220,
+   "name": "10.7 l 260 kW"
+  },
+  {
+   "id": 6022,
+   "modelId": 1220,
+   "name": "12.8 l 310 kW"
+  },
+  {
+   "id": 6023,
+   "modelId": 1220,
+   "name": "12.8 l 330 kW"
+  },
+  {
+   "id": 6024,
+   "modelId": 1220,
+   "name": "12.8 l 350 kW"
+  },
+  {
+   "id": 6025,
+   "modelId": 1220,
+   "name": "15.6 l 460 kW"
+  },
+  {
+   "id": 6026,
+   "modelId": 1221,
+   "name": "10.7 l 290 kW"
+  },
+  {
+   "id": 6027,
+   "modelId": 1221,
+   "name": "12.8 l 310 kW"
+  },
+  {
+   "id": 6028,
+   "modelId": 1221,
+   "name": "12.8 l 350 kW"
+  },
+  {
+   "id": 6029,
+   "modelId": 1221,
+   "name": "15.6 l 460 kW"
+  },
+  {
+   "id": 6030,
+   "modelId": 1221,
+   "name": "eActros 400 kW"
+  },
+  {
+   "id": 6031,
+   "modelId": 1222,
+   "name": "10.7 l 260 kW"
+  },
+  {
+   "id": 6032,
+   "modelId": 1222,
+   "name": "12.8 l 330 kW"
+  },
+  {
+   "id": 6033,
+   "modelId": 1222,
+   "name": "15.6 l 460 kW"
+  },
+  {
+   "id": 6034,
+   "modelId": 1223,
+   "name": "7.7 l 260 kW"
+  },
+  {
+   "id": 6035,
+   "modelId": 1223,
+   "name": "10.7 l 290 kW"
+  },
+  {
+   "id": 6036,
+   "modelId": 1223,
+   "name": "12.8 l 330 kW"
+  },
+  {
+   "id": 6037,
+   "modelId": 1224,
+   "name": "6.4 l 175 kW"
+  },
+  {
+   "id": 6038,
+   "modelId": 1224,
+   "name": "7.2 l 240 kW"
+  },
+  {
+   "id": 6039,
+   "modelId": 1224,
+   "name": "11.9 l 300 kW"
+  },
+  {
+   "id": 6040,
+   "modelId": 1224,
+   "name": "12.8 l 315 kW"
+  },
+  {
+   "id": 6041,
+   "modelId": 1225,
+   "name": "4.3 l 115 kW"
+  },
+  {
+   "id": 6042,
+   "modelId": 1225,
+   "name": "4.3 l 130 kW"
+  },
+  {
+   "id": 6043,
+   "modelId": 1225,
+   "name": "6.4 l 175 kW"
+  },
+  {
+   "id": 6044,
+   "modelId": 1225,
+   "name": "7.2 l 210 kW"
+  },
+  {
+   "id": 6045,
+   "modelId": 1226,
+   "name": "5.1 l 115 kW"
+  },
+  {
+   "id": 6046,
+   "modelId": 1226,
+   "name": "5.1 l 170 kW"
+  },
+  {
+   "id": 6047,
+   "modelId": 1226,
+   "name": "7.7 l 220 kW"
+  },
+  {
+   "id": 6048,
+   "modelId": 1227,
+   "name": "7.7 l 220 kW"
+  },
+  {
+   "id": 6049,
+   "modelId": 1227,
+   "name": "7.7 l 260 kW"
+  },
+  {
+   "id": 6050,
+   "modelId": 1227,
+   "name": "eEconic 300 kW"
+  },
+  {
+   "id": 6051,
+   "modelId": 1228,
+   "name": "12.0 l 185 kW"
+  },
+  {
+   "id": 6052,
+   "modelId": 1228,
+   "name": "12.0 l 210 kW"
+  },
+  {
+   "id": 6053,
+   "modelId": 1228,
+   "name": "11.9 l 220 kW"
+  },
+  {
+   "id": 6054,
+   "modelId": 1228,
+   "name": "12.0 l CNG 185 kW"
+  },
+  {
+   "id": 6055,
+   "modelId": 1229,
+   "name": "7.7 l 220 kW"
+  },
+  {
+   "id": 6056,
+   "modelId": 1229,
+   "name": "10.7 l 265 kW"
+  },
+  {
+   "id": 6057,
+   "modelId": 1229,
+   "name": "12.0 l CNG 222 kW"
+  },
+  {
+   "id": 6058,
+   "modelId": 1229,
+   "name": "eCitaro Elektro 250 kW"
+  },
+  {
+   "id": 6059,
+   "modelId": 1230,
+   "name": "10.7 l 260 kW"
+  },
+  {
+   "id": 6060,
+   "modelId": 1230,
+   "name": "11.9 l 260 kW"
+  },
+  {
+   "id": 6061,
+   "modelId": 1230,
+   "name": "12.8 l 315 kW"
+  },
+  {
+   "id": 6062,
+   "modelId": 1231,
+   "name": "11.9 l 300 kW"
+  },
+  {
+   "id": 6063,
+   "modelId": 1231,
+   "name": "12.8 l 335 kW"
+  },
+  {
+   "id": 6064,
+   "modelId": 1231,
+   "name": "15.9 V8 350 kW"
+  },
+  {
+   "id": 6065,
+   "modelId": 1232,
+   "name": "7.7 l 220 kW"
+  },
+  {
+   "id": 6066,
+   "modelId": 1232,
+   "name": "7.7 l 260 kW"
+  },
+  {
+   "id": 6067,
+   "modelId": 1233,
+   "name": "7.2 l 220 kW"
+  },
+  {
+   "id": 6068,
+   "modelId": 1233,
+   "name": "11.9 l 260 kW"
+  },
+  {
+   "id": 6069,
+   "modelId": 1234,
+   "name": "2.1 CDI 105 kW"
+  },
+  {
+   "id": 6070,
+   "modelId": 1234,
+   "name": "2.1 CDI 120 kW"
+  },
+  {
+   "id": 6071,
+   "modelId": 1234,
+   "name": "3.0 V6 CDI 140 kW"
+  },
+  {
+   "id": 6072,
+   "modelId": 1234,
+   "name": "2.0 CDI 140 kW"
+  },
+  {
+   "id": 6073,
+   "modelId": 1235,
+   "name": "9.5 l 254 kW"
+  },
+  {
+   "id": 6074,
+   "modelId": 1235,
+   "name": "13.8 l 345 kW"
+  },
+  {
+   "id": 6075,
+   "modelId": 1236,
+   "name": "7.8 l 228 kW"
+  },
+  {
+   "id": 6076,
+   "modelId": 1236,
+   "name": "10.3 l 265 kW"
+  },
+  {
+   "id": 6077,
+   "modelId": 1236,
+   "name": "12.9 l 309 kW"
+  },
+  {
+   "id": 6078,
+   "modelId": 1236,
+   "name": "12.9 l 368 kW"
+  },
+  {
+   "id": 6079,
+   "modelId": 1236,
+   "name": "12.9 l 412 kW"
+  },
+  {
+   "id": 6080,
+   "modelId": 1236,
+   "name": "8.7 l CNG 243 kW"
+  },
+  {
+   "id": 6081,
+   "modelId": 1237,
+   "name": "11.1 l 294 kW"
+  },
+  {
+   "id": 6082,
+   "modelId": 1237,
+   "name": "12.9 l 360 kW"
+  },
+  {
+   "id": 6083,
+   "modelId": 1237,
+   "name": "12.9 l 390 kW"
+  },
+  {
+   "id": 6084,
+   "modelId": 1237,
+   "name": "12.9 l 420 kW"
+  },
+  {
+   "id": 6085,
+   "modelId": 1237,
+   "name": "12.9 l LNG 338 kW"
+  },
+  {
+   "id": 6086,
+   "modelId": 1238,
+   "name": "3.9 l 105 kW"
+  },
+  {
+   "id": 6087,
+   "modelId": 1238,
+   "name": "5.9 l 132 kW"
+  },
+  {
+   "id": 6088,
+   "modelId": 1238,
+   "name": "5.9 l 160 kW"
+  },
+  {
+   "id": 6089,
+   "modelId": 1238,
+   "name": "6.7 l 184 kW"
+  },
+  {
+   "id": 6090,
+   "modelId": 1238,
+   "name": "6.7 l 235 kW"
+  },
+  {
+   "id": 6091,
+   "modelId": 1239,
+   "name": "7.8 l 228 kW"
+  },
+  {
+   "id": 6092,
+   "modelId": 1239,
+   "name": "12.9 l 309 kW"
+  },
+  {
+   "id": 6093,
+   "modelId": 1239,
+   "name": "12.9 l 368 kW"
+  },
+  {
+   "id": 6094,
+   "modelId": 1240,
+   "name": "11.1 l 294 kW"
+  },
+  {
+   "id": 6095,
+   "modelId": 1240,
+   "name": "12.9 l 360 kW"
+  },
+  {
+   "id": 6096,
+   "modelId": 1241,
+   "name": "2.0 TDI 75 kW"
+  },
+  {
+   "id": 6097,
+   "modelId": 1241,
+   "name": "2.0 TDI 103 kW"
+  },
+  {
+   "id": 6098,
+   "modelId": 1241,
+   "name": "2.0 TDI 130 kW"
+  },
+  {
+   "id": 6099,
+   "modelId": 1241,
+   "name": "eTGE Elektro 100 kW"
+  },
+  {
+   "id": 6100,
+   "modelId": 1242,
+   "name": "10.0 l 191 kW"
+  },
+  {
+   "id": 6101,
+   "modelId": 1242,
+   "name": "12.0 l 272 kW"
+  },
+  {
+   "id": 6102,
+   "modelId": 1242,
+   "name": "12.0 l 301 kW"
+  },
+  {
+   "id": 6103,
+   "modelId": 1242,
+   "name": "12.8 l 338 kW"
+  },
+  {
+   "id": 6104,
+   "modelId": 1243,
+   "name": "4.6 l 114 kW"
+  },
+  {
+   "id": 6105,
+   "modelId": 1243,
+   "name": "6.9 l 162 kW"
+  },
+  {
+   "id": 6106,
+   "modelId": 1243,
+   "name": "6.9 l 206 kW"
+  },
+  {
+   "id": 6107,
+   "modelId": 1244,
+   "name": "10.5 l 265 kW"
+  },
+  {
+   "id": 6108,
+   "modelId": 1244,
+   "name": "12.4 l 301 kW"
+  },
+  {
+   "id": 6109,
+   "modelId": 1244,
+   "name": "12.4 l 338 kW"
+  },
+  {
+   "id": 6110,
+   "modelId": 1244,
+   "name": "12.4 l 353 kW"
+  },
+  {
+   "id": 6111,
+   "modelId": 1245,
+   "name": "10.5 l 294 kW"
+  },
+  {
+   "id": 6112,
+   "modelId": 1245,
+   "name": "12.4 l 324 kW"
+  },
+  {
+   "id": 6113,
+   "modelId": 1245,
+   "name": "12.4 l 353 kW"
+  },
+  {
+   "id": 6114,
+   "modelId": 1245,
+   "name": "12.4 l 397 kW"
+  },
+  {
+   "id": 6115,
+   "modelId": 1245,
+   "name": "15.2 l 471 kW"
+  },
+  {
+   "id": 6116,
+   "modelId": 1246,
+   "name": "10.5 l 265 kW"
+  },
+  {
+   "id": 6117,
+   "modelId": 1246,
+   "name": "10.5 l 294 kW"
+  },
+  {
+   "id": 6118,
+   "modelId": 1246,
+   "name": "12.4 l 324 kW"
+  },
+  {
+   "id": 6119,
+   "modelId": 1246,
+   "name": "12.4 l 353 kW"
+  },
+  {
+   "id": 6120,
+   "modelId": 1247,
+   "name": "4.6 l 110 kW"
+  },
+  {
+   "id": 6121,
+   "modelId": 1247,
+   "name": "4.6 l 132 kW"
+  },
+  {
+   "id": 6122,
+   "modelId": 1247,
+   "name": "6.9 l 162 kW"
+  },
+  {
+   "id": 6123,
+   "modelId": 1247,
+   "name": "6.9 l 184 kW"
+  },
+  {
+   "id": 6124,
+   "modelId": 1248,
+   "name": "6.9 l 184 kW"
+  },
+  {
+   "id": 6125,
+   "modelId": 1248,
+   "name": "6.9 l 213 kW"
+  },
+  {
+   "id": 6126,
+   "modelId": 1248,
+   "name": "10.5 l 250 kW"
+  },
+  {
+   "id": 6127,
+   "modelId": 1249,
+   "name": "9.0 l 265 kW"
+  },
+  {
+   "id": 6128,
+   "modelId": 1249,
+   "name": "12.4 l 316 kW"
+  },
+  {
+   "id": 6129,
+   "modelId": 1249,
+   "name": "12.4 l 346 kW"
+  },
+  {
+   "id": 6130,
+   "modelId": 1249,
+   "name": "12.4 l 375 kW"
+  },
+  {
+   "id": 6131,
+   "modelId": 1249,
+   "name": "15.2 l 471 kW"
+  },
+  {
+   "id": 6132,
+   "modelId": 1249,
+   "name": "eTGX Elektro 400 kW"
+  },
+  {
+   "id": 6133,
+   "modelId": 1250,
+   "name": "4.6 l 118 kW"
+  },
+  {
+   "id": 6134,
+   "modelId": 1250,
+   "name": "6.9 l 184 kW"
+  },
+  {
+   "id": 6135,
+   "modelId": 1250,
+   "name": "6.9 l 213 kW"
+  },
+  {
+   "id": 6136,
+   "modelId": 1251,
+   "name": "10.5 l 199 kW"
+  },
+  {
+   "id": 6137,
+   "modelId": 1251,
+   "name": "12.0 l CNG 228 kW"
+  },
+  {
+   "id": 6138,
+   "modelId": 1252,
+   "name": "9.0 l 243 kW"
+  },
+  {
+   "id": 6139,
+   "modelId": 1252,
+   "name": "9.0 l CNG 235 kW"
+  },
+  {
+   "id": 6140,
+   "modelId": 1252,
+   "name": "Elektro 240 kW"
+  },
+  {
+   "id": 6141,
+   "modelId": 1253,
+   "name": "10.5 l 294 kW"
+  },
+  {
+   "id": 6142,
+   "modelId": 1253,
+   "name": "12.4 l 338 kW"
+  },
+  {
+   "id": 6143,
+   "modelId": 1253,
+   "name": "12.4 l 375 kW"
+  },
+  {
+   "id": 6144,
+   "modelId": 1254,
+   "name": "9.0 l 243 kW"
+  },
+  {
+   "id": 6145,
+   "modelId": 1254,
+   "name": "10.5 l 265 kW"
+  },
+  {
+   "id": 6146,
+   "modelId": 1255,
+   "name": "2.0 D 105 kW"
+  },
+  {
+   "id": 6147,
+   "modelId": 1255,
+   "name": "2.0 D 120 kW"
+  },
+  {
+   "id": 6148,
+   "modelId": 1256,
+   "name": "Elektro 90 kW"
+  },
+  {
+   "id": 6149,
+   "modelId": 1257,
+   "name": "Elektro 150 kW"
+  },
+  {
+   "id": 6150,
+   "modelId": 1258,
+   "name": "9.0 l 191 kW"
+  },
+  {
+   "id": 6151,
+   "modelId": 1258,
+   "name": "11.7 l 279 kW"
+  },
+  {
+   "id": 6152,
+   "modelId": 1258,
+   "name": "11.7 l 309 kW"
+  },
+  {
+   "id": 6153,
+   "modelId": 1258,
+   "name": "15.6 V8 368 kW"
+  },
+  {
+   "id": 6154,
+   "modelId": 1258,
+   "name": "15.6 V8 427 kW"
+  },
+  {
+   "id": 6155,
+   "modelId": 1259,
+   "name": "9.3 l 206 kW"
+  },
+  {
+   "id": 6156,
+   "modelId": 1259,
+   "name": "9.3 l 228 kW"
+  },
+  {
+   "id": 6157,
+   "modelId": 1259,
+   "name": "12.7 l 309 kW"
+  },
+  {
+   "id": 6158,
+   "modelId": 1259,
+   "name": "12.7 l 353 kW"
+  },
+  {
+   "id": 6159,
+   "modelId": 1259,
+   "name": "12.7 l 382 kW"
+  },
+  {
+   "id": 6160,
+   "modelId": 1259,
+   "name": "16.4 V8 382 kW"
+  },
+  {
+   "id": 6161,
+   "modelId": 1259,
+   "name": "16.4 V8 459 kW"
+  },
+  {
+   "id": 6162,
+   "modelId": 1259,
+   "name": "16.4 V8 537 kW"
+  },
+  {
+   "id": 6163,
+   "modelId": 1260,
+   "name": "9.3 l 206 kW"
+  },
+  {
+   "id": 6164,
+   "modelId": 1260,
+   "name": "9.3 l 235 kW"
+  },
+  {
+   "id": 6165,
+   "modelId": 1260,
+   "name": "12.7 l 302 kW"
+  },
+  {
+   "id": 6166,
+   "modelId": 1260,
+   "name": "12.7 l 331 kW"
+  },
+  {
+   "id": 6167,
+   "modelId": 1260,
+   "name": "12.7 l 375 kW"
+  },
+  {
+   "id": 6168,
+   "modelId": 1260,
+   "name": "13.0 l 412 kW"
+  },
+  {
+   "id": 6169,
+   "modelId": 1260,
+   "name": "16.4 V8 390 kW"
+  },
+  {
+   "id": 6170,
+   "modelId": 1260,
+   "name": "16.4 V8 566 kW"
+  },
+  {
+   "id": 6171,
+   "modelId": 1260,
+   "name": "Elektro 230 kW"
+  },
+  {
+   "id": 6172,
+   "modelId": 1261,
+   "name": "12.7 l 324 kW"
+  },
+  {
+   "id": 6173,
+   "modelId": 1261,
+   "name": "12.7 l 302 kW"
+  },
+  {
+   "id": 6174,
+   "modelId": 1262,
+   "name": "9.3 l 235 kW"
+  },
+  {
+   "id": 6175,
+   "modelId": 1262,
+   "name": "12.7 l 302 kW"
+  },
+  {
+   "id": 6176,
+   "modelId": 1263,
+   "name": "9.3 l 206 kW"
+  },
+  {
+   "id": 6177,
+   "modelId": 1263,
+   "name": "9.3 l 235 kW"
+  },
+  {
+   "id": 6178,
+   "modelId": 1263,
+   "name": "9.3 l CNG 206 kW"
+  },
+  {
+   "id": 6179,
+   "modelId": 1264,
+   "name": "12.1 l 279 kW"
+  },
+  {
+   "id": 6180,
+   "modelId": 1264,
+   "name": "12.1 l 309 kW"
+  },
+  {
+   "id": 6181,
+   "modelId": 1264,
+   "name": "16.1 l 382 kW"
+  },
+  {
+   "id": 6182,
+   "modelId": 1265,
+   "name": "12.8 l 294 kW"
+  },
+  {
+   "id": 6183,
+   "modelId": 1265,
+   "name": "12.8 l 324 kW"
+  },
+  {
+   "id": 6184,
+   "modelId": 1265,
+   "name": "12.8 l 353 kW"
+  },
+  {
+   "id": 6185,
+   "modelId": 1265,
+   "name": "16.1 l 397 kW"
+  },
+  {
+   "id": 6186,
+   "modelId": 1265,
+   "name": "16.1 l 485 kW"
+  },
+  {
+   "id": 6187,
+   "modelId": 1266,
+   "name": "12.8 l 309 kW"
+  },
+  {
+   "id": 6188,
+   "modelId": 1266,
+   "name": "12.8 l 338 kW"
+  },
+  {
+   "id": 6189,
+   "modelId": 1266,
+   "name": "12.8 l 368 kW"
+  },
+  {
+   "id": 6190,
+   "modelId": 1266,
+   "name": "12.8 l 397 kW"
+  },
+  {
+   "id": 6191,
+   "modelId": 1266,
+   "name": "16.1 l 397 kW"
+  },
+  {
+   "id": 6192,
+   "modelId": 1266,
+   "name": "16.1 l 551 kW"
+  },
+  {
+   "id": 6193,
+   "modelId": 1267,
+   "name": "12.8 l 338 kW"
+  },
+  {
+   "id": 6194,
+   "modelId": 1267,
+   "name": "12.8 l 368 kW"
+  },
+  {
+   "id": 6195,
+   "modelId": 1267,
+   "name": "12.8 l 397 kW"
+  },
+  {
+   "id": 6196,
+   "modelId": 1267,
+   "name": "16.1 l 551 kW"
+  },
+  {
+   "id": 6197,
+   "modelId": 1267,
+   "name": "FH Electric 490 kW"
+  },
+  {
+   "id": 6198,
+   "modelId": 1268,
+   "name": "9.4 l 221 kW"
+  },
+  {
+   "id": 6199,
+   "modelId": 1268,
+   "name": "10.8 l 243 kW"
+  },
+  {
+   "id": 6200,
+   "modelId": 1268,
+   "name": "12.8 l 309 kW"
+  },
+  {
+   "id": 6201,
+   "modelId": 1268,
+   "name": "12.8 l 338 kW"
+  },
+  {
+   "id": 6202,
+   "modelId": 1268,
+   "name": "12.8 l 368 kW"
+  },
+  {
+   "id": 6203,
+   "modelId": 1269,
+   "name": "10.8 l 243 kW"
+  },
+  {
+   "id": 6204,
+   "modelId": 1269,
+   "name": "12.8 l 309 kW"
+  },
+  {
+   "id": 6205,
+   "modelId": 1269,
+   "name": "12.8 l 368 kW"
+  },
+  {
+   "id": 6206,
+   "modelId": 1270,
+   "name": "5.1 l 132 kW"
+  },
+  {
+   "id": 6207,
+   "modelId": 1270,
+   "name": "7.7 l 177 kW"
+  },
+  {
+   "id": 6208,
+   "modelId": 1270,
+   "name": "7.7 l 206 kW"
+  },
+  {
+   "id": 6209,
+   "modelId": 1270,
+   "name": "FL Electric 130 kW"
+  },
+  {
+   "id": 6210,
+   "modelId": 1271,
+   "name": "7.7 l 206 kW"
+  },
+  {
+   "id": 6211,
+   "modelId": 1271,
+   "name": "7.7 l 235 kW"
+  },
+  {
+   "id": 6212,
+   "modelId": 1271,
+   "name": "FE Electric 200 kW"
+  },
+  {
+   "id": 6213,
+   "modelId": 1272,
+   "name": "12.1 l 309 kW"
+  },
+  {
+   "id": 6214,
+   "modelId": 1272,
+   "name": "12.8 l 338 kW"
+  },
+  {
+   "id": 6215,
+   "modelId": 1273,
+   "name": "10.8 l 316 kW"
+  },
+  {
+   "id": 6216,
+   "modelId": 1273,
+   "name": "12.8 l 338 kW"
+  },
+  {
+   "id": 6217,
+   "modelId": 1274,
+   "name": "7.7 l 206 kW"
+  },
+  {
+   "id": 6218,
+   "modelId": 1274,
+   "name": "7.7 l 250 kW"
+  },
+  {
+   "id": 6219,
+   "modelId": 1275,
+   "name": "5.1 l Hybrid 177 kW"
+  },
+  {
+   "id": 6220,
+   "modelId": 1275,
+   "name": "Elektro 200 kW"
+  },
+  {
+   "id": 6221,
+   "modelId": 1276,
+   "name": "12.6 l 280 kW"
+  },
+  {
+   "id": 6222,
+   "modelId": 1276,
+   "name": "12.6 l 315 kW"
+  },
+  {
+   "id": 6223,
+   "modelId": 1276,
+   "name": "12.6 l 355 kW"
+  },
+  {
+   "id": 6224,
+   "modelId": 1276,
+   "name": "12.6 l 390 kW"
+  },
+  {
+   "id": 6225,
+   "modelId": 1277,
+   "name": "12.9 l 300 kW"
+  },
+  {
+   "id": 6226,
+   "modelId": 1277,
+   "name": "12.9 l 340 kW"
+  },
+  {
+   "id": 6227,
+   "modelId": 1277,
+   "name": "12.9 l 375 kW"
+  },
+  {
+   "id": 6228,
+   "modelId": 1277,
+   "name": "12.9 l 410 kW"
+  },
+  {
+   "id": 6229,
+   "modelId": 1278,
+   "name": "10.8 l 300 kW"
+  },
+  {
+   "id": 6230,
+   "modelId": 1278,
+   "name": "12.9 l 320 kW"
+  },
+  {
+   "id": 6231,
+   "modelId": 1278,
+   "name": "12.9 l 355 kW"
+  },
+  {
+   "id": 6232,
+   "modelId": 1278,
+   "name": "12.9 l 390 kW"
+  },
+  {
+   "id": 6233,
+   "modelId": 1279,
+   "name": "10.8 l 300 kW"
+  },
+  {
+   "id": 6234,
+   "modelId": 1279,
+   "name": "12.9 l 355 kW"
+  },
+  {
+   "id": 6235,
+   "modelId": 1279,
+   "name": "12.9 l 390 kW"
+  },
+  {
+   "id": 6236,
+   "modelId": 1280,
+   "name": "9.2 l 228 kW"
+  },
+  {
+   "id": 6237,
+   "modelId": 1280,
+   "name": "10.8 l 300 kW"
+  },
+  {
+   "id": 6238,
+   "modelId": 1280,
+   "name": "12.9 l 340 kW"
+  },
+  {
+   "id": 6239,
+   "modelId": 1280,
+   "name": "6.7 l 194 kW"
+  },
+  {
+   "id": 6240,
+   "modelId": 1281,
+   "name": "10.8 l 270 kW"
+  },
+  {
+   "id": 6241,
+   "modelId": 1281,
+   "name": "12.9 l 355 kW"
+  },
+  {
+   "id": 6242,
+   "modelId": 1281,
+   "name": "CF Electric 270 kW"
+  },
+  {
+   "id": 6243,
+   "modelId": 1282,
+   "name": "4.5 l 118 kW"
+  },
+  {
+   "id": 6244,
+   "modelId": 1282,
+   "name": "6.7 l 172 kW"
+  },
+  {
+   "id": 6245,
+   "modelId": 1282,
+   "name": "6.7 l 213 kW"
+  },
+  {
+   "id": 6246,
+   "modelId": 1283,
+   "name": "12.0 l 324 kW"
+  },
+  {
+   "id": 6247,
+   "modelId": 1283,
+   "name": "12.8 l 353 kW"
+  },
+  {
+   "id": 6248,
+   "modelId": 1283,
+   "name": "16.1 l 368 kW"
+  },
+  {
+   "id": 6249,
+   "modelId": 1283,
+   "name": "16.1 l 412 kW"
+  },
+  {
+   "id": 6250,
+   "modelId": 1284,
+   "name": "7.2 l 196 kW"
+  },
+  {
+   "id": 6251,
+   "modelId": 1284,
+   "name": "10.8 l 243 kW"
+  },
+  {
+   "id": 6252,
+   "modelId": 1284,
+   "name": "10.8 l 338 kW"
+  },
+  {
+   "id": 6253,
+   "modelId": 1284,
+   "name": "11.1 l 309 kW"
+  },
+  {
+   "id": 6254,
+   "modelId": 1285,
+   "name": "10.8 l 324 kW"
+  },
+  {
+   "id": 6255,
+   "modelId": 1285,
+   "name": "11.1 l 316 kW"
+  },
+  {
+   "id": 6256,
+   "modelId": 1286,
+   "name": "4.8 l 132 kW"
+  },
+  {
+   "id": 6257,
+   "modelId": 1286,
+   "name": "7.2 l 177 kW"
+  },
+  {
+   "id": 6258,
+   "modelId": 1286,
+   "name": "7.2 l 210 kW"
+  },
+  {
+   "id": 6259,
+   "modelId": 1287,
+   "name": "10.8 l 316 kW"
+  },
+  {
+   "id": 6260,
+   "modelId": 1287,
+   "name": "12.8 l 353 kW"
+  },
+  {
+   "id": 6261,
+   "modelId": 1287,
+   "name": "12.8 l 382 kW"
+  },
+  {
+   "id": 6262,
+   "modelId": 1287,
+   "name": "12.8 l 397 kW"
+  },
+  {
+   "id": 6263,
+   "modelId": 1288,
+   "name": "10.8 l 316 kW"
+  },
+  {
+   "id": 6264,
+   "modelId": 1288,
+   "name": "12.8 l 382 kW"
+  },
+  {
+   "id": 6265,
+   "modelId": 1289,
+   "name": "5.1 l 158 kW"
+  },
+  {
+   "id": 6266,
+   "modelId": 1289,
+   "name": "7.7 l 206 kW"
+  },
+  {
+   "id": 6267,
+   "modelId": 1289,
+   "name": "7.7 l 235 kW"
+  },
+  {
+   "id": 6268,
+   "modelId": 1289,
+   "name": "E-Tech Elektro 185 kW"
+  },
+  {
+   "id": 6269,
+   "modelId": 1290,
+   "name": "12.7 V8 230 kW"
+  },
+  {
+   "id": 6270,
+   "modelId": 1290,
+   "name": "15.8 V10 265 kW"
+  },
+  {
+   "id": 6271,
+   "modelId": 1290,
+   "name": "19.0 V12 300 kW"
+  },
+  {
+   "id": 6272,
+   "modelId": 1291,
+   "name": "12.7 V8 260 kW"
+  },
+  {
+   "id": 6273,
+   "modelId": 1291,
+   "name": "12.7 V8 300 kW"
+  },
+  {
+   "id": 6274,
+   "modelId": 1291,
+   "name": "12.9 l 325 kW"
+  },
+  {
+   "id": 6275,
+   "modelId": 1292,
+   "name": "12.9 l 300 kW"
+  },
+  {
+   "id": 6276,
+   "modelId": 1292,
+   "name": "12.9 l 375 kW"
+  },
+  {
+   "id": 6277,
+   "modelId": 1293,
+   "name": "12.7 V8 300 kW"
+  },
+  {
+   "id": 6278,
+   "modelId": 1293,
+   "name": "12.9 l 330 kW"
+  },
+  {
+   "id": 6279,
+   "modelId": 1294,
+   "name": "3.6 D 66 kW"
+  },
+  {
+   "id": 6280,
+   "modelId": 1294,
+   "name": "3.9 TD 85 kW"
+  },
+  {
+   "id": 6281,
+   "modelId": 1295,
+   "name": "3.9 D 100 kW"
+  },
+  {
+   "id": 6282,
+   "modelId": 1295,
+   "name": "4.5 D 120 kW"
+  },
+  {
+   "id": 6283,
+   "modelId": 1296,
+   "name": "3.0 D 96 kW"
+  },
+  {
+   "id": 6284,
+   "modelId": 1296,
+   "name": "3.0 D 110 kW"
+  },
+  {
+   "id": 6285,
+   "modelId": 1296,
+   "name": "3.0 D 129 kW"
+  },
+  {
+   "id": 6286,
+   "modelId": 1296,
+   "name": "3.9 D 92 kW"
+  },
+  {
+   "id": 6287,
+   "modelId": 1296,
+   "name": "eCanter Elektro 129 kW"
+  },
+  {
+   "id": 6288,
+   "modelId": 1297,
+   "name": "3.0 D 110 kW"
+  },
+  {
+   "id": 6289,
+   "modelId": 1297,
+   "name": "5.2 D 140 kW"
+  },
+  {
+   "id": 6290,
+   "modelId": 1298,
+   "name": "4.5 l 140 kW"
+  },
+  {
+   "id": 6291,
+   "modelId": 1298,
+   "name": "5.2 l 140 kW"
+  },
+  {
+   "id": 6292,
+   "modelId": 1298,
+   "name": "6.7 l 210 kW"
+  },
+  {
+   "id": 6293,
+   "modelId": 1299,
+   "name": "12.7 l 368 kW"
+  },
+  {
+   "id": 6294,
+   "modelId": 1300,
+   "name": "11.9 l 200 kW"
+  },
+  {
+   "id": 6295,
+   "modelId": 1300,
+   "name": "11.9 l 221 kW"
+  },
+  {
+   "id": 6296,
+   "modelId": 1300,
+   "name": "11.9 l 270 kW"
+  },
+  {
+   "id": 6297,
+   "modelId": 1301,
+   "name": "11.9 V6 260 kW"
+  },
+  {
+   "id": 6298,
+   "modelId": 1301,
+   "name": "15.9 V8 310 kW"
+  },
+  {
+   "id": 6299,
+   "modelId": 1302,
+   "name": "11.9 l 260 kW"
+  },
+  {
+   "id": 6300,
+   "modelId": 1302,
+   "name": "12.8 l 315 kW"
+  },
+  {
+   "id": 6301,
+   "modelId": 1302,
+   "name": "15.9 V8 350 kW"
+  },
+  {
+   "id": 6302,
+   "modelId": 1302,
+   "name": "7.2 l 220 kW"
+  },
+  {
+   "id": 6303,
+   "modelId": 1303,
+   "name": "10.7 l 290 kW"
+  },
+  {
+   "id": 6304,
+   "modelId": 1303,
+   "name": "12.8 l 350 kW"
+  },
+  {
+   "id": 6305,
+   "modelId": 1304,
+   "name": "7.7 l 260 kW"
+  },
+  {
+   "id": 6306,
+   "modelId": 1304,
+   "name": "10.7 l 290 kW"
+  },
+  {
+   "id": 6307,
+   "modelId": 1305,
+   "name": "9.3 l 228 kW"
+  },
+  {
+   "id": 6308,
+   "modelId": 1305,
+   "name": "10.6 l 280 kW"
+  },
+  {
+   "id": 6309,
+   "modelId": 1305,
+   "name": "12.0 l 309 kW"
+  },
+  {
+   "id": 6310,
+   "modelId": 1306,
+   "name": "12.0 l 309 kW"
+  },
+  {
+   "id": 6311,
+   "modelId": 1306,
+   "name": "12.7 l 324 kW"
+  },
+  {
+   "id": 6312,
+   "modelId": 1306,
+   "name": "12.9 l 375 kW"
+  },
+  {
+   "id": 6313,
+   "modelId": 1307,
+   "name": "9.3 l 235 kW"
+  },
+  {
+   "id": 6314,
+   "modelId": 1307,
+   "name": "12.7 l 302 kW"
+  },
+  {
+   "id": 6315,
+   "modelId": 1307,
+   "name": "12.9 l 375 kW"
+  },
+  {
+   "id": 6316,
+   "modelId": 1308,
+   "name": "Elektro 230 kW"
+  },
+  {
+   "id": 6317,
+   "modelId": 1309,
+   "name": "7.8 l 213 kW"
+  },
+  {
+   "id": 6318,
+   "modelId": 1309,
+   "name": "8.7 l 265 kW"
+  },
+  {
+   "id": 6319,
+   "modelId": 1309,
+   "name": "8.7 l 294 kW"
+  },
+  {
+   "id": 6320,
+   "modelId": 1309,
+   "name": "8.7 l CNG 243 kW"
+  },
+  {
+   "id": 6321,
+   "modelId": 1310,
+   "name": "8.7 l 265 kW"
+  },
+  {
+   "id": 6322,
+   "modelId": 1310,
+   "name": "10.3 l 330 kW"
+  },
+  {
+   "id": 6323,
+   "modelId": 1310,
+   "name": "11.1 l 338 kW"
+  },
+  {
+   "id": 6324,
+   "modelId": 1311,
+   "name": "7.8 l 213 kW"
+  },
+  {
+   "id": 6325,
+   "modelId": 1311,
+   "name": "8.7 l 243 kW"
+  },
+  {
+   "id": 6326,
+   "modelId": 1311,
+   "name": "8.7 l CNG 243 kW"
+  },
+  {
+   "id": 6327,
+   "modelId": 1312,
+   "name": "7.8 l 213 kW"
+  },
+  {
+   "id": 6328,
+   "modelId": 1312,
+   "name": "10.3 l 257 kW"
+  },
+  {
+   "id": 6329,
+   "modelId": 1313,
+   "name": "3.0 D 130 kW"
+  },
+  {
+   "id": 6330,
+   "modelId": 1313,
+   "name": "3.0 D 150 kW"
+  },
+  {
+   "id": 6331,
+   "modelId": 1314,
+   "name": "9.5 l 213 kW"
+  },
+  {
+   "id": 6332,
+   "modelId": 1314,
+   "name": "10.3 l 243 kW"
+  },
+  {
+   "id": 6333,
+   "modelId": 1315,
+   "name": "11.9 l 155 kW"
+  },
+  {
+   "id": 6334,
+   "modelId": 1316,
+   "name": "11.9 l 177 kW"
+  },
+  {
+   "id": 6335,
+   "modelId": 1316,
+   "name": "11.9 l 200 kW"
+  },
+  {
+   "id": 6336,
+   "modelId": 1317,
+   "name": "7.8 l 191 kW"
+  },
+  {
+   "id": 6337,
+   "modelId": 1317,
+   "name": "7.8 l 213 kW"
+  },
+  {
+   "id": 6338,
+   "modelId": 1317,
+   "name": "10.3 l 243 kW"
+  },
+  {
+   "id": 6339,
+   "modelId": 1318,
+   "name": "4.5 l 118 kW"
+  },
+  {
+   "id": 6340,
+   "modelId": 1318,
+   "name": "6.7 l 182 kW"
+  },
+  {
+   "id": 6341,
+   "modelId": 1318,
+   "name": "6.7 l 210 kW"
+  },
+  {
+   "id": 6342,
+   "modelId": 1319,
+   "name": "6.7 l 182 kW"
+  },
+  {
+   "id": 6343,
+   "modelId": 1319,
+   "name": "6.7 l 210 kW"
+  },
+  {
+   "id": 6344,
+   "modelId": 1319,
+   "name": "6.7 l CNG 199 kW"
+  },
+  {
+   "id": 6345,
+   "modelId": 1320,
+   "name": "6.7 l 210 kW"
+  },
+  {
+   "id": 6346,
+   "modelId": 1320,
+   "name": "9.0 l 265 kW"
+  },
+  {
+   "id": 6347,
+   "modelId": 1320,
+   "name": "Elektro 230 kW"
+  },
+  {
+   "id": 6348,
+   "modelId": 1321,
+   "name": "Elektro 120 kW"
+  },
+  {
+   "id": 6349,
+   "modelId": 1321,
+   "name": "Elektro 160 kW"
+  },
+  {
+   "id": 6350,
+   "modelId": 1322,
+   "name": "7.7 l 184 kW"
+  },
+  {
+   "id": 6351,
+   "modelId": 1323,
+   "name": "6.7 l 184 kW"
+  },
+  {
+   "id": 6352,
+   "modelId": 1323,
+   "name": "7.8 l 213 kW"
+  },
+  {
+   "id": 6353,
+   "modelId": 1323,
+   "name": "9.2 l 239 kW"
+  },
+  {
+   "id": 6354,
+   "modelId": 1323,
+   "name": "CNG 213 kW"
+  },
+  {
+   "id": 6355,
+   "modelId": 1324,
+   "name": "6.7 l 210 kW"
+  },
+  {
+   "id": 6356,
+   "modelId": 1324,
+   "name": "8.7 l 265 kW"
+  },
+  {
+   "id": 6357,
+   "modelId": 1324,
+   "name": "Urbino electric 160 kW"
+  },
+  {
+   "id": 6358,
+   "modelId": 1324,
+   "name": "Urbino electric 250 kW"
+  },
+  {
+   "id": 6359,
+   "modelId": 1324,
+   "name": "Urbino hydrogen 100 kW"
+  },
+  {
+   "id": 6360,
+   "modelId": 1325,
+   "name": "7.7 l 260 kW"
+  },
+  {
+   "id": 6361,
+   "modelId": 1326,
+   "name": "10.8 l 301 kW"
+  },
+  {
+   "id": 6362,
+   "modelId": 1326,
+   "name": "12.9 l 340 kW"
+  },
+  {
+   "id": 6363,
+   "modelId": 1327,
+   "name": "6.7 l 184 kW"
+  },
+  {
+   "id": 6364,
+   "modelId": 1327,
+   "name": "6.7 l 210 kW"
+  },
+  {
+   "id": 6365,
+   "modelId": 1327,
+   "name": "Elektro 210 kW"
+  },
+  {
+   "id": 6366,
+   "modelId": 1328,
+   "name": "10.5 l 294 kW"
+  },
+  {
+   "id": 6367,
+   "modelId": 1328,
+   "name": "12.4 l 338 kW"
+  },
+  {
+   "id": 6368,
+   "modelId": 1329,
+   "name": "10.5 l 294 kW"
+  },
+  {
+   "id": 6369,
+   "modelId": 1329,
+   "name": "12.4 l 338 kW"
+  },
+  {
+   "id": 6370,
+   "modelId": 1330,
+   "name": "12.4 l 353 kW"
+  },
+  {
+   "id": 6371,
+   "modelId": 1330,
+   "name": "15.2 l 371 kW"
+  },
+  {
+   "id": 6372,
+   "modelId": 1331,
+   "name": "8.9 l 279 kW"
+  },
+  {
+   "id": 6373,
+   "modelId": 1331,
+   "name": "10.8 l 302 kW"
+  },
+  {
+   "id": 6374,
+   "modelId": 1331,
+   "name": "6.7 l 213 kW"
+  },
+  {
+   "id": 6375,
+   "modelId": 1332,
+   "name": "6.7 l 210 kW"
+  },
+  {
+   "id": 6376,
+   "modelId": 1332,
+   "name": "6.7 l 235 kW"
+  },
+  {
+   "id": 6377,
+   "modelId": 1332,
+   "name": "Elektro 230 kW"
+  },
+  {
+   "id": 6378,
+   "modelId": 1333,
+   "name": "10.8 l 316 kW"
+  },
+  {
+   "id": 6379,
+   "modelId": 1333,
+   "name": "12.9 l 375 kW"
+  },
+  {
+   "id": 6380,
+   "modelId": 1334,
+   "name": "10.4 l 141 kW"
+  },
+  {
+   "id": 6381,
+   "modelId": 1334,
+   "name": "10.4 l 158 kW"
+  },
+  {
+   "id": 6382,
+   "modelId": 1335,
+   "name": "125 cm³ 10 kW"
+  },
+  {
+   "id": 6383,
+   "modelId": 1336,
+   "name": "599 cm³ 70 kW"
+  },
+  {
+   "id": 6384,
+   "modelId": 1336,
+   "name": "599 cm³ 81 kW"
+  },
+  {
+   "id": 6385,
+   "modelId": 1337,
+   "name": "599 cm³ 85 kW"
+  },
+  {
+   "id": 6386,
+   "modelId": 1337,
+   "name": "599 cm³ 88 kW"
+  },
+  {
+   "id": 6387,
+   "modelId": 1338,
+   "name": "918 cm³ 94 kW"
+  },
+  {
+   "id": 6388,
+   "modelId": 1338,
+   "name": "929 cm³ 112 kW"
+  },
+  {
+   "id": 6389,
+   "modelId": 1338,
+   "name": "954 cm³ 113 kW"
+  },
+  {
+   "id": 6390,
+   "modelId": 1339,
+   "name": "998 cm³ 126 kW"
+  },
+  {
+   "id": 6391,
+   "modelId": 1339,
+   "name": "999 cm³ 141 kW"
+  },
+  {
+   "id": 6392,
+   "modelId": 1339,
+   "name": "1000 cm³ 160 kW"
+  },
+  {
+   "id": 6393,
+   "modelId": 1340,
+   "name": "599 cm³ 57 kW"
+  },
+  {
+   "id": 6394,
+   "modelId": 1340,
+   "name": "998 cm³ 72 kW"
+  },
+  {
+   "id": 6395,
+   "modelId": 1341,
+   "name": "499 cm³ 35 kW"
+  },
+  {
+   "id": 6396,
+   "modelId": 1341,
+   "name": "471 cm³ 35 kW"
+  },
+  {
+   "id": 6397,
+   "modelId": 1342,
+   "name": "649 cm³ 64 kW"
+  },
+  {
+   "id": 6398,
+   "modelId": 1342,
+   "name": "649 cm³ 70 kW"
+  },
+  {
+   "id": 6399,
+   "modelId": 1343,
+   "name": "599 cm³ 70 kW"
+  },
+  {
+   "id": 6400,
+   "modelId": 1343,
+   "name": "599 cm³ 75 kW"
+  },
+  {
+   "id": 6401,
+   "modelId": 1344,
+   "name": "755 cm³ 67 kW"
+  },
+  {
+   "id": 6402,
+   "modelId": 1345,
+   "name": "998 cm³ 92 kW"
+  },
+  {
+   "id": 6403,
+   "modelId": 1345,
+   "name": "998 cm³ 107 kW"
+  },
+  {
+   "id": 6404,
+   "modelId": 1346,
+   "name": "647 cm³ 41 kW"
+  },
+  {
+   "id": 6405,
+   "modelId": 1346,
+   "name": "680 cm³ 48 kW"
+  },
+  {
+   "id": 6406,
+   "modelId": 1347,
+   "name": "583 cm³ 37 kW"
+  },
+  {
+   "id": 6407,
+   "modelId": 1347,
+   "name": "647 cm³ 39 kW"
+  },
+  {
+   "id": 6408,
+   "modelId": 1347,
+   "name": "680 cm³ 44 kW"
+  },
+  {
+   "id": 6409,
+   "modelId": 1348,
+   "name": "998 cm³ 70 kW"
+  },
+  {
+   "id": 6410,
+   "modelId": 1348,
+   "name": "1084 cm³ 75 kW"
+  },
+  {
+   "id": 6411,
+   "modelId": 1349,
+   "name": "782 cm³ 80 kW"
+  },
+  {
+   "id": 6412,
+   "modelId": 1350,
+   "name": "996 cm³ 69 kW"
+  },
+  {
+   "id": 6413,
+   "modelId": 1351,
+   "name": "1832 cm³ 87 kW"
+  },
+  {
+   "id": 6414,
+   "modelId": 1352,
+   "name": "670 cm³ 35 kW"
+  },
+  {
+   "id": 6415,
+   "modelId": 1352,
+   "name": "745 cm³ 40 kW"
+  },
+  {
+   "id": 6416,
+   "modelId": 1353,
+   "name": "583 cm³ 29 kW"
+  },
+  {
+   "id": 6417,
+   "modelId": 1353,
+   "name": "745 cm³ 33 kW"
+  },
+  {
+   "id": 6418,
+   "modelId": 1354,
+   "name": "125 cm³ 9 kW"
+  },
+  {
+   "id": 6419,
+   "modelId": 1355,
+   "name": "125 cm³ 9 kW"
+  },
+  {
+   "id": 6420,
+   "modelId": 1355,
+   "name": "153 cm³ 11 kW"
+  },
+  {
+   "id": 6421,
+   "modelId": 1355,
+   "name": "279 cm³ 18 kW"
+  },
+  {
+   "id": 6422,
+   "modelId": 1356,
+   "name": "125 cm³ 11 kW"
+  },
+  {
+   "id": 6423,
+   "modelId": 1356,
+   "name": "279 cm³ 18 kW"
+  },
+  {
+   "id": 6424,
+   "modelId": 1356,
+   "name": "330 cm³ 21 kW"
+  },
+  {
+   "id": 6425,
+   "modelId": 1356,
+   "name": "745 cm³ 43 kW"
+  },
+  {
+   "id": 6426,
+   "modelId": 1357,
+   "name": "745 cm³ 43 kW"
+  },
+  {
+   "id": 6427,
+   "modelId": 1358,
+   "name": "249 cm³ 28 kW"
+  },
+  {
+   "id": 6428,
+   "modelId": 1358,
+   "name": "449 cm³ 40 kW"
+  },
+  {
+   "id": 6429,
+   "modelId": 1359,
+   "name": "125 cm³ 11 kW"
+  },
+  {
+   "id": 6430,
+   "modelId": 1360,
+   "name": "599 cm³ 88 kW"
+  },
+  {
+   "id": 6431,
+   "modelId": 1360,
+   "name": "599 cm³ 91 kW"
+  },
+  {
+   "id": 6432,
+   "modelId": 1361,
+   "name": "998 cm³ 110 kW"
+  },
+  {
+   "id": 6433,
+   "modelId": 1361,
+   "name": "998 cm³ 147 kW"
+  },
+  {
+   "id": 6434,
+   "modelId": 1362,
+   "name": "321 cm³ 31 kW"
+  },
+  {
+   "id": 6435,
+   "modelId": 1362,
+   "name": "689 cm³ 54 kW"
+  },
+  {
+   "id": 6436,
+   "modelId": 1363,
+   "name": "321 cm³ 31 kW"
+  },
+  {
+   "id": 6437,
+   "modelId": 1363,
+   "name": "689 cm³ 54 kW"
+  },
+  {
+   "id": 6438,
+   "modelId": 1364,
+   "name": "847 cm³ 85 kW"
+  },
+  {
+   "id": 6439,
+   "modelId": 1364,
+   "name": "890 cm³ 87 kW"
+  },
+  {
+   "id": 6440,
+   "modelId": 1365,
+   "name": "998 cm³ 118 kW"
+  },
+  {
+   "id": 6441,
+   "modelId": 1366,
+   "name": "600 cm³ 72 kW"
+  },
+  {
+   "id": 6442,
+   "modelId": 1367,
+   "name": "998 cm³ 110 kW"
+  },
+  {
+   "id": 6443,
+   "modelId": 1368,
+   "name": "600 cm³ 57 kW"
+  },
+  {
+   "id": 6444,
+   "modelId": 1369,
+   "name": "660 cm³ 35 kW"
+  },
+  {
+   "id": 6445,
+   "modelId": 1369,
+   "name": "689 cm³ 54 kW"
+  },
+  {
+   "id": 6446,
+   "modelId": 1370,
+   "name": "1199 cm³ 82 kW"
+  },
+  {
+   "id": 6447,
+   "modelId": 1371,
+   "name": "849 cm³ 59 kW"
+  },
+  {
+   "id": 6448,
+   "modelId": 1371,
+   "name": "897 cm³ 63 kW"
+  },
+  {
+   "id": 6449,
+   "modelId": 1372,
+   "name": "1298 cm³ 107 kW"
+  },
+  {
+   "id": 6450,
+   "modelId": 1373,
+   "name": "649 cm³ 29 kW"
+  },
+  {
+   "id": 6451,
+   "modelId": 1373,
+   "name": "1063 cm³ 46 kW"
+  },
+  {
+   "id": 6452,
+   "modelId": 1374,
+   "name": "125 cm³ 9 kW"
+  },
+  {
+   "id": 6453,
+   "modelId": 1374,
+   "name": "249 cm³ 15 kW"
+  },
+  {
+   "id": 6454,
+   "modelId": 1374,
+   "name": "292 cm³ 20 kW"
+  },
+  {
+   "id": 6455,
+   "modelId": 1374,
+   "name": "395 cm³ 24 kW"
+  },
+  {
+   "id": 6456,
+   "modelId": 1375,
+   "name": "499 cm³ 32 kW"
+  },
+  {
+   "id": 6457,
+   "modelId": 1375,
+   "name": "530 cm³ 34 kW"
+  },
+  {
+   "id": 6458,
+   "modelId": 1375,
+   "name": "562 cm³ 35 kW"
+  },
+  {
+   "id": 6459,
+   "modelId": 1376,
+   "name": "125 cm³ 9 kW"
+  },
+  {
+   "id": 6460,
+   "modelId": 1377,
+   "name": "250 cm³ 28 kW"
+  },
+  {
+   "id": 6461,
+   "modelId": 1377,
+   "name": "450 cm³ 40 kW"
+  },
+  {
+   "id": 6462,
+   "modelId": 1378,
+   "name": "595 cm³ 28 kW"
+  },
+  {
+   "id": 6463,
+   "modelId": 1378,
+   "name": "686 cm³ 34 kW"
+  },
+  {
+   "id": 6464,
+   "modelId": 1379,
+   "name": "125 cm³ 11 kW"
+  },
+  {
+   "id": 6465,
+   "modelId": 1380,
+   "name": "249 cm³ 24 kW"
+  },
+  {
+   "id": 6466,
+   "modelId": 1380,
+   "name": "296 cm³ 29 kW"
+  },
+  {
+   "id": 6467,
+   "modelId": 1380,
+   "name": "399 cm³ 33 kW"
+  },
+  {
+   "id": 6468,
+   "modelId": 1381,
+   "name": "599 cm³ 82 kW"
+  },
+  {
+   "id": 6469,
+   "modelId": 1381,
+   "name": "636 cm³ 96 kW"
+  },
+  {
+   "id": 6470,
+   "modelId": 1382,
+   "name": "998 cm³ 129 kW"
+  },
+  {
+   "id": 6471,
+   "modelId": 1382,
+   "name": "998 cm³ 147 kW"
+  },
+  {
+   "id": 6472,
+   "modelId": 1383,
+   "name": "899 cm³ 106 kW"
+  },
+  {
+   "id": 6473,
+   "modelId": 1383,
+   "name": "1199 cm³ 131 kW"
+  },
+  {
+   "id": 6474,
+   "modelId": 1383,
+   "name": "1441 cm³ 147 kW"
+  },
+  {
+   "id": 6475,
+   "modelId": 1384,
+   "name": "649 cm³ 53 kW"
+  },
+  {
+   "id": 6476,
+   "modelId": 1384,
+   "name": "649 cm³ 50 kW"
+  },
+  {
+   "id": 6477,
+   "modelId": 1385,
+   "name": "649 cm³ 51 kW"
+  },
+  {
+   "id": 6478,
+   "modelId": 1385,
+   "name": "1043 cm³ 88 kW"
+  },
+  {
+   "id": 6479,
+   "modelId": 1386,
+   "name": "748 cm³ 78 kW"
+  },
+  {
+   "id": 6480,
+   "modelId": 1386,
+   "name": "806 cm³ 83 kW"
+  },
+  {
+   "id": 6481,
+   "modelId": 1386,
+   "name": "948 cm³ 92 kW"
+  },
+  {
+   "id": 6482,
+   "modelId": 1387,
+   "name": "953 cm³ 93 kW"
+  },
+  {
+   "id": 6483,
+   "modelId": 1387,
+   "name": "1043 cm³ 104 kW"
+  },
+  {
+   "id": 6484,
+   "modelId": 1388,
+   "name": "649 cm³ 45 kW"
+  },
+  {
+   "id": 6485,
+   "modelId": 1388,
+   "name": "903 cm³ 37 kW"
+  },
+  {
+   "id": 6486,
+   "modelId": 1389,
+   "name": "249 cm³ 28 kW"
+  },
+  {
+   "id": 6487,
+   "modelId": 1389,
+   "name": "449 cm³ 40 kW"
+  },
+  {
+   "id": 6488,
+   "modelId": 1390,
+   "name": "599 cm³ 92 kW"
+  },
+  {
+   "id": 6489,
+   "modelId": 1390,
+   "name": "750 cm³ 110 kW"
+  },
+  {
+   "id": 6490,
+   "modelId": 1391,
+   "name": "988 cm³ 118 kW"
+  },
+  {
+   "id": 6491,
+   "modelId": 1391,
+   "name": "999 cm³ 136 kW"
+  },
+  {
+   "id": 6492,
+   "modelId": 1392,
+   "name": "749 cm³ 84 kW"
+  },
+  {
+   "id": 6493,
+   "modelId": 1392,
+   "name": "999 cm³ 112 kW"
+  },
+  {
+   "id": 6494,
+   "modelId": 1393,
+   "name": "600 cm³ 57 kW"
+  },
+  {
+   "id": 6495,
+   "modelId": 1393,
+   "name": "656 cm³ 63 kW"
+  },
+  {
+   "id": 6496,
+   "modelId": 1393,
+   "name": "1157 cm³ 74 kW"
+  },
+  {
+   "id": 6497,
+   "modelId": 1393,
+   "name": "1255 cm³ 72 kW"
+  },
+  {
+   "id": 6498,
+   "modelId": 1394,
+   "name": "645 cm³ 55 kW"
+  },
+  {
+   "id": 6499,
+   "modelId": 1394,
+   "name": "996 cm³ 88 kW"
+  },
+  {
+   "id": 6500,
+   "modelId": 1395,
+   "name": "645 cm³ 52 kW"
+  },
+  {
+   "id": 6501,
+   "modelId": 1395,
+   "name": "776 cm³ 62 kW"
+  },
+  {
+   "id": 6502,
+   "modelId": 1395,
+   "name": "996 cm³ 74 kW"
+  },
+  {
+   "id": 6503,
+   "modelId": 1395,
+   "name": "1037 cm³ 79 kW"
+  },
+  {
+   "id": 6504,
+   "modelId": 1396,
+   "name": "1299 cm³ 128 kW"
+  },
+  {
+   "id": 6505,
+   "modelId": 1396,
+   "name": "1340 cm³ 140 kW"
+  },
+  {
+   "id": 6506,
+   "modelId": 1397,
+   "name": "125 cm³ 9 kW"
+  },
+  {
+   "id": 6507,
+   "modelId": 1397,
+   "name": "200 cm³ 13 kW"
+  },
+  {
+   "id": 6508,
+   "modelId": 1397,
+   "name": "400 cm³ 23 kW"
+  },
+  {
+   "id": 6509,
+   "modelId": 1397,
+   "name": "638 cm³ 40 kW"
+  },
+  {
+   "id": 6510,
+   "modelId": 1398,
+   "name": "805 cm³ 38 kW"
+  },
+  {
+   "id": 6511,
+   "modelId": 1398,
+   "name": "1462 cm³ 57 kW"
+  },
+  {
+   "id": 6512,
+   "modelId": 1399,
+   "name": "398 cm³ 29 kW"
+  },
+  {
+   "id": 6513,
+   "modelId": 1399,
+   "name": "644 cm³ 32 kW"
+  },
+  {
+   "id": 6514,
+   "modelId": 1400,
+   "name": "110 cm³ 6 kW"
+  },
+  {
+   "id": 6515,
+   "modelId": 1400,
+   "name": "125 cm³ 6 kW"
+  },
+  {
+   "id": 6516,
+   "modelId": 1401,
+   "name": "125 cm³ 11 kW"
+  },
+  {
+   "id": 6517,
+   "modelId": 1401,
+   "name": "199 cm³ 19 kW"
+  },
+  {
+   "id": 6518,
+   "modelId": 1401,
+   "name": "373 cm³ 32 kW"
+  },
+  {
+   "id": 6519,
+   "modelId": 1402,
+   "name": "690 cm³ 48 kW"
+  },
+  {
+   "id": 6520,
+   "modelId": 1402,
+   "name": "693 cm³ 55 kW"
+  },
+  {
+   "id": 6521,
+   "modelId": 1403,
+   "name": "799 cm³ 77 kW"
+  },
+  {
+   "id": 6522,
+   "modelId": 1403,
+   "name": "889 cm³ 85 kW"
+  },
+  {
+   "id": 6523,
+   "modelId": 1404,
+   "name": "1301 cm³ 132 kW"
+  },
+  {
+   "id": 6524,
+   "modelId": 1404,
+   "name": "1301 cm³ 118 kW"
+  },
+  {
+   "id": 6525,
+   "modelId": 1405,
+   "name": "799 cm³ 70 kW"
+  },
+  {
+   "id": 6526,
+   "modelId": 1405,
+   "name": "889 cm³ 77 kW"
+  },
+  {
+   "id": 6527,
+   "modelId": 1406,
+   "name": "999 cm³ 78 kW"
+  },
+  {
+   "id": 6528,
+   "modelId": 1406,
+   "name": "1195 cm³ 110 kW"
+  },
+  {
+   "id": 6529,
+   "modelId": 1407,
+   "name": "125 cm³ 25 kW"
+  },
+  {
+   "id": 6530,
+   "modelId": 1407,
+   "name": "249 cm³ 35 kW"
+  },
+  {
+   "id": 6531,
+   "modelId": 1407,
+   "name": "449 cm³ 40 kW"
+  },
+  {
+   "id": 6532,
+   "modelId": 1407,
+   "name": "510 cm³ 42 kW"
+  },
+  {
+   "id": 6533,
+   "modelId": 1408,
+   "name": "125 cm³ 11 kW"
+  },
+  {
+   "id": 6534,
+   "modelId": 1408,
+   "name": "373 cm³ 32 kW"
+  },
+  {
+   "id": 6535,
+   "modelId": 1409,
+   "name": "848 cm³ 52 kW"
+  },
+  {
+   "id": 6536,
+   "modelId": 1409,
+   "name": "1085 cm³ 59 kW"
+  },
+  {
+   "id": 6537,
+   "modelId": 1409,
+   "name": "1130 cm³ 63 kW"
+  },
+  {
+   "id": 6538,
+   "modelId": 1409,
+   "name": "1170 cm³ 92 kW"
+  },
+  {
+   "id": 6539,
+   "modelId": 1410,
+   "name": "1254 cm³ 100 kW"
+  },
+  {
+   "id": 6540,
+   "modelId": 1411,
+   "name": "1300 cm³ 107 kW"
+  },
+  {
+   "id": 6541,
+   "modelId": 1412,
+   "name": "1170 cm³ 81 kW"
+  },
+  {
+   "id": 6542,
+   "modelId": 1412,
+   "name": "1254 cm³ 100 kW"
+  },
+  {
+   "id": 6543,
+   "modelId": 1413,
+   "name": "652 cm³ 37 kW"
+  },
+  {
+   "id": 6544,
+   "modelId": 1413,
+   "name": "798 cm³ 55 kW"
+  },
+  {
+   "id": 6545,
+   "modelId": 1413,
+   "name": "798 cm³ 63 kW"
+  },
+  {
+   "id": 6546,
+   "modelId": 1414,
+   "name": "853 cm³ 57 kW"
+  },
+  {
+   "id": 6547,
+   "modelId": 1414,
+   "name": "853 cm³ 70 kW"
+  },
+  {
+   "id": 6548,
+   "modelId": 1414,
+   "name": "895 cm³ 77 kW"
+  },
+  {
+   "id": 6549,
+   "modelId": 1415,
+   "name": "999 cm³ 142 kW"
+  },
+  {
+   "id": 6550,
+   "modelId": 1415,
+   "name": "999 cm³ 121 kW"
+  },
+  {
+   "id": 6551,
+   "modelId": 1415,
+   "name": "999 cm³ 110 kW"
+  },
+  {
+   "id": 6552,
+   "modelId": 1416,
+   "name": "1157 cm³ 123 kW"
+  },
+  {
+   "id": 6553,
+   "modelId": 1416,
+   "name": "1293 cm³ 129 kW"
+  },
+  {
+   "id": 6554,
+   "modelId": 1416,
+   "name": "1649 cm³ 118 kW"
+  },
+  {
+   "id": 6555,
+   "modelId": 1417,
+   "name": "313 cm³ 25 kW"
+  },
+  {
+   "id": 6556,
+   "modelId": 1418,
+   "name": "350 cm³ 25 kW"
+  },
+  {
+   "id": 6557,
+   "modelId": 1418,
+   "name": "647 cm³ 44 kW"
+  },
+  {
+   "id": 6558,
+   "modelId": 1418,
+   "name": "CE 04 Elektro 31 kW"
+  },
+  {
+   "id": 6559,
+   "modelId": 1419,
+   "name": "583 cm³ 40 kW"
+  },
+  {
+   "id": 6560,
+   "modelId": 1419,
+   "name": "696 cm³ 59 kW"
+  },
+  {
+   "id": 6561,
+   "modelId": 1419,
+   "name": "803 cm³ 64 kW"
+  },
+  {
+   "id": 6562,
+   "modelId": 1419,
+   "name": "937 cm³ 82 kW"
+  },
+  {
+   "id": 6563,
+   "modelId": 1419,
+   "name": "1198 cm³ 108 kW"
+  },
+  {
+   "id": 6564,
+   "modelId": 1420,
+   "name": "992 cm³ 62 kW"
+  },
+  {
+   "id": 6565,
+   "modelId": 1420,
+   "name": "1198 cm³ 110 kW"
+  },
+  {
+   "id": 6566,
+   "modelId": 1420,
+   "name": "1262 cm³ 118 kW"
+  },
+  {
+   "id": 6567,
+   "modelId": 1420,
+   "name": "1158 cm³ V4 125 kW"
+  },
+  {
+   "id": 6568,
+   "modelId": 1421,
+   "name": "898 cm³ 109 kW"
+  },
+  {
+   "id": 6569,
+   "modelId": 1421,
+   "name": "955 cm³ 115 kW"
+  },
+  {
+   "id": 6570,
+   "modelId": 1421,
+   "name": "1103 cm³ V4 157 kW"
+  },
+  {
+   "id": 6571,
+   "modelId": 1422,
+   "name": "803 cm³ 54 kW"
+  },
+  {
+   "id": 6572,
+   "modelId": 1422,
+   "name": "1079 cm³ 63 kW"
+  },
+  {
+   "id": 6573,
+   "modelId": 1423,
+   "name": "821 cm³ 81 kW"
+  },
+  {
+   "id": 6574,
+   "modelId": 1423,
+   "name": "937 cm³ 84 kW"
+  },
+  {
+   "id": 6575,
+   "modelId": 1424,
+   "name": "1198 cm³ 112 kW"
+  },
+  {
+   "id": 6576,
+   "modelId": 1424,
+   "name": "1262 cm³ 117 kW"
+  },
+  {
+   "id": 6577,
+   "modelId": 1424,
+   "name": "1158 cm³ V4 124 kW"
+  },
+  {
+   "id": 6578,
+   "modelId": 1425,
+   "name": "937 cm³ 81 kW"
+  },
+  {
+   "id": 6579,
+   "modelId": 1426,
+   "name": "675 cm³ 78 kW"
+  },
+  {
+   "id": 6580,
+   "modelId": 1426,
+   "name": "765 cm³ 89 kW"
+  },
+  {
+   "id": 6581,
+   "modelId": 1427,
+   "name": "1050 cm³ 99 kW"
+  },
+  {
+   "id": 6582,
+   "modelId": 1427,
+   "name": "1160 cm³ 132 kW"
+  },
+  {
+   "id": 6583,
+   "modelId": 1428,
+   "name": "799 cm³ 70 kW"
+  },
+  {
+   "id": 6584,
+   "modelId": 1428,
+   "name": "888 cm³ 70 kW"
+  },
+  {
+   "id": 6585,
+   "modelId": 1429,
+   "name": "1050 cm³ 84 kW"
+  },
+  {
+   "id": 6586,
+   "modelId": 1429,
+   "name": "1215 cm³ 104 kW"
+  },
+  {
+   "id": 6587,
+   "modelId": 1430,
+   "name": "865 cm³ 50 kW"
+  },
+  {
+   "id": 6588,
+   "modelId": 1430,
+   "name": "900 cm³ 48 kW"
+  },
+  {
+   "id": 6589,
+   "modelId": 1430,
+   "name": "1200 cm³ 59 kW"
+  },
+  {
+   "id": 6590,
+   "modelId": 1431,
+   "name": "675 cm³ 93 kW"
+  },
+  {
+   "id": 6591,
+   "modelId": 1432,
+   "name": "660 cm³ 60 kW"
+  },
+  {
+   "id": 6592,
+   "modelId": 1433,
+   "name": "2294 cm³ 110 kW"
+  },
+  {
+   "id": 6593,
+   "modelId": 1433,
+   "name": "2458 cm³ 123 kW"
+  },
+  {
+   "id": 6594,
+   "modelId": 1434,
+   "name": "883 cm³ 37 kW"
+  },
+  {
+   "id": 6595,
+   "modelId": 1434,
+   "name": "1202 cm³ 50 kW"
+  },
+  {
+   "id": 6596,
+   "modelId": 1435,
+   "name": "1584 cm³ 56 kW"
+  },
+  {
+   "id": 6597,
+   "modelId": 1435,
+   "name": "1746 cm³ 64 kW"
+  },
+  {
+   "id": 6598,
+   "modelId": 1435,
+   "name": "1868 cm³ 70 kW"
+  },
+  {
+   "id": 6599,
+   "modelId": 1436,
+   "name": "1584 cm³ 59 kW"
+  },
+  {
+   "id": 6600,
+   "modelId": 1436,
+   "name": "1746 cm³ 66 kW"
+  },
+  {
+   "id": 6601,
+   "modelId": 1436,
+   "name": "1868 cm³ 74 kW"
+  },
+  {
+   "id": 6602,
+   "modelId": 1437,
+   "name": "1450 cm³ 50 kW"
+  },
+  {
+   "id": 6603,
+   "modelId": 1437,
+   "name": "1584 cm³ 55 kW"
+  },
+  {
+   "id": 6604,
+   "modelId": 1437,
+   "name": "1690 cm³ 60 kW"
+  },
+  {
+   "id": 6605,
+   "modelId": 1438,
+   "name": "1252 cm³ 112 kW"
+  },
+  {
+   "id": 6606,
+   "modelId": 1438,
+   "name": "1252 cm³ 90 kW"
+  },
+  {
+   "id": 6607,
+   "modelId": 1439,
+   "name": "125 cm³ 11 kW"
+  },
+  {
+   "id": 6608,
+   "modelId": 1439,
+   "name": "457 cm³ 35 kW"
+  },
+  {
+   "id": 6609,
+   "modelId": 1439,
+   "name": "659 cm³ 74 kW"
+  },
+  {
+   "id": 6610,
+   "modelId": 1440,
+   "name": "999 cm³ 132 kW"
+  },
+  {
+   "id": 6611,
+   "modelId": 1440,
+   "name": "1077 cm³ 162 kW"
+  },
+  {
+   "id": 6612,
+   "modelId": 1441,
+   "name": "750 cm³ 70 kW"
+  },
+  {
+   "id": 6613,
+   "modelId": 1441,
+   "name": "896 cm³ 70 kW"
+  },
+  {
+   "id": 6614,
+   "modelId": 1442,
+   "name": "49 cm³ 3 kW"
+  },
+  {
+   "id": 6615,
+   "modelId": 1442,
+   "name": "125 cm³ 11 kW"
+  },
+  {
+   "id": 6616,
+   "modelId": 1442,
+   "name": "174 cm³ 13 kW"
+  },
+  {
+   "id": 6617,
+   "modelId": 1443,
+   "name": "125 cm³ 8 kW"
+  },
+  {
+   "id": 6618,
+   "modelId": 1443,
+   "name": "155 cm³ 11 kW"
+  },
+  {
+   "id": 6619,
+   "modelId": 1443,
+   "name": "278 cm³ 19 kW"
+  },
+  {
+   "id": 6620,
+   "modelId": 1443,
+   "name": "399 cm³ 26 kW"
+  },
+  {
+   "id": 6621,
+   "modelId": 1444,
+   "name": "278 cm³ 19 kW"
+  },
+  {
+   "id": 6622,
+   "modelId": 1444,
+   "name": "399 cm³ 26 kW"
+  },
+  {
+   "id": 6623,
+   "modelId": 1444,
+   "name": "530 cm³ 32 kW"
+  },
+  {
+   "id": 6624,
+   "modelId": 1445,
+   "name": "125 cm³ 11 kW"
+  },
+  {
+   "id": 6625,
+   "modelId": 1445,
+   "name": "250 cm³ 16 kW"
+  },
+  {
+   "id": 6626,
+   "modelId": 1445,
+   "name": "492 cm³ 29 kW"
+  },
+  {
+   "id": 6627,
+   "modelId": 1446,
+   "name": "49 cm³ 3 kW"
+  },
+  {
+   "id": 6628,
+   "modelId": 1446,
+   "name": "125 cm³ 8 kW"
+  },
+  {
+   "id": 6629,
+   "modelId": 1447,
+   "name": "1.3 48 kW"
+  },
+  {
+   "id": 6630,
+   "modelId": 1447,
+   "name": "1.5 79 kW"
+  },
+  {
+   "id": 6631,
+   "modelId": 1448,
+   "name": "49 cm³ 3 kW"
+  },
+  {
+   "id": 6632,
+   "modelId": 1448,
+   "name": "125 cm³ 8 kW"
+  },
+  {
+   "id": 6633,
+   "modelId": 1448,
+   "name": "155 cm³ 9 kW"
+  },
+  {
+   "id": 6634,
+   "modelId": 1449,
+   "name": "125 cm³ 11 kW"
+  },
+  {
+   "id": 6635,
+   "modelId": 1449,
+   "name": "278 cm³ 17 kW"
+  },
+  {
+   "id": 6636,
+   "modelId": 1449,
+   "name": "310 cm³ 18 kW"
+  },
+  {
+   "id": 6637,
+   "modelId": 1450,
+   "name": "Elektro 4 kW"
+  },
+  {
+   "id": 6638,
+   "modelId": 1451,
+   "name": "373 cm³ 32 kW"
+  },
+  {
+   "id": 6639,
+   "modelId": 1451,
+   "name": "693 cm³ 55 kW"
+  },
+  {
+   "id": 6640,
+   "modelId": 1451,
+   "name": "799 cm³ 77 kW"
+  },
+  {
+   "id": 6641,
+   "modelId": 1452,
+   "name": "125 cm³ 25 kW"
+  },
+  {
+   "id": 6642,
+   "modelId": 1452,
+   "name": "249 cm³ 35 kW"
+  },
+  {
+   "id": 6643,
+   "modelId": 1452,
+   "name": "449 cm³ 40 kW"
+  },
+  {
+   "id": 6644,
+   "modelId": 1453,
+   "name": "346 cm³ 15 kW"
+  },
+  {
+   "id": 6645,
+   "modelId": 1453,
+   "name": "349 cm³ 15 kW"
+  },
+  {
+   "id": 6646,
+   "modelId": 1454,
+   "name": "411 cm³ 18 kW"
+  },
+  {
+   "id": 6647,
+   "modelId": 1454,
+   "name": "452 cm³ 30 kW"
+  },
+  {
+   "id": 6648,
+   "modelId": 1454,
+   "name": "648 cm³ 35 kW"
+  },
+  {
+   "id": 6649,
+   "modelId": 1455,
+   "name": "744 cm³ 38 kW"
+  },
+  {
+   "id": 6650,
+   "modelId": 1455,
+   "name": "853 cm³ 48 kW"
+  },
+  {
+   "id": 6651,
+   "modelId": 1455,
+   "name": "853 cm³ 56 kW"
+  },
+  {
+   "id": 6652,
+   "modelId": 1456,
+   "name": "1064 cm³ 54 kW"
+  },
+  {
+   "id": 6653,
+   "modelId": 1456,
+   "name": "1151 cm³ 75 kW"
+  },
+  {
+   "id": 6654,
+   "modelId": 1456,
+   "name": "1380 cm³ 71 kW"
+  },
+  {
+   "id": 6655,
+   "modelId": 1456,
+   "name": "1042 cm³ 85 kW"
+  },
+  {
+   "id": 6656,
+   "modelId": 1457,
+   "name": "675 cm³ 94 kW"
+  },
+  {
+   "id": 6657,
+   "modelId": 1457,
+   "name": "798 cm³ 103 kW"
+  },
+  {
+   "id": 6658,
+   "modelId": 1458,
+   "name": "998 cm³ 143 kW"
+  },
+  {
+   "id": 6659,
+   "modelId": 1459,
+   "name": "500 cm³ 35 kW"
+  },
+  {
+   "id": 6660,
+   "modelId": 1459,
+   "name": "754 cm³ 56 kW"
+  },
+  {
+   "id": 6661,
+   "modelId": 1460,
+   "name": "292 cm³ 21 kW"
+  },
+  {
+   "id": 6662,
+   "modelId": 1460,
+   "name": "649 cm³ 45 kW"
+  },
+  {
+   "id": 6663,
+   "modelId": 1460,
+   "name": "799 cm³ 70 kW"
+  },
+  {
+   "id": 6664,
+   "modelId": 1461,
+   "name": "495 cm³ 23 kW"
+  },
+  {
+   "id": 6665,
+   "modelId": 1461,
+   "name": "580 cm³ 31 kW"
+  },
+  {
+   "id": 6666,
+   "modelId": 1461,
+   "name": "800 cm³ 45 kW"
+  },
+  {
+   "id": 6667,
+   "modelId": 1462,
+   "name": "49 cm³ 2 kW"
+  },
+  {
+   "id": 6668,
+   "modelId": 1462,
+   "name": "125 cm³ 7 kW"
+  },
+  {
+   "id": 6669,
+   "modelId": 1462,
+   "name": "200 cm³ 9 kW"
+  },
+  {
+   "id": 6670,
+   "modelId": 1463,
+   "name": "125 cm³ 10 kW"
+  },
+  {
+   "id": 6671,
+   "modelId": 1463,
+   "name": "300 cm³ 21 kW"
+  },
+  {
+   "id": 6672,
+   "modelId": 1463,
+   "name": "550 cm³ 39 kW"
+  },
+  {
+   "id": 6673,
+   "modelId": 1464,
+   "name": "300 cm³ 15 kW"
+  },
+  {
+   "id": 6674,
+   "modelId": 1464,
+   "name": "500 cm³ 25 kW"
+  },
+  {
+   "id": 6675,
+   "modelId": 1464,
+   "name": "700 cm³ 30 kW"
+  },
+  {
+   "id": 6676,
+   "modelId": 1465,
+   "name": "49 cm³ 2 kW"
+  },
+  {
+   "id": 6677,
+   "modelId": 1465,
+   "name": "125 cm³ 7 kW"
+  },
+  {
+   "id": 6678,
+   "modelId": 1466,
+   "name": "125 cm³ 10 kW"
+  },
+  {
+   "id": 6679,
+   "modelId": 1466,
+   "name": "300 cm³ 20 kW"
+  },
+  {
+   "id": 6680,
+   "modelId": 1466,
+   "name": "400 cm³ 25 kW"
+  },
+  {
+   "id": 6681,
+   "modelId": 1467,
+   "name": "49 cm³ 2 kW"
+  },
+  {
+   "id": 6682,
+   "modelId": 1467,
+   "name": "125 cm³ 8 kW"
+  },
+  {
+   "id": 6683,
+   "modelId": 1468,
+   "name": "125 cm³ 11 kW"
+  },
+  {
+   "id": 6684,
+   "modelId": 1468,
+   "name": "400 cm³ 26 kW"
+  },
+  {
+   "id": 6685,
+   "modelId": 1469,
+   "name": "343 cm³ 17 kW"
+  },
+  {
+   "id": 6686,
+   "modelId": 1469,
+   "name": "397 cm³ 20 kW"
+  },
+  {
+   "id": 6687,
+   "modelId": 1470,
+   "name": "1133 cm³ 69 kW"
+  },
+  {
+   "id": 6688,
+   "modelId": 1470,
+   "name": "1203 cm³ 90 kW"
+  },
+  {
+   "id": 6689,
+   "modelId": 1470,
+   "name": "1811 cm³ 69 kW"
+  },
+  {
+   "id": 6690,
+   "modelId": 1470,
+   "name": "1890 cm³ 72 kW"
+  },
+  {
+   "id": 6691,
+   "modelId": 1471,
+   "name": "570 cm³ 35 kW"
+  },
+  {
+   "id": 6692,
+   "modelId": 1471,
+   "name": "650 cm³ 46 kW"
+  },
+  {
+   "id": 6693,
+   "modelId": 1471,
+   "name": "976 cm³ 61 kW"
+  },
+  {
+   "id": 6694,
+   "modelId": 1472,
+   "name": "600 cm³ 37 kW"
+  },
+  {
+   "id": 6695,
+   "modelId": 1472,
+   "name": "900 cm³ 61 kW"
+  },
+  {
+   "id": 6696,
+   "modelId": 1472,
+   "name": "1330 cm³ 86 kW"
+  },
+  {
+   "id": 6697,
+   "modelId": 1473,
+   "name": "570 cm³ 33 kW"
+  },
+  {
+   "id": 6698,
+   "modelId": 1473,
+   "name": "850 cm³ 57 kW"
+  },
+  {
+   "id": 6699,
+   "modelId": 1473,
+   "name": "1000 cm³ 67 kW"
+  },
+  {
+   "id": 6700,
+   "modelId": 1474,
+   "name": "999 cm³ 75 kW"
+  },
+  {
+   "id": 6701,
+   "modelId": 1474,
+   "name": "925 cm³ 135 kW"
   }
  ]
 }

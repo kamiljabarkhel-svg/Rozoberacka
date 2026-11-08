@@ -33,7 +33,7 @@ export default function Admin() {
   if (state === "mfa") return <MfaGate onOk={async () => setState((await A.isAdmin().catch(() => false)) ? "ok" : "no")} />;
   return (
     <div className="pp">
-      <aside className="pp-nav"><div className="pp-who"><b>Administrácia</b><span className="mute">Rozoberačka</span></div>
+      <aside className="pp-nav"><div className="pp-who"><b>Administrácia</b><span className="mute">autosuciastky.eu</span></div>
         <nav>{TABS.map(([t, l]) => <button key={t} type="button" aria-current={tab === t ? "page" : undefined} onClick={() => setTab(t)}>{l}</button>)}</nav></aside>
       <section className="pp-body">
         {err && <p className="pp-err">{err}</p>}
@@ -74,10 +74,10 @@ function Reports({ run }: { run: Run }) {
     {rows && !rows.length && <div className="empty">Žiadne nahlásenia.</div>}
     <ul className="pp-msgs">{rows?.map((r) => <li key={r.id} className={r.status === "open" ? "unread" : ""}>
       <div className="pp-mh"><b>{r.reason}</b><span className="mute">{d(r.createdAt)} · {ST[r.status]}</span></div>
-      <div>Inzerát #{r.listingId}: <a href={listingHref(r.listingId)} target="_blank" rel="noreferrer">{r.listingName}</a> <span className="mute">({ST[r.listingStatus] || r.listingStatus})</span></div>
+      <div>{r.carId ? <>Vozidlo: <a href={"/vozidlo/" + r.carId} target="_blank" rel="noreferrer">{r.listingName}</a></> : <>Inzerát #{r.listingId}: <a href={listingHref(r.listingId)} target="_blank" rel="noreferrer">{r.listingName}</a></>} <span className="mute">({ST[r.listingStatus] || r.listingStatus})</span></div>
       {r.note && <p>{r.note}</p>}{r.contact && <div className="mute">Kontakt: {r.contact}</div>}
       <div className="pp-ra ad-a">
-        {r.listingStatus !== "blocked" && <button className="del" onClick={async () => { if (await run(() => A.setListing(r.listingId, true, "nahlásenie #" + r.id + ": " + r.reason), "Inzerát skrytý")) { await run(() => A.resolveReport(r.id, "resolved"), "Vybavené"); reload(); } }}>Skryť inzerát a vybaviť</button>}
+        {r.listingStatus && r.listingStatus !== "blocked" && <button className="del" onClick={async () => { if (await run(() => r.carId ? A.setCar(r.carId, true, "nahlásenie #" + r.id + ": " + r.reason) : A.setListing(r.listingId, true, "nahlásenie #" + r.id + ": " + r.reason), "Inzerát skrytý")) { await run(() => A.resolveReport(r.id, "resolved"), "Vybavené"); reload(); } }}>Skryť inzerát a vybaviť</button>}
         {r.status !== "resolved" && <button className="ubtn" onClick={async () => { await run(() => A.resolveReport(r.id, "resolved"), "Vybavené"); reload(); }}>Vybavené</button>}
         {r.status !== "rejected" && <button className="ubtn" onClick={async () => { await run(() => A.resolveReport(r.id, "rejected"), "Zamietnuté"); reload(); }}>Zamietnuť</button>}
       </div></li>)}</ul></div>;
@@ -171,7 +171,7 @@ function MfaGate({ onOk }: { onOk: () => void }) {
       <h1>Administrácia – potvrdenie kódom</h1>
       {err && <p className="pp-err">{err}</p>}
       {!st && !err && <p className="mute">Načítavam…</p>}
-      {st?.factorId && <><p>Otvorte v mobile aplikáciu na overovanie (napr. Google Authenticator) a zadajte kód pre <b>Rozoberačka</b>.</p>{form}</>}
+      {st?.factorId && <><p>Otvorte v mobile aplikáciu na overovanie (napr. Google Authenticator) a zadajte kód pre <b>autosuciastky.eu</b>.</p>{form}</>}
       {st && !st.factorId && !en && <>
         <p>Do administrácie sa pre vyššiu bezpečnosť vstupuje heslom <b>a</b> kódom z mobilu. Ak niekto získa vaše heslo, bez vášho mobilu sa dnu nedostane.</p>
         <ol><li>Nainštalujte si do mobilu aplikáciu <b>Google Authenticator</b> alebo <b>Microsoft Authenticator</b> (zadarmo).</li><li>Kliknite nižšie a naskenujte QR kód.</li><li>Zadajte 6-miestny kód, ktorý aplikácia ukáže.</li></ol>

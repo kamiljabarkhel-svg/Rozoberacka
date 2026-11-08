@@ -11,6 +11,7 @@ import { pickCatalog } from "@/lib/catalogSort";
 import { emptyFilters } from "@/lib/types";
 import { pieces } from "@/lib/format";
 import { JsonLd, SITE_NAME, SITE_URL, breadcrumbLd, sellerPath } from "@/lib/seo";
+import Disclaimer from "@/components/Disclaimer";
 
 export const revalidate = 600;
 
@@ -29,7 +30,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!d) return { title: "Predajca sa nenašiel", robots: { index: false } };
   const { s, res } = d;
   const title = `${s.name} – použité autodiely${s.city ? ", " + s.city : ""}`;
-  const description = `${s.name}${s.city ? " (" + s.city + ")" : ""}: ${pieces(res.total)} na Rozoberačke${s.ratingCount ? `, hodnotenie ${s.ratingAvg?.toLocaleString("sk-SK")} z 5 (${s.ratingCount})` : ""}. Predajcovi zavoláte bez registrácie.`;
+  const description = `${s.name}${s.city ? " (" + s.city + ")" : ""}: ${pieces(res.total)} na autosuciastky.eu${s.ratingCount ? `, hodnotenie ${s.ratingAvg?.toLocaleString("sk-SK")} z 5 (${s.ratingCount})` : ""}. Predajcovi zavoláte bez registrácie.`;
   const path = sellerPath(s.id, s.name);
   return { title, description, alternates: { canonical: path }, robots: res.total ? undefined : { index: false, follow: true },
     openGraph: { title: `${title} | ${SITE_NAME}`, description, url: path, siteName: SITE_NAME, locale: "sk_SK", type: "website" } };
@@ -53,11 +54,12 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
       <div className="seller-head">
         <h1>{s.name}</h1>
         <p className="seller-meta">
-          <span>{sellerKind(s.type)}</span>{s.city && <span>{s.city}</span>}{s.verified && <span className="ok">✓ Overený predajca</span>}<span>Na Rozoberačke od {since}</span>
+          <span>{sellerKind(s.type)}</span>{s.city && <span>{s.city}</span>}{s.verified && <span className="ok">✓ Overený predajca</span>}<span>Na autosuciastky.eu od {since}</span>
         </p>
         {s.ratingCount > 0 ? <p><Stars value={s.ratingAvg} count={s.ratingCount} /> <a href="#hodnotenia" className="lnk">Hodnotenia kupujúcich</a></p>
           : <p className="mute">Zatiaľ bez hodnotení.</p>}
         <SellerNotice type={s.type} name={s.name} ico={s.ico} address={s.address} />
+        <Disclaimer kind="short" />
       </div>
       <SellerStock seller={s.id} cat={pickCatalog(cat, res.items)} initial={{ items: res.items, total: res.total, cats: [...res.cats] }} />
       <section id="hodnotenia" className="reviews">

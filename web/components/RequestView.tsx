@@ -10,6 +10,7 @@ import { listingHref } from "@/lib/paths";
 import { sellerPath } from "@/lib/seo";
 import Stars from "./Stars";
 import RateSeller from "./RateSeller";
+import Disclaimer from "./Disclaimer";
 
 export default function RequestView({ token }: { token: string }) {
   const [r, setR] = useState<RV | null | undefined>(undefined);
@@ -27,6 +28,7 @@ export default function RequestView({ token }: { token: string }) {
       <h1>{r.partName}</h1>
       <p className="landing-lead">{car} · zadaný {new Date(r.createdAt).toLocaleDateString("sk-SK")} · <b>{st}</b>{r.note ? <><br />{r.note}</> : null}</p>
       <h2 className="sh">Ponuky od predajcov ({r.offers.length})</h2>
+      <Disclaimer kind="request" />
       {r.offers.length > 0 && <p className="mute small">Pri kúpe od podnikateľa máte práva spotrebiteľa (zodpovednosť za vady, pri kúpe na diaľku odstúpenie do 14 dní). Pri kúpe od súkromnej osoby sa predpisy na ochranu spotrebiteľa nepoužijú. Typ predajcu vychádza z jeho vyhlásenia.</p>}
       {!r.offers.length && <div className="empty">Zatiaľ žiadna ponuka. Predajcovia vidia dopyt vo svojom portáli a ozvú sa vám aj priamo na kontakt, ktorý ste uviedli. Stránku si uložte a pozrite sa neskôr.</div>}
       <ul className="pp-msgs">{r.offers.map((o, i) => (

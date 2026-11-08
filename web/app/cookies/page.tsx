@@ -7,7 +7,7 @@ export const metadata: Metadata = { title: "Cookies", alternates: { canonical: "
 export default function Page() {
   return (
     <LegalPage title="Cookies a úložisko prehliadača">
-      <p>Rozoberačka <b>nepoužíva reklamné, analytické ani sledovacie cookies</b> a nevkladá kód tretích strán, ktorý by vás sledoval (ani písma z Google – web ich podáva sám). V prehliadači ukladáme len údaje nevyhnutné na fungovanie služieb, o ktoré ste požiadali. Na ne podľa § 109 ods. 8 zákona č. 452/2021 Z. z. o elektronických komunikáciách nie je potrebný súhlas.</p>
+      <p>autosuciastky.eu <b>nepoužíva reklamné, analytické ani sledovacie cookies</b> a nevkladá kód tretích strán, ktorý by vás sledoval (ani písma z Google – web ich podáva sám). V prehliadači ukladáme len údaje nevyhnutné na fungovanie služieb, o ktoré ste požiadali. Na ne podľa § 109 ods. 8 zákona č. 452/2021 Z. z. o elektronických komunikáciách nie je potrebný súhlas.</p>
       <h2>Ako funguje súhlas</h2>
       <ul>
         <li><b>Nevyhnutné úložisko</b> je vždy zapnuté – bez neho by nefungovalo prihlásenie predajcu, obľúbené diely ani uložené hľadania.</li>

@@ -2,20 +2,21 @@
 // Formulár inzerátu v 5 krokoch: Diel → Auto → Stav, cena a podmienky → Fotky a popis → Kontakt.
 // Povinné polia podľa CLAUDE.md; tie isté pravidlá stráži aj databáza (04_funkcie.sql).
 import { useEffect, useMemo, useRef, useState } from "react";
-import type { Catalog, Condition } from "@/lib/types";
-import { CONDITIONS, condLabel } from "@/lib/types";
+import type { Catalog, Condition, Specs, VehicleType } from "@/lib/types";
+import { CONDITIONS, condLabel, PCDS, RIM_DIAMETERS, SEASONS, SPEC_LABEL, specsErrors, VEHICLE_TYPES, WHEEL_CAT } from "@/lib/types";
 import { carName } from "@/lib/seo";
 import { saveListing, skError, type Donor, type ListingInput, type MyListing, type PhotoItem, type Profile } from "@/lib/seller";
 import ScanText from "../ScanText";
 
 const STEPS = ["Diel", "Auto", "Stav, cena a podmienky", "Fotky a popis", "Kontakt"];
 const MAX_PHOTOS = 8;
-type Key = "name" | "cat" | "oem" | "brand" | "model" | "year" | "cond" | "price" | "war" | "ship" | "photos" | "desc" | "city" | "phone";
-const STEP_OF: Record<Key, number> = { name: 0, cat: 0, oem: 0, brand: 1, model: 1, year: 1, cond: 2, price: 2, war: 2, ship: 2, photos: 3, desc: 3, city: 4, phone: 4 };
+type Key = "name" | "cat" | "oem" | "specs" | "brand" | "model" | "year" | "cond" | "price" | "war" | "ship" | "photos" | "desc" | "city" | "phone";
+const STEP_OF: Record<Key, number> = { name: 0, cat: 0, oem: 0, specs: 0, brand: 1, model: 1, year: 1, cond: 2, price: 2, war: 2, ship: 2, photos: 3, desc: 3, city: 4, phone: 4 };
 const MSG: Record<Key, string> = {
   name: "Názov dielu musí mať aspoň 3 znaky.", cat: "Vyberte kategóriu.", oem: "Zadajte kód súčiastky / OEM číslo (aspoň 4 písmená alebo číslice).",
   brand: "Vyberte značku auta.", model: "Vyberte model.", year: "Vyberte ročník.", cond: "Vyberte stav.", price: "Zadajte cenu väčšiu ako 0 €.",
   war: "Vyberte záruku.", ship: "Vyberte odovzdanie.", photos: "Pridajte aspoň 1 fotku.", desc: "Popis musí mať aspoň 20 znakov.",
+  specs: "Niektorý parameter kolesa má nesprávny tvar (pozrite červené polia).",
   city: "Zadajte mesto.", phone: "Telefón musí mať aspoň 9 číslic.",
 };
 
@@ -31,6 +32,9 @@ export default function ListingForm({ uid, cat, prof, edit, donor, onSaved }: { 
     description: edit?.description || "", city: edit?.city || prof?.city || "", phone: edit?.phone || prof?.phone || "",
   });
   const [fits, setFits] = useState(edit?.fits || []);
+  const [specs, setSpecs] = useState<Specs>(edit?.specs || {});
+  const startModel = cat.models.find((m) => m.id === (edit?.modelId ?? donor?.modelId));
+  const [vt, setVt] = useState<VehicleType>(startModel?.vehicleType || "osobne");
   const [photos, setPhotos] = useState<PhotoItem[]>(edit?.photos.map((p) => ({ path: p.path, url: p.url })) || []);
   const [bad, setBad] = useState<Set<Key>>(new Set());
   const [busy, setBusy] = useState(false), [err, setErr] = useState("");
@@ -38,7 +42,14 @@ export default function ListingForm({ uid, cat, prof, edit, donor, onSaved }: { 
   const firm = (prof?.type || "Firma") === "Firma";
   const set = <K extends keyof typeof v>(k: K, val: (typeof v)[K]) => { setV((o) => ({ ...o, [k]: val })); };
 
-  const models = cat.models.filter((m) => m.brandId === v.brandId);
+  const vtOf = (m: { vehicleType?: VehicleType }) => m.vehicleType || "osobne";
+  const vtModels = cat.models.filter((m) => vtOf(m) === vt);
+  const vtBrands = useMemo(() => { const ids = new Set(vtModels.map((m) => m.brandId)); return cat.brands.filter((b) => ids.has(b.id)); }, [vtModels, cat.brands]);
+  const vtCats = cat.categories.filter((c) => !c.vtypes?.length || c.vtypes.includes(vt));
+  const models = vtModels.filter((m) => m.brandId === v.brandId);
+  const wheel = v.categoryId === WHEEL_CAT;
+  const specBad = wheel ? specsErrors(specs) : [];
+  const setSpec = (k: keyof Specs, val: string) => { setSpecs((o) => ({ ...o, [k]: val })); clear("specs"); };
   const model = cat.models.find((m) => m.id === v.modelId);
   const engines = cat.engines.filter((e) => e.modelId === v.modelId);
   const subs = cat.subcategories.filter((s) => s.categoryId === v.categoryId);
@@ -55,6 +66,7 @@ export default function ListingForm({ uid, cat, prof, edit, donor, onSaved }: { 
     if (v.name.trim().length < 3) b.add("name");
     if (!v.categoryId) b.add("cat");
     if (v.oem.replace(/[^A-Za-z0-9]/g, "").length < 4) b.add("oem");
+    if (v.categoryId === WHEEL_CAT && specsErrors(specs).length) b.add("specs");
     if (!v.brandId) b.add("brand");
     if (!v.modelId) b.add("model");
     if (!v.year) b.add("year");
@@ -91,7 +103,7 @@ export default function ListingForm({ uid, cat, prof, edit, donor, onSaved }: { 
       subcategoryId: v.subcategoryId, oem: v.oem, partMaker: v.partMaker, price: Math.round(Number(v.price.replace(",", ".")) * 100) / 100,
       city: v.city, condition: v.condition as Condition, description: v.description, warranty: v.warranty, shipping: v.shipping,
       phone: v.phone, side: v.side, gearbox: v.gearbox, km: v.km ? Math.max(0, parseInt(v.km.replace(/\D/g, ""), 10) || 0) : null,
-      tested: v.tested, returns14: v.returns14, fits, donorId: edit ? edit.donorId : donor?.id ?? null,
+      tested: v.tested, returns14: v.returns14, fits, specs, donorId: edit ? edit.donorId : donor?.id ?? null,
     };
     setBusy(true);
     try { onSaved(await saveListing(uid, edit?.id ?? null, x, photos, edit?.photos.map((p) => p.path) || [])); }
@@ -110,6 +122,7 @@ export default function ListingForm({ uid, cat, prof, edit, donor, onSaved }: { 
   const vname = (b: number, m: number | null, e: number | null) =>
     [cat.brands.find((x) => x.id === b)?.name, m ? cat.models.find((x) => x.id === m)?.name : "všetky modely", e ? cat.engines.find((x) => x.id === e)?.name : m ? "všetky motorizácie" : ""].filter(Boolean).join(" ");
 
+  const SI = (k: keyof Specs, el: React.ReactNode) => <label key={k} className={specBad.includes(k) ? "bad" : ""}><span>{SPEC_LABEL[k]}</span>{el}</label>;
   const L = ({ k, t, req = true, children }: { k?: Key; t: string; req?: boolean; children: React.ReactNode }) => (
     <label className={k && bad.has(k) ? "bad" : ""}><span className="lt">{t}{req && <em>*</em>}</span>{children}{k && bad.has(k) && <small className="pp-ferr">{MSG[k]}</small>}</label>
   );
@@ -118,22 +131,56 @@ export default function ListingForm({ uid, cat, prof, edit, donor, onSaved }: { 
     <div ref={top}>
       <header className="pp-h"><h1>{edit ? "Upraviť inzerát" : "Pridať inzerát"}</h1><span className="mute">Polia s <em className="req">*</em> sú povinné.</span></header>
       {firm && prof && (!prof.ico || !prof.address) && <p className="pp-warnbox" role="alert">Ako podnikateľ musíte mať v profile vyplnené <b>IČO a sídlo</b> – kupujúci musí vedieť, s kým uzatvára zmluvu. Bez nich inzerát nezverejníte. Doplňte ich v záložke Profil.</p>}
-      {donor && !edit && <p className="pp-donor-note">Diel z darcovského auta <b>{carName(donor, cat, true)}, {donor.year}{donor.km != null ? `, ${donor.km.toLocaleString("sk-SK")} km` : ""}</b>. Údaje o aute sú predvyplnené.</p>}
+      {donor && !edit && <p className="pp-donor-note">Diel z auta na diely <b>{carName(donor, cat, true)}, {donor.year}{donor.km != null ? `, ${donor.km.toLocaleString("sk-SK")} km` : ""}</b>. Údaje o aute sú predvyplnené.</p>}
       <ol className="pp-steps">{STEPS.map((s, i) => (
         <li key={s}><button type="button" aria-current={i === step ? "step" : undefined} className={(i !== step && i < step && !stepBad(i, cur) ? "done " : "") + (stepBad(i) ? "bad" : "")} onClick={() => goStep(i)} aria-label={`Krok ${i + 1}: ${s}`}><span>{i + 1}</span><em>{s}</em></button></li>
       ))}</ol>
       <div className="pp-form pp-grid pp-card">
         {step === 0 && <>
+          <div className="full pp-vt" role="radiogroup" aria-label="Druh vozidla"><span className="lt">Diel je na</span>
+            {VEHICLE_TYPES.map((t) => <button key={t.id} type="button" role="radio" aria-checked={vt === t.id} className={vt === t.id ? "on" : ""} onClick={() => {
+              if (t.id === vt) return; setVt(t.id);
+              set("brandId", 0); set("modelId", 0); set("engineId", null); set("year", 0);
+              const c = cat.categories.find((x) => x.id === v.categoryId); if (c?.vtypes?.length && !c.vtypes.includes(t.id)) { set("categoryId", ""); set("subcategoryId", null); }
+            }}>{t.name}</button>)}
+          </div>
           <div className="full">{L({ k: "name", t: "Názov dielu", children: <input value={v.name} maxLength={120} placeholder="napr. Predné ľavé svetlo LED" onChange={(e) => { set("name", e.target.value); clear("name"); }} /> })}</div>
-          {L({ k: "cat", t: "Kategória", children: <select value={v.categoryId} onChange={(e) => { set("categoryId", e.target.value); set("subcategoryId", null); clear("cat"); }}><option value="">Vyberte…</option>{cat.categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}</select> })}
+          {L({ k: "cat", t: "Kategória", children: <select value={v.categoryId} onChange={(e) => { set("categoryId", e.target.value); set("subcategoryId", null); clear("cat"); }}><option value="">Vyberte…</option>{vtCats.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}</select> })}
           {L({ t: "Podkategória", req: false, children: <select value={v.subcategoryId ?? ""} disabled={!subs.length} onChange={(e) => set("subcategoryId", e.target.value ? Number(e.target.value) : null)}><option value="">{v.categoryId ? "Nevybraná" : "Najprv vyberte kategóriu"}</option>{subs.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}</select> })}
           {L({ k: "oem", t: "Kód súčiastky / OEM číslo", children: <span className="oemin"><input value={v.oem} maxLength={40} placeholder="napr. 5E1941015" onChange={(e) => { set("oem", e.target.value); clear("oem"); }} />
             <ScanText kind="oem" onResult={(x) => { set("oem", x); clear("oem"); }} /></span> })}
           {L({ t: "Výrobca dielu", req: false, children: <input value={v.partMaker} maxLength={60} placeholder="Bosch, Valeo, Hella…" onChange={(e) => set("partMaker", e.target.value)} /> })}
-          <p className="full mute pp-hint">OEM číslo nájdete na štítku dielu. Podľa neho kupujúci overia, že diel pasuje, a web ho spojí s rovnakými dielmi iných áut.</p>
+          <p className="full mute pp-hint"><b>Číslo dielu je najdôležitejší údaj inzerátu.</b> Nájdete ho na štítku alebo vyrazené na diele. Kupujúci podľa neho overí, že diel pasuje – aj pri rovnakom modeli auta sa diely líšia podľa motora, výbavy či roku. Web podľa čísla spojí aj rovnaké diely iných áut.</p>
+          {wheel && <div className={"full pp-specs" + (bad.has("specs") ? " bad" : "")}>
+            <b>Parametre pneumatík a diskov</b><span className="mute">Nepovinné, ale kupujúci podľa nich hľadajú. Vyplňte, čo platí (pneumatika, disk alebo oboje).</span>
+            <div className="pp-specg">
+              <fieldset><legend>Pneumatika</legend>
+                {SI("tw", <input inputMode="numeric" placeholder="205" value={specs.tw || ""} onChange={(e) => setSpec("tw", e.target.value)} />)}
+                {SI("tp", <input inputMode="numeric" placeholder="55" value={specs.tp || ""} onChange={(e) => setSpec("tp", e.target.value)} />)}
+                {SI("rd", <select value={specs.rd || ""} onChange={(e) => setSpec("rd", e.target.value)}><option value="">–</option>{RIM_DIAMETERS.map((d) => <option key={d} value={d}>R{d}</option>)}</select>)}
+                {SI("season", <select value={specs.season || ""} onChange={(e) => setSpec("season", e.target.value)}><option value="">–</option>{SEASONS.map((x) => <option key={x}>{x}</option>)}</select>)}
+                {SI("tread", <input inputMode="decimal" placeholder="6" value={specs.tread || ""} onChange={(e) => setSpec("tread", e.target.value)} />)}
+                {SI("dot", <input inputMode="numeric" placeholder="2021" value={specs.dot || ""} onChange={(e) => setSpec("dot", e.target.value)} />)}
+                {SI("li", <input placeholder="91" value={specs.li || ""} onChange={(e) => setSpec("li", e.target.value)} />)}
+                {SI("si", <input placeholder="V" maxLength={2} value={specs.si || ""} onChange={(e) => setSpec("si", e.target.value)} />)}
+              </fieldset>
+              <fieldset><legend>Disk</legend>
+                {SI("pcd", <><input list="pp-pcds" placeholder="5x112" value={specs.pcd || ""} onChange={(e) => setSpec("pcd", e.target.value)} /><datalist id="pp-pcds">{PCDS.map((x) => <option key={x} value={x} />)}</datalist></>)}
+                {SI("rw", <input inputMode="decimal" placeholder="7" value={specs.rw || ""} onChange={(e) => setSpec("rw", e.target.value)} />)}
+                {SI("et", <input inputMode="numeric" placeholder="49" value={specs.et || ""} onChange={(e) => setSpec("et", e.target.value)} />)}
+                {SI("cb", <input inputMode="decimal" placeholder="57.1" value={specs.cb || ""} onChange={(e) => setSpec("cb", e.target.value)} />)}
+                {SI("mat", <select value={specs.mat || ""} onChange={(e) => setSpec("mat", e.target.value)}><option value="">–</option><option>Hliník</option><option>Oceľ</option></select>)}
+              </fieldset>
+              <fieldset><legend>Sada</legend>
+                {SI("pcs", <input inputMode="numeric" placeholder="4" value={specs.pcs || ""} onChange={(e) => setSpec("pcs", e.target.value)} />)}
+              </fieldset>
+            </div>
+            {bad.has("specs") && <small className="pp-ferr">{MSG.specs}</small>}
+            <small className="mute">Príklad: pneumatika 205/55 R16 91V, disk 7J×16 5x112 ET49, stredový otvor 57.1. Priemer platí pre pneumatiku aj disk.</small>
+          </div>}
         </>}
         {step === 1 && <>
-          {L({ k: "brand", t: "Značka auta", children: <select value={v.brandId || ""} onChange={(e) => { set("brandId", Number(e.target.value)); set("modelId", 0); set("engineId", null); set("year", 0); clear("brand"); }}><option value="">Vyberte…</option>{cat.brands.map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}</select> })}
+          {L({ k: "brand", t: "Značka auta", children: <select value={v.brandId || ""} onChange={(e) => { set("brandId", Number(e.target.value)); set("modelId", 0); set("engineId", null); set("year", 0); clear("brand"); }}><option value="">Vyberte…</option>{vtBrands.map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}</select> })}
           {L({ k: "model", t: "Model", children: <select value={v.modelId || ""} disabled={!models.length} onChange={(e) => { set("modelId", Number(e.target.value)); set("engineId", null); set("year", 0); clear("model"); }}><option value="">Vyberte…</option>{models.map((m) => <option key={m.id} value={m.id}>{m.name} ({m.yearFrom}–{m.yearTo ?? ""})</option>)}</select> })}
           {L({ t: "Motorizácia", req: false, children: <select value={v.engineId ?? ""} disabled={!engines.length} onChange={(e) => set("engineId", e.target.value ? Number(e.target.value) : null)}><option value="">Všetky motorizácie</option>{engines.map((x) => <option key={x.id} value={x.id}>{x.name}</option>)}</select> })}
           {L({ k: "year", t: "Ročník auta", children: <select value={v.year || ""} disabled={!v.modelId} onChange={(e) => { set("year", Number(e.target.value)); clear("year"); }}><option value="">Vyberte…</option>{years.map((y) => <option key={y}>{y}</option>)}</select> })}
@@ -142,8 +189,8 @@ export default function ListingForm({ uid, cat, prof, edit, donor, onSaved }: { 
           {L({ t: "Strana auta", req: false, children: <select value={v.side} onChange={(e) => set("side", e.target.value)}><option value="">Neuvádza sa</option><option>Ľavá</option><option>Pravá</option></select> })}
           <div className="full pp-fits"><b>Pasuje aj na ďalšie autá</b><span className="mute">Nepovinné. Diel sa zobrazí aj pri hľadaní podľa týchto áut.</span>
             <div className="pp-fitrow">
-              <select value={fb || ""} onChange={(e) => { setFb(Number(e.target.value)); setFm(0); setFe(0); }} aria-label="Značka"><option value="">Značka</option>{cat.brands.map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}</select>
-              <select value={fm || ""} disabled={!fb} onChange={(e) => { setFm(Number(e.target.value)); setFe(0); }} aria-label="Model"><option value="">Všetky modely</option>{cat.models.filter((m) => m.brandId === fb).map((m) => <option key={m.id} value={m.id}>{m.name}</option>)}</select>
+              <select value={fb || ""} onChange={(e) => { setFb(Number(e.target.value)); setFm(0); setFe(0); }} aria-label="Značka"><option value="">Značka</option>{vtBrands.map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}</select>
+              <select value={fm || ""} disabled={!fb} onChange={(e) => { setFm(Number(e.target.value)); setFe(0); }} aria-label="Model"><option value="">Všetky modely</option>{vtModels.filter((m) => m.brandId === fb).map((m) => <option key={m.id} value={m.id}>{m.name}</option>)}</select>
               <select value={fe || ""} disabled={!fm} onChange={(e) => setFe(Number(e.target.value))} aria-label="Motorizácia"><option value="">Všetky motorizácie</option>{cat.engines.filter((x) => x.modelId === fm).map((x) => <option key={x.id} value={x.id}>{x.name}</option>)}</select>
               <button type="button" className="ubtn" disabled={!fb} onClick={() => {
                 const f = { brandId: fb, modelId: fm || null, engineId: fe || null };
@@ -186,6 +233,7 @@ export default function ListingForm({ uid, cat, prof, edit, donor, onSaved }: { 
           {L({ k: "city", t: "Mesto", children: <input value={v.city} maxLength={60} onChange={(e) => { set("city", e.target.value); clear("city"); }} /> })}
           {L({ k: "phone", t: "Telefón", children: <input value={v.phone} inputMode="tel" placeholder="0900 123 456" onChange={(e) => { set("phone", e.target.value); clear("phone"); }} /> })}
           <p className="full mute pp-hint">Telefón sa nezobrazuje v zozname. Kupujúci ho uvidí až po kliknutí na „Zobraziť telefón“.</p>
+          <p className="full pp-resp">Zverejnením potvrdzujete, že údaje v inzeráte sú pravdivé a diel smiete predať. <b>Za inzerát, diel, jeho stav a vybavenie reklamácie zodpovedáte vy ako predajca.</b> autosuciastky.eu je len inzertný portál – prevádzkovateľ KJ trade s. r. o. nie je stranou kúpnej zmluvy.</p>
         </>}
         {err && <p className="full pp-err" role="alert">{err}</p>}
         <div className="full pp-actions">

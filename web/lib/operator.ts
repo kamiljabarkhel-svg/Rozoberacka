@@ -12,5 +12,5 @@ export const OPERATOR = {
   supervisor: "Slovenská obchodná inšpekcia, Inšpektorát SOI pre Bratislavský kraj; ústredný inšpektorát: Bajkalská 21/A, 827 99 Bratislava 27",
 };
 /** Verzia podmienok a zásad. Pri zmene textov zvýšiť – uloží sa pri registrácii predajcu. */
-export const TERMS_VERSION = "2026-11-08";
+export const TERMS_VERSION = "2026-11-09";
 export const fill = (v: string) => v || "údaj doplníme pred spustením";

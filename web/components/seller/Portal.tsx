@@ -17,11 +17,12 @@ import {
 } from "@/lib/seller";
 import ListingForm from "./ListingForm";
 import Donors from "./Donors";
+import Cars from "./Cars";
 import Requests from "./Requests";
 import CsvImport from "./CsvImport";
 
-type Tab = "home" | "list" | "donor" | "form" | "csv" | "req" | "msg" | "prof";
-const TABS: [Tab, string][] = [["home", "Nástenka"], ["list", "Moje inzeráty"], ["donor", "Darcovské autá"], ["form", "Pridať inzerát"], ["csv", "Import CSV"], ["req", "Dopyty"], ["msg", "Správy"], ["prof", "Profil"]];
+type Tab = "home" | "list" | "donor" | "cars" | "form" | "csv" | "req" | "msg" | "prof";
+const TABS: [Tab, string][] = [["home", "Nástenka"], ["list", "Moje inzeráty"], ["donor", "Autá na diely"], ["cars", "Havarované vozidlá"], ["form", "Pridať inzerát"], ["csv", "Import CSV"], ["req", "Dopyty"], ["msg", "Správy"], ["prof", "Profil"]];
 const ST: Record<Status, string> = { active: "Aktívny", paused: "Pozastavený", sold: "Predaný", blocked: "Skrytý správcom" };
 
 export default function Portal() {
@@ -35,6 +36,7 @@ export default function Portal() {
   const [tab, setTab] = useState<Tab>("home");
   const [edit, setEdit] = useState<MyListing | null>(null);
   const [donor, setDonor] = useState<Donor | null>(null);
+  const [sellDonor, setSellDonor] = useState<Donor | null>(null);
   const [listF, setListF] = useState<{ f: F; n: number }>({ f: "all", n: 0 });
   const [toast, setToast] = useState("");
   const [err, setErr] = useState("");
@@ -79,7 +81,7 @@ export default function Portal() {
     const t = window.setInterval(() => { if (document.visibilityState === "visible") { last = Date.now(); reload(session); } }, 120000);
     return () => { document.removeEventListener("visibilitychange", h); window.removeEventListener("focus", h); window.clearInterval(t); };
   }, [session, reload]);
-  const go = (t: Tab, lf?: F) => { if (t === "list") setListF((o) => ({ f: lf || "all", n: o.n + 1 })); setTab(t); if (t !== "form") { setEdit(null); setDonor(null); } history.replaceState(null, "", "#" + t); window.scrollTo({ top: 0 }); };
+  const go = (t: Tab, lf?: F) => { if (t === "list") setListF((o) => ({ f: lf || "all", n: o.n + 1 })); setTab(t); if (t !== "form") { setEdit(null); setDonor(null); } setSellDonor(null); history.replaceState(null, "", "#" + t); window.scrollTo({ top: 0 }); };
 
   if (IS_DEMO) return <div className="pp-auth"><h1>Portál predajcu</h1><p className="mute">V ukážkovej verzii bez databázy portál nefunguje. Pripojte Supabase.</p></div>;
   if (!ready || !session) return <div className="pp-auth"><p className="mute">Načítavam portál…</p>{err && <p className="pp-err">{err}</p>}</div>;
@@ -105,7 +107,7 @@ export default function Portal() {
       </aside>
       <section className="pp-body">
         {err && <div className="pp-box pp-errbox"><p className="pp-err">Niečo sa nenačítalo: {err}</p><button className="ubtn" onClick={() => window.location.reload()}>Skúsiť znova</button></div>}
-        {(tab === "form" || tab === "csv") && !cat && !err && <p className="mute">Načítavam katalóg áut…</p>}
+        {(tab === "form" || tab === "csv" || tab === "cars" || tab === "donor") && !cat && !err && <p className="mute">Načítavam katalóg áut…</p>}
         {pwMode && <NewPassword onDone={() => { setPwMode(false); flash("Heslo je zmenené."); }} />}
         {tab === "home" && <Dashboard cat={cat} prof={prof} items={items} msgs={msgs} go={go} />}
         {tab === "list" && <MyList key={listF.n} initial={listF.f} items={items} cat={cat}
@@ -119,7 +121,9 @@ export default function Portal() {
         {tab === "req" && cat && <Requests uid={session.user.id} cat={cat} prof={prof} items={items} onSent={flash} />}
         {tab === "donor" && cat && <Donors uid={session.user.id} cat={cat} prof={prof} items={items}
           onAddOne={(d) => { setEdit(null); setDonor(d); setTab("form"); window.scrollTo({ top: 0 }); }}
+          onSellCar={(d) => { setSellDonor(d); setTab("cars"); history.replaceState(null, "", "#cars"); window.scrollTo({ top: 0 }); }}
           onDone={async (m) => { await reload(session); flash(m); }} />}
+        {tab === "cars" && cat && <Cars key={sellDonor?.id ?? "cars"} uid={session.user.id} cat={cat} prof={prof} fromDonor={sellDonor} onDone={(m) => { setSellDonor(null); flash(m); }} />}
         {tab === "form" && cat && <ListingForm key={edit?.id ?? "new-" + (donor?.id ?? "")} uid={session.user.id} cat={cat} prof={prof} edit={edit} donor={donor}
           onSaved={async (id) => { await reload(session); setEdit(null); go("list"); flash(edit ? "Zmeny uložené" : `Inzerát #${id} je zverejnený`); }} />}
         {tab === "csv" && cat && <CsvImport uid={session.user.id} cat={cat} prof={prof} onDone={async (n) => { await reload(session); flash(`Importované: ${n}`); go("list"); }} />}
@@ -291,7 +295,7 @@ function Messages({ msgs, onRead }: { msgs: Message[]; onRead: (ids: number[]) =
         <ul className="pp-msgs">{msgs.map((m) => (
           <li key={m.id} className={m.read ? "" : "unread"}>
             <div className="pp-mh"><b>{m.name}</b><span className="mute">{new Date(m.createdAt).toLocaleString("sk-SK", { dateStyle: "short", timeStyle: "short" })}</span></div>
-            <div className="mute">K inzerátu: <a href={listingHref(m.listingId)} target="_blank" rel="noreferrer">{m.listingName}</a></div>
+            <div className="mute">K inzerátu: <a href={m.carId ? "/vozidlo/" + m.carId : listingHref(m.listingId)} target="_blank" rel="noreferrer">{m.listingName}</a></div>
             <p>{m.body}</p>
             <div className="pp-mf"><span>Kontakt: <b>{/@/.test(m.contact) ? <a href={"mailto:" + m.contact}>{m.contact}</a> : <a href={"tel:" + m.contact.replace(/\s/g, "")}>{m.contact}</a>}</b></span>
               {!m.read && <button className="lnk" onClick={() => onRead([m.id])}>Označiť ako prečítané</button>}</div>
