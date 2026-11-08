@@ -78,6 +78,7 @@ export const NAVODY: Navod[] = [
         <li><b>Kto predáva:</b> pri každom inzeráte uvidíte, či predáva <b>podnikateľ</b> (s obchodným menom, IČO a sídlom) alebo <b>súkromná osoba</b>. Vychádza to z vyhlásenia predajcu.</li>
         <li><b>Kúpa od podnikateľa:</b> máte práva spotrebiteľa. Predajca zodpovedá za vady, ktoré sa prejavia do 24 mesiacov od prevzatia; pri použitom alebo repasovanom diele sa s vami môže dohodnúť na kratšej dobe, najmenej 12 mesiacov (v inzeráte to uvidíte). Za vadu sa nepovažuje bežné opotrebenie zodpovedajúce veku dielu. Pri kúpe na diaľku (zásielka) môžete odstúpiť od zmluvy do 14 dní bez udania dôvodu; pri osobnom odbere toto právo nemáte.</li>
         <li><b>Kúpa od súkromnej osoby:</b> predpisy na ochranu spotrebiteľa sa nepoužijú (žiadne odstúpenie do 14 dní). Predajca zodpovedá za vady, na ktoré vás neupozornil – vytknite mu ich čo najskôr, najneskôr do 24 mesiacov od prevzatia (od 1. 7. 2027 podľa nového Občianskeho zákonníka spravidla do 6 mesiacov). Podmienky si dohodnite vopred, ideálne písomne (stačí správa).</li>
+        <li><b>Spor s podnikateľom</b> riešte najprv reklamáciou u predajcu. Ak nevyhovie, môžete sa obrátiť na subjekt alternatívneho riešenia spotrebiteľských sporov, napríklad Slovenskú obchodnú inšpekciu (soi.sk), alebo na súd.</li>
         <li><b>Kupujete pre firmu alebo servis?</b> Vtedy nie ste spotrebiteľ – zodpovednosť za vady sa riadi Obchodným zákonníkom a dohodou s predajcom.</li>
       </ul>
       <p className="mute">Toto je všeobecná informácia, nie právna rada.</p>

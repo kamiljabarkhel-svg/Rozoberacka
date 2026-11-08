@@ -156,7 +156,7 @@ export default function ListingForm({ uid, cat, prof, edit, donor, onSaved }: { 
         </>}
         {step === 2 && <>
           {L({ k: "cond", t: "Stav", children: <select value={v.condition} onChange={(e) => { const c = e.target.value as Condition; set("condition", c); if (firm && c === "Nový") set("warranty", "24 mesiacov"); clear("cond"); }}><option value="">Vyberte…</option>{CONDITIONS.map((c) => <option key={c} value={c}>{condLabel(c)}</option>)}</select> })}
-          {L({ k: "price", t: "Cena (€)", children: <input value={v.price} inputMode="decimal" placeholder="napr. 120" onChange={(e) => { set("price", e.target.value); clear("price"); }} /> })}
+          {L({ k: "price", t: firm ? "Konečná cena (€) vrátane DPH" : "Cena (€)", children: <input value={v.price} inputMode="decimal" placeholder="napr. 120" onChange={(e) => { set("price", e.target.value); clear("price"); }} /> })}
           {L({ k: "war", t: "Zodpovednosť za vady (záruka)", children: <select value={v.warranty} onChange={(e) => set("warranty", e.target.value)}>{!firm && <option value="Bez záruky">Bez záruky (súkromný predaj)</option>}{!(firm && v.condition === "Nový") && <option>12 mesiacov</option>}<option>24 mesiacov</option></select> })}
           {L({ k: "ship", t: "Odovzdanie", children: <select value={v.shipping} onChange={(e) => set("shipping", e.target.value)}><option>Len osobný odber</option><option>Zasielam kuriérom</option></select> })}
           <label className="pp-chk"><input type="checkbox" checked={v.tested} onChange={(e) => set("tested", e.target.checked)} /><span>Diel je odskúšaný</span></label>

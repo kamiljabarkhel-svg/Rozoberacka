@@ -644,3 +644,4 @@ p.mute a,div.mute a,.pp-mf a,.msgbox a{color:var(--link)}
 @media(max-width:560px){.ckbar{left:8px;right:8px;bottom:8px}}
 .ckbtn.ghost:hover{background:var(--chip)}
 .pp-typeo input[type=radio]{width:18px!important;height:18px;flex:none;padding:0}
+.pnote{margin:-6px 0 0;font-size:.85rem}

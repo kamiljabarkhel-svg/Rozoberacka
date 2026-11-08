@@ -53,7 +53,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             <a href="/obchodne-podmienky">Obchodné podmienky</a><a href="/ochrana-osobnych-udajov">Ochrana osobných údajov</a><a href="/cookies">Cookies</a><CookieSettingsLink />
             {OPERATOR.email && <a href={"mailto:" + OPERATOR.email}>Kontakt</a>}
           </nav>
-          <span>Prevádzkovateľ: {OPERATOR.name}, IČO {OPERATOR.ico}{OPERATOR.address ? ", " + OPERATOR.address : ""}</span>
+          <span>Prevádzkovateľ: {OPERATOR.name}, IČO {OPERATOR.ico}{OPERATOR.address ? ", " + OPERATOR.address : ""}{OPERATOR.register ? ", zapísaná v " + OPERATOR.register.replace(/^Obchodný register/, "Obchodnom registri") : ""}{OPERATOR.email ? <>, <a href={"mailto:" + OPERATOR.email}>{OPERATOR.email}</a></> : null}</span>
         </footer>
         <CookieBar />
       </body>

@@ -129,7 +129,7 @@ Audit a návrh priorít: Claude Docs „Rozoberačka – audit a návrh priorít
 - Hľadanie beží v databáze (`search_listings`), nie v prehliadači. Ukážkový režim bez Supabase hľadá lokálne.
 
 ## GDPR (3. 11. 2026, 22:40)
-- Prevádzkovateľ: KJ Trade s.r.o., IČO 57598142. Údaje v `web/lib/operator.ts` (sídlo Kvetná 1505/4D, 900 41 Rovinka, e-mail autosuciastky24@gmail.com; zápis v OR doplniť). Pri zmene textov podmienok zvýšiť `TERMS_VERSION`.
+- Prevádzkovateľ: KJ trade s. r. o. (presne podľa ORSR), IČO 57598142, OR Mestského súdu Bratislava III, oddiel Sro, vložka 198932/B. Údaje v `web/lib/operator.ts` (sídlo Kvetná 1505/4D, 900 41 Rovinka, e-mail autosuciastky24@gmail.com; zápis v OR doplniť). Pri zmene textov podmienok zvýšiť `TERMS_VERSION`.
 - Žiadne analytické ani reklamné cookies bez súhlasu. Ak sa pridajú, najprv cookie lišta so súhlasom.
 - Doby uchovávania: správy 12 mesiacov, nahlásenia 12 mesiacov po vybavení, odtlačok IP 3 dni (pri nahlásení 30), záznam správcu 3 roky, dopyty kupujúcich 60 dní od zadania (platnosť 30 dní), strážca e-mailom: nepotvrdený 3 dni, potvrdený najviac 6 mesiacov. Mazanie: `purge_old_data()` denne cez pg_cron.
 - Nové osobné údaje (napr. VIN darcovského auta, e-mail kupujúceho pre strážcu) doplniť do zásad a do záznamov o spracovateľských činnostiach skôr, než sa začnú zbierať.
