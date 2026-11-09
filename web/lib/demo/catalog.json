@@ -144,6 +144,102 @@
    "vtypes": [
     "motorky"
    ]
+  },
+  {
+   "id": "tuz",
+   "name": "Ťažné zariadenia a nosiče",
+   "sort": 22,
+   "vtypes": [
+    "osobne",
+    "dodavky"
+   ]
+  },
+  {
+   "id": "kab",
+   "name": "Kabriolet a strešné systémy",
+   "sort": 23,
+   "vtypes": [
+    "osobne"
+   ]
+  },
+  {
+   "id": "dnp",
+   "name": "Nákladný priestor dodávky",
+   "sort": 24,
+   "vtypes": [
+    "dodavky"
+   ]
+  },
+  {
+   "id": "obv",
+   "name": "Obytné vozidlá a karavany",
+   "sort": 25,
+   "vtypes": [
+    "dodavky"
+   ]
+  },
+  {
+   "id": "nkb",
+   "name": "Kabína kamiónu",
+   "sort": 26,
+   "vtypes": [
+    "nakladne"
+   ]
+  },
+  {
+   "id": "nvz",
+   "name": "Vzduchový systém a pruženie",
+   "sort": 27,
+   "vtypes": [
+    "nakladne",
+    "autobusy"
+   ]
+  },
+  {
+   "id": "npr",
+   "name": "Náves a príves",
+   "sort": 28,
+   "vtypes": [
+    "nakladne"
+   ]
+  },
+  {
+   "id": "bin",
+   "name": "Interiér autobusu",
+   "sort": 29,
+   "vtypes": [
+    "autobusy"
+   ]
+  },
+  {
+   "id": "mvy",
+   "name": "Kufre, nosiče a ochrana motorky",
+   "sort": 30,
+   "vtypes": [
+    "motorky"
+   ]
+  },
+  {
+   "id": "mjz",
+   "name": "Prilby a výbava jazdca",
+   "sort": 31,
+   "vtypes": [
+    "motorky"
+   ]
+  },
+  {
+   "id": "atv",
+   "name": "Štvorkolky (ATV/UTV)",
+   "sort": 32,
+   "vtypes": [
+    "motorky"
+   ]
+  },
+  {
+   "id": "ine",
+   "name": "Iné",
+   "sort": 99,
+   "vtypes": null
   }
  ],
  "subcategories": [
@@ -1706,6 +1802,510 @@
    "categoryId": "mvi",
    "name": "Ložiská riadenia",
    "sort": 23
+  },
+  {
+   "id": 261,
+   "categoryId": "tuz",
+   "name": "Ťažné zariadenia",
+   "sort": 1
+  },
+  {
+   "id": 262,
+   "categoryId": "tuz",
+   "name": "Elektroinštalácia ťažného zariadenia",
+   "sort": 2
+  },
+  {
+   "id": 263,
+   "categoryId": "tuz",
+   "name": "Strešné nosiče a priečniky",
+   "sort": 3
+  },
+  {
+   "id": 264,
+   "categoryId": "tuz",
+   "name": "Strešné boxy",
+   "sort": 4
+  },
+  {
+   "id": 265,
+   "categoryId": "tuz",
+   "name": "Nosiče bicyklov",
+   "sort": 5
+  },
+  {
+   "id": 266,
+   "categoryId": "tuz",
+   "name": "Nosiče na ťažné zariadenie",
+   "sort": 6
+  },
+  {
+   "id": 267,
+   "categoryId": "kab",
+   "name": "Mechanizmy strechy",
+   "sort": 1
+  },
+  {
+   "id": 268,
+   "categoryId": "kab",
+   "name": "Plátené strechy",
+   "sort": 2
+  },
+  {
+   "id": 269,
+   "categoryId": "kab",
+   "name": "Pevné strechy (hardtop)",
+   "sort": 3
+  },
+  {
+   "id": 270,
+   "categoryId": "kab",
+   "name": "Hydraulika strechy",
+   "sort": 4
+  },
+  {
+   "id": 271,
+   "categoryId": "kab",
+   "name": "Panoramatické a posuvné strechy",
+   "sort": 5
+  },
+  {
+   "id": 272,
+   "categoryId": "kab",
+   "name": "Deflektory vetra",
+   "sort": 6
+  },
+  {
+   "id": 273,
+   "categoryId": "dnp",
+   "name": "Posuvné dvere a koľajnice",
+   "sort": 1
+  },
+  {
+   "id": 274,
+   "categoryId": "dnp",
+   "name": "Zadné krídlové dvere",
+   "sort": 2
+  },
+  {
+   "id": 275,
+   "categoryId": "dnp",
+   "name": "Priečky a mreže za kabínou",
+   "sort": 3
+  },
+  {
+   "id": 276,
+   "categoryId": "dnp",
+   "name": "Podlahy a obloženie nákladného priestoru",
+   "sort": 4
+  },
+  {
+   "id": 277,
+   "categoryId": "dnp",
+   "name": "Regály a vstavby",
+   "sort": 5
+  },
+  {
+   "id": 278,
+   "categoryId": "dnp",
+   "name": "Zadné schodíky",
+   "sort": 6
+  },
+  {
+   "id": 279,
+   "categoryId": "dnp",
+   "name": "Strešné rebríky a nosiče",
+   "sort": 7
+  },
+  {
+   "id": 280,
+   "categoryId": "obv",
+   "name": "Okná a strešné okná",
+   "sort": 1
+  },
+  {
+   "id": 281,
+   "categoryId": "obv",
+   "name": "Kúrenie (Truma, Webasto)",
+   "sort": 2
+  },
+  {
+   "id": 282,
+   "categoryId": "obv",
+   "name": "Chladničky a variče",
+   "sort": 3
+  },
+  {
+   "id": 283,
+   "categoryId": "obv",
+   "name": "Vodné nádrže a čerpadlá",
+   "sort": 4
+  },
+  {
+   "id": 284,
+   "categoryId": "obv",
+   "name": "Markízy",
+   "sort": 5
+  },
+  {
+   "id": 285,
+   "categoryId": "obv",
+   "name": "Elektrina 12 V, batérie a meniče",
+   "sort": 6
+  },
+  {
+   "id": 286,
+   "categoryId": "obv",
+   "name": "Nábytok a lôžka",
+   "sort": 7
+  },
+  {
+   "id": 287,
+   "categoryId": "obv",
+   "name": "Solárne panely",
+   "sort": 8
+  },
+  {
+   "id": 288,
+   "categoryId": "nkb",
+   "name": "Lôžka a matrace",
+   "sort": 1
+  },
+  {
+   "id": 289,
+   "categoryId": "nkb",
+   "name": "Sklápanie kabíny",
+   "sort": 2
+  },
+  {
+   "id": 290,
+   "categoryId": "nkb",
+   "name": "Odpruženie kabíny",
+   "sort": 3
+  },
+  {
+   "id": 291,
+   "categoryId": "nkb",
+   "name": "Strešné spojlery a deflektory",
+   "sort": 4
+  },
+  {
+   "id": 292,
+   "categoryId": "nkb",
+   "name": "Slnečné clony",
+   "sort": 5
+  },
+  {
+   "id": 293,
+   "categoryId": "nkb",
+   "name": "Stupačky a madlá",
+   "sort": 6
+  },
+  {
+   "id": 294,
+   "categoryId": "nkb",
+   "name": "Chladničky do kabíny",
+   "sort": 7
+  },
+  {
+   "id": 295,
+   "categoryId": "nkb",
+   "name": "Vzduchové sedadlá vodiča",
+   "sort": 8
+  },
+  {
+   "id": 296,
+   "categoryId": "nvz",
+   "name": "Kompresory",
+   "sort": 1
+  },
+  {
+   "id": 297,
+   "categoryId": "nvz",
+   "name": "Sušiče vzduchu",
+   "sort": 2
+  },
+  {
+   "id": 298,
+   "categoryId": "nvz",
+   "name": "Vzduchojemy",
+   "sort": 3
+  },
+  {
+   "id": 299,
+   "categoryId": "nvz",
+   "name": "Ventily a regulátory",
+   "sort": 4
+  },
+  {
+   "id": 300,
+   "categoryId": "nvz",
+   "name": "Vzduchové vankúše (mechy)",
+   "sort": 5
+  },
+  {
+   "id": 301,
+   "categoryId": "nvz",
+   "name": "Výškové ventily",
+   "sort": 6
+  },
+  {
+   "id": 302,
+   "categoryId": "nvz",
+   "name": "Hadice a spojky",
+   "sort": 7
+  },
+  {
+   "id": 303,
+   "categoryId": "npr",
+   "name": "Točnice a kráľovské čapy",
+   "sort": 1
+  },
+  {
+   "id": 304,
+   "categoryId": "npr",
+   "name": "Nápravy návesov",
+   "sort": 2
+  },
+  {
+   "id": 305,
+   "categoryId": "npr",
+   "name": "Plachty a rámy",
+   "sort": 3
+  },
+  {
+   "id": 306,
+   "categoryId": "npr",
+   "name": "Bočnice a zadné čelá",
+   "sort": 4
+  },
+  {
+   "id": 307,
+   "categoryId": "npr",
+   "name": "Podpery návesu",
+   "sort": 5
+  },
+  {
+   "id": 308,
+   "categoryId": "npr",
+   "name": "Svetlá a zásuvky prívesu",
+   "sort": 6
+  },
+  {
+   "id": 309,
+   "categoryId": "npr",
+   "name": "Brzdy prívesu",
+   "sort": 7
+  },
+  {
+   "id": 310,
+   "categoryId": "npr",
+   "name": "Blatníky a zásterky",
+   "sort": 8
+  },
+  {
+   "id": 311,
+   "categoryId": "bin",
+   "name": "Sedadlá cestujúcich",
+   "sort": 1
+  },
+  {
+   "id": 312,
+   "categoryId": "bin",
+   "name": "Madlá a tyče",
+   "sort": 2
+  },
+  {
+   "id": 313,
+   "categoryId": "bin",
+   "name": "Podlahy a krytiny",
+   "sort": 3
+  },
+  {
+   "id": 314,
+   "categoryId": "bin",
+   "name": "Batožinové priestory a police",
+   "sort": 4
+  },
+  {
+   "id": 315,
+   "categoryId": "bin",
+   "name": "Toalety",
+   "sort": 5
+  },
+  {
+   "id": 316,
+   "categoryId": "bin",
+   "name": "Závesy a clony",
+   "sort": 6
+  },
+  {
+   "id": 317,
+   "categoryId": "bin",
+   "name": "Sedadlo vodiča autobusu",
+   "sort": 7
+  },
+  {
+   "id": 318,
+   "categoryId": "mvy",
+   "name": "Bočné kufre",
+   "sort": 1
+  },
+  {
+   "id": 319,
+   "categoryId": "mvy",
+   "name": "Top case",
+   "sort": 2
+  },
+  {
+   "id": 320,
+   "categoryId": "mvy",
+   "name": "Nosiče kufrov",
+   "sort": 3
+  },
+  {
+   "id": 321,
+   "categoryId": "mvy",
+   "name": "Tankvaky",
+   "sort": 4
+  },
+  {
+   "id": 322,
+   "categoryId": "mvy",
+   "name": "Padacie rámy",
+   "sort": 5
+  },
+  {
+   "id": 323,
+   "categoryId": "mvy",
+   "name": "Chrániče rúk",
+   "sort": 6
+  },
+  {
+   "id": 324,
+   "categoryId": "mvy",
+   "name": "Stojany",
+   "sort": 7
+  },
+  {
+   "id": 325,
+   "categoryId": "mjz",
+   "name": "Prilby",
+   "sort": 1
+  },
+  {
+   "id": 326,
+   "categoryId": "mjz",
+   "name": "Bundy",
+   "sort": 2
+  },
+  {
+   "id": 327,
+   "categoryId": "mjz",
+   "name": "Nohavice",
+   "sort": 3
+  },
+  {
+   "id": 328,
+   "categoryId": "mjz",
+   "name": "Kombinézy",
+   "sort": 4
+  },
+  {
+   "id": 329,
+   "categoryId": "mjz",
+   "name": "Rukavice",
+   "sort": 5
+  },
+  {
+   "id": 330,
+   "categoryId": "mjz",
+   "name": "Topánky",
+   "sort": 6
+  },
+  {
+   "id": 331,
+   "categoryId": "mjz",
+   "name": "Chrániče",
+   "sort": 7
+  },
+  {
+   "id": 332,
+   "categoryId": "mjz",
+   "name": "Komunikátory",
+   "sort": 8
+  },
+  {
+   "id": 333,
+   "categoryId": "atv",
+   "name": "Ramená a čapy",
+   "sort": 1
+  },
+  {
+   "id": 334,
+   "categoryId": "atv",
+   "name": "Navijaky",
+   "sort": 2
+  },
+  {
+   "id": 335,
+   "categoryId": "atv",
+   "name": "Radlice",
+   "sort": 3
+  },
+  {
+   "id": 336,
+   "categoryId": "atv",
+   "name": "Pneumatiky ATV",
+   "sort": 4
+  },
+  {
+   "id": 337,
+   "categoryId": "atv",
+   "name": "Kapotáže ATV",
+   "sort": 5
+  },
+  {
+   "id": 338,
+   "categoryId": "atv",
+   "name": "Variátory a prevodovky",
+   "sort": 6
+  },
+  {
+   "id": 339,
+   "categoryId": "ine",
+   "name": "Iné diely",
+   "sort": 1
+  },
+  {
+   "id": 340,
+   "categoryId": "ine",
+   "name": "Náradie a dielenské vybavenie",
+   "sort": 2
+  },
+  {
+   "id": 341,
+   "categoryId": "ine",
+   "name": "Oleje a prevádzkové kvapaliny",
+   "sort": 3
+  },
+  {
+   "id": 342,
+   "categoryId": "ine",
+   "name": "Kľúče a ovládače",
+   "sort": 4
+  },
+  {
+   "id": 343,
+   "categoryId": "ine",
+   "name": "Servisné knihy a literatúra",
+   "sort": 5
+  },
+  {
+   "id": 344,
+   "categoryId": "ine",
+   "name": "Historické a zberateľské diely",
+   "sort": 6
   }
  ],
  "brands": [

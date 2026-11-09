@@ -19,6 +19,9 @@ insert into public.sellers (id, name, city, seller_type) values ('d1111111-0000-
 select pg_temp.ok((select count(*) from public.categories) >= 21, '18: aspoň 21 kategórií');
 select pg_temp.ok((select name from public.categories where id = 'kol') = 'Pneumatiky a disky', '18: kategória Pneumatiky a disky');
 select pg_temp.ok((select vtypes from public.categories where id = 'mrm') = '{motorky}', '18: kapotáž len pre motorky');
+select pg_temp.ok((select count(*) from public.categories) >= 33, '21: aspoň 33 kategórií');
+select pg_temp.ok((select vtypes is null and sort = 99 from public.categories where id = 'ine'), '21: kategória Iné pre všetky vozidlá, posledná');
+select pg_temp.ok((select vtypes from public.categories where id = 'nvz') = '{nakladne,autobusy}', '21: vzduchový systém pre nákladné a autobusy');
 select pg_temp.ok((select count(*) from public.models where vehicle_type = 'motorky') > 0 or true, '18: stĺpec vehicle_type čitateľný');
 
 -- diel s parametrami kolies
