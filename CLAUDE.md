@@ -200,3 +200,10 @@ Overené na Slov-Lexe: Občiansky zákonník § 597, 599, 612, 618, 619 (znenie 
 - **Autá na diely** (predtým „darcovské autá“, v DB stále `donor_cars`): predajca zapíše rozoberané vozidlo a pridá z neho veľa dielov naraz; zoznamy bežných dielov podľa druhu vozidla; tlačidlo „Predať celé vozidlo“.
 - **Havarované vozidlá** (`supabase/19`, `car_listings`, `car_contacts`, `car_photos`): len havarované, nepojazdné, po požiari/povodni alebo na diely – nie bežný autobazár. Verejnosť číta len cez funkcie (`search_cars`, `get_car`); telefón na klik, VIN nikdy verejne. Stránky `/havarovane-vozidla` a `/vozidlo/<id>-<nazov>`, portál „Havarované vozidlá“, správy a nahlásenia (aj „Podozrenie na kradnuté vozidlo“), v mape webu.
 - **Inzertný portál – zodpovednosť**: `components/Disclaimer.tsx` v detaile dielu, vozidla, dopytoch, na úvode, stránke predajcu, vo formulároch a pri registrácii; pätička; obchodné podmienky časť 6 „Zodpovednosť“ (`#zodpovednost`) a 3a1 „Predaj celých vozidiel“ (zákon 79/2015 o starých vozidlách). `TERMS_VERSION` 2026-11-09. Overiť s právnikom.
+
+## Nový vzhľad „pult v predajni dielov“ (9. 11. 2026, 17:30)
+- Úvod sa pýta ako predavač: „Na aké vozidlo hľadáte diel?“; záložky druhov vozidiel sú horná hrana panelu hľadania.
+- Písma: IBM Plex Sans Condensed (nadpisy), IBM Plex Sans (text), IBM Plex Mono len na čísla dielov a VIN. Barlow sme skúsili a zamietli – zle rozostavené „ľ“.
+- Farby: petrolejová #0f3d47 (značka, tlačidlá telefónu), pozadie oceľovo-sivé #eef2f4, žltá #f2b300 len na hlavné „Hľadať“ a štítok TOP (aj v tmavom režime).
+- Číslo dielu je všade rovnaký „štítok“ (tenký tmavý rámik, Plex Mono). Odkazy bez šípky „→“, štítky bez veľkých písmen.
+- Nové pravidlá sú vrstva na konci `web/app/globals.css` („Vzhľad pult v predajni dielov“). Pravidlá z „Tvar dizajnu“ (rohy max. 6 px, bez tieňov) platia ďalej.

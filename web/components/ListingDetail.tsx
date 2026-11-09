@@ -160,7 +160,7 @@ export default function ListingDetail({ id, onClose, initial, catalog }: { id: n
             <span className="mute">{sellerKind(l.seller.type)} · {l.seller.city || l.city}</span>
             {isTrader(l.seller.type) && (l.seller.ico || l.seller.address) && <span className="mute">{[l.seller.ico && `IČO ${l.seller.ico}`, l.seller.address].filter(Boolean).join(" · ")}</span>}
             {s.seller && s.seller.ratingCount > 0 && <span><Stars value={s.seller.ratingAvg} count={s.seller.ratingCount} small /></span>}
-            {l.sellerId && !STATIC_PREVIEW && <Link className="lnk seller-all" href={sellerPath(l.sellerId, l.seller.name)}>Všetky diely predajcu{more.total ? ` (${more.total + 1})` : ""} →</Link>}
+            {l.sellerId && !STATIC_PREVIEW && <Link className="lnk seller-all" href={sellerPath(l.sellerId, l.seller.name)}>Všetky diely predajcu{more.total ? ` (${more.total + 1})` : ""}</Link>}
             <span className="mute">Inzerát pridaný {agoText(l.createdAt)}{l.updatedAt && Date.parse(l.updatedAt) - Date.parse(l.createdAt) > 3600000 ? ` · upravený ${agoText(l.updatedAt)}` : ""}</span>
           </div>
         </div>
@@ -199,7 +199,7 @@ export default function ListingDetail({ id, onClose, initial, catalog }: { id: n
 
       {more.items.length > 0 && <>
         <h2 className="sh">Ďalšie diely od predajcu {l.seller.name}{more.total > more.items.length ? ` (${more.total})` : ""}
-          {l.sellerId && !STATIC_PREVIEW && <> <Link className="lnk sh-more" href={sellerPath(l.sellerId, l.seller.name)}>Všetky diely predajcu →</Link></>}</h2>
+          {l.sellerId && !STATIC_PREVIEW && <> <Link className="lnk sh-more" href={sellerPath(l.sellerId, l.seller.name)}>Všetky diely predajcu</Link></>}</h2>
         <div className="sim">
           {more.items.slice(0, 3).map((x) => (
             <ListingLink key={x.id} id={x.id} name={x.name} car={carName(x, cat)} className="simc">

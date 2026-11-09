@@ -11,7 +11,7 @@ export default function OemBox({ oem }: { oem: string | null }) {
   return (
     <div className="oembox">
       <span className="oeml">Číslo dielu (OEM)</span>
-      <div className="oemrow"><b className="oemnum">{oem}</b>
+      <div className="oem-line"><b className="oemnum">{oem}</b>
         <button type="button" className="lnk" onClick={copy}>{copied ? "Skopírované ✓" : "Kopírovať"}</button>
         <Link className="lnk" href={"/?q=" + encodeURIComponent(oem) + "#vysledky"}>Rovnaké číslo u iných predajcov</Link></div>
       <p><b>Porovnajte ho s číslom na vašom starom diele.</b> Aj pri rovnakom modeli auta sa diely líšia podľa motora, výbavy či roku výroby – rozhoduje číslo dielu, nie len auto.</p>

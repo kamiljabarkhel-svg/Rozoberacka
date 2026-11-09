@@ -234,8 +234,8 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
   return (
     <main id="pub" tabIndex={-1}>
       <section className="hero"><div className="in"><span id="main" />
-        <h1>Použité autodiely presne na vaše vozidlo</h1>
-        <p className="sub">Osobné autá, dodávky, nákladné autá, autobusy aj motorky. Vyberte vozidlo alebo zadajte číslo dielu a uvidíte len diely, ktoré pasujú. Predajcov kontaktujete bez registrácie.</p>
+        <h1>Na aké vozidlo hľadáte diel?</h1>
+        <p className="sub">Použité diely na osobné autá, dodávky, nákladné autá, autobusy a motorky od vrakovísk a predajcov z celého Slovenska. Vyberte vozidlo alebo zadajte číslo dielu – predajcovi zavoláte bez registrácie.</p>
         {stats && stats.parts > 0 && <p className="stats"><b>{stats.parts.toLocaleString("sk-SK")}</b> {stats.parts === 1 ? "diel" : stats.parts >= 2 && stats.parts <= 4 ? "diely" : "dielov"} od <b>{stats.sellers}</b> {stats.sellers === 1 ? "predajcu" : "predajcov"} na jednom mieste</p>}
         <div className="qb" aria-label="Najčastejšie značky">
           {quick.map((b) => (

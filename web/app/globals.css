@@ -1,9 +1,10 @@
 @import "tailwindcss";
 
-/* Vzhľad prevzatý z prototyp.html (2. 11. 2026). Písma sú v balíkoch @fontsource (web ich podáva sám, návštevník nevolá Google). */
-:root{--bg:#f3f6f7;--card:#fff;--ink:#0d1b22;--mute:#5a6b75;--line:#e1e8ec;--chip:#e9eff2;--ico:#dfe8ec;--icoink:#0a6a75;--pet:#0a3b44;--pet2:#0f5a66;--acc:#ffb400;--accink:#241800;--link:#0a6a75;--ok:#1f9d6a;--warn:#d99100;--bad:#d64545;--sh1:none;--sh2:0 8px 24px rgba(13,43,52,.16);color-scheme:light;box-sizing:border-box;padding-bottom:env(safe-area-inset-bottom,0px);--f-d:"Sora","Segoe UI",system-ui,sans-serif;--f-b:"Manrope","Segoe UI",system-ui,sans-serif;--f-m:"IBM Plex Mono",ui-monospace,Menlo,monospace}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b1317;--card:#131f25;--ink:#e8f0f3;--mute:#92a6af;--line:#243139;--chip:#1b2931;--ico:#1d2d35;--icoink:#6fd0da;--pet:#0a2f37;--pet2:#14636f;--link:#6fd0da;--ok:#46c593;--warn:#f0b73c;--bad:#f08a8a;--sh1:none;--sh2:0 14px 34px rgba(0,0,0,.5);color-scheme:dark}}
-:root[data-theme="dark"]{--bg:#0b1317;--card:#131f25;--ink:#e8f0f3;--mute:#92a6af;--line:#243139;--chip:#1b2931;--ico:#1d2d35;--icoink:#6fd0da;--pet:#0a2f37;--pet2:#14636f;--link:#6fd0da;--ok:#46c593;--warn:#f0b73c;--bad:#f08a8a;--sh1:none;--sh2:0 14px 34px rgba(0,0,0,.5);color-scheme:dark}
+/* Vzhľad „pult v predajni dielov“ (9. 11. 2026): petrolejová značka, oceľovo-sivé pozadie, signálna žltá len na hlavnú akciu a TOP.
+   Písma IBM Plex Sans Condensed (nadpisy), IBM Plex Sans (text), IBM Plex Mono (len čísla dielov a VIN) – balíky @fontsource, web ich podáva sám. */
+:root{--bg:#eef2f4;--card:#fff;--ink:#121d24;--mute:#56656d;--line:#d3dce0;--chip:#e6ecef;--ico:#dce4e8;--icoink:#0f5562;--pet:#0f3d47;--pet2:#17606e;--acc:#f2b300;--accink:#1e1600;--link:#0f5f6d;--ok:#1d8a5f;--warn:#b97a00;--bad:#c93c3c;--sh1:none;--sh2:0 8px 24px rgba(13,43,52,.16);color-scheme:light;box-sizing:border-box;padding-bottom:env(safe-area-inset-bottom,0px);--f-d:"IBM Plex Sans Condensed","Arial Narrow",system-ui,sans-serif;--f-b:"IBM Plex Sans","Segoe UI",system-ui,sans-serif;--f-m:"IBM Plex Mono",ui-monospace,Menlo,monospace}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0c1418;--card:#131e23;--ink:#e6edf0;--mute:#97a8b0;--line:#27353c;--chip:#1a272d;--ico:#1c2a31;--icoink:#7ccfd9;--pet:#0b2e36;--pet2:#2a7f8c;--link:#7ccfd9;--ok:#46c593;--warn:#f0b73c;--bad:#f08a8a;--sh1:none;--sh2:0 14px 34px rgba(0,0,0,.5);color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0c1418;--card:#131e23;--ink:#e6edf0;--mute:#97a8b0;--line:#27353c;--chip:#1a272d;--ico:#1c2a31;--icoink:#7ccfd9;--pet:#0b2e36;--pet2:#2a7f8c;--link:#7ccfd9;--ok:#46c593;--warn:#f0b73c;--bad:#f08a8a;--sh1:none;--sh2:0 14px 34px rgba(0,0,0,.5);color-scheme:dark}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:500 16px/1.5 var(--f-b);-webkit-font-smoothing:antialiased}
 select,input,button,textarea{font:inherit}
@@ -733,3 +734,144 @@ p.mute a,div.mute a,.pp-mf a,.msgbox a{color:var(--link)}
 .snav a[aria-current="page"]{opacity:1;border-bottom-color:var(--acc)}
 
 .landing .panel{margin:16px 0 18px;box-shadow:none;border:1px solid var(--line)}
+
+
+/* ================= Vzhľad „pult v predajni dielov“ (9. 11. 2026) – vrstva navrchu starších pravidiel ================= */
+body{font:400 16px/1.55 var(--f-b)}
+h1,h2,h3,.cnt,.price,.brand,.btn,.btn2,.mp,.tile b{letter-spacing:0}
+:focus-visible{outline:3px solid var(--pet2);outline-offset:2px}
+/* hlavička */
+.site-header{background:var(--card);backdrop-filter:none;-webkit-backdrop-filter:none}
+.brand{font:700 1.45rem/1 var(--f-d)}
+.brand svg{border-radius:3px}
+.gs{border:1px solid var(--line);background:var(--card)}
+.gs input{padding:10px 14px}
+.ubtn{border-radius:3px;font-weight:600;background:transparent;border:1px solid var(--line)}
+.ubtn:hover{background:var(--chip)}
+.snav a{font:600 1.02rem/1 var(--f-d);padding:11px 12px 10px;opacity:.75}
+.snav a[aria-current="page"]{border-bottom-color:var(--pet);opacity:1}
+/* úvodný pás: otázka predavača */
+.hero{background:linear-gradient(180deg,#0f3d47 0%,#0c343d 100%);padding:56px 16px 128px}
+.hero h1{font:700 clamp(2.5rem,6.4vw,4.4rem)/.96 var(--f-d);max-width:15ch;margin:0 0 16px}
+.sub{font-size:1.12rem;line-height:1.5;max-width:58ch;color:rgba(255,255,255,.8);margin:0 0 22px}
+.stats{margin:0 0 18px;color:rgba(255,255,255,.78);font-weight:500}
+.stats b{color:#fff;font-weight:700}
+.qb{gap:4px 18px}
+.qb .chip{background:none;border:0;border-bottom:1px solid rgba(255,255,255,.28);border-radius:0;padding:3px 0;color:rgba(255,255,255,.9);font-weight:600;font-size:.95rem}
+.qb .chip:hover{background:none;border-color:#fff;color:#fff}
+.sellcta{margin:22px 0 0;color:rgba(255,255,255,.75);font-weight:500}
+.sellcta a{color:#fff;font-weight:600;text-decoration:underline;text-underline-offset:3px}
+/* panel hľadania: záložky druhov vozidiel sú horná hrana panelu */
+.panel{box-shadow:none;border:1px solid var(--line);padding:0 22px 22px;gap:18px;overflow:hidden}
+.panel>.vtabs{order:-1;margin:0 -22px;display:flex;flex-wrap:wrap;gap:0;background:var(--chip);border-bottom:1px solid var(--line)}
+.panel>.vtabs button{border:0;border-right:1px solid var(--line);border-radius:0;background:transparent;padding:14px 20px 12px;font:600 1.08rem/1 var(--f-d);color:var(--mute);box-shadow:none}
+.panel>.vtabs button:hover{color:var(--ink);background:color-mix(in srgb,var(--card) 60%,transparent)}
+.panel>.vtabs button.on{background:var(--card);color:var(--ink);box-shadow:inset 0 3px 0 var(--pet);margin-bottom:-1px}
+.panel label,.plate label,.oemrow label{font-weight:600;font-size:.86rem;color:var(--mute)}
+.panel select,.panel input,.plate select,.oemrow input{background:var(--card);border:1px solid var(--line);border-radius:3px;padding:12px 12px;font-weight:500}
+.panel select:focus,.panel input:focus,.plate select:focus,.oemrow input:focus{border-color:var(--pet2);box-shadow:0 0 0 2px color-mix(in srgb,var(--pet2) 25%,transparent)}
+.panel select:disabled{background:var(--chip)}
+.oemrow{border-top:1px dashed var(--line)}
+.oemrow input{font:500 1.08rem var(--f-m);letter-spacing:.06em}
+.btn{border-radius:3px;padding:13px 34px;font:700 1.15rem/1 var(--f-d)}
+.btn2{border-width:1.5px;border-radius:3px;padding:11px 22px;font:600 1.08rem/1 var(--f-d)}
+.add{border-radius:3px;font-weight:600}
+.call{border-radius:3px;font-weight:600}
+.lnk{font-weight:600}
+/* VIN */
+.plate{padding:20px 22px}
+.plate h2{font:700 1.45rem/1.1 var(--f-d)}
+.pl{border-width:1.5px;border-radius:3px}
+/* nadpisy sekcií a výsledky */
+.sh{font:700 1.4rem/1.15 var(--f-d)}
+.cnt{font:700 2.1rem/1 var(--f-d)}
+.chip{border-radius:3px;font-weight:600;padding:7px 13px;font-size:.93rem}
+.chips .chip svg{opacity:.75}
+.pop .chip{background:transparent}
+/* karta dielu: číslo dielu ako štítok */
+.grid{gap:18px}
+.card h2{font:600 1.28rem/1.15 var(--f-d)}
+.cb{padding:14px 16px 4px;gap:3px}
+.car{font-weight:500;font-size:.92rem}
+.cardoem{margin:8px 0 4px;font-size:.8rem;color:var(--mute);display:flex;align-items:center;gap:8px}
+.cardoem b{font:600 .92rem/1 var(--f-m);background:var(--card);border:1px solid color-mix(in srgb,var(--ink) 55%,transparent);padding:5px 8px;border-radius:2px;letter-spacing:.06em}
+.meta{font-size:.86rem}
+.side{padding:10px 16px 16px}
+.price{font:700 1.7rem/1 var(--f-d)}
+.card .call{padding:9px 14px;font-size:.88rem}
+.ph .fav{box-shadow:none;border:1px solid var(--line)}
+.toptag{border-radius:2px;font-weight:700}
+.card.is-top{box-shadow:none;border:2px solid var(--acc)}
+.tg{border-radius:2px;font-weight:600}
+/* detail */
+.dpage .dbox{padding:28px}
+.di h1{font:700 2.2rem/1.02 var(--f-d)}
+.dpr .price{background:none;color:var(--ink);padding:0;font-size:2.6rem}
+.oembox{border:1.5px solid var(--ink);border-radius:3px;padding:12px 14px;background:var(--card)}
+.oembox.none{border:1.5px dashed var(--line)}
+.oeml{text-transform:none;letter-spacing:0;font-size:.82rem;font-weight:600}
+.oem-line{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px;margin:4px 0 8px}
+.oemnum{font:600 1.6rem/1.15 var(--f-m);letter-spacing:.07em}
+.dl{background:none;padding:0;border-top:1px solid var(--line);border-radius:0}
+.dl dt,.dl dd{padding:11px 0}
+.dl dd{font-weight:600}
+.seller{background:none;border:1px solid var(--line);border-radius:3px}
+.warn{background:var(--chip);border-radius:3px}
+.fits li{background:none;border:1px solid var(--line);border-radius:3px}
+.disclaimer{border-radius:3px}
+.rq-cta{border-radius:3px;border-left-width:3px;border-left-color:var(--pet)}
+/* ako to funguje */
+.how div{border-radius:3px;border-top:3px solid var(--pet)}
+.how b{font:700 1.6rem/1 var(--f-d);color:var(--pet2)}
+.how h3{font:700 1.3rem/1.15 var(--f-d)}
+/* vstupné stránky, právne stránky, pätička */
+.landing h1,.legal h1,.soon h1,#sell h1{font:700 clamp(2rem,4.6vw,3rem)/1.02 var(--f-d)}
+.landing-lead{font-size:1.05rem}
+.foot2 b{font:700 1.3rem var(--f-d)}
+/* portál predajcu */
+.pp-h h1{font:700 1.9rem/1.05 var(--f-d)}
+.pp-nav nav button{font-weight:600;border-radius:3px}
+.pp-card,.pp-nav,.pp-auth{border-radius:4px}
+.pp-auth h1{font:700 2rem/1.05 var(--f-d)}
+.pp-form input:not([type=checkbox]):not([type=file]),.pp-form select,.pp-form textarea,.pp-tools input,.pp-tools select,.pp-fitrow select{background:var(--card);border:1px solid var(--line);border-radius:3px;font-weight:500}
+.pp-form input:focus,.pp-form select:focus,.pp-form textarea:focus,.pp-tools input:focus{box-shadow:0 0 0 2px color-mix(in srgb,var(--pet2) 25%,transparent)}
+.tile b{font:700 2.6rem/1 var(--f-d)}
+/* havarované vozidlá */
+.carcard h3{font:600 1.28rem/1.15 var(--f-d)}
+.carcard .price{font-size:1.6rem}
+.cd-box{border-radius:4px}
+.cd-box .price{font-size:2.6rem}
+.dpage h1{font:700 clamp(1.8rem,4vw,2.5rem)/1.05 var(--f-d)}
+@media(max-width:760px){
+  .hero{padding:34px 16px 104px}
+  .panel{padding:0 16px 16px}
+  .panel>.vtabs{margin:0 -16px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+  .panel>.vtabs button{flex:none;padding:13px 15px 11px}
+  .di h1{font-size:1.9rem}
+  .dpr .price{font-size:2.2rem}
+}
+.panel .oemrow{grid-template-columns:minmax(0,560px) auto;justify-content:start}
+.panel .oemrow label{min-width:0}
+.panel .oemin{flex-wrap:nowrap}
+.panel .oemin input{flex:1 1 auto;min-width:0}
+.dl{grid-template-columns:minmax(150px,max-content) 1fr}
+.dl dt{padding-right:24px}
+@media(max-width:560px){.panel .oemrow{grid-template-columns:1fr}.dl{grid-template-columns:1fr}.dl dt{border-bottom:0;padding-bottom:0}}
+/* tmavý režim: žltá len na hlavné „Hľadať“ a TOP */
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .call{background:var(--pet2);color:#fff}:root:not([data-theme="light"]) .chip[aria-pressed="true"],:root:not([data-theme="light"]) .stabs button[aria-selected="true"]{background:var(--pet2);border-color:var(--pet2);color:#fff}:root:not([data-theme="light"]) .panel>.vtabs button.on{box-shadow:inset 0 3px 0 var(--pet2)}}
+:root[data-theme="dark"] .call{background:var(--pet2);color:#fff}
+:root[data-theme="dark"] .chip[aria-pressed="true"],:root[data-theme="dark"] .stabs button[aria-selected="true"]{background:var(--pet2);border-color:var(--pet2);color:#fff}
+:root[data-theme="dark"] .panel>.vtabs button.on{box-shadow:inset 0 3px 0 var(--pet2)}
+/* hlavička na mobile: logo a prihlásenie v jednom riadku */
+@media(max-width:600px){
+  .site-header{padding-top:calc(env(safe-area-inset-top,0px) + 8px);padding-bottom:8px}
+  .tb{gap:8px 10px;flex-wrap:wrap}
+  .brand{font-size:1.2rem;gap:7px}
+  .brand svg{width:28px;height:28px;padding:5px}
+  #user{margin-left:auto}
+  #user .ubtn{padding:7px 10px;font-size:.82rem}
+  .gs{flex-basis:100%}
+  .gs input{padding:8px 12px}
+  .gs button{width:42px;margin:3px}
+  .snav a{padding:9px 10px 8px;font-size:.95rem}
+}
