@@ -24,7 +24,8 @@ export default function Page() {
           <tr><td>rozoberacka-dopyty</td><td>localStorage</td><td>odkazy na vaše dopyty na diely, aby ste ich našli znova</td><td>nevyhnutné (vami zapnutá funkcia)</td><td>kým ich nezmažete</td></tr>
           <tr><td>rozoberacka-moje-auto</td><td>localStorage</td><td>auto, ktoré ste si uložili ako „Moje auto“, aby sme vám ukázali diely naň</td><td>nevyhnutné (vami zapnutá funkcia)</td><td>kým ho nezmažete („Zabudnúť auto“)</td></tr>
           <tr><td>rozoberacka-suhlas</td><td>localStorage</td><td>vaša voľba v nastaveniach cookies a jej dátum</td><td>nevyhnutné</td><td>kým ju nezmeníte alebo nezmažete</td></tr>
-          <tr><td>rz-tel-*, rz-view-*</td><td>sessionStorage</td><td>aby sa odkrytý telefón a zobrazenie nepočítali znova</td><td>nevyhnutné</td><td>do zatvorenia prehliadača</td></tr>
+          <tr><td>rozoberacka-druh</td><td>localStorage</td><td>druh vozidla (osobné, motorky…), ktorý ste naposledy zvolili pri pridávaní dielu – len v portáli predajcu</td><td>nevyhnutné (vami zvolené nastavenie)</td><td>kým ho nezmeníte alebo nezmažete</td></tr>
+          <tr><td>rz-tel-*, rz-view-*, rz-carview-*</td><td>sessionStorage</td><td>aby sa odkrytý telefón a zobrazenie dielu alebo vozidla nepočítali znova</td><td>nevyhnutné</td><td>do zatvorenia prehliadača</td></tr>
           <tr><td>sw.js (service worker)</td><td>skript prehliadača</td><td>pridanie webu na plochu ako aplikácie a hlásenie „bez internetu“; neukladá žiadne údaje</td><td>nevyhnutné</td><td>kým ho nezmažete v nastaveniach prehliadača</td></tr>
         </tbody>
       </table>
