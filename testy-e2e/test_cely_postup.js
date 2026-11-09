@@ -6,7 +6,7 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
 (async () => {
   const br = await chromium.launch(); const ctx = await br.newContext({ viewport: { width: 1280, height: 900 } }); const pg = await ctx.newPage();
   // voľba v lište cookies už je uložená (lištu testuje samostatný krok), aby neprekrývala tlačidlá
-  const seen = () => localStorage.setItem("rozoberacka-suhlas", JSON.stringify({ v: 1, at: new Date().toISOString(), analytics: false }));
+  const seen = () => localStorage.setItem("rozoberacka-suhlas", JSON.stringify({ v: 2, at: new Date().toISOString(), analytics: false }));
   await ctx.addInitScript(seen);
   pg.on("console", (m) => { if (m.type() === "error") errs.push("console: " + m.text()); });
   pg.on("response", (r) => { if (r.status() >= 400) errs.push("HTTP " + r.status() + " " + r.request().method() + " " + r.url().slice(0, 140)); }); pg.on("pageerror", (e) => errs.push("pageerror: " + e.message));

@@ -214,3 +214,9 @@ Overené na Slov-Lexe: Občiansky zákonník § 597, 599, 612, 618, 619 (znenie 
 - Hľadanie podľa VIN sa ukáže len pri osobných autách, dodávkach a „všetkých“; pri nákladných, autobusoch a motorkách nie.
 - Číslo dielu (OEM) aj text sa hľadá len v zvolenom druhu vozidla (pri poli je napísané, v akom). Odkaz „Rovnaké číslo u iných predajcov“ nesie druh vozidla dielu. Motorky majú vlastné „Najhľadanejšie diely“.
 - Portál predajcu: vo formulári je prvá otázka „Na aké vozidlo je diel?“ (pamätá si naposledy zvolený druh), v „Moje inzeráty“ filter a štítok druhu vozidla, na nástenke „Na aké vozidlá predávate“.
+
+## Google Analytics (9. 11. 2026, 19:40)
+- Pripravené, zapína sa premennou `NEXT_PUBLIC_GA_ID` (G-…) vo Verceli. Bez nej sa nič nemení.
+- Kód Google sa načíta až po súhlase v lište (Prijať všetky / Odmietnuť / Nastavenia), bez Google signals a reklamných funkcií; pri odvolaní sa cookies zmažú. `CONSENT_VERSION` 2 – lišta sa ukáže všetkým znova.
+- CSP, /cookies (_ga, _ga_*) a zásady ochrany údajov (časť 3 a 6, prenos do USA cez rámec EÚ – USA) sa prispôsobia samy podľa `NEXT_PUBLIC_GA_ID`.
+- V Google Analytics nastaviť: uchovávanie údajov 14 mesiacov, vypnúť Google signals a reklamné funkcie, prijať dodatok o spracúvaní údajov.

@@ -9,10 +9,12 @@ const KEY = "rozoberacka-suhlas";
 const EVT = "rz-consent";
 const OPEN = "rz-consent-open";
 /** Zvýšte, keď pribudne nový voliteľný nástroj – lišta sa zobrazí znova. */
-export const CONSENT_VERSION = 1;
+export const CONSENT_VERSION = 2; // 2 = pribudol Google Analytics (9. 11. 2026)
 /** Adresa skriptu merania návštevnosti (napr. https://plausible.io/js/script.js). Prázdne = žiadne voliteľné cookies. */
 export const ANALYTICS_SRC = process.env.NEXT_PUBLIC_ANALYTICS_SRC || "";
-export const HAS_OPTIONAL = !!ANALYTICS_SRC;
+/** Google Analytics 4 – ID merania (G-XXXXXXX) z nastavenia v Google Analytics. Prázdne = vypnuté. */
+export const GA_ID = (process.env.NEXT_PUBLIC_GA_ID || "").trim();
+export const HAS_OPTIONAL = !!ANALYTICS_SRC || /^G-[A-Z0-9]+$/.test(GA_ID);
 
 export type Consent = { v: number; at: string; analytics: boolean };
 
@@ -29,6 +31,7 @@ export function saveConsent(analytics: boolean) {
   try { localStorage.setItem(KEY, JSON.stringify(c)); } catch {}
   window.dispatchEvent(new Event(EVT));
   if (before?.analytics && !analytics) {
+    if (GA_ID) (window as unknown as Record<string, boolean>)["ga-disable-" + GA_ID] = true;
     // Odvolanie súhlasu: zmažeme cookies nastavené nástrojmi tretích strán (portál sám cookies nepoužíva) a načítame stránku bez nich.
     for (const part of document.cookie.split(";")) {
       const name = part.split("=")[0].trim();

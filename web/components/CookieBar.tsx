@@ -3,7 +3,7 @@
 // zapínať). Keď sa pridá meranie návštevnosti, ponúkne tri rovnocenné tlačidlá: Prijať všetky / Odmietnuť / Nastavenia.
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { ANALYTICS_SRC, HAS_OPTIONAL, saveConsent, useConsent } from "@/lib/consent";
+import { ANALYTICS_SRC, GA_ID, HAS_OPTIONAL, saveConsent, useConsent } from "@/lib/consent";
 
 export default function CookieBar() {
   const { consent, ready, open, close } = useConsent();
@@ -19,7 +19,7 @@ export default function CookieBar() {
     {HAS_OPTIONAL && consent?.analytics && <AnalyticsScript />}
     {showBar && (HAS_OPTIONAL ? (
       <div className="ckbar" role="region" aria-label="Súhlas s cookies">
-        <p><b>Cookies</b> – nevyhnutné úložisko používame vždy (prihlásenie, obľúbené, uložené hľadania). So súhlasom by sme merali aj návštevnosť, aby sme web zlepšovali. Súhlas môžete kedykoľvek zmeniť v pätičke. <Link href="/cookies">Podrobnosti</Link></p>
+        <p><b>Cookies</b> – nevyhnutné úložisko používame vždy (prihlásenie, obľúbené, uložené hľadania). So súhlasom meriame aj návštevnosť cez Google Analytics (Google), aby sme vedeli, čo na webe funguje a čo zlepšiť. Bez súhlasu sa Google Analytics vôbec nenačíta. Súhlas môžete kedykoľvek zmeniť v pätičke. <Link href="/cookies">Podrobnosti</Link></p>
         <div className="ckb"><button className="ckbtn" onClick={() => done(true)}>Prijať všetky</button><button className="ckbtn" onClick={() => done(false)}>Odmietnuť</button><button className="ckbtn ghost" onClick={() => { setAn(false); setSettings(true); }}>Nastavenia</button></div>
       </div>
     ) : (
@@ -37,7 +37,7 @@ export default function CookieBar() {
             <span className="ckon">Vždy zapnuté</span>
           </div>
           <div className="ckcat">
-            <div><b>Meranie návštevnosti</b><span className="mute">{HAS_OPTIONAL ? "Anonymné štatistiky, ktoré stránky sa používajú, aby sme web zlepšovali." : "Momentálne nepoužívame žiadne nástroje na meranie návštevnosti ani reklamu."}</span></div>
+            <div><b>Meranie návštevnosti</b><span className="mute">{HAS_OPTIONAL ? "Google Analytics (Google Ireland Ltd.): koľko ľudí web navštívi, ktoré stránky a z akého zariadenia. Bez reklamy a bez prepájania s účtom Google. Cookies _ga a _ga_* (najviac 2 roky)." : "Momentálne nepoužívame žiadne nástroje na meranie návštevnosti ani reklamu."}</span></div>
             {HAS_OPTIONAL
               ? <label className="cksw"><input type="checkbox" checked={an} onChange={(e) => setAn(e.target.checked)} /> <span>{an ? "Zapnuté" : "Vypnuté"}</span></label>
               : <span className="ckoff">Nepoužívame</span>}
@@ -59,6 +59,18 @@ export default function CookieBar() {
 /** Skript merania návštevnosti – vloží sa až po súhlase. Doménu treba doplniť aj do CSP (next.config.ts to robí samo). */
 function AnalyticsScript() {
   useEffect(() => {
+    if (GA_ID && /^G-[A-Z0-9]+$/.test(GA_ID) && !document.querySelector("script[data-rz-ga]")) {
+      // Google Analytics 4 až po súhlase; bez Google signals a reklamných funkcií
+      const w = window as unknown as { dataLayer: unknown[]; gtag: (...a: unknown[]) => void } & Record<string, unknown>;
+      w["ga-disable-" + GA_ID] = false;
+      w.dataLayer = w.dataLayer || [];
+      w.gtag = function gtag() { w.dataLayer.push(arguments); }; // eslint-disable-line prefer-rest-params
+      w.gtag("js", new Date());
+      w.gtag("config", GA_ID, { allow_google_signals: false, allow_ad_personalization_signals: false });
+      const g = document.createElement("script");
+      g.src = "https://www.googletagmanager.com/gtag/js?id=" + GA_ID; g.async = true; g.dataset.rzGa = "1";
+      document.head.appendChild(g);
+    }
     if (!ANALYTICS_SRC || document.querySelector("script[data-rz-analytics]")) return;
     const s = document.createElement("script");
     s.src = ANALYTICS_SRC; s.defer = true; s.dataset.rzAnalytics = "1";

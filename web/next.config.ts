@@ -14,15 +14,20 @@ function securityHeaders() {
   // meranie návštevnosti (len po súhlase s cookies) – jeho doména musí byť povolená
   let an = "";
   try { an = process.env.NEXT_PUBLIC_ANALYTICS_SRC ? new URL(process.env.NEXT_PUBLIC_ANALYTICS_SRC).origin : ""; } catch {}
+  // Google Analytics 4 (len po súhlase) – domény podľa návodu Google pre CSP
+  const ga = /^G-[A-Z0-9]+$/.test((process.env.NEXT_PUBLIC_GA_ID || "").trim());
+  const gaScript = ga ? " https://www.googletagmanager.com" : "";
+  const gaConnect = ga ? " https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com" : "";
+  const gaImg = ga ? " https://*.google-analytics.com https://www.googletagmanager.com" : "";
   const csp = [
     "default-src 'self'",
     // 'unsafe-inline' potrebuje Next.js pre vložené skripty stránky; 'wasm-unsafe-eval' a blob: čítanie čísla z fotky (tesseract.js)
-    `script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' blob:${dev ? " 'unsafe-eval'" : ""}${an ? " " + an : ""}`,
+    `script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' blob:${dev ? " 'unsafe-eval'" : ""}${an ? " " + an : ""}${gaScript}`,
     "worker-src 'self' blob:",
     "style-src 'self' 'unsafe-inline'",
-    `img-src 'self' data: blob: ${supa}`.trim(),
+    `img-src 'self' data: blob: ${supa}${gaImg}`.trim(),
     "font-src 'self' data:",
-    `connect-src 'self' ${supa} ${ws} ${an}`.trim(),
+    `connect-src 'self' ${supa} ${ws} ${an}${gaConnect}`.trim(),
     "manifest-src 'self'",
     "media-src 'self' blob:",
     "object-src 'none'",

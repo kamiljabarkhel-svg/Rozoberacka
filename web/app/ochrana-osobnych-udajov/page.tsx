@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { LegalPage, OperatorBox } from "@/components/Legal";
 import { OPERATOR, fill } from "@/lib/operator";
 
+const GA = /^G-[A-Z0-9]+$/.test((process.env.NEXT_PUBLIC_GA_ID || "").trim());
+
 export const metadata: Metadata = { title: "Ochrana osobných údajov", alternates: { canonical: "/ochrana-osobnych-udajov" } };
 
 export default function Page() {
@@ -45,7 +47,7 @@ export default function Page() {
         <li><b>Predajcovi</b>: meno, kontakt a text vašej správy dostane len predajca, ktorému píšete.</li>
         <li><b>Registrovaným predajcom</b>: dopyt na diel vrátane mena a kontaktu vidia prihlásení predajcovia na portáli (nie verejnosť), aby vám mohli poslať ponuku.</li>
         <li><b>Kupujúcemu, ktorý zadal dopyt</b>: ponuku predajcu (názov predajcu, typ, mesto, cenu, telefón a poznámku) vidí len tento kupujúci na svojej neverejnej adrese dopytu.</li>
-        <li><b>Sprostredkovateľom</b>, ktorí pre nás zabezpečujú techniku: Supabase Inc. (databáza, prihlásenie, fotky a zatiaľ aj odosielanie potvrdzovacích e-mailov; údaje sú uložené v dátovom centre vo Frankfurte, Nemecko; zmluva o spracúvaní údajov je súčasťou zmluvy so Supabase), poskytovateľ hostingu Vercel Inc. (zobrazovanie webu; stránky sa pripravujú na serveroch vo Frankfurte) a po zapojení aj Brevo (Sendinblue SAS, Francúzsko – odosielanie e-mailov a upozornení strážcu).</li>
+        <li><b>Sprostredkovateľom</b>, ktorí pre nás zabezpečujú techniku: Supabase Inc. (databáza, prihlásenie, fotky a zatiaľ aj odosielanie potvrdzovacích e-mailov; údaje sú uložené v dátovom centre vo Frankfurte, Nemecko; zmluva o spracúvaní údajov je súčasťou zmluvy so Supabase), poskytovateľ hostingu Vercel Inc. (zobrazovanie webu; stránky sa pripravujú na serveroch vo Frankfurte) a po zapojení aj Brevo (Sendinblue SAS, Francúzsko – odosielanie e-mailov a upozornení strážcu).{GA && " So súhlasom návštevníka aj Google Ireland Ltd. (Google Analytics – meranie návštevnosti, časť 6)."}</li>
         <li><b>Orgánom verejnej moci</b>, ak nám to ukladá zákon.</li>
       </ul>
       <p>Supabase a Vercel sú spoločnosti so sídlom v USA. Ak by pri ich službách došlo k prenosu údajov mimo EÚ, deje sa na základe štandardných zmluvných doložiek Európskej komisie, prípadne rámca EÚ – USA na ochranu údajov. Údaje nepredávame a nepoužívame na reklamu.</p>
@@ -65,7 +67,8 @@ export default function Page() {
       <p>Prístup k údajom stráži databáza pravidlami pre každý riadok (predajca vidí len svoje údaje), komunikácia je šifrovaná (HTTPS), heslá sa ukladajú len ako odtlačok a zásahy správcu sa zaznamenávajú.</p>
 
       <h2>6. Cookies</h2>
-      <p>Používame len nevyhnutné úložisko prehliadača, na ktoré nie je potrebný súhlas. Reklamné ani analytické cookies nepoužívame. Keby sme v budúcnosti pridali voliteľné nástroje (napríklad meranie návštevnosti), načítame ich až po vašom súhlase, ktorý môžete kedykoľvek odvolať v „Nastaveniach cookies“ v pätičke. Podrobnosti a zoznam všetkých údajov sú na stránke <a href="/cookies">Cookies</a>.</p>
+      {GA && <p><b>Meranie návštevnosti (Google Analytics).</b> Ak v lište cookies súhlasíte, meriame návštevnosť nástrojom Google Analytics 4 od Google Ireland Ltd. (Gordon House, Barrow Street, Dublin 4, Írsko). Spracúvajú sa údaje o návšteve: navštívené stránky, odkiaľ ste prišli, približná poloha (krajina, mesto), typ zariadenia a prehliadača a identifikátor v cookies _ga. Účel: zistiť, ako sa web používa, a zlepšovať ho. Právny základ: váš súhlas (čl. 6 ods. 1 písm. a) GDPR a § 109 ods. 8 zákona č. 452/2021 Z. z.), ktorý môžete kedykoľvek odvolať v „Nastaveniach cookies“ v pätičke. Reklamné funkcie a Google signals máme vypnuté, údaje neprepájame s vaším menom ani účtom. Google je pre nás sprostredkovateľom; údaje môžu byť prenesené do USA na základe rámca EÚ – USA na ochranu údajov, ku ktorému je Google pripojený. Údaje v Google Analytics uchovávame 14 mesiacov.</p>}
+      <p>Používame len nevyhnutné úložisko prehliadača, na ktoré nie je potrebný súhlas{GA ? ", a so súhlasom Google Analytics (pozri vyššie). Reklamné cookies nepoužívame." : ". Reklamné ani analytické cookies nepoužívame."} {GA ? "Google Analytics aj prípadné ďalšie voliteľné nástroje načítame až po vašom súhlase," : "Keby sme v budúcnosti pridali voliteľné nástroje (napríklad meranie návštevnosti), načítame ich až po vašom súhlase,"} ktorý môžete kedykoľvek odvolať v „Nastaveniach cookies“ v pätičke. Podrobnosti a zoznam všetkých údajov sú na stránke <a href="/cookies">Cookies</a>.</p>
     </LegalPage>
   );
 }
