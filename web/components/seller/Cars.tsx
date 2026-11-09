@@ -3,7 +3,7 @@
 // Telefón a VIN sú v súkromnej tabuľke car_contacts; VIN sa nikdy nezobrazuje verejne.
 import { useEffect, useMemo, useState } from "react";
 import type { Catalog, VehicleType } from "@/lib/types";
-import { CAR_CONDITIONS, CAR_DAMAGE, CAR_DOCS, FUELS, VEHICLE_TYPES } from "@/lib/types";
+import { CAR_BODIES, CAR_CONDITIONS, CAR_DAMAGE, CAR_DAMAGE_NOT_MOTO, CAR_DOCS, CAR_ORIGINS, FUELS, VEHICLE_TYPES } from "@/lib/types";
 import { carName } from "@/lib/seo";
 import { price as fmtPrice } from "@/lib/format";
 import { deleteCar, myCars, saveCar, setCarStatus, skError, type CarInput, type Donor, type MyCar, type PhotoItem, type Profile, type Status } from "@/lib/seller";
@@ -63,7 +63,9 @@ function CarSaleForm({ uid, cat, prof, edit, donor, onSaved, onCancel }: { uid: 
     vehicleType: dm?.vehicleType || "osobne", brandId: donor?.brandId || 0, modelId: donor?.modelId || null, engineId: donor?.engineId ?? null, year: donor?.year || 0,
     km: donor?.km ?? null, fuel: "", gearbox: donor?.gearbox || "", color: donor?.color || "", condition: "", damage: [], starts: null, docs: "", stkUntil: "",
     price: 0, city: prof?.city || "", description: donor?.note || "", donorId: donor?.id ?? null, phone: prof?.phone || "", vin: donor?.vin || "",
+    body: "", powerKw: null, keys: null, origin: "",
   });
+  const [kmUnknown, setKmUnknown] = useState(!!edit && edit.km == null);
   const [priceS, setPriceS] = useState(edit ? String(edit.price) : "");
   const [photos, setPhotos] = useState<PhotoItem[]>(edit?.photos.map((p) => ({ path: p.path, url: p.url })) || []);
   const [errs, setErrs] = useState<string[]>([]); const [busy, setBusy] = useState(false);
@@ -89,6 +91,11 @@ function CarSaleForm({ uid, cat, prof, edit, donor, onSaved, onCancel }: { uid: 
     if (!v.brandId) e.push("Vyberte značku.");
     if (models.length && !v.modelId) e.push("Vyberte model.");
     if (!v.year) e.push("Vyberte ročník.");
+    if (!v.fuel) e.push("Vyberte palivo.");
+    if (v.km == null && !kmUnknown) e.push("Zadajte najazdené km, alebo zaškrtnite „Stav km nepoznám“.");
+    if (!v.body) e.push("Vyberte karosériu / typ vozidla.");
+    if (v.starts == null) e.push("Vyberte, či vozidlo naštartuje.");
+    if (v.keys == null) e.push("Vyberte, či sú ku vozidlu kľúče.");
     if (!v.condition) e.push("Vyberte stav vozidla.");
     if (!v.docs) e.push("Vyberte, či má vozidlo doklady.");
     const pr = Math.round(Number(priceS.replace(/\s|€/g, "").replace(",", ".")) * 100) / 100; if (!(pr > 0)) e.push("Zadajte cenu väčšiu ako 0 €.");
@@ -113,21 +120,26 @@ function CarSaleForm({ uid, cat, prof, edit, donor, onSaved, onCancel }: { uid: 
       <div className="pp-form pp-grid pp-card">
         <div className="full pp-vt" role="radiogroup" aria-label="Druh vozidla"><span className="lt">Druh vozidla</span>
           {VEHICLE_TYPES.map((t) => <button key={t.id} type="button" role="radio" aria-checked={v.vehicleType === t.id} className={v.vehicleType === t.id ? "on" : ""}
-            onClick={() => { if (t.id !== v.vehicleType) set({ vehicleType: t.id as VehicleType, brandId: 0, modelId: null, engineId: null, year: 0 }); }}>{t.short}</button>)}</div>
+            onClick={() => { if (t.id !== v.vehicleType) set({ vehicleType: t.id as VehicleType, brandId: 0, modelId: null, engineId: null, year: 0, body: "", damage: v.damage.filter((d) => t.id !== "motorky" || !CAR_DAMAGE_NOT_MOTO.includes(d)) }); }}>{t.short}</button>)}</div>
         <label>Značka *<select value={v.brandId || ""} onChange={(e) => set({ brandId: Number(e.target.value), modelId: null, engineId: null, year: 0 })}><option value="">Vyberte…</option>{cat.brands.filter((b) => brandIds.has(b.id)).map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}</select></label>
         <label>Model *<select value={v.modelId || ""} disabled={!models.length} onChange={(e) => set({ modelId: Number(e.target.value) || null, engineId: null, year: 0 })}><option value="">Vyberte…</option>{models.map((m) => <option key={m.id} value={m.id}>{m.name} ({m.yearFrom}–{m.yearTo ?? ""})</option>)}</select></label>
         <label>Motorizácia<select value={v.engineId ?? ""} disabled={!engines.length} onChange={(e) => set({ engineId: e.target.value ? Number(e.target.value) : null })}><option value="">Neuvedená</option>{engines.map((x) => <option key={x.id} value={x.id}>{x.name}</option>)}</select></label>
         <label>Ročník *<select value={v.year || ""} disabled={!v.brandId} onChange={(e) => set({ year: Number(e.target.value) })}><option value="">Vyberte…</option>{years.map((y) => <option key={y}>{y}</option>)}</select></label>
-        <label>Najazdené km<input inputMode="numeric" value={v.km ?? ""} onChange={(e) => set({ km: e.target.value ? parseInt(e.target.value.replace(/\D/g, ""), 10) || 0 : null })} placeholder="napr. 210000" /></label>
-        <label>Palivo<select value={v.fuel} onChange={(e) => set({ fuel: e.target.value })}><option value="">Neuvedené</option>{FUELS.map((x) => <option key={x}>{x}</option>)}</select></label>
+        <label>Karoséria / typ *<select value={v.body} onChange={(e) => set({ body: e.target.value })}><option value="">Vyberte…</option>{CAR_BODIES[v.vehicleType].map((x) => <option key={x}>{x}</option>)}</select></label>
+        <label>Najazdené km *<input inputMode="numeric" value={v.km ?? ""} disabled={kmUnknown} onChange={(e) => set({ km: e.target.value ? parseInt(e.target.value.replace(/\D/g, ""), 10) || 0 : null })} placeholder="napr. 210000" /></label>
+        <label className="pp-chk"><input type="checkbox" checked={kmUnknown} onChange={(e) => { setKmUnknown(e.target.checked); if (e.target.checked) set({ km: null }); }} /><span>Stav km nepoznám</span></label>
+        <label>Palivo *<select value={v.fuel} onChange={(e) => set({ fuel: e.target.value })}><option value="">Vyberte…</option>{FUELS.map((x) => <option key={x}>{x}</option>)}</select></label>
+        <label>Výkon (kW)<input inputMode="numeric" value={v.powerKw ?? ""} onChange={(e) => { const n = parseInt(e.target.value.replace(/\D/g, ""), 10); set({ powerKw: n > 0 ? Math.min(n, 2000) : null }); }} placeholder="napr. 110" /></label>
         <label>Prevodovka<select value={v.gearbox} onChange={(e) => set({ gearbox: e.target.value })}><option value="">Neuvedená</option><option>Manuálna</option><option>Automatická</option></select></label>
         <label>Farba<input value={v.color} maxLength={40} onChange={(e) => set({ color: e.target.value })} placeholder="napr. sivá metalíza" /></label>
 
         <label>Stav vozidla *<select value={v.condition} onChange={(e) => set({ condition: e.target.value })}><option value="">Vyberte…</option>{CAR_CONDITIONS.map((x) => <option key={x}>{x}</option>)}</select></label>
-        <label>Naštartuje?<select value={v.starts == null ? "" : v.starts ? "1" : "0"} onChange={(e) => set({ starts: e.target.value === "" ? null : e.target.value === "1" })}><option value="">Neuvádzam</option><option value="1">Áno</option><option value="0">Nie</option></select></label>
+        <label>Naštartuje? *<select value={v.starts == null ? "" : v.starts ? "1" : "0"} onChange={(e) => set({ starts: e.target.value === "" ? null : e.target.value === "1" })}><option value="">Vyberte…</option><option value="1">Áno</option><option value="0">Nie</option></select></label>
+        <label>Kľúče *<select value={v.keys == null ? "" : v.keys ? "1" : "0"} onChange={(e) => set({ keys: e.target.value === "" ? null : e.target.value === "1" })}><option value="">Vyberte…</option><option value="1">Áno, sú ku vozidlu</option><option value="0">Nie</option></select></label>
+        <label>Pôvod vozidla<select value={v.origin} onChange={(e) => set({ origin: e.target.value })}><option value="">Neuvádzam</option>{CAR_ORIGINS.map((x) => <option key={x}>{x}</option>)}</select></label>
         <label>Doklady *<select value={v.docs} onChange={(e) => set({ docs: e.target.value })}><option value="">Vyberte…</option>{CAR_DOCS.map((x) => <option key={x}>{x}</option>)}</select></label>
         <label>STK a EK platná do<input type="date" value={v.stkUntil} onChange={(e) => set({ stkUntil: e.target.value })} /></label>
-        <fieldset className="full pp-dmg"><legend>Poškodené časti</legend>{CAR_DAMAGE.map((d) => <label key={d} className="pp-chk"><input type="checkbox" checked={v.damage.includes(d)} onChange={() => tog(d)} /><span>{d}</span></label>)}</fieldset>
+        <fieldset className="full pp-dmg"><legend>Poškodené časti <small className="mute">(označte všetko, čo je poškodené)</small></legend>{CAR_DAMAGE.filter((d) => v.vehicleType !== "motorky" || !CAR_DAMAGE_NOT_MOTO.includes(d)).map((d) => <label key={d} className="pp-chk"><input type="checkbox" checked={v.damage.includes(d)} onChange={() => tog(d)} /><span>{d}</span></label>)}</fieldset>
         {v.docs.startsWith("Bez dokladov") && <p className="full pp-warnbox">Vozidlo bez dokladov sa dá predať len na diely. Ak je vozidlo <b>odpadom (staré vozidlo)</b>, smiete ho odovzdať len osobe s oprávnením na spracovanie starých vozidiel, ktorá vám vydá potvrdenie (zákon č. 79/2015 Z. z. o odpadoch). Toto nie je právna rada.</p>}
 
         <label>{firm ? "Cena (€) vrátane DPH *" : "Cena (€) *"}<input value={priceS} inputMode="decimal" placeholder="napr. 1500" onChange={(e) => setPriceS(e.target.value)} /></label>

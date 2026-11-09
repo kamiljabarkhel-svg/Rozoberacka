@@ -449,6 +449,7 @@ function toCar(r: Row): CarListing {
     gearbox: (r.gearbox as string) ?? null, color: (r.color as string) ?? null, condition: String(r.condition), damage: (r.damage as string[]) || [],
     starts: (r.starts as boolean) ?? null, docs: String(r.docs), stkUntil: (r.stk_until as string) ?? null, price: Number(r.price), city: String(r.city),
     description: String(r.description || ""), donorId: (r.donor_id as number) ?? null, createdAt: String(r.created_at), updatedAt: String(r.updated_at),
+    body: (r.body as string) ?? null, powerKw: (r.power_kw as number) ?? null, keys: (r.keys as boolean) ?? null, origin: (r.origin as string) ?? null,
     sellerId: String(r.seller_id), seller: { name: String(s.name || ""), type: String(s.seller_type || ""), city: (s.city as string) ?? null, verified: !!s.verified, ico: (s.ico as string) ?? null, address: (s.address as string) ?? null },
     photos: ((r.photos || []) as string[]).map((p) => photoUrl(p)), thumbs: ((r.photos || []) as string[]).map((p) => photoUrl(thumbPath(p))),
     mediums: ((r.photos || []) as string[]).map((p) => photoUrl(mediumPath(p))), parts: Number(r.parts || 0), status: (r.status as string) ?? undefined,

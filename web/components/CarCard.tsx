@@ -9,8 +9,8 @@ export default function CarCard({ c, cat }: { c: CarListing; cat: Catalog }) {
   const title = vehicleTitle(c, cat);
   const eng = c.engineId ? cat.engines.find((e) => e.id === c.engineId)?.name : "";
   const facts = [
-    String(c.year), c.km != null && `${c.km.toLocaleString("sk-SK")} km`, eng, c.fuel, c.gearbox,
-    c.starts === true ? "naštartuje" : c.starts === false ? "nenaštartuje" : "",
+    String(c.year), c.km != null && `${c.km.toLocaleString("sk-SK")} km`, c.body, eng, c.powerKw ? `${c.powerKw} kW` : "", c.fuel, c.gearbox,
+    c.starts === true ? "naštartuje" : c.starts === false ? "nenaštartuje" : "", c.keys === false ? "bez kľúčov" : "",
   ].filter(Boolean) as string[];
   return (
     <article className="carcard">

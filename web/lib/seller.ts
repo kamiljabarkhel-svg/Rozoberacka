@@ -410,10 +410,11 @@ export type MyCar = {
   id: number; vehicleType: VehicleType; brandId: number; modelId: number | null; engineId: number | null; year: number; km: number | null;
   fuel: string; gearbox: string; color: string; condition: string; damage: string[]; starts: boolean | null; docs: string; stkUntil: string;
   price: number; city: string; description: string; donorId: number | null; status: Status; moderationNote: string;
+  body: string; powerKw: number | null; keys: boolean | null; origin: string;
   views: number; calls: number; createdAt: string; updatedAt: string; phone: string; vin: string; photos: { path: string; url: string }[];
 };
 export type CarInput = Omit<MyCar, "id" | "status" | "moderationNote" | "views" | "calls" | "createdAt" | "updatedAt" | "photos">;
-const CAR_COLS = "id,vehicle_type,brand_id,model_id,engine_id,year,km,fuel,gearbox,color,condition,damage,starts,docs,stk_until,price,city,description,donor_id," +
+const CAR_COLS = "id,vehicle_type,brand_id,model_id,engine_id,year,km,fuel,gearbox,color,condition,damage,starts,docs,stk_until,price,city,description,donor_id,body,power_kw,keys,origin," +
   "status,moderation_note,views,calls,created_at,updated_at,car_contacts(phone,vin),car_photos(path,position)";
 function toMyCar(r: Row): MyCar {
   const ct = r.car_contacts as Row | Row[] | null; const c0 = (Array.isArray(ct) ? ct[0] : ct) || {};
@@ -423,6 +424,7 @@ function toMyCar(r: Row): MyCar {
     engineId: (r.engine_id as number) ?? null, year: Number(r.year), km: (r.km as number) ?? null, fuel: String(r.fuel || ""), gearbox: String(r.gearbox || ""),
     color: String(r.color || ""), condition: String(r.condition), damage: (r.damage as string[]) || [], starts: (r.starts as boolean) ?? null, docs: String(r.docs),
     stkUntil: String(r.stk_until || ""), price: Number(r.price), city: String(r.city || ""), description: String(r.description || ""), donorId: (r.donor_id as number) ?? null,
+    body: String(r.body || ""), powerKw: (r.power_kw as number) ?? null, keys: (r.keys as boolean) ?? null, origin: String(r.origin || ""),
     status: r.status as Status, moderationNote: String(r.moderation_note || ""), views: Number(r.views || 0), calls: Number(r.calls || 0),
     createdAt: String(r.created_at), updatedAt: String(r.updated_at || r.created_at), phone: String((c0 as Row).phone || ""), vin: String((c0 as Row).vin || ""),
     photos: ph.map((p) => ({ path: String(p.path), url: photoUrl(String(p.path)) })),
@@ -443,6 +445,7 @@ export async function saveCar(uid: string, id: number | null, x: CarInput, photo
     vehicle_type: x.vehicleType, brand_id: x.brandId, model_id: x.modelId, engine_id: x.engineId, year: x.year, km: x.km, fuel: x.fuel || null,
     gearbox: x.gearbox || null, color: x.color.trim() || null, condition: x.condition, damage: x.damage, starts: x.starts, docs: x.docs,
     stk_until: x.stkUntil || null, price: x.price, city: x.city.trim(), description: x.description.trim(), donor_id: x.donorId,
+    body: x.body || null, power_kw: x.powerKw, keys: x.keys, origin: x.origin || null,
   };
   let cid = id;
   if (cid == null) {

@@ -21,9 +21,10 @@ export default function CarDetail({ c, title, engine, path, sellerHref }: { c: C
   }, [c.id]);
   const vt = VEHICLE_TYPES.find((t) => t.id === c.vehicleType)?.name;
   const rows: [string, string | null | undefined][] = [
-    ["Druh vozidla", vt], ["Motorizácia", engine], ["Ročník", String(c.year)], ["Najazdené", c.km != null ? `${c.km.toLocaleString("sk-SK")} km` : null],
+    ["Druh vozidla", vt], ["Karoséria", c.body], ["Motorizácia", engine], ["Výkon", c.powerKw ? `${c.powerKw} kW (${Math.round(c.powerKw * 1.36)} k)` : null],
+    ["Ročník", String(c.year)], ["Najazdené", c.km != null ? `${c.km.toLocaleString("sk-SK")} km` : "neznáme"],
     ["Palivo", c.fuel], ["Prevodovka", c.gearbox], ["Farba", c.color], ["Stav", c.condition],
-    ["Naštartuje", c.starts == null ? null : c.starts ? "Áno" : "Nie"], ["Doklady", c.docs],
+    ["Naštartuje", c.starts == null ? null : c.starts ? "Áno" : "Nie"], ["Kľúče", c.keys == null ? null : c.keys ? "Áno" : "Nie"], ["Doklady", c.docs], ["Pôvod", c.origin],
     ["STK a EK do", c.stkUntil ? new Date(c.stkUntil).toLocaleDateString("sk-SK") : null], ["Mesto", c.city],
     ["Pridané", new Date(c.createdAt).toLocaleDateString("sk-SK")],
   ];

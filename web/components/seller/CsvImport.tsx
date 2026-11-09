@@ -2,7 +2,7 @@
 // Import inzerátov z CSV (Excel → Uložiť ako CSV). Najprv náhľad s chybami, potom import.
 import { useState } from "react";
 import type { Catalog, Condition } from "@/lib/types";
-import { CONDITIONS, condLabel, cleanSpecs, isUniversal, specsErrors, SPEC_LABEL, VEHICLE_TYPES, WHEEL_CAT, type Specs } from "@/lib/types";
+import { CONDITIONS, condLabel, cleanSpecs, isUniversal, specsErrors, SPEC_LABEL, VEHICLE_TYPES, WHEEL_CAT, wheelDefaults, wheelKind, wheelMissing, type Specs } from "@/lib/types";
 import { SPEC_COLS } from "@/lib/csvExport";
 import { importMany, type ListingInput, type Profile } from "@/lib/seller";
 
@@ -92,7 +92,17 @@ export default function CsvImport({ uid, cat, prof, onDone }: { uid: string; cat
       const rawSpecs: Specs = {};
       if (c?.id === WHEEL_CAT) for (const [colName, k] of SPEC_COLS) { let x = g(colName); if (k === "season") x = x.toLowerCase(); if (k === "mat") x = /^hl|^al/i.test(x) ? "Hliník" : /^oc|^st/i.test(norm(x)) ? "Oceľ" : x; if (x) rawSpecs[k] = x; }
       for (const k of specsErrors(rawSpecs)) warns.push(`${SPEC_LABEL[k].toLowerCase()} „${rawSpecs[k]}“ má zlý tvar – vynechané`);
-      const specs = cleanSpecs(rawSpecs);
+      let specs = cleanSpecs(rawSpecs);
+      if (c?.id === WHEEL_CAT) {
+        if (!sub) errors.push("pri pneumatikách a diskoch vyplňte stĺpec podkategoria (napr. Pneumatiky zimné, Disky hliníkové, Kolesá s pneumatikami)");
+        else {
+          const kind = wheelKind(sub.name); specs = { ...wheelDefaults(sub.name), ...specs };
+          const miss = wheelMissing(kind, specs, condition === "Nový");
+          const must = miss.filter((x) => ["tw", "tp", "rd", "pcd"].includes(x));   // rozmer stráži aj databáza
+          if (must.length) errors.push(`chýba rozmer: ${must.map((x) => SPEC_LABEL[x].toLowerCase()).join(", ")}`);
+          const rest = miss.filter((x) => !must.includes(x)); if (rest.length) warns.push(`odporúčame doplniť: ${rest.map((x) => SPEC_LABEL[x].toLowerCase()).join(", ")}`);
+        }
+      }
       warns.push("bez fotky – doplňte cez Upraviť");
       const ok = !errors.length;
       return {

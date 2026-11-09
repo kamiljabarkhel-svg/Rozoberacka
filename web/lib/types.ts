@@ -158,15 +158,53 @@ export function specsErrors(s: Specs | null | undefined): (keyof Specs)[] {
   return (Object.entries(s || {}) as [keyof Specs, string][]).filter(([k, v]) => v && v.trim() && !SPEC_RULES[k]?.(normSpec(k, v))).map(([k]) => k);
 }
 
+/** Druh ponuky v kategórii Pneumatiky a disky podľa podkategórie (rovnaké pravidlá ako trigger listing_required v supabase/23). */
+export type WheelKind = "pneu" | "disk" | "kolesa" | "ine";
+export function wheelKind(subName: string | null | undefined): WheelKind {
+  const n = subName || "";
+  if (n.startsWith("Pneumatiky")) return "pneu";
+  if (n.startsWith("Disky")) return "disk";
+  if (n === "Kolesá s pneumatikami" || n === "Rezervné a dojazdové kolesá") return "kolesa";
+  return "ine";
+}
+/** Povinné parametre podľa druhu (dezén len pri použitých pneumatikách – rieši formulár). Databáza vyžaduje rozmer: pneu tw+tp+rd, disk pcd+rd, kolesá oboje. */
+export const WHEEL_REQ: Record<WheelKind, (keyof Specs)[]> = {
+  pneu: ["tw", "tp", "rd", "pcs"], disk: ["rd", "pcd", "rw", "et", "pcs"], kolesa: ["tw", "tp", "rd", "pcd", "pcs"], ine: [],
+};
+/** Sezóna a materiál vyplývajúce z podkategórie (napr. „Pneumatiky zimné“ → zimné). */
+export function wheelDefaults(subName: string | null | undefined): Specs {
+  const n = subName || "", o: Specs = {};
+  if (n.endsWith("letné")) o.season = "letné"; else if (n.endsWith("zimné")) o.season = "zimné"; else if (n.endsWith("celoročné")) o.season = "celoročné";
+  if (n === "Disky hliníkové") o.mat = "Hliník"; else if (n === "Disky oceľové") o.mat = "Oceľ";
+  return o;
+}
+/** Chýbajúce povinné parametre kolesa (prázdne polia). */
+export function wheelMissing(kind: WheelKind, s: Specs | null | undefined, isNew = false): (keyof Specs)[] {
+  const req = [...WHEEL_REQ[kind]]; if ((kind === "pneu" || kind === "kolesa") && !isNew) req.push("tread");
+  return req.filter((k) => !(s?.[k] || "").trim());
+}
+
 // ---------- Havarované vozidlá na predaj ----------
 export const CAR_CONDITIONS = ["Havarované – pojazdné", "Havarované – nepojazdné", "Nepojazdné – porucha", "Na diely", "Po požiari alebo povodni"] as const;
-export const CAR_DAMAGE = ["Predok", "Zadok", "Ľavý bok", "Pravý bok", "Strecha", "Podvozok", "Motor", "Prevodovka", "Elektrika", "Interiér"] as const;
+export const CAR_DAMAGE = ["Predok", "Zadok", "Ľavý bok", "Pravý bok", "Strecha", "Podvozok", "Motor", "Prevodovka", "Elektrika", "Interiér", "Airbagy", "Sklá", "Kolesá a náprava", "Rám"] as const;
+/** Poškodenia, ktoré sa pri motorke neponúkajú. */
+export const CAR_DAMAGE_NOT_MOTO = ["Strecha", "Interiér", "Airbagy", "Sklá", "Podvozok"];
+/** Karoséria podľa druhu vozidla (rovnaký zoznam ako check v supabase/23). */
+export const CAR_BODIES: Record<VehicleType, string[]> = {
+  osobne: ["Hatchback", "Sedan", "Kombi", "SUV", "MPV", "Kupé", "Kabriolet", "Pick-up"],
+  dodavky: ["Skriňová dodávka", "Valník", "Sklápač", "Podvozok s kabínou", "Obytné vozidlo", "Minibus"],
+  nakladne: ["Ťahač", "Skriňa", "Valník", "Sklápač", "Chladiarenské", "Cisterna", "Podvozok"],
+  autobusy: ["Mestský", "Medzimestský", "Diaľkový", "Minibus"],
+  motorky: ["Cestná", "Športová", "Naked", "Chopper", "Enduro", "Cross", "Skúter", "Štvorkolka"],
+};
+export const CAR_ORIGINS = ["Slovensko", "Dovoz"] as const;
 export const CAR_DOCS = ["S dokladmi – prihlásené", "S dokladmi – odhlásené", "Bez dokladov – len na diely"] as const;
 export const FUELS = ["Benzín", "Nafta", "LPG", "CNG", "Hybrid", "Plug-in hybrid", "Elektro"] as const;
 export type CarListing = {
   id: number; vehicleType: VehicleType; brandId: number; modelId: number | null; engineId: number | null; year: number; km: number | null;
   fuel: string | null; gearbox: string | null; color: string | null; condition: string; damage: string[]; starts: boolean | null; docs: string;
   stkUntil: string | null; price: number; city: string; description: string; donorId: number | null; createdAt: string; updatedAt: string;
+  body: string | null; powerKw: number | null; keys: boolean | null; origin: string | null;
   sellerId: string; seller: Seller; photos: string[]; thumbs: string[]; mediums: string[]; parts: number; status?: string;
 };
 export type CarFilters = { vtype: VehicleType | ""; brand: number | null; model: number | null; yfrom: number | null; yto: number | null; max: number | null; cond: string; fuel: string; docs: boolean; city: string; q: string; sort: "new" | "asc" | "desc" | "year" | "km" };

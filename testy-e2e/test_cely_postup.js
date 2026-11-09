@@ -175,7 +175,11 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
     await pg.waitForSelector(".pp-donor-note:has-text('Octavia III')");
     await pg.click("text=Zverejniť vozidlo"); await pg.waitForSelector(".pp-err:has-text('Vyberte stav vozidla')");
     await pg.selectOption("label:has-text('Stav vozidla') select", "Havarované – nepojazdné"); await pg.selectOption("label:has-text('Doklady') select", "S dokladmi – odhlásené");
-    await pg.check(".pp-dmg label:has-text('Predok') input"); await pg.check(".pp-dmg label:has-text('Motor') input");
+    await pg.click("text=Zverejniť vozidlo"); await pg.waitForSelector(".pp-err:has-text('Vyberte palivo')"); await pg.waitForSelector(".pp-err:has-text('kľúče')");
+    await pg.selectOption("label:has-text('Palivo') select", "Nafta"); await pg.selectOption("label:has-text('Karoséria') select", "Kombi");
+    await pg.fill("label:has-text('Najazdené km') input", "210000"); await pg.fill("label:has-text('Výkon') input", "110");
+    await pg.selectOption("label:has-text('Naštartuje') select", "0"); await pg.selectOption("label:has-text('Kľúče') select", "1");
+    await pg.check(".pp-dmg label:has-text('Predok') input"); await pg.check(".pp-dmg label:has-text('Airbagy') input");
     await pg.fill("label:has-text('Cena (€)') input", "1800"); await pg.fill("label:has-text('Popis') textarea", "Čelný náraz, airbagy vystrelené, zadná časť a interiér v poriadku.");
     await pg.setInputFiles(".pp-add input[type=file]", ["a.png"]); await pg.waitForSelector(".pp-phl figure");
     await pg.click("text=Zverejniť vozidlo"); await pg.waitForSelector(".pp-toast:has-text('je zverejnené')", { timeout: 20000 });
@@ -187,6 +191,7 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
     await b2.click(".cs-vt >> text=Motorky a štvorkolky"); await b2.waitForSelector("text=0 vozidiel"); await b2.click(".cs-vt >> text=Osobné autá"); await b2.waitForSelector(".carcard");
     await b2.click(".cars-conds >> text=Na diely"); await b2.waitForSelector("text=0 vozidiel"); await b2.click(".cars-conds >> text=Všetky stavy"); await b2.waitForSelector(".carcard");
     await b2.click(".carcard a"); await b2.waitForURL("**/vozidlo/**"); await b2.waitForSelector("h1:has-text('Havarované – nepojazdné')");
+    await b2.waitForSelector("dd:text-is('Kombi')"); await b2.waitForSelector("dd:has-text('110 kW')");
     const h = await b2.content(); if (/TMBJJ7NE0G0123456/.test(h)) throw new Error("VIN je verejne");
     // diely z auta na diely sú zatiaľ pozastavené (bez fotiek) – kupujúci ich nevidí
     if (await b2.locator("h2:has-text('Diely z tohto vozidla')").count()) throw new Error("pozastavené diely sú verejné"); await b2.waitForSelector(".disclaimer:has-text('KJ trade')");
@@ -197,11 +202,22 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
   });
   await step("pneumatiky a disky: parametre vo formulari a filtri", async () => {
     await pg.click(".pp-nav >> text=Pridať inzerát"); await pg.fill(".pp-form label:has-text('Názov dielu') input", "Disky 16 Škoda 5x112");
-    await pg.selectOption(".pp-form select:has(option:text-is('Pneumatiky a disky'))", { label: "Pneumatiky a disky" }); await pg.waitForSelector(".pp-specs");
+    await pg.selectOption(".pp-form select:has(option:text-is('Pneumatiky a disky'))", { label: "Pneumatiky a disky" });
+    await pg.click("text=Ďalej →"); await pg.waitForSelector(".pp-ferr:has-text('čo predávate')");
+    // pneumatiky: rozmer, sezóna zo zvolenej podkategórie, bez čísla dielu
+    await pg.selectOption(".pp-form label:has-text('Čo predávate') select", { label: "Pneumatiky zimné" }); await pg.waitForSelector(".pp-specg legend:text-is('Pneumatika')");
+    if (await pg.locator(".pp-form label:has-text('OEM')").count()) throw new Error("pri pneumatikách je pole OEM");
+    if (await pg.inputValue(".pp-specg label:has-text('Sezóna') select") !== "zimné") throw new Error("sezóna sa nevyplnila");
+    await pg.click("text=Ďalej →"); await pg.waitForSelector(".pp-ferr:has-text('šírka pneumatiky')");
+    // disky
+    await pg.selectOption(".pp-form label:has-text('Čo predávate') select", { label: "Disky hliníkové" }); await pg.waitForSelector(".pp-specg legend:text-is('Disk')");
+    if (await pg.locator(".pp-specg legend:text-is('Pneumatika')").count()) throw new Error("pri diskoch sú polia pneumatiky");
     await pg.fill(".pp-specg label:has-text('Rozteč') input", "5x112"); await pg.selectOption(".pp-specg label:has-text('Priemer') select", "16");
     await pg.fill(".pp-specg label:has-text('Zális') input", "abc"); await pg.fill(".pp-form label:has-text('OEM') input", "5E0601025");
-    await pg.click("text=Ďalej →"); await pg.waitForSelector(".pp-ferr:has-text('parameter kolesa')");
-    await pg.fill(".pp-specg label:has-text('Zális') input", "46"); await pg.click("text=Ďalej →"); await pg.waitForSelector(".pp-form label:has-text('Značka auta')");
+    await pg.click("text=Ďalej →"); await pg.waitForSelector(".pp-ferr:has-text('Doplňte alebo opravte')");
+    await pg.fill(".pp-specg label:has-text('Zális') input", "46"); await pg.fill(".pp-specg label:has-text('Šírka disku') input", "6.5"); await pg.fill(".pp-specg label:has-text('Počet kusov') input", "4");
+    await pg.click("text=Ďalej →"); await pg.waitForSelector(".pp-form label:has-text('Značka auta')");
+    if (await pg.locator(".pp-form label:has-text('Prevodovka auta')").count()) throw new Error("pri diskoch je prevodovka auta");
   });
   await step("export CSV a hromadna cena", async () => {
     await pg.click(".pp-nav >> text=Moje inzeráty"); await pg.waitForSelector(".pp-row");
