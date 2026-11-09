@@ -25,15 +25,15 @@ select pg_temp.ok((select vtypes from public.categories where id = 'nvz') = '{na
 select pg_temp.ok((select count(*) from public.models where vehicle_type = 'motorky') > 0 or true, '18: stĺpec vehicle_type čitateľný');
 
 -- diel s parametrami kolies
-insert into public.listings (seller_id, name, brand_id, model_id, year, category_id, oem, price, city, description, warranty, condition, specs)
-select 'd1111111-0000-0000-0000-0000000000d1', 'Disky 17 Škoda', b.id, m.id, 2018, 'kol', '5E0601025', 300, 'Senica',
+insert into public.listings (seller_id, name, brand_id, model_id, year, category_id, subcategory_id, oem, price, city, description, warranty, condition, specs)
+select 'd1111111-0000-0000-0000-0000000000d1', 'Disky 17 Škoda', b.id, m.id, 2018, 'kol', (select id from public.subcategories where category_id = 'kol' and name = 'Disky hliníkové'), '5E0601025', 300, 'Senica',
        'Sada 4 diskov bez poškodenia, len bežné stopy.', 'Bez záruky', 'Dobrý', '{"pcd":"5x112","rd":"17","rw":"7","et":"49","pcs":"4","mat":"Hliník"}'
 from public.brands b join public.models m on m.brand_id = b.id where b.name = 'Škoda' order by m.id limit 1;
 select pg_temp.ok(true, '18: diel s parametrami kolies uložený');
 do $$ begin
   begin
-    insert into public.listings (seller_id, name, brand_id, model_id, year, category_id, oem, price, city, description, warranty, condition, specs)
-    select 'd1111111-0000-0000-0000-0000000000d1', 'Zlé disky', b.id, m.id, 2018, 'kol', '5E0601026', 300, 'Senica', 'Popis má aspoň dvadsať znakov naozaj.', 'Bez záruky', 'Dobrý', '{"pcd":"112"}'
+    insert into public.listings (seller_id, name, brand_id, model_id, year, category_id, subcategory_id, oem, price, city, description, warranty, condition, specs)
+    select 'd1111111-0000-0000-0000-0000000000d1', 'Zlé disky', b.id, m.id, 2018, 'kol', (select id from public.subcategories where category_id = 'kol' and name = 'Disky hliníkové'), '5E0601026', 300, 'Senica', 'Popis má aspoň dvadsať znakov naozaj.', 'Bez záruky', 'Dobrý', '{"pcd":"112"}'
     from public.brands b join public.models m on m.brand_id = b.id where b.name = 'Škoda' order by m.id limit 1;
     raise exception 'ZLYHAL: zlá rozteč prešla';
   exception when check_violation then raise notice 'OK  18: zlá rozteč odmietnutá'; end;
