@@ -7,7 +7,7 @@ import type { Catalog, Filters, Specs, VehicleType } from "@/lib/types";
 import { cleanSpecs, CONDITIONS, condLabel, emptyFilters, PCDS, RIM_DIAMETERS, RIM_WIDTHS, SEASONS, TIRE_PROFILES, TIRE_WIDTHS, VEHICLE_TYPES, WHEEL_CAT } from "@/lib/types";
 import { getCatalog, getCities, getStats, initialData, searchListings, type SearchPage } from "@/lib/data";
 import { decodeVin } from "@/lib/vin";
-import { pieces, sk } from "@/lib/format";
+import { pieces, plural, sk } from "@/lib/format";
 import { useFavs } from "@/lib/favs";
 import { filterKey, hasCriteria, MAX_SAVED, useSaved } from "@/lib/saved";
 import SavedSearches from "./SavedSearches";
@@ -34,15 +34,16 @@ const POP: { label: string; cat?: string; sub?: string; q?: string }[] = [
   { label: "Riadiaca jednotka", q: "Riadiaca jednotka" }, { label: "Alternátor", cat: "el", sub: "Alternátory" },
   { label: "Turbo", cat: "motor", sub: "Turbodúchadlá" }, { label: "Motor", cat: "motor", sub: "Motory kompletné" },
   { label: "Prevodovka", cat: "pr" }, { label: "Volant", cat: "int", sub: "Volanty a airbagy" },
-  { label: "Disky", cat: "kol", sub: "Disky hliníkové" }, { label: "Pneumatiky", cat: "kol" },
 ];
 
 // Krátke názvy parametrov v adrese
-const P = { q: "q", brand: "znacka", model: "model", engine: "motor", year: "rok", cat: "kat", sub: "pod", max: "cena", cond: "stav", city: "mesto", sort: "zoradit", fav: "oblubene", side: "strana", tested: "odskusane", ret: "vratenie", vtype: "druh" } as const;
+const P = { q: "q", brand: "znacka", model: "model", engine: "motor", year: "rok", cat: "kat", sub: "pod", max: "cena", cond: "stav", city: "mesto", sort: "zoradit", fav: "oblubene", side: "strana", tested: "odskusane", ret: "vratenie", vtype: "druh", wtype: "typ" } as const;
 // Parametre kolies v adrese (len pri kategórii Pneumatiky a disky)
 const SP: [keyof Specs, string][] = [["pcd", "roztec"], ["rd", "priemer"], ["tw", "sirka"], ["tp", "profil"], ["season", "sezona"], ["rw", "disk"], ["et", "et"], ["mat", "material"]];
 
 /** Úvod má predvolené osobné autá; „Všetky vozidlá“ = druh=vsetky v adrese. */
+function pick(o: Specs, keys: (keyof Specs)[]): Specs { const r: Specs = {}; for (const k of keys) if (o[k]) r[k] = o[k]; return r; }
+
 const HOME_DEFAULT: Filters = { ...emptyFilters, vtype: "osobne" };
 
 // Najhľadanejšie diely na motorky (iné kategórie ako pri autách)
@@ -50,7 +51,7 @@ const POP_MOTO: typeof POP = [
   { label: "Predné svetlo", cat: "sv", sub: "Predné svetlá" }, { label: "Zadné svetlo", cat: "sv", sub: "Zadné svetlá" },
   { label: "Kapotáž", cat: "mrm", sub: "Kapotáže a plasty" }, { label: "Nádrž", cat: "mrm", sub: "Nádrže" }, { label: "Sedlo", cat: "mrm", sub: "Sedlá" },
   { label: "Predná vidlica", cat: "mvi", sub: "Predné vidlice" }, { label: "Riadidlá", cat: "mri", sub: "Riadidlá" }, { label: "Zrkadlo", cat: "mri", sub: "Zrkadlá" },
-  { label: "Výfuk", cat: "pal", sub: "Výfuky" }, { label: "Reťazová sada", cat: "mpo", sub: "Reťazové sady" }, { label: "Motor", cat: "motor" }, { label: "Disky", cat: "kol", sub: "Disky hliníkové" },
+  { label: "Výfuk", cat: "pal", sub: "Výfuky" }, { label: "Reťazová sada", cat: "mpo", sub: "Reťazové sady" }, { label: "Motor", cat: "motor" },
 ];
 
 function readUrl(): Filters {
@@ -67,6 +68,7 @@ function readUrl(): Filters {
   const sd = s.get(P.side); f.side = sd === "Ľavá" || sd === "Pravá" ? sd : "";
   f.tested = s.get(P.tested) === "1"; f.ret = s.get(P.ret) === "1";
   const vt = s.get(P.vtype); f.vtype = vt === "vsetky" ? "" : VEHICLE_TYPES.some((t) => t.id === vt) ? (vt as VehicleType) : "osobne";
+  if (f.cat === WHEEL_CAT) { const wt = s.get(P.wtype); f.wtype = wt === "vsetko" ? "" : wt === "pneu" || wt === "disk" || wt === "kolesa" ? wt : "pneu"; }
   if (f.cat === WHEEL_CAT) { const sp: Specs = {}; for (const [k, n] of SP) { const v = s.get(n); if (v) sp[k] = v; } f.specs = cleanSpecs(sp); }
   return f;
 }
@@ -79,7 +81,7 @@ function writeUrl(f: Filters) {
   put(P.cat, f.cat); put(P.sub, f.sub); put(P.max, f.max); put(P.cond, f.cond); put(P.city, f.city);
   if (f.sort !== "new") put(P.sort, f.sort);
   put(P.fav, f.fav); put(P.side, f.side); put(P.tested, f.tested); put(P.ret, f.ret); if (f.vtype !== "osobne") put(P.vtype, f.vtype || "vsetky");
-  if (f.cat === WHEEL_CAT) for (const [k, n] of SP) put(n, f.specs?.[k] || "");
+  if (f.cat === WHEEL_CAT) { put(P.wtype, f.wtype || "vsetko"); for (const [k, n] of SP) put(n, f.specs?.[k] || ""); }
   const qs = s.toString();
   const url = window.location.pathname + (qs ? "?" + qs : "") + window.location.hash;
   window.history.replaceState(window.history.state, "", url);
@@ -240,7 +242,6 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
 
   const opt = (v: string | number, label: string) => <option key={v} value={v}>{label}</option>;
   const wheels = f.cat === WHEEL_CAT;
-  const wheelSubs = catalog ? catalog.subcategories.filter((x) => x.categoryId === WHEEL_CAT).sort((a, b) => a.sort - b.sort) : [];
   const numOrNull = (v: string) => (v === "" ? null : Number(v));
 
   const detailId = STATIC_PREVIEW && hash.startsWith("#inzerat-") ? Number(hash.slice(9)) : null;
@@ -267,15 +268,16 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
 
       <div className="wrap">
         <section className="panel" aria-label="Hľadanie dielov" ref={panelRef}>
-          <MyCarBar car={my.car} cat={catalog} f={f}
+          {!wheels && <MyCarBar car={my.car} cat={catalog} f={f}
             onUse={() => { if (my.car) { set({ brand: my.car.brand, model: my.car.model, engine: my.car.engine, year: null }); setTimeout(toRes, 30); } }}
             onAll={() => set({ brand: null, model: null, engine: null, year: null })}
             onSave={() => { if (f.brand != null) { const c = { brand: f.brand, model: f.model, engine: f.engine, year: f.year }; my.save(catalog ? { ...c, label: myCarLabel(c, catalog) } : c); } }}
-            onForget={() => my.save(null)} />
+            onForget={() => my.save(null)} />}
           <div className="vtabs" role="tablist" aria-label="Druh vozidla">
             {VEHICLE_TYPES.map((t) => <button key={t.id} role="tab" aria-selected={f.vtype === t.id} className={f.vtype === t.id ? "on" : ""} onClick={() => pickVt(t.id)}>{t.short}</button>)}
             <button role="tab" aria-selected={!f.vtype} className={!f.vtype ? "on" : ""} onClick={() => pickVt("")}>Všetky vozidlá</button>
           </div>
+          {!wheels && <>
           <div className="pg">
             <label>Značka
               <select value={f.brand ?? ""} onChange={(e) => set({ brand: numOrNull(e.target.value), model: null, engine: null, year: null })}>
@@ -298,33 +300,54 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
               </select>
             </label>
             <label>Kategória
-              <select value={f.cat} onChange={(e) => set({ cat: e.target.value, sub: null, specs: {} })}>
+              <select value={f.cat} onChange={(e) => set({ cat: e.target.value, sub: null, specs: {}, wtype: e.target.value === WHEEL_CAT ? "pneu" : "" })}>
                 {opt("", "Všetky kategórie")}{cats.map((c) => opt(c.id, c.name))}
               </select>
             </label>
           </div>
-          {wheels && <div className="wheelbox" id="pneu" aria-label="Parametre pneumatík a diskov">
+          </>}
+          {wheels && <div className="wheelbox" id="pneu">
             <div className="wb-type" role="radiogroup" aria-label="Čo hľadáte">
-              <button type="button" role="radio" aria-checked={f.sub == null} className={f.sub == null ? "on" : ""} onClick={() => set({ sub: null })}>Všetko</button>
-              {wheelSubs.filter((x) => /^(Pneumatiky letné|Pneumatiky zimné|Pneumatiky celoročné|Disky hliníkové|Disky oceľové|Kolesá s pneumatikami)$/.test(x.name)).map((x) =>
-                <button key={x.id} type="button" role="radio" aria-checked={f.sub === x.id} className={f.sub === x.id ? "on" : ""} onClick={() => set({ sub: x.id })}>{x.name}</button>)}
+              {([["pneu", "Pneumatiky"], ["disk", "Disky"], ["kolesa", "Kolesá (disk s pneumatikou)"], ["", "Všetko"]] as const).map(([id, label]) =>
+                <button key={id} type="button" role="radio" aria-checked={f.wtype === id} className={f.wtype === id ? "on" : ""}
+                  onClick={() => set({ wtype: id, sub: null, specs: id === "pneu" ? pick(f.specs, ["tw", "tp", "rd", "season"]) : id === "disk" ? pick(f.specs, ["rd", "pcd", "rw", "et", "mat"]) : f.specs })}>{label}</button>)}
             </div>
-            <div className="wb-g">
-              <fieldset><legend>Pneumatika</legend>
-                <label>Šírka<select value={f.specs.tw || ""} onChange={(e) => setSpec("tw", e.target.value)}>{opt("", "Každá")}{TIRE_WIDTHS.map((x) => opt(x, x))}</select></label>
-                <label>Profil<select value={f.specs.tp || ""} onChange={(e) => setSpec("tp", e.target.value)}>{opt("", "Každý")}{TIRE_PROFILES.map((x) => opt(x, x))}</select></label>
-                <label>Priemer<select value={f.specs.rd || ""} onChange={(e) => setSpec("rd", e.target.value)}>{opt("", "Každý")}{RIM_DIAMETERS.map((x) => opt(x, "R" + x))}</select></label>
-                <label>Sezóna<select value={f.specs.season || ""} onChange={(e) => setSpec("season", e.target.value)}>{opt("", "Každá")}{SEASONS.map((x) => opt(x, x))}</select></label>
-              </fieldset>
-              <fieldset><legend>Disk</legend>
-                <label>Rozteč (PCD)<select value={f.specs.pcd || ""} onChange={(e) => setSpec("pcd", e.target.value)}>{opt("", "Každá")}{PCDS.map((x) => opt(x, x))}</select></label>
-                <label>Šírka disku<select value={f.specs.rw || ""} onChange={(e) => setSpec("rw", e.target.value)}>{opt("", "Každá")}{RIM_WIDTHS.map((x) => opt(x, x + "J"))}</select></label>
+            {f.wtype !== "disk" && <div className="wb-row">
+              <span className="wb-l">{f.wtype === "kolesa" ? "Pneumatika" : "Rozmer pneumatiky"}</span>
+              <div className="wb-size" aria-label="Rozmer pneumatiky, napr. 205/55 R16">
+                <select aria-label="Šírka" value={f.specs.tw || ""} onChange={(e) => setSpec("tw", e.target.value)}>{opt("", "šírka")}{TIRE_WIDTHS.map((x) => opt(x, x))}</select>
+                <span>/</span>
+                <select aria-label="Profil" value={f.specs.tp || ""} onChange={(e) => setSpec("tp", e.target.value)}>{opt("", "profil")}{TIRE_PROFILES.map((x) => opt(x, x))}</select>
+                <span>R</span>
+                <select aria-label="Priemer" value={f.specs.rd || ""} onChange={(e) => setSpec("rd", e.target.value)}>{opt("", "priemer")}{RIM_DIAMETERS.map((x) => opt(x, x))}</select>
+              </div>
+              <div className="wb-seg" role="radiogroup" aria-label="Sezóna">
+                {(["", ...SEASONS] as string[]).map((x) => <button key={x || "vsetky"} type="button" role="radio" aria-checked={(f.specs.season || "") === x} className={(f.specs.season || "") === x ? "on" : ""} onClick={() => setSpec("season", x)}>{x ? x[0].toUpperCase() + x.slice(1) : "Každá sezóna"}</button>)}
+              </div>
+            </div>}
+            {(f.wtype === "disk" || f.wtype === "kolesa") && <div className="wb-row">
+              <span className="wb-l">Disk</span>
+              <div className="wb-disk">
+                {f.wtype === "disk" && <label>Priemer<select value={f.specs.rd || ""} onChange={(e) => setSpec("rd", e.target.value)}>{opt("", "každý")}{RIM_DIAMETERS.map((x) => opt(x, x + "\""))}</select></label>}
+                <label>Rozteč skrutiek<select value={f.specs.pcd || ""} onChange={(e) => setSpec("pcd", e.target.value)}>{opt("", "každá")}{PCDS.map((x) => opt(x, x))}</select></label>
+                <label>Šírka<select value={f.specs.rw || ""} onChange={(e) => setSpec("rw", e.target.value)}>{opt("", "každá")}{RIM_WIDTHS.map((x) => opt(x, x + "J"))}</select></label>
                 <label>ET (zális)<input inputMode="numeric" placeholder="napr. 45" value={f.specs.et || ""} onChange={(e) => setSpec("et", e.target.value.replace(/[^\d-]/g, "").slice(0, 4))} /></label>
-                <label>Typ disku<select value={f.specs.mat || ""} onChange={(e) => setSpec("mat", e.target.value)}>{opt("", "Hliníkový aj oceľový")}{opt("Hliník", "Hliníkový (elektróny)")}{opt("Oceľ", "Oceľový (plechový)")}</select></label>
-              </fieldset>
-            </div>
-            <p className="wb-hint mute">Rozmer napr. <b>205/55 R16</b> = šírka 205, profil 55, priemer 16. Pri diskoch vyberte rovnakú rozteč a priemer ako na vašom aute. Auto (značka a model) nižšie vyplniť nemusíte.</p>
+              </div>
+              <div className="wb-seg" role="radiogroup" aria-label="Typ disku">
+                {([["", "Hliníkové aj oceľové"], ["Hliník", "Hliníkové (elektróny)"], ["Oceľ", "Oceľové (plechové)"]] as const).map(([id, label]) => <button key={id || "oba"} type="button" role="radio" aria-checked={(f.specs.mat || "") === id} className={(f.specs.mat || "") === id ? "on" : ""} onClick={() => setSpec("mat", id)}>{label}</button>)}
+              </div>
+            </div>}
+            {(f.wtype === "disk" || f.wtype === "kolesa") && <div className="wb-row wb-car">
+              <span className="wb-l">Na auto <small>(nepovinné – len ak hľadáte originálne disky na konkrétny model)</small></span>
+              <div className="wb-disk">
+                <label>Značka<select value={f.brand ?? ""} onChange={(e) => set({ brand: numOrNull(e.target.value), model: null, engine: null, year: null })}>{opt("", "akákoľvek")}{brands.map((b) => opt(b.id, b.name))}</select></label>
+                <label>Model<select value={f.model ?? ""} disabled={f.brand == null} onChange={(e) => set({ model: numOrNull(e.target.value) })}>{opt("", f.brand == null ? "najprv značka" : "akýkoľvek")}{models.map((m) => opt(m.id, m.name))}</select></label>
+              </div>
+            </div>}
+            <p className="wb-hint mute">{f.wtype === "disk" ? <>Rozmer disku je vyrazený na jeho vnútornej strane, napr. <b>7J×16 ET45 5x112</b>: šírka 7, priemer 16, zális 45, rozteč 5x112.</> : <>Rozmer nájdete na boku pneumatiky, napr. <b>205/55 R16 91V</b>: šírka 205, profil 55, priemer 16.</>}</p>
+            <div className="pa"><button type="button" className="lnk" onClick={() => set({ wtype: f.wtype, specs: {}, brand: null, model: null })}>Zrušiť rozmery</button><button className="btn" onClick={toRes}>Zobraziť {f.wtype === "disk" ? "disky" : f.wtype === "kolesa" ? "kolesá" : f.wtype === "pneu" ? "pneumatiky" : "ponuky"}</button></div>
           </div>}
+          {!wheels && <>
           <div className="adv" hidden={!adv}>
             <label>Podkategória
               <select value={f.sub ?? ""} disabled={!f.cat} onChange={(e) => set({ sub: numOrNull(e.target.value) })}>
@@ -371,6 +394,7 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
               <ScanText kind="oem" onResult={(v) => { setOemQ(v); set({ q: v }); window.dispatchEvent(new CustomEvent("rz-q-set", { detail: v })); setTimeout(toRes, 30); }} /></span></label>
             <button className="btn2" type="submit">Hľadať podľa čísla</button>
           </form>
+          </>}
         </section>
 
         {!wheels && (!f.vtype || f.vtype === "osobne" || f.vtype === "dodavky") && <section id="vin" className="plate" aria-label="Hľadanie podľa VIN">
@@ -405,7 +429,7 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
         </div></div>}
 
         <div id="vysledky" ref={resRef} className="head">
-          <span className="cnt-w"><span className="cnt" aria-live="polite">{res ? pieces(res.total) : "Načítavam…"}</span>{!STATIC_PREVIEW && <Link className="sortinfo" href="/ako-zoradujeme">Ako zoraďujeme ponuky</Link>}</span>
+          <span className="cnt-w"><span className="cnt" aria-live="polite">{res ? (wheels ? plural(res.total, "ponuka", "ponuky", "ponúk") : pieces(res.total)) : "Načítavam…"}</span>{!STATIC_PREVIEW && <Link className="sortinfo" href="/ako-zoradujeme">Ako zoraďujeme ponuky</Link>}</span>
           <span className="head-a">
             {hasCriteria(f) && !f.fav && (isSaved
               ? <span className="chip saved-ok" title="Pri ďalšej návšteve uvidíte, koľko nových dielov pribudlo">✓ Hľadanie uložené</span>
@@ -417,7 +441,7 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
         <SavedSearches list={saved.list} cat={catalog} onRemove={saved.remove}
           onOpen={(x) => { setF({ ...x.f, fav: false }); saved.seen(x.id); window.dispatchEvent(new CustomEvent("rz-q-set", { detail: x.f.q })); setTimeout(toRes, 30); }} />
 
-        {res && catalog && !(f.fav && res.total === 0) && (
+        {res && catalog && !wheels && !(f.fav && res.total === 0) && (
           <div className="chips" aria-label="Kategórie nájdených dielov">
             {f.q.trim() && <button className="chip qchip" title="Zrušiť hľadaný text" aria-label={`Zrušiť hľadaný text ${f.q.trim()}`} onClick={() => { set({ q: "" }); setOemQ(""); window.dispatchEvent(new CustomEvent("rz-q-set", { detail: "" })); }}>„{f.q.trim()}“ <span aria-hidden="true">✕</span></button>}
             <button className="chip" aria-pressed={!f.cat} onClick={() => set({ cat: "", sub: null })}>Všetky ({res.base})</button>
@@ -444,9 +468,9 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
           )}
           {res && res.total === 0 && (
             hasCriteria(f) || f.fav
-              ? <div className="empty">{f.fav && !favs.length ? "Zatiaľ nemáte obľúbené diely. Označte ich srdiečkom ♡ na karte." : "Nič sme nenašli. Skúste iné slovo, kategóriu alebo všetky značky."}
+              ? <div className="empty">{f.fav && !favs.length ? "Zatiaľ nemáte obľúbené diely. Označte ich srdiečkom ♡ na karte." : wheels ? "Takýto rozmer zatiaľ nikto neponúka. Skúste iný rozmer, sezónu alebo typ." : "Nič sme nenašli. Skúste iné slovo, kategóriu alebo všetky značky."}
                   {hasCriteria(f) && !f.fav && !isSaved && <><br />Uložte si hľadanie a pri ďalšej návšteve uvidíte, či pribudol vhodný diel.<br /><button className="add" onClick={() => saved.add(f)}>🔔 Uložiť hľadanie</button></>}
-                  <br />{f.fav ? <button className="add" onClick={() => set({ fav: false })}>Zobraziť všetky diely</button> : <button className="add" onClick={reset}>Zrušiť všetky filtre</button>}
+                  <br />{f.fav ? <button className="add" onClick={() => set({ fav: false })}>Zobraziť všetky diely</button> : wheels ? <button className="add" onClick={() => set({ specs: {}, brand: null, model: null, engine: null, q: "" })}>Zrušiť rozmer a filtre</button> : <button className="add" onClick={reset}>Zrušiť všetky filtre</button>}
                 </div>
               : <div className="empty">Na portáli zatiaľ nie sú žiadne inzeráty.<br />Predávate diely? <a href={STATIC_PREVIEW ? sellersHref : "/pre-predajcov?registracia=1"}>Pridajte prvý diel zadarmo</a>.</div>
           )}
@@ -461,8 +485,13 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
         <Disclaimer kind="short" />
 
         <section className="how" aria-label="Ako to funguje">
+          {wheels ? <>
+          <div><b>1</b><h3>Zistite rozmer</h3><p>Rozmer pneumatiky je na jej boku (napr. 205/55 R16), rozmer disku v technickom preukaze alebo na zadnej strane disku.</p></div>
+          <div><b>2</b><h3>Vyberte ponuku</h3><p>Pri pneumatikách porovnajte rok výroby (DOT) a hĺbku dezénu, pri diskoch rozteč, šírku a ET.</p></div>
+          </> : <>
           <div><b>1</b><h3>Vyberte svoje auto</h3><p>Značka, model a motorizácia, alebo VIN číslo. Diely, ktoré naň pasujú, uvidíte hneď.</p></div>
           <div><b>2</b><h3>Nájdite diel</h3><p>Zúžte výber podľa kategórie, ceny, stavu alebo mesta a porovnajte OEM číslo so starým dielom.</p></div>
+          </>}
           <div><b>3</b><h3>Zavolajte predajcovi</h3><p>Bez registrácie. Telefón sa zobrazí jedným kliknutím a dohodnete sa priamo s predajcom.</p></div>
         </section>
       </div>

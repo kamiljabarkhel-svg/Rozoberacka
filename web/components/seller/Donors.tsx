@@ -165,7 +165,7 @@ function QuickAdd({ uid, cat, prof, donor, onCancel, onDone }: { uid: string; ca
       subcategoryId: cat.subcategories.find((s) => s.categoryId === r.cat && s.name === r.sub)?.id ?? null, oem: r.oem.trim(), partMaker: "",
       price: Math.round(Number(r.price.replace(",", ".")) * 100) / 100, city: prof?.city || "", condition: r.cond, description: desc,
       warranty: firm ? "12 mesiacov" : "Bez záruky", shipping: "Len osobný odber", phone: prof?.phone || "", side: r.side, gearbox: donor.gearbox,
-      km: donor.km, tested: false, returns14: false, fits: [], specs: {}, donorId: donor.id,
+      km: donor.km, tested: false, returns14: false, fits: [], specs: {}, vtype: null, donorId: donor.id,
     }));
     setBusy(true);
     const res = await createFromDonor(uid, input);

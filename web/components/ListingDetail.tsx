@@ -6,7 +6,7 @@ import type { Catalog } from "@/lib/types";
 import { groupVehicles } from "@/lib/search";
 import { agoText, condDot, price } from "@/lib/format";
 import { useFavs } from "@/lib/favs";
-import { condLabel, specsLine } from "@/lib/types";
+import { condLabel, isUniversal, specsLine, universalLabel } from "@/lib/types";
 import { STATIC_PREVIEW, homeHref } from "@/lib/paths";
 import { Icon, catIcon } from "./Icons";
 import PhoneButton from "./PhoneButton";
@@ -99,9 +99,13 @@ export default function ListingDetail({ id, onClose, initial, catalog }: { id: n
   const cName = cat.categories.find((x) => x.id === l.categoryId)?.name || "";
   const sName = cat.subcategories.find((x) => x.id === l.subcategoryId)?.name || "";
   const fav = favs.includes(l.id);
+  const univ = !l.brandId;   // univerzálny diel (pneumatiky, výbava jazdca…) bez konkrétneho auta
   const rows: [string, string][] = [
+    ...(univ ? [["Vozidlo", universalLabel(l.vtype)] as [string, string]] : [
     ["Značka", bName || "neuvedené"], ["Model", mName || "neuvedené"], ["Motorizácia", eName || "Pasuje na všetky motorizácie"],
-    ["Ročník", l.year ? String(l.year) : "neuvedené"], ["Číslo dielu (OEM)", l.oem || "neuvedené"], ["Kategória", cName + (sName ? " · " + sName : "")],
+    ["Ročník", l.year ? String(l.year) : "neuvedené"]] as [string, string][]),
+    ...((l.oem || !isUniversal(l.categoryId)) ? [["Číslo dielu (OEM)", l.oem || "neuvedené"] as [string, string]] : []),
+    ["Kategória", cName + (sName ? " · " + sName : "")],
     ["Stav", condLabel(l.condition)], ["Zodpovednosť za vady", liabilityText(l)], ["Odovzdanie", l.shipping || "Len osobný odber"], ["Mesto", l.city || "neuvedené"],
   ];
   if (l.side) rows.splice(5, 0, ["Strana auta", l.side]);
@@ -145,16 +149,16 @@ export default function ListingDetail({ id, onClose, initial, catalog }: { id: n
           <h1>{l.name}</h1>
           <div className="dpr"><span className="price">{price(l.price)}</span><span className="cond"><i className={"dot " + condDot(l.condition)} />{condLabel(l.condition)}</span></div>
           {isTrader(l.seller.type) && <p className="mute pnote">Konečná cena vrátane DPH. Cenu dopravy si dohodnite s predajcom pred kúpou.</p>}
-          <p className="car">{[bName, mName, eName].filter(Boolean).join(" ")}{l.year ? ", " + l.year : ""}</p>
-          <OemBox oem={l.oem} vtype={cat.models.find((x) => x.id === l.modelId)?.vehicleType || "osobne"} />
-          {specsLine(l.specs) && <p className="specs-line">{specsLine(l.specs)}</p>}
+          <p className="car">{univ ? universalLabel(l.vtype) : <>{[bName, mName, eName].filter(Boolean).join(" ")}{l.year ? ", " + l.year : ""}</>}</p>
+          {specsLine(l.specs) && <p className="specs-box"><span>{l.categoryId === "kol" ? "Rozmer a parametre" : "Parametre"}</span><b>{specsLine(l.specs)}</b></p>}
+          {(l.oem || !isUniversal(l.categoryId)) && <OemBox oem={l.oem} vtype={cat.models.find((x) => x.id === l.modelId)?.vehicleType || l.vtype || "osobne"} />}
           <div className="dacts" ref={actsRef}>
             <PhoneButton id={l.id} />
             <button className="fav" aria-pressed={fav} onClick={() => toggle(l.id)}>{fav ? "♥" : "♡"} Obľúbené</button>
           </div>
           <ContactBox id={l.id} name={l.name} seller={l.seller.name} path={listingPath(l.id, l.name, carName(l, cat))} cat={cat} />
           <Tags l={l} />
-          <MyCarFit vehicles={vehicles} cat={cat} />
+          {!univ && <MyCarFit vehicles={vehicles} cat={cat} />}
           <div className="seller">
             <b>{l.sellerId && !STATIC_PREVIEW ? <Link href={sellerPath(l.sellerId, l.seller.name)}>{l.seller.name}</Link> : l.seller.name}{l.seller.verified && <span className="bdg">Overený predajca</span>}</b>
             <span className="mute">{sellerKind(l.seller.type)} · {l.seller.city || l.city}</span>
@@ -181,7 +185,10 @@ export default function ListingDetail({ id, onClose, initial, catalog }: { id: n
       </>}
 
       <SellerNotice type={l.seller.type} name={l.seller.name} ico={l.seller.ico} address={l.seller.address} />
-      <div className="warn">Pred nákupom porovnajte číslo dielu (OEM) so starým dielom a vyžiadajte si od predajcu ďalšie fotky. Neposielajte zálohy vopred neznámym predajcom.</div>
+      <div className="warn">{l.categoryId === "kol"
+        ? "Pred nákupom porovnajte rozmer (pri pneumatikách aj rok výroby DOT a hĺbku dezénu, pri diskoch rozteč, ET a stredový otvor) s údajmi pre vaše auto a vyžiadajte si ďalšie fotky. Neposielajte zálohy vopred neznámym predajcom."
+        : univ && !l.oem ? "Pred nákupom si od predajcu vyžiadajte ďalšie fotky a overte veľkosť a stav. Neposielajte zálohy vopred neznámym predajcom."
+        : "Pred nákupom porovnajte číslo dielu (OEM) so starým dielom a vyžiadajte si od predajcu ďalšie fotky. Neposielajte zálohy vopred neznámym predajcom."}</div>
       <Disclaimer kind="part" />
       <ReportBox id={l.id} />
 

@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getCatalog, getCities, getSeoCounts, searchListings } from "@/lib/data";
 import { pickCatalog } from "@/lib/catalogSort";
-import { emptyFilters, type Catalog } from "@/lib/types";
+import { emptyFilters, isUniversal, type Catalog } from "@/lib/types";
 import { jeSu, pieces, sk } from "@/lib/format";
 import { JsonLd, SITE_NAME, SITE_URL, breadcrumbLd, carName, landingCrumbs, landingPath, landingTitle, listingPath, type Landing } from "@/lib/seo";
 import Crumbs from "./Crumbs";
@@ -27,7 +27,7 @@ export async function landingMetadata(x: Landing | null): Promise<Metadata> {
   const description = res.total && x.city
     ? `${title}: ${pieces(res.total)} od vrakovísk a predajcov z mesta ${x.city}${minP ? `, ceny od ${minP.toLocaleString("sk-SK")} €` : ""}. Osobný odber, predajcovi zavoláte bez registrácie.`
     : res.total
-    ? `${title} z vrakovísk a od predajcov z celého Slovenska: ${pieces(res.total)}${minP ? `, ceny od ${minP.toLocaleString("sk-SK")} €` : ""}. Predajcovi zavoláte bez registrácie, pred kúpou porovnajte OEM číslo.`
+    ? `${title} z vrakovísk a od predajcov z celého Slovenska: ${pieces(res.total)}${minP ? `, ceny od ${minP.toLocaleString("sk-SK")} €` : ""}. Predajcovi zavoláte bez registrácie${x.cat && isUniversal(x.cat) ? "" : ", pred kúpou porovnajte OEM číslo"}.`
     : `${title}: zatiaľ tu nie sú ponuky. Uložte si hľadanie a pozrite sa neskôr.`;
   return {
     title, description, alternates: { canonical: path },
@@ -91,7 +91,9 @@ export default async function LandingPage({ x }: { x: Landing }) {
       <p className="landing-lead">
         {res.total ? <>{x.city ? <>V meste {x.city} {jeSu(res.total)} na autosuciastky.eu {pieces(res.total)} od miestnych vrakovísk a predajcov – diel si môžete prevziať osobne. </>
           : <>Na autosuciastky.eu {jeSu(res.total)} {pieces(res.total)}{car ? ` na auto ${car}` : ""} od vrakovísk a predajcov z celého Slovenska. </>}
-        Zoznam zahŕňa aj diely, ktoré podľa predajcov pasujú cez rovnaké OEM číslo. Predajcovi zavoláte bez registrácie – pred kúpou porovnajte OEM číslo so starým dielom.</>
+        {x.cat === "kol" ? "Pred kúpou porovnajte rozmer pneumatiky alebo disku s údajmi pre vaše auto (nájdete ich v technickom preukaze alebo na starej pneumatike). Predajcovi zavoláte bez registrácie."
+          : x.cat && isUniversal(x.cat) ? "Predajcovi zavoláte bez registrácie – pred kúpou si vyžiadajte ďalšie fotky."
+          : "Zoznam zahŕňa aj diely, ktoré podľa predajcov pasujú cez rovnaké OEM číslo. Predajcovi zavoláte bez registrácie – pred kúpou porovnajte OEM číslo so starým dielom."}</>
           : <>Zatiaľ tu nie sú žiadne ponuky. Nové diely pribúdajú každý deň – zadajte dopyt a predajcovia sa vám ozvú sami.</>}
       </p>
       {res.total > 0 && <p><Link className="btn2" href={`/?${qs.toString()}#vysledky`}>Filtrovať podľa ceny, stavu a mesta</Link></p>}

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import type { Session } from "@supabase/supabase-js";
 import { getCatalog, IS_DEMO } from "@/lib/data";
 import type { Catalog, VehicleType } from "@/lib/types";
-import { VEHICLE_TYPES } from "@/lib/types";
+import { isUniversal, VEHICLE_TYPES } from "@/lib/types";
 import { listingHref } from "@/lib/paths";
 import { carName, sellerPath } from "@/lib/seo";
 import Stars from "../Stars";
@@ -153,7 +153,7 @@ function Dashboard({ cat, prof, items, msgs, go }: { cat: Catalog | null; prof: 
   const profMissing = !prof?.city || !prof?.phone;
   const traderMissing = prof?.type === "Firma" && (!prof.ico || !prof.address);
   const byVt = new Map<string, number>();
-  a.forEach((i) => { const t = cat?.models.find((x) => x.id === i.modelId)?.vehicleType || "osobne"; byVt.set(t, (byVt.get(t) || 0) + 1); });
+  a.forEach((i) => { const t = cat?.models.find((x) => x.id === i.modelId)?.vehicleType || i.vtype || "osobne"; byVt.set(t, (byVt.get(t) || 0) + 1); });
   const byCat = new Map<string, number>();
   a.forEach((i) => byCat.set(i.categoryId, (byCat.get(i.categoryId) || 0) + 1));
   const d0 = new Date().toLocaleDateString("sk-SK", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
@@ -208,12 +208,13 @@ function MyList({ initial, items, cat, onEdit, onStatus, onTop, onDup, onDelete,
 }) {
   const [q, setQ] = useState(""), [f, setF] = useState<F>(initial), [sort, setSort] = useState("new");
   const [vt, setVt] = useState<VehicleType | "">("");
-  const vtOf = (l: MyListing): VehicleType => cat?.models.find((x) => x.id === l.modelId)?.vehicleType || "osobne";
+  const vtOf = (l: MyListing): VehicleType => cat?.models.find((x) => x.id === l.modelId)?.vehicleType || l.vtype || "osobne";
   const vtCounts = VEHICLE_TYPES.map((t) => [t, items.filter((i) => vtOf(i) === t.id).length] as const).filter(([, n]) => n > 0);
   const [sel, setSel] = useState<Set<number>>(new Set());
   const [confirm, setConfirm] = useState<number[] | null>(null);
   const catName = (id: string) => cat?.categories.find((c) => c.id === id)?.name || id;
   const vehicle = (l: MyListing) => {
+    if (!l.brandId) return "bez konkrétneho auta";
     const b = cat?.brands.find((x) => x.id === l.brandId)?.name || "", m = cat?.models.find((x) => x.id === l.modelId)?.name || "";
     return `${b} ${m}, ${l.year}`;
   };
@@ -223,7 +224,7 @@ function MyList({ initial, items, cat, onEdit, onStatus, onTop, onDup, onDelete,
       if (k && !(i.name + " " + i.oem + " " + i.description).toLowerCase().includes(k)) return false;
       if (vt && vtOf(i) !== vt) return false;
       if (f === "nophoto") return !i.photos.length;
-      if (f === "nooem") return i.oem.replace(/[^A-Za-z0-9]/g, "").length < 4;
+      if (f === "nooem") return !isUniversal(i.categoryId) && i.oem.replace(/[^A-Za-z0-9]/g, "").length < 4;
       if (f === "nodesc") return i.description.length < 20;
       if (f === "stale") return isStale(i);
       return f === "all" || i.status === f;
@@ -274,7 +275,7 @@ function MyList({ initial, items, cat, onEdit, onStatus, onTop, onDup, onDelete,
               <div className="pp-th">{l.photos[0] ? <img src={l.photos[0].url} alt="" loading="lazy" /> : <span>bez fotky</span>}</div>
               <div className="pp-ri">
                 {l.status === "active" ? <a href={listingHref(l.id, l.name, carName(l, cat))} target="_blank" rel="noreferrer" title="Otvoriť, ako ho vidia kupujúci"><b>{l.name}</b></a> : <b>{l.name}</b>}
-                <span className="mute"><span className="tg">{VEHICLE_TYPES.find((t) => t.id === vtOf(l))?.short}</span> {vehicle(l)} · {catName(l.categoryId)} · číslo dielu {l.oem || "—"}</span>
+                <span className="mute"><span className="tg">{VEHICLE_TYPES.find((t) => t.id === vtOf(l))?.short}</span> {vehicle(l)} · {catName(l.categoryId)}{l.oem || !isUniversal(l.categoryId) ? <> · číslo dielu {l.oem || "—"}</> : null}</span>
                 <span className="pp-meta"><span className={"pp-st " + l.status}>{ST[l.status]}</span>{l.top && <span className="toptag">TOP</span>}<b>{fmtPrice(l.price)}</b><span className="mute">{plural(l.views, "zobrazenie", "zobrazenia", "zobrazení")} · {plural(l.calls, "telefón", "telefóny", "telefónov")}</span>{isStale(l) && <span className="pp-stale">neaktualizované {Math.floor((Date.now() - Date.parse(l.updatedAt)) / 86400000)} dní · <button className="lnk" onClick={() => onFresh([l.id])}>Stále aktuálne</button></span>}</span>
               </div>
               <div className="pp-ra">

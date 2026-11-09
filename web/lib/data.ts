@@ -79,7 +79,7 @@ export { thumbPath, mediumPath } from "./photos";
 
 const LISTING_COLS =
   "id,name,brand_id,model_id,engine_id,year,category_id,subcategory_id,oem,price,city,condition,description,warranty,shipping,created_at,updated_at,seller_id,donor_id," +
-  "side,donor_gearbox,donor_km,tested,returns_14d,top_until,part_maker,specs," +
+  "side,donor_gearbox,donor_km,tested,returns_14d,top_until,part_maker,specs,vtype," +
   "sellers(name,seller_type,city,verified,ico,address),listing_photos(path,position),listing_fits(brand_id,model_id,engine_id)";
 
 function toListing(r: Row): Listing {
@@ -88,7 +88,7 @@ function toListing(r: Row): Listing {
   return {
     id: Number(r.id), name: String(r.name),
     brandId: (r.brand_id as number) ?? null, modelId: (r.model_id as number) ?? null, engineId: (r.engine_id as number) ?? null,
-    year: (r.year as number) ?? null, categoryId: String(r.category_id), subcategoryId: (r.subcategory_id as number) ?? null,
+    year: (r.year as number) ?? null, vtype: (r.vtype as VehicleType) ?? null, categoryId: String(r.category_id), subcategoryId: (r.subcategory_id as number) ?? null,
     oem: (r.oem as string) ?? null, price: Number(r.price), city: (r.city as string) ?? null,
     condition: r.condition as Condition, description: (r.description as string) ?? null,
     warranty: String(r.warranty), shipping: String(r.shipping), createdAt: String(r.created_at),
@@ -136,7 +136,7 @@ async function fetchCatalog(): Promise<Catalog> {
 
 /** Filtre v tvare pre databázovú funkciu search_listings (aj pre strážcu e-mailom). */
 export function filterParams(f: Filters): Record<string, unknown> {
-  const p: Record<string, unknown> = { vtype: f.vtype, specs: Object.keys(cleanSpecs(f.specs)).length ? cleanSpecs(f.specs) : null, q: f.q.trim(), brand: f.brand, model: f.model, engine: f.engine, year: f.year, cat: f.cat, sub: f.sub,
+  const p: Record<string, unknown> = { vtype: f.vtype, wtype: f.cat === "kol" ? f.wtype || null : null, specs: Object.keys(cleanSpecs(f.specs)).length ? cleanSpecs(f.specs) : null, q: f.q.trim(), brand: f.brand, model: f.model, engine: f.engine, year: f.year, cat: f.cat, sub: f.sub,
     max: f.max, cond: f.cond, city: f.city, side: f.side, tested: f.tested, ret: f.ret };
   for (const k of Object.keys(p)) if (p[k] === null || p[k] === "" || p[k] === false) delete p[k];
   return p;
@@ -177,6 +177,18 @@ export async function getCities(): Promise<string[]> {
 /** Podobné inzeráty: rovnaká kategória a značka, inak rovnaká kategória. */
 export async function getSimilar(l: Listing): Promise<Listing[]> {
   const base = { ...emptyFilters, cat: l.categoryId };
+  if (l.categoryId === "kol") {
+    // pneumatiky a disky: rovnaký rozmer (šírka/profil/priemer alebo rozteč/priemer), potom rovnaký druh
+    const s = l.specs || {}, core: typeof s = {};
+    for (const k of (s.tw ? ["tw", "tp", "rd"] : ["pcd", "rd"]) as (keyof typeof s)[]) if (s[k]) core[k] = s[k];
+    const out: Listing[] = [], seen = new Set<number>();
+    for (const f of [{ ...base, sub: l.subcategoryId, specs: core }, { ...base, sub: l.subcategoryId }, base]) {
+      const r = await searchListings(f, [], 0, 4, { exclude: l.id });
+      for (const x of r.items) if (!seen.has(x.id)) { seen.add(x.id); out.push(x); }
+      if (out.length >= 3) break;
+    }
+    return out.slice(0, 3);
+  }
   const a = await searchListings({ ...base, brand: l.brandId }, [], 0, 4, { exclude: l.id });
   if (a.items.length >= 3) return a.items.slice(0, 3);
   const b = await searchListings(base, [], 0, 4, { exclude: l.id });

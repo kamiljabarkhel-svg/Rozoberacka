@@ -921,3 +921,66 @@ h1,h2,h3,.cnt,.price,.brand,.btn,.btn2,.mp,.tile b{letter-spacing:0}
 .pop .chip[aria-pressed="true"]{background:var(--pet);border-color:var(--pet);color:#fff}
 .foot2 span b{font:inherit;font-weight:700}
 @media(max-width:600px){.panel{scroll-margin-top:130px}}
+.specs-box{display:grid;gap:4px;border:1.5px solid var(--ink);border-radius:3px;padding:12px 14px;margin:12px 0;background:var(--card)}
+.specs-box span{font-size:.82rem;font-weight:600;color:var(--mute)}
+.specs-box b{font:600 1.25rem/1.3 var(--f-m);letter-spacing:.03em}
+/* Pneumatiky a disky – hľadanie podľa rozmeru (9. 11. 2026) */
+.wheelbox .wb-type{gap:0;border:1px solid var(--line);border-radius:4px;overflow:hidden;width:max-content;max-width:100%;flex-wrap:wrap}
+.wheelbox .wb-type button{border:0;border-right:1px solid var(--line);border-radius:0;padding:12px 18px;font:700 1.05rem/1 var(--f-d)}
+.wheelbox .wb-type button:last-child{border-right:0}
+.wb-row{display:grid;gap:10px;padding:14px 0 4px;border-top:1px dashed var(--line)}
+.wb-l{font:700 1.15rem/1.1 var(--f-d)}
+.wb-l small{font:400 .84rem var(--f-b);color:var(--mute)}
+.wb-size{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.wb-size select{width:auto;min-width:96px;font:600 1.15rem var(--f-m)!important;padding:10px 12px!important}
+.wb-size span{font:700 1.4rem var(--f-m);color:var(--mute)}
+.wb-seg{display:flex;flex-wrap:wrap;gap:6px}
+.wb-seg button{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:3px;padding:8px 14px;font:600 .92rem var(--f-b);cursor:pointer}
+.wb-seg button.on{background:var(--pet);border-color:var(--pet);color:#fff}
+.wb-disk{display:grid;grid-template-columns:repeat(4,minmax(0,180px));gap:10px}
+.wb-disk label{display:grid;gap:5px;font-weight:600;font-size:.84rem;color:var(--mute)}
+.wb-car .wb-disk{grid-template-columns:repeat(2,minmax(0,240px))}
+.wheelbox .pa{border-top:1px dashed var(--line);padding-top:14px}
+@media(max-width:640px){.wb-disk,.wb-car .wb-disk{grid-template-columns:1fr 1fr}.wheelbox .wb-type button{padding:11px 12px;font-size:.98rem}}
+/* Havarované vozidlá – vlastný vzhľad: stav ako dlaždice, bočné filtre, široké riadky (9. 11. 2026) */
+.cars-conds{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin:-64px 0 22px;position:relative;z-index:2}
+.cars-conds button{display:grid;gap:4px;text-align:left;background:var(--card);color:var(--ink);border:1px solid var(--line);border-top:4px solid var(--line);border-radius:4px;padding:14px 14px 12px;cursor:pointer;min-height:86px;align-content:start}
+.cars-conds button b{font:700 1.08rem/1.15 var(--f-d)}
+.cars-conds button span{font-size:.82rem;color:var(--mute);line-height:1.3}
+.cars-conds button:hover{border-color:var(--pet2)}
+.cars-conds button.on{border-color:var(--pet);border-top-color:var(--bad);box-shadow:inset 0 0 0 1px var(--pet)}
+.cars-conds button:first-child.on{border-top-color:var(--pet)}
+.cars-layout{display:grid;grid-template-columns:260px minmax(0,1fr);gap:22px;align-items:start}
+.cars-side{display:grid;gap:14px;background:var(--card);border:1px solid var(--line);border-radius:6px;padding:18px;position:sticky;top:84px}
+.cars-side label{display:grid;gap:5px;font-weight:600;font-size:.86rem;color:var(--mute)}
+.cars-side label.chk{display:flex;align-items:center;gap:8px;color:var(--ink);font-weight:500}
+.cars-side select,.cars-side input:not([type=checkbox]):not([type=radio]){background:var(--card);border:1px solid var(--line);border-radius:3px;padding:10px;font:500 .95rem var(--f-b);color:var(--ink)}
+.cs-vt{border:0;margin:0;padding:0;display:grid;gap:2px}
+.cs-vt legend{font:700 1.1rem/1 var(--f-d);margin-bottom:8px;color:var(--ink)}
+.cars-side .cs-radio{display:flex;align-items:center;gap:9px;font-size:.95rem;font-weight:500;color:var(--ink);padding:5px 0;cursor:pointer}
+.cs-two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.cars-rh{display:flex;justify-content:space-between;align-items:end;gap:12px;margin-bottom:12px}
+.cars-rh .sh{margin:0}
+.cars-rh label{display:flex;align-items:center;gap:8px;font-weight:600;font-size:.88rem;color:var(--mute)}
+.cars-rh select{background:var(--card);border:1px solid var(--line);border-radius:3px;padding:8px 10px;font:500 .92rem var(--f-b);color:var(--ink)}
+.cars-list{display:grid;gap:12px}
+.carcard{background:var(--card);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.carcard:hover{border-color:var(--pet2)}
+.carcard .carlink{display:grid;grid-template-columns:260px minmax(0,1fr) 180px;color:inherit;text-decoration:none;height:auto}
+.carcard .ph{position:relative;aspect-ratio:4/3;background:var(--ico)}
+.carcard .ph img{width:100%;height:100%;object-fit:cover;display:block}
+.carcard .bd{padding:14px 18px;display:grid;gap:7px;align-content:start}
+.carcard h3{font:700 1.35rem/1.15 var(--f-d);margin:0}
+.carcard h3 .mute{font-weight:600;font-size:1.05rem}
+.cc-cond{display:flex;gap:8px;align-items:center;margin:0}
+.cc-badge{background:color-mix(in srgb,var(--bad) 12%,var(--card));color:var(--bad);border:1px solid color-mix(in srgb,var(--bad) 40%,var(--line));border-radius:3px;padding:3px 9px;font-weight:700;font-size:.86rem}
+.cc-facts{display:flex;flex-wrap:wrap;gap:4px 14px;list-style:none;margin:0;padding:0;font-size:.93rem;font-weight:500}
+.cc-facts li+li::before{content:"";display:inline-block;width:4px;height:4px;border-radius:50%;background:var(--line);margin:0 10px 2px -9px;vertical-align:middle}
+.cc-dmg{margin:0;font-size:.9rem}
+.cc-docs{margin:0;font-size:.86rem}
+.cc-side{padding:14px 18px;border-left:1px solid var(--line);display:grid;align-content:space-between;gap:6px;text-align:right}
+.cc-side .price{font:700 1.7rem/1 var(--f-d);margin:0}
+.cc-side p{margin:0}
+.cc-more{font-weight:700;color:var(--link)}
+@media(max-width:1000px){.cars-conds{grid-template-columns:repeat(3,minmax(0,1fr))}.cars-layout{grid-template-columns:1fr}.cars-side{position:static}.carcard .carlink{grid-template-columns:220px minmax(0,1fr)}.cc-side{grid-column:1/-1;border-left:0;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;text-align:left}}
+@media(max-width:600px){.cars-conds{grid-template-columns:1fr 1fr;margin-top:-56px}.carcard .carlink{grid-template-columns:1fr}.cars-conds button{min-height:0}}

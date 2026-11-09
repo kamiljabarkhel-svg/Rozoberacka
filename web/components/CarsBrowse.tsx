@@ -67,34 +67,50 @@ export default function CarsBrowse({ packed, initial }: { packed: PackedCatalog;
   const opt = (v: string | number, l: string) => <option key={v} value={v}>{l}</option>;
   const num = (v: string) => (v === "" ? null : Number(v));
 
+  const COND_INFO: Record<string, string> = {
+    "Havarované – pojazdné": "Po nehode, ale ide",
+    "Havarované – nepojazdné": "Po nehode, treba odtiahnuť",
+    "Nepojazdné – porucha": "Motor, prevodovka, elektrika",
+    "Na diely": "Na rozobratie, bez opravy",
+    "Po požiari alebo povodni": "Poškodené ohňom alebo vodou",
+  };
+  const condTotal = Object.values(res.conds || {}).reduce((a, b) => a + Number(b), 0);
   return (
     <>
-      <section className="panel" aria-label="Hľadanie vozidiel">
-        <div className="vtabs" role="tablist" aria-label="Druh vozidla">
-          {VEHICLE_TYPES.map((t) => <button key={t.id} role="tab" aria-selected={f.vtype === t.id} className={f.vtype === t.id ? "on" : ""} onClick={() => set({ vtype: t.id, brand: null, model: null })}>{t.short}</button>)}
-          <button role="tab" aria-selected={!f.vtype} className={!f.vtype ? "on" : ""} onClick={() => set({ vtype: "", brand: null, model: null })}>Všetky vozidlá</button>
-        </div>
-        <div className="cars-f">
+      <div className="cars-conds" role="radiogroup" aria-label="Stav vozidla">
+        <button type="button" role="radio" aria-checked={!f.cond} className={!f.cond ? "on" : ""} onClick={() => set({ cond: "" })}><b>Všetky stavy</b><span>{condTotal || res.total} {condTotal === 1 ? "vozidlo" : "vozidiel"}</span></button>
+        {CAR_CONDITIONS.map((c) => <button key={c} type="button" role="radio" aria-checked={f.cond === c} className={f.cond === c ? "on" : ""} onClick={() => set({ cond: f.cond === c ? "" : c })}>
+          <b>{c}</b><span>{COND_INFO[c]}{res.conds[c] ? ` · ${res.conds[c]}` : ""}</span></button>)}
+      </div>
+      <div className="cars-layout">
+        <aside className="cars-side" aria-label="Filtre vozidiel">
+          <fieldset className="cs-vt"><legend>Druh vozidla</legend>
+            {VEHICLE_TYPES.map((t) => <label key={t.id} className="cs-radio"><input type="radio" name="cs-vt" checked={f.vtype === t.id} onChange={() => set({ vtype: t.id, brand: null, model: null })} />{t.name}</label>)}
+            <label className="cs-radio"><input type="radio" name="cs-vt" checked={!f.vtype} onChange={() => set({ vtype: "", brand: null, model: null })} />Všetky vozidlá</label>
+          </fieldset>
           <label>Značka<select value={f.brand ?? ""} onChange={(e) => set({ brand: num(e.target.value), model: null })}>{opt("", "Všetky značky")}{brands.map((b) => opt(b.id, b.name))}</select></label>
           <label>Model<select value={f.model ?? ""} disabled={!f.brand} onChange={(e) => set({ model: num(e.target.value) })}>{opt("", f.brand ? "Všetky modely" : "Najprv vyberte značku")}{models.map((m) => opt(m.id, `${m.name} (${m.yearFrom}–${m.yearTo || "dnes"})`))}</select></label>
-          <label>Stav<select value={f.cond} onChange={(e) => set({ cond: e.target.value })}>{opt("", "Každý stav")}{CAR_CONDITIONS.map((c) => opt(c, `${c}${res.conds[c] ? ` (${res.conds[c]})` : ""}`))}</select></label>
+          <div className="cs-two">
+            <label>Ročník od<select value={f.yfrom ?? ""} onChange={(e) => set({ yfrom: num(e.target.value) })}>{opt("", "–")}{years.map((y) => opt(y, String(y)))}</select></label>
+            <label>do<select value={f.yto ?? ""} onChange={(e) => set({ yto: num(e.target.value) })}>{opt("", "–")}{years.map((y) => opt(y, String(y)))}</select></label>
+          </div>
           <label>Cena do<input type="number" min={0} inputMode="numeric" placeholder="€" value={f.max ?? ""} onChange={(e) => set({ max: e.target.value === "" ? null : Math.max(0, Number(e.target.value)) })} /></label>
-          <label>Ročník od<select value={f.yfrom ?? ""} onChange={(e) => set({ yfrom: num(e.target.value) })}>{opt("", "Každý")}{years.map((y) => opt(y, String(y)))}</select></label>
-          <label>Ročník do<select value={f.yto ?? ""} onChange={(e) => set({ yto: num(e.target.value) })}>{opt("", "Každý")}{years.map((y) => opt(y, String(y)))}</select></label>
           <label>Palivo<select value={f.fuel} onChange={(e) => set({ fuel: e.target.value })}>{opt("", "Každé")}{FUELS.map((x) => opt(x, x))}</select></label>
-          <label>Zoradiť<select value={f.sort} onChange={(e) => set({ sort: e.target.value as CarFilters["sort"] })}>{opt("new", "Najnovšie")}{opt("asc", "Najlacnejšie")}{opt("desc", "Najdrahšie")}{opt("year", "Najmladšie")}{opt("km", "Najmenej km")}</select></label>
-          <label style={{ gridColumn: "span 2" }}>Hľadať v popise<input value={f.q} placeholder="napr. motor v poriadku, airbagy" onChange={(e) => set({ q: e.target.value })} /></label>
-          <label className="chk"><input type="checkbox" checked={f.docs} onChange={(e) => set({ docs: e.target.checked })} /> Len s dokladmi</label>
+          <label className="chk"><input type="checkbox" checked={f.docs} onChange={(e) => set({ docs: e.target.checked })} /> Len s dokladmi (dá sa prihlásiť)</label>
+          <label>Hľadať v popise<input value={f.q} placeholder="napr. motor v poriadku" onChange={(e) => set({ q: e.target.value })} /></label>
           <button className="lnk" onClick={() => setF((x) => ({ ...emptyCarFilters, vtype: x.vtype }))}>Zrušiť filtre</button>
-        </div>
-      </section>
-      <section id="vysledky" aria-live="polite">
-        <h2 className="sh">{plural(res.total, "vozidlo", "vozidlá", "vozidiel")}{busy && <span className="mute"> · hľadám…</span>}</h2>
-        {err && <p className="pp-err">Vozidlá sa nepodarilo načítať: {err}</p>}
-        {!res.items.length && !busy && <div className="empty">{res.total === 0 && !f.brand && !f.cond && !f.q ? <>Zatiaľ tu nie je žiadne vozidlo na predaj{f.vtype ? ` (${VEHICLE_TYPES.find((t) => t.id === f.vtype)?.name.toLowerCase()})` : ""}.<br />Predávate havarované alebo nepojazdné vozidlo? <Link href="/pre-predajcov?registracia=1">Pridajte ho zadarmo</Link>.<br />Hľadáte diely naň? <Link href="/">Prezrite si autodiely</Link>.</> : <>Takéto vozidlo zatiaľ nikto neponúka. Skúste zmeniť filtre alebo hľadajte <Link href="/">diely</Link>.</>}</div>}
-        <div className="grid">{res.items.map((c: CarListing) => <CarCard key={c.id} c={c} cat={cat} />)}</div>
-        {res.items.length < res.total && <p style={{ textAlign: "center" }}><button className="btn2" disabled={busy} onClick={more}>Načítať ďalšie</button></p>}
-      </section>
+        </aside>
+        <section id="vysledky" className="cars-res" aria-live="polite">
+          <div className="cars-rh">
+            <h2 className="sh">{plural(res.total, "vozidlo", "vozidlá", "vozidiel")}{busy && <span className="mute"> · hľadám…</span>}</h2>
+            <label>Zoradiť<select value={f.sort} onChange={(e) => set({ sort: e.target.value as CarFilters["sort"] })}>{opt("new", "Najnovšie")}{opt("asc", "Najlacnejšie")}{opt("desc", "Najdrahšie")}{opt("year", "Najmladšie")}{opt("km", "Najmenej km")}</select></label>
+          </div>
+          {err && <p className="pp-err">Vozidlá sa nepodarilo načítať: {err}</p>}
+          {!res.items.length && !busy && <div className="empty">{res.total === 0 && !f.brand && !f.cond && !f.q ? <>Zatiaľ tu nie je žiadne vozidlo na predaj{f.vtype ? ` (${VEHICLE_TYPES.find((t) => t.id === f.vtype)?.name.toLowerCase()})` : ""}.<br />Predávate havarované alebo nepojazdné vozidlo? <Link href="/pre-predajcov?registracia=1">Pridajte ho zadarmo</Link>.<br />Hľadáte diely naň? <Link href="/">Prezrite si autodiely</Link>.</> : <>Takéto vozidlo zatiaľ nikto neponúka. Skúste zmeniť filtre alebo hľadajte <Link href="/">diely</Link>.</>}</div>}
+          <div className="cars-list">{res.items.map((c: CarListing) => <CarCard key={c.id} c={c} cat={cat} />)}</div>
+          {res.items.length < res.total && <p style={{ textAlign: "center" }}><button className="btn2" disabled={busy} onClick={more}>Načítať ďalšie</button></p>}
+        </section>
+      </div>
     </>
   );
 }

@@ -2,13 +2,15 @@
 // Import inzerátov z CSV (Excel → Uložiť ako CSV). Najprv náhľad s chybami, potom import.
 import { useState } from "react";
 import type { Catalog, Condition } from "@/lib/types";
-import { CONDITIONS, condLabel, cleanSpecs, specsErrors, SPEC_LABEL, WHEEL_CAT, type Specs } from "@/lib/types";
+import { CONDITIONS, condLabel, cleanSpecs, isUniversal, specsErrors, SPEC_LABEL, VEHICLE_TYPES, WHEEL_CAT, type Specs } from "@/lib/types";
 import { SPEC_COLS } from "@/lib/csvExport";
 import { importMany, type ListingInput, type Profile } from "@/lib/seller";
 
 const MAX = 500;
-const REQ = ["nazov", "znacka", "model", "oem", "cena", "kategoria"];
-const OPT = ["motorizacia", "rocnik", "podkategoria", "stav", "zaruka", "popis", "mesto", "telefon", "pasuje", "strana", "odskusany", "vratenie", "km", "vyrobca", ...SPEC_COLS.map(([c]) => c)];
+const REQ = ["nazov", "cena", "kategoria"];
+/** povinné pri bežných dieloch, pri univerzálnych (pneumatiky, výbava jazdca, iné…) nie */
+const REQ_PART = ["znacka", "model", "oem"];
+const OPT = ["druh", "motorizacia", "rocnik", "podkategoria", "stav", "zaruka", "popis", "mesto", "telefon", "pasuje", "strana", "odskusany", "vratenie", "km", "vyrobca", ...SPEC_COLS.map(([c]) => c)];
 const norm = (s: string) => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/\s+/g, " ").trim();
 
 function parse(text: string): string[][] {
@@ -50,19 +52,22 @@ export default function CsvImport({ uid, cat, prof, onDone }: { uid: string; cat
       const errors: string[] = [], warns: string[] = [];
       const name = g("nazov");
       if (name.length < 3) errors.push("názov má menej ako 3 znaky");
-      const brand = byName(cat.brands, g("znacka"));
-      if (!brand) errors.push(`značka „${g("znacka")}“ nie je v katalógu`);
+      // kategória najprv: pri univerzálnych (pneumatiky, výbava jazdca, iné…) auto a číslo dielu nie sú povinné
+      const c0 = cat.categories.find((x) => norm(x.name) === norm(g("kategoria")) || x.id === norm(g("kategoria")));
+      const univ = isUniversal(c0?.id);
+      const brand = g("znacka") ? byName(cat.brands, g("znacka")) : undefined;
+      if (!brand && (!univ || g("znacka"))) errors.push(g("znacka") ? `značka „${g("znacka")}“ nie je v katalógu` : "chýba značka auta");
       const model = brand ? cat.models.find((m) => m.brandId === brand.id && norm(m.name) === norm(g("model"))) : undefined;
-      if (brand && !model) errors.push(`model „${g("model")}“ nie je v katalógu pre ${brand.name}`);
+      if (brand && !model && (!univ || g("model"))) errors.push(`model „${g("model")}“ nie je v katalógu pre ${brand.name}`);
       const engine = model && g("motorizacia") ? cat.engines.find((e) => e.modelId === model.id && norm(e.name) === norm(g("motorizacia"))) : undefined;
       if (model && g("motorizacia") && !engine) warns.push("motorizácia nenájdená – pasuje na všetky");
       const c = cat.categories.find((x) => norm(x.name) === norm(g("kategoria")) || x.id === norm(g("kategoria")));
       if (!c) errors.push(`kategória „${g("kategoria")}“ neexistuje`);
       const sub = c && g("podkategoria") ? cat.subcategories.find((s) => s.categoryId === c.id && norm(s.name) === norm(g("podkategoria"))) : undefined;
       if (c && g("podkategoria") && !sub) warns.push("podkategória nenájdená");
-      const oem = g("oem"); if (oem.replace(/[^A-Za-z0-9]/g, "").length < 4) errors.push("OEM má menej ako 4 znaky");
+      const oem = g("oem"); if ((!univ || oem) && oem.replace(/[^A-Za-z0-9]/g, "").length < 4) errors.push("číslo dielu (OEM) má menej ako 4 znaky");
       const price = Number(g("cena").replace(/\s|€/g, "").replace(",", ".")); if (!(price > 0)) errors.push("cena musí byť väčšia ako 0");
-      let year = parseInt(g("rocnik"), 10);
+      let year = parseInt(g("rocnik"), 10) || 0;
       if (!year && model) { year = model.yearFrom; warns.push(`ročník chýba – nastavený ${year}`); }
       const condition: Condition = CONDITIONS.find((x) => norm(x) === norm(g("stav")) || norm(condLabel(x)) === norm(g("stav"))) || (norm(g("stav")) === norm("nepoužitý") ? "Nový" : "Dobrý");
       if (g("stav") && ![norm(condition), norm(condLabel(condition)), norm("nepoužitý")].includes(norm(g("stav")))) warns.push("stav nerozpoznaný – nastavený Dobrý");
@@ -92,7 +97,8 @@ export default function CsvImport({ uid, cat, prof, onDone }: { uid: string; cat
       const ok = !errors.length;
       return {
         row: k + 2, name: name || "(bez názvu)", ok, errors, warns,
-        data: ok ? { name, brandId: brand!.id, modelId: model!.id, engineId: engine?.id ?? null, year, categoryId: c!.id, subcategoryId: sub?.id ?? null,
+        data: ok ? { name, brandId: model ? brand!.id : 0, modelId: model?.id ?? 0, engineId: engine?.id ?? null, year: model ? year : 0,
+          vtype: (VEHICLE_TYPES.find((t) => norm(t.name) === norm(g("druh")) || t.id === norm(g("druh")))?.id) ?? null, categoryId: c!.id, subcategoryId: sub?.id ?? null,
           oem, partMaker: g("vyrobca"), price, city, condition, description, warranty, shipping: "Len osobný odber", phone,
           side, gearbox: "", km: Number.isFinite(km) ? km : null, tested: yes(g("odskusany")), returns14: yes(g("vratenie")), fits, specs, donorId: null } : undefined,
       };
@@ -114,7 +120,7 @@ export default function CsvImport({ uid, cat, prof, onDone }: { uid: string; cat
     <div>
       <header className="pp-h"><h1>Import z CSV</h1><a className="ubtn" href={sampleHref} download="vzor-autosuciastky.csv">Stiahnuť vzorový súbor</a></header>
       <div className="pp-box">
-        <p>Povinné stĺpce: <b>{REQ.join(", ")}</b>. Voliteľné: {OPT.join(", ")}. Oddeľovač <b>;</b> alebo <b>,</b>, najviac {MAX} riadkov. Stav: Nový, Repasovaný, Veľmi dobrý, Dobrý alebo Na opravu. V stĺpci <b>pasuje</b> oddeľte autá znakom | (napr. „Škoda Octavia III | VW Golf VII“).</p>
+        <p>Povinné stĺpce: <b>{[...REQ, ...REQ_PART].join(", ")}</b> – pri pneumatikách, diskoch, výbave jazdca, príslušenstve a „Iné“ stačí <b>{REQ.join(", ")}</b> (stĺpec <b>druh</b>: osobné, dodávky, nákladné, autobusy alebo motorky). Voliteľné: {OPT.join(", ")}. Oddeľovač <b>;</b> alebo <b>,</b>, najviac {MAX} riadkov. Stav: Nový, Repasovaný, Veľmi dobrý, Dobrý alebo Na opravu. V stĺpci <b>pasuje</b> oddeľte autá znakom | (napr. „Škoda Octavia III | VW Golf VII“).</p>
         <p className="mute">Pneumatiky a disky (kategória „Pneumatiky a disky“): stĺpce pneu_sirka (205), pneu_profil (55), priemer (16), sezona (letné/zimné/celoročné), dezen_mm, dot (rok), index_nosnosti, index_rychlosti, sirka_disku (7), roztec (5x112), et (49), stredovy_otvor (57.1), kusy, material (Hliník/Oceľ).</p>
         <p className="mute">Popis musí mať aspoň 20 znakov. Mesto a telefón sa doplnia z profilu, ak ich v súbore nemáte. Importované inzeráty sú bez fotiek – doplníte ich cez Upraviť.</p>
         <label className="pp-add pp-file"><input type="file" accept=".csv,text/csv" onChange={async (e) => { const f = e.target.files?.[0]; if (f) load(await f.text()); e.target.value = ""; }} /><span>Vybrať CSV súbor</span></label>

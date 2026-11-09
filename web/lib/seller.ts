@@ -20,7 +20,8 @@ export function sellerClient(): SupabaseClient {
 export type Profile = { id: string; email: string; name: string; type: string; city: string; phone: string; ico: string; address: string; verified: boolean; ratingAvg?: number | null; ratingCount?: number };
 export type Status = "active" | "paused" | "sold" | "blocked";
 export type MyListing = {
-  id: number; name: string; brandId: number; modelId: number; engineId: number | null; year: number;
+  id: number; name: string; brandId: number; modelId: number; engineId: number | null; year: number; // 0 = bez auta (univerzálny diel)
+  vtype: VehicleType | null;
   categoryId: string; subcategoryId: number | null; oem: string; partMaker: string; price: number; city: string;
   condition: Condition; description: string; warranty: string; shipping: string; status: Status;
   views: number; calls: number; createdAt: string; updatedAt: string; phone: string;
@@ -132,7 +133,7 @@ export async function saveProfile(p: Profile) {
 
 // ---------- INZERÁTY ----------
 const COLS = "id,name,brand_id,model_id,engine_id,year,category_id,subcategory_id,oem,part_maker,price,city,condition,description,warranty,shipping,status,views,calls,created_at,updated_at,moderation_note,donor_id," +
-  "side,donor_gearbox,donor_km,tested,returns_14d,top_until,specs,listing_contacts(phone),listing_photos(path,position),listing_fits(brand_id,model_id,engine_id)";
+  "side,donor_gearbox,donor_km,tested,returns_14d,top_until,specs,vtype,listing_contacts(phone),listing_photos(path,position),listing_fits(brand_id,model_id,engine_id)";
 
 type Row = Record<string, unknown>;
 export function photoUrl(path: string) {
@@ -144,7 +145,7 @@ function toMine(r: Row): MyListing {
   const phone = Array.isArray(ct) ? String(ct[0]?.phone || "") : String(ct?.phone || "");
   return {
     id: Number(r.id), name: String(r.name), brandId: Number(r.brand_id), modelId: Number(r.model_id), engineId: (r.engine_id as number) ?? null,
-    year: Number(r.year), categoryId: String(r.category_id), subcategoryId: (r.subcategory_id as number) ?? null, oem: String(r.oem || ""),
+    year: Number(r.year || 0), vtype: (r.vtype as VehicleType) ?? null, categoryId: String(r.category_id), subcategoryId: (r.subcategory_id as number) ?? null, oem: String(r.oem || ""),
     partMaker: String(r.part_maker || ""), price: Number(r.price), city: String(r.city || ""), condition: r.condition as Condition,
     description: String(r.description || ""), warranty: String(r.warranty), shipping: String(r.shipping), status: r.status as Status,
     views: Number(r.views || 0), calls: Number(r.calls || 0), createdAt: String(r.created_at), updatedAt: String(r.updated_at || r.created_at), phone,
@@ -163,8 +164,8 @@ export async function myListings(uid: string): Promise<MyListing[]> {
 
 function dbRow(x: ListingInput) {
   return {
-    name: x.name.trim(), brand_id: x.brandId, model_id: x.modelId, engine_id: x.engineId, year: x.year,
-    category_id: x.categoryId, subcategory_id: x.subcategoryId, oem: x.oem.trim(), part_maker: x.partMaker.trim() || null,
+    name: x.name.trim(), brand_id: x.brandId || null, model_id: x.modelId || null, engine_id: x.modelId ? x.engineId : null, year: x.year || null, vtype: x.vtype,
+    category_id: x.categoryId, subcategory_id: x.subcategoryId, oem: x.oem.trim() || null, part_maker: x.partMaker.trim() || null,
     price: x.price, city: x.city.trim(), condition: x.condition, description: x.description.trim(), warranty: x.warranty, shipping: x.shipping,
     side: x.side || null, donor_gearbox: x.gearbox || null, donor_km: x.km, tested: x.tested, returns_14d: x.returns14, donor_id: x.donorId ?? null,
     specs: x.categoryId === WHEEL_CAT ? cleanSpecs(x.specs) : {},

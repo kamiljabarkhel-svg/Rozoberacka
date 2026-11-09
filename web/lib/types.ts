@@ -10,6 +10,9 @@ export const VEHICLE_TYPES: { id: VehicleType; name: string; short: string }[] =
 export type Model = { id: number; brandId: number; name: string; yearFrom: number; yearTo: number | null; vehicleType?: VehicleType };
 export type Engine = { id: number; modelId: number; name: string };
 export type Category = { id: string; name: string; sort: number; vtypes?: VehicleType[] | null };
+/** Univerzálne kategórie (rovnaké ako categories.universal v databáze, supabase/22): auto a číslo dielu sú nepovinné. */
+export const UNIVERSAL_CATS = ["kol", "mjz", "ine", "vyb", "obv", "mvy"];
+export const isUniversal = (cat: string | null | undefined) => !!cat && UNIVERSAL_CATS.includes(cat);
 export type Subcategory = { id: number; categoryId: string; name: string; sort: number };
 
 export type Catalog = {
@@ -39,6 +42,8 @@ export type Listing = {
   modelId: number | null;
   engineId: number | null;
   year: number | null;
+  /** druh vozidla pri univerzálnom diele bez auta (null = pre všetky vozidlá) */
+  vtype?: VehicleType | null;
   categoryId: string;
   subcategoryId: number | null;
   oem: string | null;
@@ -69,6 +74,8 @@ export type Listing = {
 
 export type Filters = {
   vtype: VehicleType | "";
+  /** pri Pneumatikách a diskoch: pneu, disk, kolesa (prázdne = všetko) */
+  wtype: "" | "pneu" | "disk" | "kolesa";
   specs: Specs;
   q: string;
   brand: number | null;
@@ -88,7 +95,7 @@ export type Filters = {
 };
 
 export const emptyFilters: Filters = {
-  vtype: "", specs: {},
+  vtype: "", wtype: "", specs: {},
   q: "", brand: null, model: null, engine: null, year: null, cat: "", sub: null,
   max: null, cond: "", city: "", sort: "new", fav: false, side: "", tested: false, ret: false,
 };
@@ -164,3 +171,9 @@ export type CarListing = {
 };
 export type CarFilters = { vtype: VehicleType | ""; brand: number | null; model: number | null; yfrom: number | null; yto: number | null; max: number | null; cond: string; fuel: string; docs: boolean; city: string; q: string; sort: "new" | "asc" | "desc" | "year" | "km" };
 export const emptyCarFilters: CarFilters = { vtype: "", brand: null, model: null, yfrom: null, yto: null, max: null, cond: "", fuel: "", docs: false, city: "", q: "", sort: "new" };
+
+/** Text o vozidle pri univerzálnom diele bez auta. */
+export function universalLabel(vtype: VehicleType | null | undefined): string {
+  const t = VEHICLE_TYPES.find((x) => x.id === vtype);
+  return t ? `Na ${t.name.toLowerCase()} – nie je viazané na konkrétny model` : "Univerzálne – pre všetky vozidlá";
+}

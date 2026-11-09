@@ -70,7 +70,11 @@ export function search(listings: Listing[], f: Filters, cat: Catalog, favs: numb
     if (withCat && f.sub != null && l.subcategoryId !== f.sub) return false;
     if (f.year != null && own && l.year !== f.year) return false;
     if (f.cond && l.condition !== f.cond) return false;
-    if (f.vtype && (cat.models.find((m) => m.id === l.modelId)?.vehicleType || "osobne") !== f.vtype) return false;
+    if (f.vtype) { const t = l.modelId ? cat.models.find((m) => m.id === l.modelId)?.vehicleType || "osobne" : l.vtype; if (t && t !== f.vtype) return false; }
+    if (f.cat === "kol" && f.wtype) {
+      const sn = cat.subcategories.find((x) => x.id === l.subcategoryId)?.name || "";
+      if (f.wtype === "pneu" ? !sn.startsWith("Pneumatiky") : f.wtype === "disk" ? !sn.startsWith("Disky") : !/^(Kolesá s pneumatikami|Rezervné)/.test(sn)) return false;
+    }
     if (f.specs && Object.entries(cleanSpecs(f.specs)).some(([k, v]) => v && (l.specs as Record<string, string | undefined>)?.[k] !== v)) return false;
     if (f.city && l.city !== f.city) return false;
     if (f.max != null && l.price > f.max) return false;

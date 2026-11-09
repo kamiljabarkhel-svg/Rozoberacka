@@ -1,6 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { specsLine, type Catalog, type Listing } from "@/lib/types";
+import { isUniversal, specsLine, universalLabel, type Catalog, type Listing } from "@/lib/types";
 import { condDot, photosText, price } from "@/lib/format";
 import { STATIC_PREVIEW, listingHref } from "@/lib/paths";
 import { Icon, catIcon } from "./Icons";
@@ -10,6 +10,7 @@ import Tags from "./Tags";
 import { carName } from "@/lib/seo";
 
 export function carText(l: Listing, cat: Catalog): string {
+  if (!l.brandId) return universalLabel(l.vtype);
   const b = cat.brands.find((x) => x.id === l.brandId)?.name || "";
   const m = cat.models.find((x) => x.id === l.modelId)?.name || "";
   const e = cat.engines.find((x) => x.id === l.engineId)?.name || "";
@@ -35,8 +36,8 @@ export default function ListingCard({ l, cat, fav, onFav }: { l: Listing; cat: C
       <div className="cb">
         <h2><ListingLink id={l.id} name={l.name} car={carName(l, cat)}>{l.name}</ListingLink></h2>
         <p className="car">{carText(l, cat)}</p>
-        <p className="cardoem">{l.oem ? <>Číslo dielu: <b>{l.oem}</b></> : <span className="mute">Číslo dielu neuvedené</span>}</p>
         {specsLine(l.specs) && <p className="specs-line">{specsLine(l.specs)}</p>}
+        {(l.oem || !isUniversal(l.categoryId)) && <p className="cardoem">{l.oem ? <>Číslo dielu: <b>{l.oem}</b></> : <span className="mute">Číslo dielu neuvedené</span>}</p>}
         <Tags l={l} />
         <div className="meta">
           <span className="cond"><i className={"dot " + condDot(l.condition)} />{l.condition}</span>

@@ -53,7 +53,7 @@ export default function RequestForm() {
   };
   async function submit(e: React.FormEvent) {
     e.preventDefault(); setErr("");
-    const vin = v.vin.replace(/\s/g, "");
+    const vin = vt === "osobne" || vt === "dodavky" ? v.vin.replace(/\s/g, "") : "";
     if (!v.brand) return setErr("Vyberte značku auta.");
     if (vin && !/^[A-HJ-NPR-Z0-9]{17}$/i.test(vin)) return setErr("VIN má 17 znakov (bez I, O a Q). Ak ho nemáte, nechajte pole prázdne.");
     if (v.part.trim().length < 3) return setErr("Napíšte, aký diel hľadáte.");
@@ -85,9 +85,9 @@ export default function RequestForm() {
       <form className="pp-form pp-grid pp-card" onSubmit={submit} noValidate>
         {IS_DEMO && <p className="full pp-err">Ukážkový režim: dopyt sa nedá odoslať.</p>}
         <h2 className="full rq-h">Vozidlo</h2>
-        <div className="full pp-vt" role="radiogroup" aria-label="Druh vozidla">{VEHICLE_TYPES.map((t) => <button key={t.id} type="button" role="radio" aria-checked={vt === t.id} className={vt === t.id ? "on" : ""} onClick={() => { if (t.id !== vt) { setVt(t.id); set({ brand: 0, model: 0, engine: 0, year: 0 }); } }}>{t.short}</button>)}</div>
-        <label className="full">VIN (nepovinné – pomôže predajcovi nájsť presný diel)<span className="oemin"><input value={v.vin} maxLength={20} onChange={(e) => onVin(e.target.value)} placeholder="napr. TMBJJ7NE0G0123456" autoComplete="off" />
-          <ScanText kind="vin" onResult={(x) => onVin(x)} /></span></label>
+        <div className="full pp-vt" role="radiogroup" aria-label="Druh vozidla">{VEHICLE_TYPES.map((t) => <button key={t.id} type="button" role="radio" aria-checked={vt === t.id} className={vt === t.id ? "on" : ""} onClick={() => { if (t.id !== vt) { setVt(t.id); set({ brand: 0, model: 0, engine: 0, year: 0, vin: "" }); } }}>{t.short}</button>)}</div>
+        {(vt === "osobne" || vt === "dodavky") && <label className="full">VIN (nepovinné – pomôže predajcovi nájsť presný diel)<span className="oemin"><input value={v.vin} maxLength={20} onChange={(e) => onVin(e.target.value)} placeholder="napr. TMBJJ7NE0G0123456" autoComplete="off" />
+          <ScanText kind="vin" onResult={(x) => onVin(x)} /></span></label>}
         <label>Značka *<select value={v.brand || ""} onChange={(e) => set({ brand: Number(e.target.value), model: 0, engine: 0, year: 0 })}><option value="">Vyberte…</option>{brands.map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}</select></label>
         <label>Model<select value={v.model || ""} disabled={!models.length} onChange={(e) => set({ model: Number(e.target.value), engine: 0 })}><option value="">Neviem / iný</option>{models.map((m) => <option key={m.id} value={m.id}>{m.name} ({m.yearFrom}–{m.yearTo ?? ""})</option>)}</select></label>
         <label>Motorizácia<select value={v.engine || ""} disabled={!engines.length} onChange={(e) => set({ engine: Number(e.target.value) })}><option value="">Neviem</option>{engines.map((x) => <option key={x.id} value={x.id}>{x.name}</option>)}</select></label>

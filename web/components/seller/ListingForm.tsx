@@ -3,7 +3,7 @@
 // Povinné polia podľa CLAUDE.md; tie isté pravidlá stráži aj databáza (04_funkcie.sql).
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { Catalog, Condition, Specs, VehicleType } from "@/lib/types";
-import { CONDITIONS, condLabel, PCDS, RIM_DIAMETERS, SEASONS, SPEC_LABEL, specsErrors, VEHICLE_TYPES, WHEEL_CAT } from "@/lib/types";
+import { CONDITIONS, condLabel, isUniversal, PCDS, RIM_DIAMETERS, SEASONS, SPEC_LABEL, specsErrors, VEHICLE_TYPES, WHEEL_CAT } from "@/lib/types";
 import { carName } from "@/lib/seo";
 import { saveListing, skError, type Donor, type ListingInput, type MyListing, type PhotoItem, type Profile } from "@/lib/seller";
 import ScanText from "../ScanText";
@@ -36,6 +36,7 @@ export default function ListingForm({ uid, cat, prof, edit, donor, onSaved }: { 
   const startModel = cat.models.find((m) => m.id === (edit?.modelId ?? donor?.modelId));
   const [vt, setVt] = useState<VehicleType>(() => {
     if (startModel?.vehicleType) return startModel.vehicleType;
+    if (edit?.vtype) return edit.vtype;
     if (edit || donor) return "osobne";
     try { const x = localStorage.getItem("rozoberacka-druh"); if (x && VEHICLE_TYPES.some((t) => t.id === x)) return x as VehicleType; } catch {} // naposledy zvolený druh
     return "osobne";
@@ -70,11 +71,14 @@ export default function ListingForm({ uid, cat, prof, edit, donor, onSaved }: { 
     const b = new Set<Key>();
     if (v.name.trim().length < 3) b.add("name");
     if (!v.categoryId) b.add("cat");
-    if (v.oem.replace(/[^A-Za-z0-9]/g, "").length < 4) b.add("oem");
+    const univ = isUniversal(v.categoryId);   // pneumatiky, výbava jazdca, príslušenstvo, iné: auto a číslo dielu nepovinné
+    if ((!univ || v.oem.trim()) && v.oem.replace(/[^A-Za-z0-9]/g, "").length < 4) b.add("oem");
     if (v.categoryId === WHEEL_CAT && specsErrors(specs).length) b.add("specs");
-    if (!v.brandId) b.add("brand");
-    if (!v.modelId) b.add("model");
-    if (!v.year) b.add("year");
+    if (!univ || v.brandId) {
+      if (!v.brandId) b.add("brand");
+      if (!v.modelId) b.add("model");
+      if (!v.year && !univ) b.add("year");
+    }
     if (!v.condition) b.add("cond");
     const pr = Number(v.price.replace(",", ".")); if (!(pr > 0)) b.add("price");
     if (!v.warranty) b.add("war");
@@ -108,7 +112,7 @@ export default function ListingForm({ uid, cat, prof, edit, donor, onSaved }: { 
       subcategoryId: v.subcategoryId, oem: v.oem, partMaker: v.partMaker, price: Math.round(Number(v.price.replace(",", ".")) * 100) / 100,
       city: v.city, condition: v.condition as Condition, description: v.description, warranty: v.warranty, shipping: v.shipping,
       phone: v.phone, side: v.side, gearbox: v.gearbox, km: v.km ? Math.max(0, parseInt(v.km.replace(/\D/g, ""), 10) || 0) : null,
-      tested: v.tested, returns14: v.returns14, fits, specs, donorId: edit ? edit.donorId : donor?.id ?? null,
+      vtype: vt, tested: v.tested, returns14: v.returns14, fits, specs, donorId: edit ? edit.donorId : donor?.id ?? null,
     };
     setBusy(true);
     try { onSaved(await saveListing(uid, edit?.id ?? null, x, photos, edit?.photos.map((p) => p.path) || [])); }
@@ -152,7 +156,7 @@ export default function ListingForm({ uid, cat, prof, edit, donor, onSaved }: { 
           <div className="full">{L({ k: "name", t: "Názov dielu", children: <input value={v.name} maxLength={120} placeholder="napr. Predné ľavé svetlo LED" onChange={(e) => { set("name", e.target.value); clear("name"); }} /> })}</div>
           {L({ k: "cat", t: "Kategória", children: <select value={v.categoryId} onChange={(e) => { set("categoryId", e.target.value); set("subcategoryId", null); clear("cat"); }}><option value="">Vyberte…</option>{vtCats.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}</select> })}
           {L({ t: "Podkategória", req: false, children: <select value={v.subcategoryId ?? ""} disabled={!subs.length} onChange={(e) => set("subcategoryId", e.target.value ? Number(e.target.value) : null)}><option value="">{v.categoryId ? "Nevybraná" : "Najprv vyberte kategóriu"}</option>{subs.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}</select> })}
-          {L({ k: "oem", t: "Kód súčiastky / OEM číslo", children: <span className="oemin"><input value={v.oem} maxLength={40} placeholder="napr. 5E1941015" onChange={(e) => { set("oem", e.target.value); clear("oem"); }} />
+          {L({ k: "oem", t: isUniversal(v.categoryId) ? "Číslo dielu (OEM) – nepovinné" : "Kód súčiastky / OEM číslo", req: !isUniversal(v.categoryId), children: <span className="oemin"><input value={v.oem} maxLength={40} placeholder="napr. 5E1941015" onChange={(e) => { set("oem", e.target.value); clear("oem"); }} />
             <ScanText kind="oem" onResult={(x) => { set("oem", x); clear("oem"); }} /></span> })}
           {L({ t: "Výrobca dielu", req: false, children: <input value={v.partMaker} maxLength={60} placeholder="Bosch, Valeo, Hella…" onChange={(e) => set("partMaker", e.target.value)} /> })}
           <p className="full mute pp-hint"><b>Číslo dielu je najdôležitejší údaj inzerátu.</b> Nájdete ho na štítku alebo vyrazené na diele. Kupujúci podľa neho overí, že diel pasuje – aj pri rovnakom modeli auta sa diely líšia podľa motora, výbavy či roku. Web podľa čísla spojí aj rovnaké diely iných áut.</p>
@@ -185,10 +189,11 @@ export default function ListingForm({ uid, cat, prof, edit, donor, onSaved }: { 
           </div>}
         </>}
         {step === 1 && <>
-          {L({ k: "brand", t: "Značka auta", children: <select value={v.brandId || ""} onChange={(e) => { set("brandId", Number(e.target.value)); set("modelId", 0); set("engineId", null); set("year", 0); clear("brand"); }}><option value="">Vyberte…</option>{vtBrands.map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}</select> })}
-          {L({ k: "model", t: "Model", children: <select value={v.modelId || ""} disabled={!models.length} onChange={(e) => { set("modelId", Number(e.target.value)); set("engineId", null); set("year", 0); clear("model"); }}><option value="">Vyberte…</option>{models.map((m) => <option key={m.id} value={m.id}>{m.name} ({m.yearFrom}–{m.yearTo ?? ""})</option>)}</select> })}
+          {isUniversal(v.categoryId) && <p className="full pp-resp">Pri kategórii <b>{cat.categories.find((c) => c.id === v.categoryId)?.name}</b> auto vyplniť <b>nemusíte</b> – diel sa ukáže pri všetkých vozidlách zvoleného druhu ({VEHICLE_TYPES.find((t) => t.id === vt)?.name.toLowerCase()}). Auto vyberte len vtedy, ak sa diel hodí iba naň (napr. originálne disky na konkrétny model).</p>}
+          {L({ k: "brand", t: "Značka auta", req: !isUniversal(v.categoryId), children: <select value={v.brandId || ""} onChange={(e) => { set("brandId", Number(e.target.value)); set("modelId", 0); set("engineId", null); set("year", 0); clear("brand"); }}><option value="">Vyberte…</option>{vtBrands.map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}</select> })}
+          {L({ k: "model", t: "Model", req: !isUniversal(v.categoryId) || !!v.brandId, children: <select value={v.modelId || ""} disabled={!models.length} onChange={(e) => { set("modelId", Number(e.target.value)); set("engineId", null); set("year", 0); clear("model"); }}><option value="">Vyberte…</option>{models.map((m) => <option key={m.id} value={m.id}>{m.name} ({m.yearFrom}–{m.yearTo ?? ""})</option>)}</select> })}
           {L({ t: "Motorizácia", req: false, children: <select value={v.engineId ?? ""} disabled={!engines.length} onChange={(e) => set("engineId", e.target.value ? Number(e.target.value) : null)}><option value="">Všetky motorizácie</option>{engines.map((x) => <option key={x.id} value={x.id}>{x.name}</option>)}</select> })}
-          {L({ k: "year", t: "Ročník auta", children: <select value={v.year || ""} disabled={!v.modelId} onChange={(e) => { set("year", Number(e.target.value)); clear("year"); }}><option value="">Vyberte…</option>{years.map((y) => <option key={y}>{y}</option>)}</select> })}
+          {L({ k: "year", t: "Ročník auta", req: !isUniversal(v.categoryId), children: <select value={v.year || ""} disabled={!v.modelId} onChange={(e) => { set("year", Number(e.target.value)); clear("year"); }}><option value="">Vyberte…</option>{years.map((y) => <option key={y}>{y}</option>)}</select> })}
           {L({ t: "Prevodovka auta", req: false, children: <select value={v.gearbox} onChange={(e) => set("gearbox", e.target.value)}><option value="">Neuvedená</option><option>Manuálna</option><option>Automatická</option></select> })}
           {L({ t: "Najazdené km auta", req: false, children: <input value={v.km} inputMode="numeric" placeholder="napr. 184000" onChange={(e) => set("km", e.target.value)} /> })}
           {L({ t: "Strana auta", req: false, children: <select value={v.side} onChange={(e) => set("side", e.target.value)}><option value="">Neuvádza sa</option><option>Ľavá</option><option>Pravá</option></select> })}

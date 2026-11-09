@@ -184,7 +184,8 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
   await step("havarovane vozidla: zoznam, detail, telefon, sprava", async () => {
     global.CUR = b2;
     await b2.goto(B + "/havarovane-vozidla"); await b2.waitForSelector(".carcard:has-text('Octavia III')");
-    await b2.click(".vtabs >> text=Motorky"); await b2.waitForSelector("text=0 vozidiel"); await b2.click(".vtabs >> text=Osobné"); await b2.waitForSelector(".carcard");
+    await b2.click(".cs-vt >> text=Motorky a štvorkolky"); await b2.waitForSelector("text=0 vozidiel"); await b2.click(".cs-vt >> text=Osobné autá"); await b2.waitForSelector(".carcard");
+    await b2.click(".cars-conds >> text=Na diely"); await b2.waitForSelector("text=0 vozidiel"); await b2.click(".cars-conds >> text=Všetky stavy"); await b2.waitForSelector(".carcard");
     await b2.click(".carcard a"); await b2.waitForURL("**/vozidlo/**"); await b2.waitForSelector("h1:has-text('Havarované – nepojazdné')");
     const h = await b2.content(); if (/TMBJJ7NE0G0123456/.test(h)) throw new Error("VIN je verejne");
     // diely z auta na diely sú zatiaľ pozastavené (bez fotiek) – kupujúci ich nevidí
@@ -205,7 +206,7 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
   await step("export CSV a hromadna cena", async () => {
     await pg.click(".pp-nav >> text=Moje inzeráty"); await pg.waitForSelector(".pp-row");
     const [dl] = await Promise.all([pg.waitForEvent("download"), pg.click("text=Export CSV")]);
-    const t = require("fs").readFileSync(await dl.path(), "utf8"); if (!/^\uFEFFnazov;znacka;model/.test(t) || !/Kapota/.test(t)) throw new Error(t.slice(0, 120));
+    const t = require("fs").readFileSync(await dl.path(), "utf8"); if (!/^\uFEFFnazov;druh;znacka;model/.test(t) || !/Kapota/.test(t)) throw new Error(t.slice(0, 120));
     await pg.click(".pp-chips >> text=Pozastavené"); await pg.check(".pp-rowh input"); await pg.click("text=Zmeniť cenu");
     await pg.fill(".pp-price input", "-10"); await pg.click(".pp-price >> text=Použiť na"); await pg.waitForSelector(".pp-toast:has-text('Ceny zmenené')");
     await pg.waitForSelector(".pp-row:has-text('Kapota') >> text=81 €");
