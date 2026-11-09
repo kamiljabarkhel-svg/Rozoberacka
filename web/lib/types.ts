@@ -97,6 +97,9 @@ export const emptyFilters: Filters = {
 /** Parametre kolies (kľúče rovnaké ako v databáze listings.specs). */
 export type Specs = Partial<Record<"tw" | "tp" | "rd" | "season" | "tread" | "dot" | "li" | "si" | "rw" | "pcd" | "et" | "cb" | "pcs" | "mat", string>>;
 export const SEASONS = ["letné", "zimné", "celoročné"] as const;
+export const TIRE_WIDTHS = ["135", "145", "155", "165", "175", "185", "195", "205", "215", "225", "235", "245", "255", "265", "275", "285", "295", "305", "315", "325", "385", "435"];
+export const TIRE_PROFILES = ["25", "30", "35", "40", "45", "50", "55", "60", "65", "70", "75", "80", "85"];
+export const RIM_WIDTHS = ["4.5", "5", "5.5", "6", "6.5", "7", "7.5", "8", "8.5", "9", "9.5", "10", "10.5", "11", "12"];
 export const PCDS = ["4x98", "4x100", "4x108", "4x114.3", "5x98", "5x100", "5x108", "5x110", "5x112", "5x114.3", "5x115", "5x118", "5x120", "5x127", "5x130", "5x160", "6x114.3", "6x130", "6x139.7", "8x165.1", "10x225", "10x335"];
 export const RIM_DIAMETERS = ["13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "17.5", "19.5", "22.5"];
 /** Kategória Pneumatiky a disky. */

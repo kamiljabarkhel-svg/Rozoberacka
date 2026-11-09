@@ -64,7 +64,7 @@ export default function Header() {
         {/* obyčajné odkazy: úvod si filtre prečíta z adresy pri načítaní */}
         {/* eslint-disable @next/next/no-html-link-for-pages */}
         <a href="/" aria-current={path === "/" && !wheels ? "page" : undefined}>Autodiely</a>
-        <a href="/?kat=kol#vysledky" aria-current={path === "/" && wheels ? "page" : undefined}>Pneumatiky a disky</a>
+        <a href="/?kat=kol#pneu" aria-current={path === "/" && wheels ? "page" : undefined}>Pneumatiky a disky</a>
         {/* eslint-enable @next/next/no-html-link-for-pages */}
         <Link href="/havarovane-vozidla" aria-current={path?.startsWith("/havarovane-vozidla") || path?.startsWith("/vozidlo/") ? "page" : undefined}>Havarované vozidlá</Link>
         <Link href="/dopyt" aria-current={path?.startsWith("/dopyt") ? "page" : undefined}>Dopyt na diel</Link>

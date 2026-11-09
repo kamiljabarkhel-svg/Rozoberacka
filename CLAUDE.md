@@ -209,7 +209,7 @@ Overené na Slov-Lexe: Občiansky zákonník § 597, 599, 612, 618, 619 (znenie 
 - Nové pravidlá sú vrstva na konci `web/app/globals.css` („Vzhľad pult v predajni dielov“). Pravidlá z „Tvar dizajnu“ (rohy max. 6 px, bez tieňov) platia ďalej.
 
 ## Sekcie a druh vozidla (9. 11. 2026, 18:30)
-- Sekcie Autodiely / Pneumatiky a disky / Havarované vozidlá / Dopyt na diel sú výrazný petrolejový pás pod hlavičkou (na mobile 2 × 2).
+- Sekcie Autodiely / Pneumatiky a disky / Havarované vozidlá / Dopyt na diel sú výrazný **žltý** pás pod hlavičkou (aktívna sekcia petrolejová; na mobile 2 × 2) – na želanie majiteľa, aby si ho ľudia všimli.
 - Úvod aj havarované vozidlá majú **predvolené osobné autá**; „Všetky vozidlá“ je posledná záložka (v adrese `druh=vsetky`, osobné sa do adresy nepíšu).
 - Hľadanie podľa VIN sa ukáže len pri osobných autách, dodávkach a „všetkých“; pri nákladných, autobusoch a motorkách nie.
 - Číslo dielu (OEM) aj text sa hľadá len v zvolenom druhu vozidla (pri poli je napísané, v akom). Odkaz „Rovnaké číslo u iných predajcov“ nesie druh vozidla dielu. Motorky majú vlastné „Najhľadanejšie diely“.
@@ -220,3 +220,8 @@ Overené na Slov-Lexe: Občiansky zákonník § 597, 599, 612, 618, 619 (znenie 
 - Kód Google sa načíta až po súhlase v lište (Prijať všetky / Odmietnuť / Nastavenia), bez Google signals a reklamných funkcií; pri odvolaní sa cookies zmažú. `CONSENT_VERSION` 2 – lišta sa ukáže všetkým znova.
 - CSP, /cookies (_ga, _ga_*) a zásady ochrany údajov (časť 3 a 6, prenos do USA cez rámec EÚ – USA) sa prispôsobia samy podľa `NEXT_PUBLIC_GA_ID`.
 - V Google Analytics nastaviť: uchovávanie údajov 14 mesiacov, vypnúť Google signals a reklamné funkcie, prijať dodatok o spracúvaní údajov.
+
+## Pneumatiky, havarované vozidlá, dopyt (9. 11. 2026, 21:00)
+- „Pneumatiky a disky“ (`/?kat=kol#pneu`): úvod zmení nadpis, hore v paneli je výber (Disky hliníkové/oceľové, Kolesá s pneumatikami, Pneumatiky letné/zimné/celoročné) a filtre Pneumatika (šírka, profil, priemer, sezóna) a Disk (rozteč, šírka disku, ET, typ disku). VIN a najhľadanejšie diely sa vtedy skryjú.
+- `/havarovane-vozidla` má rovnaký úvodný pás ako úvod a prázdny stav s odkazom pre predajcov.
+- Dopyt vidia všetci registrovaní predajcovia v záložke „Dopyty“ (predvolene len dopyty na značky, ktoré predávajú). E-mailom sa zatiaľ neposiela – až po Brevo. Vysvetlené na `/dopyt`.

@@ -5,7 +5,6 @@ import { getCatalog, searchCars } from "@/lib/data";
 import { packCatalog } from "@/lib/catalogSort";
 import { emptyCarFilters } from "@/lib/types";
 import { JsonLd, SITE_NAME, SITE_URL, breadcrumbLd, vehiclePath, vehicleTitle } from "@/lib/seo";
-import Crumbs from "@/components/Crumbs";
 import CarsBrowse from "@/components/CarsBrowse";
 import Disclaimer from "@/components/Disclaimer";
 
@@ -23,16 +22,19 @@ export default async function Page() {
   const initial = await searchCars({ ...emptyCarFilters, vtype: "osobne" }, 0, 24).catch(() => ({ items: [], total: 0, conds: {} }));
   const packed = packCatalog({ ...cat, engines: [], subcategories: [] });
   return (
-    <main id="main" className="main landing">
+    <main id="main">
       <JsonLd data={[breadcrumbLd([{ name: "Úvod", href: "/" }, { name: "Havarované vozidlá", href: "/havarovane-vozidla" }]),
         { "@context": "https://schema.org", "@type": "ItemList", name: TITLE, numberOfItems: initial.total,
           itemListElement: initial.items.map((c, i) => ({ "@type": "ListItem", position: i + 1, url: SITE_URL + vehiclePath(c.id, vehicleTitle(c, cat), c.condition) })) }]} />
-      <Crumbs items={[{ name: "Úvod", href: "/" }]} last="Havarované vozidlá" />
-      <h1>{TITLE}</h1>
-      <p className="landing-lead">Celé vozidlá po havárii, s poruchou, po požiari či povodni alebo určené na diely – od osobných áut po kamióny a motorky.
-        Bežné jazdené autá tu nenájdete. Predávate také vozidlo? <Link href="/pre-predajcov?registracia=1">Pridajte ho zadarmo</Link>.</p>
-      <CarsBrowse packed={packed} initial={initial} />
-      <Disclaimer kind="car" />
+      <section className="hero"><div className="in">
+        <h1>Havarované a nepojazdné vozidlá</h1>
+        <p className="sub">Celé vozidlá po havárii, s poruchou, po požiari či povodni alebo určené na diely – osobné autá, dodávky, nákladné autá, autobusy aj motorky. Pri každom vidíte stav, poškodené časti, kilometre a doklady. Bežné jazdené autá tu nenájdete.</p>
+        <p className="sellcta">Predávate havarované alebo nepojazdné vozidlo? <Link href="/pre-predajcov?registracia=1">Pridajte ho zadarmo</Link></p>
+      </div></section>
+      <div className="wrap">
+        <CarsBrowse packed={packed} initial={initial} />
+        <Disclaimer kind="car" />
+      </div>
     </main>
   );
 }

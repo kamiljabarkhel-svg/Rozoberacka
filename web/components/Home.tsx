@@ -4,7 +4,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import type { Catalog, Filters, Specs, VehicleType } from "@/lib/types";
-import { cleanSpecs, CONDITIONS, condLabel, emptyFilters, PCDS, RIM_DIAMETERS, SEASONS, VEHICLE_TYPES, WHEEL_CAT } from "@/lib/types";
+import { cleanSpecs, CONDITIONS, condLabel, emptyFilters, PCDS, RIM_DIAMETERS, RIM_WIDTHS, SEASONS, TIRE_PROFILES, TIRE_WIDTHS, VEHICLE_TYPES, WHEEL_CAT } from "@/lib/types";
 import { getCatalog, getCities, getStats, initialData, searchListings, type SearchPage } from "@/lib/data";
 import { decodeVin } from "@/lib/vin";
 import { pieces, sk } from "@/lib/format";
@@ -132,6 +132,7 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
     if (u.sub != null || u.year != null || u.max != null || u.cond || u.city || u.sort !== "new" || u.side || u.tested || u.ret) setAdv(true);
     ready.current = true;
     if (window.location.hash === "#vysledky") setTimeout(() => resRef.current?.scrollIntoView({ block: "start" }), 50);
+    if (window.location.hash === "#pneu") setTimeout(() => panelRef.current?.scrollIntoView({ block: "start" }), 50);
   }, []);
   useEffect(() => { if (ready.current) writeUrl(f); }, [f]);
 
@@ -238,6 +239,8 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
   };
 
   const opt = (v: string | number, label: string) => <option key={v} value={v}>{label}</option>;
+  const wheels = f.cat === WHEEL_CAT;
+  const wheelSubs = catalog ? catalog.subcategories.filter((x) => x.categoryId === WHEEL_CAT).sort((a, b) => a.sort - b.sort) : [];
   const numOrNull = (v: string) => (v === "" ? null : Number(v));
 
   const detailId = STATIC_PREVIEW && hash.startsWith("#inzerat-") ? Number(hash.slice(9)) : null;
@@ -246,14 +249,19 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
   return (
     <main id="pub" tabIndex={-1}>
       <section className="hero"><div className="in"><span id="main" />
+        {wheels ? <>
+        <h1>Pneumatiky a disky</h1>
+        <p className="sub">Hľadajte podľa rozmeru: šírka, profil a priemer pneumatiky, rozteč, ET a typ disku. Rozmer nájdete na boku pneumatiky (napr. 205/55 R16) a na vnútornej strane disku (napr. 7J×16 ET49 5x112).</p>
+        </> : <>
         <h1>Na aké vozidlo hľadáte diel?</h1>
         <p className="sub">Použité diely na osobné autá, dodávky, nákladné autá, autobusy a motorky od vrakovísk a predajcov z celého Slovenska. Vyberte vozidlo alebo zadajte číslo dielu – predajcovi zavoláte bez registrácie.</p>
+        </>}
         {stats && stats.parts > 0 && <p className="stats"><b>{stats.parts.toLocaleString("sk-SK")}</b> {stats.parts === 1 ? "diel" : stats.parts >= 2 && stats.parts <= 4 ? "diely" : "dielov"} od <b>{stats.sellers}</b> {stats.sellers === 1 ? "predajcu" : "predajcov"} na jednom mieste</p>}
-        <div className="qb" aria-label="Najčastejšie značky">
+        {!wheels && <div className="qb" aria-label="Najčastejšie značky">
           {quick.map((b) => (
             <button key={b.id} className="chip" onClick={() => { set({ brand: b.id, model: null, engine: null, year: null }); panelRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }); }}>{b.name}</button>
           ))}
-        </div>
+        </div>}
         <p className="sellcta">Predávate diely z vrakoviska alebo servisu? <a href={STATIC_PREVIEW ? sellersHref : "/pre-predajcov?registracia=1"}>Vytvorte si účet predajcu zadarmo</a></p>
       </div></section>
 
@@ -295,15 +303,27 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
               </select>
             </label>
           </div>
-          {f.cat === WHEEL_CAT && <div className="pg wheelf" aria-label="Parametre pneumatík a diskov">
-            <label>Rozteč (PCD)<select value={f.specs.pcd || ""} onChange={(e) => setSpec("pcd", e.target.value)}>{opt("", "Každá")}{PCDS.map((x) => opt(x, x))}</select></label>
-            <label>Priemer<select value={f.specs.rd || ""} onChange={(e) => setSpec("rd", e.target.value)}>{opt("", "Každý")}{RIM_DIAMETERS.map((x) => opt(x, "R" + x))}</select></label>
-            <label>Šírka pneu<input inputMode="numeric" placeholder="205" value={f.specs.tw || ""} onChange={(e) => setSpec("tw", e.target.value.replace(/\D/g, "").slice(0, 3))} /></label>
-            <label>Profil<input inputMode="numeric" placeholder="55" value={f.specs.tp || ""} onChange={(e) => setSpec("tp", e.target.value.replace(/\D/g, "").slice(0, 3))} /></label>
-            <label>Sezóna<select value={f.specs.season || ""} onChange={(e) => setSpec("season", e.target.value)}>{opt("", "Každá")}{SEASONS.map((x) => opt(x, x))}</select></label>
-            <label>Šírka disku (J)<input inputMode="decimal" placeholder="7" value={f.specs.rw || ""} onChange={(e) => setSpec("rw", e.target.value.replace(",", ".").slice(0, 4))} /></label>
-            <label>ET<input inputMode="numeric" placeholder="49" value={f.specs.et || ""} onChange={(e) => setSpec("et", e.target.value.replace(/[^\d-]/g, "").slice(0, 4))} /></label>
-            <label>Materiál<select value={f.specs.mat || ""} onChange={(e) => setSpec("mat", e.target.value)}>{opt("", "Hliník aj oceľ")}{opt("Hliník", "Hliník")}{opt("Oceľ", "Oceľ")}</select></label>
+          {wheels && <div className="wheelbox" id="pneu" aria-label="Parametre pneumatík a diskov">
+            <div className="wb-type" role="radiogroup" aria-label="Čo hľadáte">
+              <button type="button" role="radio" aria-checked={f.sub == null} className={f.sub == null ? "on" : ""} onClick={() => set({ sub: null })}>Všetko</button>
+              {wheelSubs.filter((x) => /^(Pneumatiky letné|Pneumatiky zimné|Pneumatiky celoročné|Disky hliníkové|Disky oceľové|Kolesá s pneumatikami)$/.test(x.name)).map((x) =>
+                <button key={x.id} type="button" role="radio" aria-checked={f.sub === x.id} className={f.sub === x.id ? "on" : ""} onClick={() => set({ sub: x.id })}>{x.name}</button>)}
+            </div>
+            <div className="wb-g">
+              <fieldset><legend>Pneumatika</legend>
+                <label>Šírka<select value={f.specs.tw || ""} onChange={(e) => setSpec("tw", e.target.value)}>{opt("", "Každá")}{TIRE_WIDTHS.map((x) => opt(x, x))}</select></label>
+                <label>Profil<select value={f.specs.tp || ""} onChange={(e) => setSpec("tp", e.target.value)}>{opt("", "Každý")}{TIRE_PROFILES.map((x) => opt(x, x))}</select></label>
+                <label>Priemer<select value={f.specs.rd || ""} onChange={(e) => setSpec("rd", e.target.value)}>{opt("", "Každý")}{RIM_DIAMETERS.map((x) => opt(x, "R" + x))}</select></label>
+                <label>Sezóna<select value={f.specs.season || ""} onChange={(e) => setSpec("season", e.target.value)}>{opt("", "Každá")}{SEASONS.map((x) => opt(x, x))}</select></label>
+              </fieldset>
+              <fieldset><legend>Disk</legend>
+                <label>Rozteč (PCD)<select value={f.specs.pcd || ""} onChange={(e) => setSpec("pcd", e.target.value)}>{opt("", "Každá")}{PCDS.map((x) => opt(x, x))}</select></label>
+                <label>Šírka disku<select value={f.specs.rw || ""} onChange={(e) => setSpec("rw", e.target.value)}>{opt("", "Každá")}{RIM_WIDTHS.map((x) => opt(x, x + "J"))}</select></label>
+                <label>ET (zális)<input inputMode="numeric" placeholder="napr. 45" value={f.specs.et || ""} onChange={(e) => setSpec("et", e.target.value.replace(/[^\d-]/g, "").slice(0, 4))} /></label>
+                <label>Typ disku<select value={f.specs.mat || ""} onChange={(e) => setSpec("mat", e.target.value)}>{opt("", "Hliníkový aj oceľový")}{opt("Hliník", "Hliníkový (elektróny)")}{opt("Oceľ", "Oceľový (plechový)")}</select></label>
+              </fieldset>
+            </div>
+            <p className="wb-hint mute">Rozmer napr. <b>205/55 R16</b> = šírka 205, profil 55, priemer 16. Pri diskoch vyberte rovnakú rozteč a priemer ako na vašom aute. Auto (značka a model) nižšie vyplniť nemusíte.</p>
           </div>}
           <div className="adv" hidden={!adv}>
             <label>Podkategória
@@ -353,7 +373,7 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
           </form>
         </section>
 
-        {(!f.vtype || f.vtype === "osobne" || f.vtype === "dodavky") && <section id="vin" className="plate" aria-label="Hľadanie podľa VIN">
+        {!wheels && (!f.vtype || f.vtype === "osobne" || f.vtype === "dodavky") && <section id="vin" className="plate" aria-label="Hľadanie podľa VIN">
           <h2>Hľadať podľa VIN</h2>
           <div className="pg2">
             <label>VIN (17 znakov)
@@ -371,7 +391,7 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
           <p className="vmsg" role="status">{vinMsg}</p>
         </section>}
 
-        <div className="pop"><h2 className="sh">Najhľadanejšie diely</h2><div className="chips">
+        {!wheels && <div className="pop"><h2 className="sh">Najhľadanejšie diely</h2><div className="chips">
           {(f.vtype === "motorky" ? POP_MOTO : POP).filter((p) => cats.some((c) => c.id === p.cat)).map((p) => {
             const sub = p.sub && catalog ? catalog.subcategories.find((s) => s.categoryId === p.cat && s.name === p.sub)?.id ?? null : null;
             const on = p.q ? f.q === p.q && !f.cat : !f.q && f.cat === p.cat && f.sub === sub;
@@ -382,7 +402,7 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
               if (!on) setTimeout(toRes, 30);
             }}>{p.label}</button>;
           })}
-        </div></div>
+        </div></div>}
 
         <div id="vysledky" ref={resRef} className="head">
           <span className="cnt-w"><span className="cnt" aria-live="polite">{res ? pieces(res.total) : "Načítavam…"}</span>{!STATIC_PREVIEW && <Link className="sortinfo" href="/ako-zoradujeme">Ako zoraďujeme ponuky</Link>}</span>

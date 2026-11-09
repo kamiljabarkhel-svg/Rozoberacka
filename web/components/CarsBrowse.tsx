@@ -89,9 +89,9 @@ export default function CarsBrowse({ packed, initial }: { packed: PackedCatalog;
         </div>
       </section>
       <section id="vysledky" aria-live="polite">
-        <h2 className="sh">{res.total} {plural(res.total, "vozidlo", "vozidlá", "vozidiel")}{busy && <span className="mute"> · hľadám…</span>}</h2>
+        <h2 className="sh">{plural(res.total, "vozidlo", "vozidlá", "vozidiel")}{busy && <span className="mute"> · hľadám…</span>}</h2>
         {err && <p className="pp-err">Vozidlá sa nepodarilo načítať: {err}</p>}
-        {!res.items.length && !busy && <div className="empty">Takéto vozidlo zatiaľ nikto neponúka. Skúste zmeniť filtre alebo hľadajte <Link href="/">diely</Link>.</div>}
+        {!res.items.length && !busy && <div className="empty">{res.total === 0 && !f.brand && !f.cond && !f.q ? <>Zatiaľ tu nie je žiadne vozidlo na predaj{f.vtype ? ` (${VEHICLE_TYPES.find((t) => t.id === f.vtype)?.name.toLowerCase()})` : ""}.<br />Predávate havarované alebo nepojazdné vozidlo? <Link href="/pre-predajcov?registracia=1">Pridajte ho zadarmo</Link>.<br />Hľadáte diely naň? <Link href="/">Prezrite si autodiely</Link>.</> : <>Takéto vozidlo zatiaľ nikto neponúka. Skúste zmeniť filtre alebo hľadajte <Link href="/">diely</Link>.</>}</div>}
         <div className="grid">{res.items.map((c: CarListing) => <CarCard key={c.id} c={c} cat={cat} />)}</div>
         {res.items.length < res.total && <p style={{ textAlign: "center" }}><button className="btn2" disabled={busy} onClick={more}>Načítať ďalšie</button></p>}
       </section>

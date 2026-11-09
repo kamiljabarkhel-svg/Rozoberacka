@@ -896,3 +896,28 @@ h1,h2,h3,.cnt,.price,.brand,.btn,.btn2,.mp,.tile b{letter-spacing:0}
 .pp-vtf button span{opacity:.7;margin-left:4px}
 .panel .oemrow{align-items:end}
 .oem-scope{font-size:.82rem;margin-top:-3px}
+/* Pneumatiky a disky: filter rozmerov hore v paneli */
+.wheelbox{order:-1;display:grid;gap:14px;padding-top:4px}
+.wb-type{display:flex;flex-wrap:wrap;gap:6px}
+.wb-type button{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:3px;padding:8px 13px;font:600 .92rem/1.1 var(--f-b);cursor:pointer}
+.wb-type button.on{background:var(--pet);border-color:var(--pet);color:#fff}
+.wb-g{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.wb-g fieldset{border:1px solid var(--line);border-radius:4px;margin:0;padding:10px 14px 14px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.wb-g legend{font:700 1.1rem/1 var(--f-d);padding:0 6px}
+.wb-g label{display:grid;gap:5px;font-weight:600;font-size:.84rem;color:var(--mute)}
+.wb-hint{margin:0;font-size:.86rem}
+@media(max-width:900px){.wb-g{grid-template-columns:1fr}}
+@media(max-width:520px){.wb-g fieldset{grid-template-columns:1fr 1fr}}
+/* Pás sekcií v signálnej žltej, aby si ho ľudia všimli (9. 11. 2026, na želanie majiteľa) */
+.snav{background:var(--acc);border-bottom:1px solid rgba(0,0,0,.12)}
+.snav a{color:#1e1600;opacity:1;font-weight:700;border-right:1px solid rgba(0,0,0,.12)}
+.snav a:first-child{border-left:1px solid rgba(0,0,0,.12)}
+.snav a:hover{background:rgba(255,255,255,.28)}
+.snav a[aria-current="page"]{background:var(--pet);color:#fff;border-bottom-color:var(--pet)}
+@media(max-width:600px){.snav a{border-right:1px solid rgba(0,0,0,.12);border-top:1px solid rgba(0,0,0,.1)}.snav a:nth-child(2n){border-right:0}}
+.rq-how{margin:0 0 18px;padding:14px 18px 14px 36px;background:var(--card);border:1px solid var(--line);border-left:3px solid var(--pet);border-radius:3px;display:grid;gap:8px;max-width:820px}
+.rq-how li{line-height:1.5}
+.panel{scroll-margin-top:96px}
+.pop .chip[aria-pressed="true"]{background:var(--pet);border-color:var(--pet);color:#fff}
+.foot2 span b{font:inherit;font-weight:700}
+@media(max-width:600px){.panel{scroll-margin-top:130px}}
