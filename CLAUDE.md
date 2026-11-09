@@ -207,3 +207,10 @@ Overené na Slov-Lexe: Občiansky zákonník § 597, 599, 612, 618, 619 (znenie 
 - Farby: petrolejová #0f3d47 (značka, tlačidlá telefónu), pozadie oceľovo-sivé #eef2f4, žltá #f2b300 len na hlavné „Hľadať“ a štítok TOP (aj v tmavom režime).
 - Číslo dielu je všade rovnaký „štítok“ (tenký tmavý rámik, Plex Mono). Odkazy bez šípky „→“, štítky bez veľkých písmen.
 - Nové pravidlá sú vrstva na konci `web/app/globals.css` („Vzhľad pult v predajni dielov“). Pravidlá z „Tvar dizajnu“ (rohy max. 6 px, bez tieňov) platia ďalej.
+
+## Sekcie a druh vozidla (9. 11. 2026, 18:30)
+- Sekcie Autodiely / Pneumatiky a disky / Havarované vozidlá / Dopyt na diel sú výrazný petrolejový pás pod hlavičkou (na mobile 2 × 2).
+- Úvod aj havarované vozidlá majú **predvolené osobné autá**; „Všetky vozidlá“ je posledná záložka (v adrese `druh=vsetky`, osobné sa do adresy nepíšu).
+- Hľadanie podľa VIN sa ukáže len pri osobných autách, dodávkach a „všetkých“; pri nákladných, autobusoch a motorkách nie.
+- Číslo dielu (OEM) aj text sa hľadá len v zvolenom druhu vozidla (pri poli je napísané, v akom). Odkaz „Rovnaké číslo u iných predajcov“ nesie druh vozidla dielu. Motorky majú vlastné „Najhľadanejšie diely“.
+- Portál predajcu: vo formulári je prvá otázka „Na aké vozidlo je diel?“ (pamätá si naposledy zvolený druh), v „Moje inzeráty“ filter a štítok druhu vozidla, na nástenke „Na aké vozidlá predávate“.

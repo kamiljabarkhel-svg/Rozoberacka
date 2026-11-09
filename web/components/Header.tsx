@@ -10,6 +10,12 @@ import HeaderSearch, { type Pick } from "./HeaderSearch";
 /** Hlavička: logo, hľadanie (na úvode filtruje hneď), „Pre predajcov“. */
 export default function Header() {
   const path = usePathname();
+  // sekcia „Pneumatiky a disky“ = úvod s kategóriou kol (úvod ohlási zmenu adresy udalosťou rz-url)
+  const [wheels, setWheels] = useState(false);
+  useEffect(() => {
+    const h = () => { try { setWheels(new URLSearchParams(window.location.search).get("kat") === "kol"); } catch {} };
+    h(); window.addEventListener("rz-url", h); return () => window.removeEventListener("rz-url", h);
+  }, [path]);
   const router = useRouter();
   const onHome = STATIC_PREVIEW || path === "/";
   const [q, setQ] = useState("");
@@ -55,8 +61,11 @@ export default function Header() {
       </div>
     </header>
       {!STATIC_PREVIEW && <nav className="snav" aria-label="Sekcie">
-        <Link href="/" aria-current={path === "/" ? "page" : undefined}>Autodiely</Link>
-        <Link href="/?kat=kol#vysledky">Pneumatiky a disky</Link>
+        {/* obyčajné odkazy: úvod si filtre prečíta z adresy pri načítaní */}
+        {/* eslint-disable @next/next/no-html-link-for-pages */}
+        <a href="/" aria-current={path === "/" && !wheels ? "page" : undefined}>Autodiely</a>
+        <a href="/?kat=kol#vysledky" aria-current={path === "/" && wheels ? "page" : undefined}>Pneumatiky a disky</a>
+        {/* eslint-enable @next/next/no-html-link-for-pages */}
         <Link href="/havarovane-vozidla" aria-current={path?.startsWith("/havarovane-vozidla") || path?.startsWith("/vozidlo/") ? "page" : undefined}>Havarované vozidlá</Link>
         <Link href="/dopyt" aria-current={path?.startsWith("/dopyt") ? "page" : undefined}>Dopyt na diel</Link>
       </nav>}

@@ -668,7 +668,7 @@ p.mute a,div.mute a,.pp-mf a,.msgbox a{color:var(--link)}
 .oembox{border:2px solid var(--pet2,#0f5a66);border-radius:6px;padding:10px 12px;margin:10px 0;background:var(--card)}
 .oembox.none{border-color:var(--line);border-style:dashed}
 .oeml{display:block;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--mute)}
-.oemrow{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px;margin:2px 0 6px}
+.oem-line{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px;margin:2px 0 6px}
 .oemnum{font:800 1.35rem/1.2 var(--f-m);letter-spacing:.05em;color:var(--ink);word-break:break-all}
 .oembox p{margin:0;font-size:.85rem;color:var(--mute)}
 .oembox p b{color:var(--ink)}
@@ -875,3 +875,24 @@ h1,h2,h3,.cnt,.price,.brand,.btn,.btn2,.mp,.tile b{letter-spacing:0}
   .gs button{width:42px;margin:3px}
   .snav a{padding:9px 10px 8px;font-size:.95rem}
 }
+/* Sekcie webu: výrazný pás pod hlavičkou (9. 11. 2026) */
+.snav{background:var(--pet);border-bottom:1px solid rgba(255,255,255,.12);gap:0}
+.snav a{color:#fff;opacity:.82;font:600 1.12rem/1 var(--f-d);padding:15px 22px 13px;border-bottom:3px solid transparent;border-right:1px solid rgba(255,255,255,.1)}
+.snav a:first-child{border-left:1px solid rgba(255,255,255,.1)}
+.snav a:hover{opacity:1;background:rgba(255,255,255,.06)}
+.snav a[aria-current="page"]{opacity:1;border-bottom-color:#fff;background:rgba(255,255,255,.08)}
+.oem-scope{font-weight:500;color:var(--mute)}
+@media(max-width:600px){
+  .snav{display:grid;grid-template-columns:1fr 1fr;padding:0}
+  .snav a{padding:12px 10px 10px;font-size:1rem;text-align:center;border-left:0!important;border-right:1px solid rgba(255,255,255,.1);border-top:1px solid rgba(255,255,255,.08)}
+  .snav a:nth-child(2n){border-right:0}
+}
+.pp-vt-big{padding:14px;border:1px solid var(--line);border-left:3px solid var(--pet);border-radius:3px;background:var(--bg)}
+.pp-vt-big .lt{flex-basis:100%;display:grid;gap:2px;font:700 1.15rem/1.2 var(--f-d);margin:0 0 6px}
+.pp-vt-big .lt small{font:400 .86rem/1.4 var(--f-b)}
+.pp-vt-big .lt em{color:var(--bad);font-style:normal}
+.pp-vt-big button{padding:10px 16px;font-weight:600}
+.pp-vtf{margin:0 0 10px}
+.pp-vtf button span{opacity:.7;margin-left:4px}
+.panel .oemrow{align-items:end}
+.oem-scope{font-size:.82rem;margin-top:-3px}

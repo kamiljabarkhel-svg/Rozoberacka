@@ -34,7 +34,12 @@ export default function ListingForm({ uid, cat, prof, edit, donor, onSaved }: { 
   const [fits, setFits] = useState(edit?.fits || []);
   const [specs, setSpecs] = useState<Specs>(edit?.specs || {});
   const startModel = cat.models.find((m) => m.id === (edit?.modelId ?? donor?.modelId));
-  const [vt, setVt] = useState<VehicleType>(startModel?.vehicleType || "osobne");
+  const [vt, setVt] = useState<VehicleType>(() => {
+    if (startModel?.vehicleType) return startModel.vehicleType;
+    if (edit || donor) return "osobne";
+    try { const x = localStorage.getItem("rozoberacka-druh"); if (x && VEHICLE_TYPES.some((t) => t.id === x)) return x as VehicleType; } catch {} // naposledy zvolený druh
+    return "osobne";
+  });
   const [photos, setPhotos] = useState<PhotoItem[]>(edit?.photos.map((p) => ({ path: p.path, url: p.url })) || []);
   const [bad, setBad] = useState<Set<Key>>(new Set());
   const [busy, setBusy] = useState(false), [err, setErr] = useState("");
@@ -137,9 +142,9 @@ export default function ListingForm({ uid, cat, prof, edit, donor, onSaved }: { 
       ))}</ol>
       <div className="pp-form pp-grid pp-card">
         {step === 0 && <>
-          <div className="full pp-vt" role="radiogroup" aria-label="Druh vozidla"><span className="lt">Diel je na</span>
+          <div className="full pp-vt pp-vt-big" role="radiogroup" aria-label="Druh vozidla"><span className="lt">Na aké vozidlo je diel? <em>*</em><small className="mute">Podľa toho ho nájdu správni kupujúci – diel na motorku uvidia len tí, čo hľadajú diely na motorky.</small></span>
             {VEHICLE_TYPES.map((t) => <button key={t.id} type="button" role="radio" aria-checked={vt === t.id} className={vt === t.id ? "on" : ""} onClick={() => {
-              if (t.id === vt) return; setVt(t.id);
+              if (t.id === vt) return; setVt(t.id); try { localStorage.setItem("rozoberacka-druh", t.id); } catch {}
               set("brandId", 0); set("modelId", 0); set("engineId", null); set("year", 0);
               const c = cat.categories.find((x) => x.id === v.categoryId); if (c?.vtypes?.length && !c.vtypes.includes(t.id)) { set("categoryId", ""); set("subcategoryId", null); }
             }}>{t.name}</button>)}

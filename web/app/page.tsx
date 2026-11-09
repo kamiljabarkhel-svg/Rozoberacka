@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 async function ssrData(): Promise<HomeSsr | null> {
   if (IS_DEMO) return null;
   try {
-    const [catalog, res, stats, cities] = await Promise.all([getCatalog(), searchListings(emptyFilters, [], 0, 12), getStats(), getCities()]);
+    const [catalog, res, stats, cities] = await Promise.all([getCatalog(), searchListings({ ...emptyFilters, vtype: "osobne" }, [], 0, 12), getStats(), getCities()]);
     return { catalog: packCatalog(catalog), res, stats, cities };
   } catch { return null; } // pri výpadku databázy sa stránka načíta v prehliadači
 }

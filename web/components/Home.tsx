@@ -42,8 +42,19 @@ const P = { q: "q", brand: "znacka", model: "model", engine: "motor", year: "rok
 // Parametre kolies v adrese (len pri kategórii Pneumatiky a disky)
 const SP: [keyof Specs, string][] = [["pcd", "roztec"], ["rd", "priemer"], ["tw", "sirka"], ["tp", "profil"], ["season", "sezona"], ["rw", "disk"], ["et", "et"], ["mat", "material"]];
 
+/** Úvod má predvolené osobné autá; „Všetky vozidlá“ = druh=vsetky v adrese. */
+const HOME_DEFAULT: Filters = { ...emptyFilters, vtype: "osobne" };
+
+// Najhľadanejšie diely na motorky (iné kategórie ako pri autách)
+const POP_MOTO: typeof POP = [
+  { label: "Predné svetlo", cat: "sv", sub: "Predné svetlá" }, { label: "Zadné svetlo", cat: "sv", sub: "Zadné svetlá" },
+  { label: "Kapotáž", cat: "mrm", sub: "Kapotáže a plasty" }, { label: "Nádrž", cat: "mrm", sub: "Nádrže" }, { label: "Sedlo", cat: "mrm", sub: "Sedlá" },
+  { label: "Predná vidlica", cat: "mvi", sub: "Predné vidlice" }, { label: "Riadidlá", cat: "mri", sub: "Riadidlá" }, { label: "Zrkadlo", cat: "mri", sub: "Zrkadlá" },
+  { label: "Výfuk", cat: "pal", sub: "Výfuky" }, { label: "Reťazová sada", cat: "mpo", sub: "Reťazové sady" }, { label: "Motor", cat: "motor" }, { label: "Disky", cat: "kol", sub: "Disky hliníkové" },
+];
+
 function readUrl(): Filters {
-  const f = { ...emptyFilters };
+  const f = { ...HOME_DEFAULT };
   let s: URLSearchParams;
   try { s = new URLSearchParams(window.location.search); } catch { return f; }
   const num = (k: string) => { const v = s.get(k); const n = v ? Number(v) : NaN; return Number.isFinite(n) ? n : null; };
@@ -55,7 +66,7 @@ function readUrl(): Filters {
   f.fav = s.get(P.fav) === "1";
   const sd = s.get(P.side); f.side = sd === "Ľavá" || sd === "Pravá" ? sd : "";
   f.tested = s.get(P.tested) === "1"; f.ret = s.get(P.ret) === "1";
-  const vt = s.get(P.vtype); f.vtype = VEHICLE_TYPES.some((t) => t.id === vt) ? (vt as VehicleType) : "";
+  const vt = s.get(P.vtype); f.vtype = vt === "vsetky" ? "" : VEHICLE_TYPES.some((t) => t.id === vt) ? (vt as VehicleType) : "osobne";
   if (f.cat === WHEEL_CAT) { const sp: Specs = {}; for (const [k, n] of SP) { const v = s.get(n); if (v) sp[k] = v; } f.specs = cleanSpecs(sp); }
   return f;
 }
@@ -67,11 +78,12 @@ function writeUrl(f: Filters) {
   put(P.q, f.q.trim()); put(P.brand, f.brand); put(P.model, f.model); put(P.engine, f.engine); put(P.year, f.year);
   put(P.cat, f.cat); put(P.sub, f.sub); put(P.max, f.max); put(P.cond, f.cond); put(P.city, f.city);
   if (f.sort !== "new") put(P.sort, f.sort);
-  put(P.fav, f.fav); put(P.side, f.side); put(P.tested, f.tested); put(P.ret, f.ret); put(P.vtype, f.vtype);
+  put(P.fav, f.fav); put(P.side, f.side); put(P.tested, f.tested); put(P.ret, f.ret); if (f.vtype !== "osobne") put(P.vtype, f.vtype || "vsetky");
   if (f.cat === WHEEL_CAT) for (const [k, n] of SP) put(n, f.specs?.[k] || "");
   const qs = s.toString();
   const url = window.location.pathname + (qs ? "?" + qs : "") + window.location.hash;
   window.history.replaceState(window.history.state, "", url);
+  window.dispatchEvent(new Event("rz-url"));
 }
 
 export type HomeSsr = { catalog: PackedCatalog; res: SearchPage; stats: { parts: number; sellers: number }; cities: string[] };
@@ -83,7 +95,7 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
   const [busy, setBusy] = useState(false);
   const [cities, setCities] = useState<string[]>(ssr?.cities || []);
   const [loadErr, setLoadErr] = useState("");
-  const [f, setF] = useState<Filters>(emptyFilters);
+  const [f, setF] = useState<Filters>(HOME_DEFAULT);
   const [adv, setAdv] = useState(false);
   const [vin, setVin] = useState("");
   const [vinCat, setVinCat] = useState("");
@@ -211,7 +223,7 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
     return r;
   }, [model]);
 
-  const reset = () => { setF({ ...emptyFilters }); window.dispatchEvent(new CustomEvent("rz-q-set", { detail: "" })); };
+  const reset = () => { setF((x) => ({ ...emptyFilters, vtype: x.vtype })); window.dispatchEvent(new CustomEvent("rz-q-set", { detail: "" })); };
 
   const onVin = () => {
     const r = decodeVin(vin);
@@ -253,8 +265,8 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
             onSave={() => { if (f.brand != null) { const c = { brand: f.brand, model: f.model, engine: f.engine, year: f.year }; my.save(catalog ? { ...c, label: myCarLabel(c, catalog) } : c); } }}
             onForget={() => my.save(null)} />
           <div className="vtabs" role="tablist" aria-label="Druh vozidla">
-            <button role="tab" aria-selected={!f.vtype} className={!f.vtype ? "on" : ""} onClick={() => pickVt("")}>Všetky vozidlá</button>
             {VEHICLE_TYPES.map((t) => <button key={t.id} role="tab" aria-selected={f.vtype === t.id} className={f.vtype === t.id ? "on" : ""} onClick={() => pickVt(t.id)}>{t.short}</button>)}
+            <button role="tab" aria-selected={!f.vtype} className={!f.vtype ? "on" : ""} onClick={() => pickVt("")}>Všetky vozidlá</button>
           </div>
           <div className="pg">
             <label>Značka
@@ -335,13 +347,13 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
             <button className="btn" onClick={toRes}>Hľadať</button>
           </div>
           <form id="hladat" className="oemrow" onSubmit={(e) => { e.preventDefault(); if (!oemQ.trim()) return; set({ q: oemQ.trim() }); window.dispatchEvent(new CustomEvent("rz-q-set", { detail: oemQ.trim() })); setTimeout(toRes, 30); }}>
-            <label>Číslo dielu (OEM)<span className="oemin"><input value={oemQ} onChange={(e) => setOemQ(e.target.value)} placeholder="napr. 03G903023 alebo 5E0 807 221" autoComplete="off" />
+            <label>Číslo dielu (OEM) {f.vtype ? <span className="oem-scope">Hľadáme len diely na {VEHICLE_TYPES.find((t) => t.id === f.vtype)?.name.toLowerCase()}</span> : <span className="oem-scope">Hľadáme diely na všetky vozidlá</span>}<span className="oemin"><input value={oemQ} onChange={(e) => setOemQ(e.target.value)} placeholder="napr. 03G903023 alebo 5E0 807 221" autoComplete="off" />
               <ScanText kind="oem" onResult={(v) => { setOemQ(v); set({ q: v }); window.dispatchEvent(new CustomEvent("rz-q-set", { detail: v })); setTimeout(toRes, 30); }} /></span></label>
             <button className="btn2" type="submit">Hľadať podľa čísla</button>
           </form>
         </section>
 
-        <section id="vin" className="plate" aria-label="Hľadanie podľa VIN">
+        {(!f.vtype || f.vtype === "osobne" || f.vtype === "dodavky") && <section id="vin" className="plate" aria-label="Hľadanie podľa VIN">
           <h2>Hľadať podľa VIN</h2>
           <div className="pg2">
             <label>VIN (17 znakov)
@@ -357,10 +369,10 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
           </div>
           <p>VIN nájdete v osvedčení o evidencii (časť I, pole E) a na štítku pri čelnom skle (<Link href="/navody/vin">kde presne</Link>). Z VIN prečítame značku a približný ročník, model a motorizáciu potom vyberte v paneli vyššie. Podľa ŠPZ nehľadáme.</p>
           <p className="vmsg" role="status">{vinMsg}</p>
-        </section>
+        </section>}
 
         <div className="pop"><h2 className="sh">Najhľadanejšie diely</h2><div className="chips">
-          {POP.map((p) => {
+          {(f.vtype === "motorky" ? POP_MOTO : POP).filter((p) => cats.some((c) => c.id === p.cat)).map((p) => {
             const sub = p.sub && catalog ? catalog.subcategories.find((s) => s.categoryId === p.cat && s.name === p.sub)?.id ?? null : null;
             const on = p.q ? f.q === p.q && !f.cat : !f.q && f.cat === p.cat && f.sub === sub;
             return <button key={p.label} className="chip" aria-pressed={on} onClick={() => {

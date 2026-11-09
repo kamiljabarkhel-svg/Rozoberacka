@@ -23,7 +23,8 @@ export function filterKey(f: Filters): string {
   return JSON.stringify({ ...rest, q: rest.q.trim().toLowerCase() });
 }
 export function hasCriteria(f: Filters): boolean {
-  return filterKey(f) !== filterKey(emptyFilters);
+  // druh vozidla sám o sebe nie je kritérium (úvod má predvolené osobné autá)
+  return filterKey({ ...f, vtype: "" }) !== filterKey(emptyFilters);
 }
 /** Čitateľný názov hľadania, napr. „Škoda Octavia III · Svetlá · do 100 €“. */
 export function describe(f: Filters, cat: Catalog | null): string {

@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 
 export default async function Page() {
   const cat = await getCatalog();
-  const initial = await searchCars(emptyCarFilters, 0, 24).catch(() => ({ items: [], total: 0, conds: {} }));
+  const initial = await searchCars({ ...emptyCarFilters, vtype: "osobne" }, 0, 24).catch(() => ({ items: [], total: 0, conds: {} }));
   const packed = packCatalog({ ...cat, engines: [], subcategories: [] });
   return (
     <main id="main" className="main landing">

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 
-export default function OemBox({ oem }: { oem: string | null }) {
+export default function OemBox({ oem, vtype = "osobne" }: { oem: string | null; vtype?: string }) {
   const [copied, setCopied] = useState(false);
   if (!oem) return <div className="oembox none"><span className="oeml">Číslo dielu (OEM)</span><b>Predajca ho neuviedol</b>
     <p>Pred kúpou si číslo dielu vyžiadajte od predajcu a porovnajte ho s vaším starým dielom.</p></div>;
@@ -13,7 +13,7 @@ export default function OemBox({ oem }: { oem: string | null }) {
       <span className="oeml">Číslo dielu (OEM)</span>
       <div className="oem-line"><b className="oemnum">{oem}</b>
         <button type="button" className="lnk" onClick={copy}>{copied ? "Skopírované ✓" : "Kopírovať"}</button>
-        <Link className="lnk" href={"/?q=" + encodeURIComponent(oem) + "#vysledky"}>Rovnaké číslo u iných predajcov</Link></div>
+        <Link className="lnk" href={"/?q=" + encodeURIComponent(oem) + (vtype !== "osobne" ? "&druh=" + vtype : "") + "#vysledky"}>Rovnaké číslo u iných predajcov</Link></div>
       <p><b>Porovnajte ho s číslom na vašom starom diele.</b> Aj pri rovnakom modeli auta sa diely líšia podľa motora, výbavy či roku výroby – rozhoduje číslo dielu, nie len auto.</p>
     </div>
   );

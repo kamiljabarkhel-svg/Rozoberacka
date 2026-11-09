@@ -146,7 +146,7 @@ export default function ListingDetail({ id, onClose, initial, catalog }: { id: n
           <div className="dpr"><span className="price">{price(l.price)}</span><span className="cond"><i className={"dot " + condDot(l.condition)} />{condLabel(l.condition)}</span></div>
           {isTrader(l.seller.type) && <p className="mute pnote">Konečná cena vrátane DPH. Cenu dopravy si dohodnite s predajcom pred kúpou.</p>}
           <p className="car">{[bName, mName, eName].filter(Boolean).join(" ")}{l.year ? ", " + l.year : ""}</p>
-          <OemBox oem={l.oem} />
+          <OemBox oem={l.oem} vtype={cat.models.find((x) => x.id === l.modelId)?.vehicleType || "osobne"} />
           {specsLine(l.specs) && <p className="specs-line">{specsLine(l.specs)}</p>}
           <div className="dacts" ref={actsRef}>
             <PhoneButton id={l.id} />

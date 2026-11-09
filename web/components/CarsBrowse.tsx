@@ -13,11 +13,11 @@ const PAGE = 24;
 const P = { vtype: "druh", brand: "znacka", model: "model", yfrom: "rok-od", yto: "rok-do", max: "cena", cond: "stav", fuel: "palivo", docs: "doklady", q: "q", sort: "zoradit" } as const;
 
 function readUrl(): CarFilters {
-  const f = { ...emptyCarFilters };
+  const f: CarFilters = { ...emptyCarFilters, vtype: "osobne" };
   try {
     const s = new URLSearchParams(window.location.search);
     const n = (k: string) => { const v = Number(s.get(k)); return s.get(k) && Number.isFinite(v) ? v : null; };
-    const vt = s.get(P.vtype); f.vtype = VEHICLE_TYPES.some((t) => t.id === vt) ? (vt as VehicleType) : "";
+    const vt = s.get(P.vtype); f.vtype = vt === "vsetky" ? "" : VEHICLE_TYPES.some((t) => t.id === vt) ? (vt as VehicleType) : "osobne";
     f.brand = n(P.brand); f.model = n(P.model); f.yfrom = n(P.yfrom); f.yto = n(P.yto); f.max = n(P.max);
     f.cond = s.get(P.cond) || ""; f.fuel = s.get(P.fuel) || ""; f.docs = s.get(P.docs) === "1"; f.q = s.get(P.q) || "";
     const so = s.get(P.sort); f.sort = (["asc", "desc", "year", "km"] as const).find((x) => x === so) || "new";
@@ -27,7 +27,7 @@ function readUrl(): CarFilters {
 function writeUrl(f: CarFilters) {
   const s = new URLSearchParams();
   const put = (k: string, v: unknown) => { if (v !== null && v !== "" && v !== false && v !== undefined) s.set(k, v === true ? "1" : String(v)); };
-  put(P.vtype, f.vtype); put(P.brand, f.brand); put(P.model, f.model); put(P.yfrom, f.yfrom); put(P.yto, f.yto); put(P.max, f.max);
+  if (f.vtype !== "osobne") put(P.vtype, f.vtype || "vsetky"); put(P.brand, f.brand); put(P.model, f.model); put(P.yfrom, f.yfrom); put(P.yto, f.yto); put(P.max, f.max);
   put(P.cond, f.cond); put(P.fuel, f.fuel); put(P.docs, f.docs); put(P.q, f.q.trim()); if (f.sort !== "new") put(P.sort, f.sort);
   const qs = s.toString();
   window.history.replaceState(window.history.state, "", window.location.pathname + (qs ? "?" + qs : ""));
@@ -35,7 +35,7 @@ function writeUrl(f: CarFilters) {
 
 export default function CarsBrowse({ packed, initial }: { packed: PackedCatalog; initial: CarPage }) {
   const cat: Catalog = useMemo(() => unpackCatalog(packed), [packed]);
-  const [f, setF] = useState<CarFilters>(emptyCarFilters);
+  const [f, setF] = useState<CarFilters>({ ...emptyCarFilters, vtype: "osobne" });
   const [res, setRes] = useState<CarPage>(initial);
   const [busy, setBusy] = useState(false), [err, setErr] = useState("");
   const first = useRef(true), seq = useRef(0);
@@ -71,8 +71,8 @@ export default function CarsBrowse({ packed, initial }: { packed: PackedCatalog;
     <>
       <section className="panel" aria-label="Hľadanie vozidiel">
         <div className="vtabs" role="tablist" aria-label="Druh vozidla">
-          <button role="tab" aria-selected={!f.vtype} className={!f.vtype ? "on" : ""} onClick={() => set({ vtype: "", brand: null, model: null })}>Všetky vozidlá</button>
           {VEHICLE_TYPES.map((t) => <button key={t.id} role="tab" aria-selected={f.vtype === t.id} className={f.vtype === t.id ? "on" : ""} onClick={() => set({ vtype: t.id, brand: null, model: null })}>{t.short}</button>)}
+          <button role="tab" aria-selected={!f.vtype} className={!f.vtype ? "on" : ""} onClick={() => set({ vtype: "", brand: null, model: null })}>Všetky vozidlá</button>
         </div>
         <div className="cars-f">
           <label>Značka<select value={f.brand ?? ""} onChange={(e) => set({ brand: num(e.target.value), model: null })}>{opt("", "Všetky značky")}{brands.map((b) => opt(b.id, b.name))}</select></label>
@@ -85,7 +85,7 @@ export default function CarsBrowse({ packed, initial }: { packed: PackedCatalog;
           <label>Zoradiť<select value={f.sort} onChange={(e) => set({ sort: e.target.value as CarFilters["sort"] })}>{opt("new", "Najnovšie")}{opt("asc", "Najlacnejšie")}{opt("desc", "Najdrahšie")}{opt("year", "Najmladšie")}{opt("km", "Najmenej km")}</select></label>
           <label style={{ gridColumn: "span 2" }}>Hľadať v popise<input value={f.q} placeholder="napr. motor v poriadku, airbagy" onChange={(e) => set({ q: e.target.value })} /></label>
           <label className="chk"><input type="checkbox" checked={f.docs} onChange={(e) => set({ docs: e.target.checked })} /> Len s dokladmi</label>
-          <button className="lnk" onClick={() => setF({ ...emptyCarFilters })}>Zrušiť filtre</button>
+          <button className="lnk" onClick={() => setF((x) => ({ ...emptyCarFilters, vtype: x.vtype }))}>Zrušiť filtre</button>
         </div>
       </section>
       <section id="vysledky" aria-live="polite">

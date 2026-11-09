@@ -4,7 +4,8 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Session } from "@supabase/supabase-js";
 import { getCatalog, IS_DEMO } from "@/lib/data";
-import type { Catalog } from "@/lib/types";
+import type { Catalog, VehicleType } from "@/lib/types";
+import { VEHICLE_TYPES } from "@/lib/types";
 import { listingHref } from "@/lib/paths";
 import { carName, sellerPath } from "@/lib/seo";
 import Stars from "../Stars";
@@ -151,6 +152,8 @@ function Dashboard({ cat, prof, items, msgs, go }: { cat: Catalog | null; prof: 
   ];
   const profMissing = !prof?.city || !prof?.phone;
   const traderMissing = prof?.type === "Firma" && (!prof.ico || !prof.address);
+  const byVt = new Map<string, number>();
+  a.forEach((i) => { const t = cat?.models.find((x) => x.id === i.modelId)?.vehicleType || "osobne"; byVt.set(t, (byVt.get(t) || 0) + 1); });
   const byCat = new Map<string, number>();
   a.forEach((i) => byCat.set(i.categoryId, (byCat.get(i.categoryId) || 0) + 1));
   const d0 = new Date().toLocaleDateString("sk-SK", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
@@ -182,6 +185,9 @@ function Dashboard({ cat, prof, items, msgs, go }: { cat: Catalog | null; prof: 
           </ul>
         </div>
       </div>
+      <div className="pp-box"><h2>Na aké vozidlá predávate</h2>
+        {byVt.size ? <div className="pp-cats">{VEHICLE_TYPES.filter((t) => byVt.get(t.id)).map((t) => <span key={t.id} className="tg">{t.name}: <b>{byVt.get(t.id)}</b></span>)}</div> : <p className="mute">Zatiaľ žiadne aktívne diely.</p>}
+        <p className="mute pp-hint">Druh vozidla určuje model auta v inzeráte. Kupujúci, ktorý hľadá diely na motorky, uvidí len diely na motorky.</p></div>
       <div className="pp-box"><h2>Aktívne inzeráty podľa kategórie</h2>
         {byCat.size ? <div className="pp-cats">{[...byCat].sort((x, y) => y[1] - x[1]).map(([c, n]) => <span key={c} className="tg">{cat?.categories.find((x) => x.id === c)?.name || c}: <b>{n}</b></span>)}</div> : <p className="mute">Zatiaľ nemáte aktívne inzeráty. <button className="lnk" onClick={() => go("form")}>Pridajte prvý diel</button></p>}
       </div>
@@ -201,6 +207,9 @@ function MyList({ initial, items, cat, onEdit, onStatus, onTop, onDup, onDelete,
   onTop: (l: MyListing) => void; onDup: (l: MyListing) => void; onDelete: (l: MyListing[]) => void;
 }) {
   const [q, setQ] = useState(""), [f, setF] = useState<F>(initial), [sort, setSort] = useState("new");
+  const [vt, setVt] = useState<VehicleType | "">("");
+  const vtOf = (l: MyListing): VehicleType => cat?.models.find((x) => x.id === l.modelId)?.vehicleType || "osobne";
+  const vtCounts = VEHICLE_TYPES.map((t) => [t, items.filter((i) => vtOf(i) === t.id).length] as const).filter(([, n]) => n > 0);
   const [sel, setSel] = useState<Set<number>>(new Set());
   const [confirm, setConfirm] = useState<number[] | null>(null);
   const catName = (id: string) => cat?.categories.find((c) => c.id === id)?.name || id;
@@ -212,6 +221,7 @@ function MyList({ initial, items, cat, onEdit, onStatus, onTop, onDup, onDelete,
     const k = q.trim().toLowerCase();
     const r = items.filter((i) => {
       if (k && !(i.name + " " + i.oem + " " + i.description).toLowerCase().includes(k)) return false;
+      if (vt && vtOf(i) !== vt) return false;
       if (f === "nophoto") return !i.photos.length;
       if (f === "nooem") return i.oem.replace(/[^A-Za-z0-9]/g, "").length < 4;
       if (f === "nodesc") return i.description.length < 20;
@@ -223,7 +233,7 @@ function MyList({ initial, items, cat, onEdit, onStatus, onTop, onDup, onDelete,
       calls: (a, b) => b.calls - a.calls, pup: (a, b) => a.price - b.price, pdown: (a, b) => b.price - a.price,
     };
     return r.sort(by[sort]);
-  }, [items, q, f, sort]);
+  }, [items, q, f, sort, vt]); // eslint-disable-line react-hooks/exhaustive-deps
   const ids = [...sel].filter((i) => shown.some((s) => s.id === i));
   const toggle = (id: number) => setSel((s) => { const n = new Set(s); if (n.has(id)) n.delete(id); else n.add(id); return n; });
   const count = (x: F) => x === "all" ? items.length : x === "nophoto" ? items.filter((i) => !i.photos.length).length : x === "nooem" ? 0 : x === "nodesc" ? items.filter((i) => i.description.length < 20).length : x === "stale" ? items.filter(isStale).length : items.filter((i) => i.status === x).length;
@@ -239,6 +249,9 @@ function MyList({ initial, items, cat, onEdit, onStatus, onTop, onDup, onDelete,
           <option value="new">Najnovšie</option><option value="views">Najviac zobrazení</option><option value="calls">Najviac telefónov</option><option value="pup">Cena od najnižšej</option><option value="pdown">Cena od najvyššej</option>
         </select>
       </div>
+      {vtCounts.length > 1 && <div className="pp-vt pp-vtf" role="radiogroup" aria-label="Druh vozidla"><span className="lt">Diely na</span>
+        {vtCounts.map(([t, n]) => <button key={t.id} type="button" role="radio" aria-checked={vt === t.id} className={vt === t.id ? "on" : ""} onClick={() => setVt(t.id)}>{t.short} <span>{n}</span></button>)}
+        <button type="button" role="radio" aria-checked={!vt} className={!vt ? "on" : ""} onClick={() => setVt("")}>Všetky <span>{items.length}</span></button></div>}
       <div className="pp-chips">{FL.map(([x, l]) => <button key={x} type="button" className="chip" aria-pressed={f === x} onClick={() => setF(x)}>{l} <span className="mute">{count(x)}</span></button>)}</div>
       {ids.length > 0 && (
         <div className="pp-bulk"><b>Vybrané: {ids.length}</b>
@@ -261,7 +274,7 @@ function MyList({ initial, items, cat, onEdit, onStatus, onTop, onDup, onDelete,
               <div className="pp-th">{l.photos[0] ? <img src={l.photos[0].url} alt="" loading="lazy" /> : <span>bez fotky</span>}</div>
               <div className="pp-ri">
                 {l.status === "active" ? <a href={listingHref(l.id, l.name, carName(l, cat))} target="_blank" rel="noreferrer" title="Otvoriť, ako ho vidia kupujúci"><b>{l.name}</b></a> : <b>{l.name}</b>}
-                <span className="mute">{vehicle(l)} · {catName(l.categoryId)} · OEM {l.oem || "—"}</span>
+                <span className="mute"><span className="tg">{VEHICLE_TYPES.find((t) => t.id === vtOf(l))?.short}</span> {vehicle(l)} · {catName(l.categoryId)} · číslo dielu {l.oem || "—"}</span>
                 <span className="pp-meta"><span className={"pp-st " + l.status}>{ST[l.status]}</span>{l.top && <span className="toptag">TOP</span>}<b>{fmtPrice(l.price)}</b><span className="mute">{plural(l.views, "zobrazenie", "zobrazenia", "zobrazení")} · {plural(l.calls, "telefón", "telefóny", "telefónov")}</span>{isStale(l) && <span className="pp-stale">neaktualizované {Math.floor((Date.now() - Date.parse(l.updatedAt)) / 86400000)} dní · <button className="lnk" onClick={() => onFresh([l.id])}>Stále aktuálne</button></span>}</span>
               </div>
               <div className="pp-ra">
