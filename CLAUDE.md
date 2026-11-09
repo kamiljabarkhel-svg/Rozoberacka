@@ -225,3 +225,9 @@ Overené na Slov-Lexe: Občiansky zákonník § 597, 599, 612, 618, 619 (znenie 
 - „Pneumatiky a disky“ (`/?kat=kol#pneu`): úvod zmení nadpis, hore v paneli je výber (Disky hliníkové/oceľové, Kolesá s pneumatikami, Pneumatiky letné/zimné/celoročné) a filtre Pneumatika (šírka, profil, priemer, sezóna) a Disk (rozteč, šírka disku, ET, typ disku). VIN a najhľadanejšie diely sa vtedy skryjú.
 - `/havarovane-vozidla` má rovnaký úvodný pás ako úvod a prázdny stav s odkazom pre predajcov.
 - Dopyt vidia všetci registrovaní predajcovia v záložke „Dopyty“ (predvolene len dopyty na značky, ktoré predávajú). E-mailom sa zatiaľ neposiela – až po Brevo. Vysvetlené na `/dopyt`.
+
+## Univerzálne diely, pneumatiky, havarované vozidlá (9. 11. 2026, 22:05)
+- `supabase/22` (ostrá DB): `categories.universal` (kol, mjz, ine, vyb, obv, mvy) – inzerát môže byť bez auta a bez čísla dielu; ostatné kategórie vyžadujú značku, model, ročník a číslo dielu (trigger `listing_required`). `listings.vtype` = druh vozidla aj bez modelu. Web: `UNIVERSAL_CATS`/`isUniversal` v `lib/types.ts`.
+- Pneumatiky a disky majú vlastný panel podľa rozmeru (`wtype` pneu/disk/kolesa, adresa `typ=`), bez OEM, VIN, chipov kategórií a „Moje auto“.
+- Havarované vozidlá: dlaždice stavov + bočné filtre (`CarsBrowse.tsx`, `CarCard.tsx`) – nemajú vyzerať ako autodiely.
+- VIN len pri osobných autách a dodávkach – platí aj vo formulári dopytu.
