@@ -231,3 +231,7 @@ Overené na Slov-Lexe: Občiansky zákonník § 597, 599, 612, 618, 619 (znenie 
 - Pneumatiky a disky majú vlastný panel podľa rozmeru (`wtype` pneu/disk/kolesa, adresa `typ=`), bez OEM, VIN, chipov kategórií a „Moje auto“.
 - Havarované vozidlá: dlaždice stavov + bočné filtre (`CarsBrowse.tsx`, `CarCard.tsx`) – nemajú vyzerať ako autodiely.
 - VIN len pri osobných autách a dodávkach – platí aj vo formulári dopytu.
+
+## Povinné polia pri pneumatikách a vozidlách (9. 11. 2026, 22:25)
+- `supabase/23`: pri kategórii `kol` je povinná podkategória („Čo predávate?“) a rozmer – pneumatiky šírka + profil + priemer, disky rozteč + priemer, kolesá oboje (trigger `listing_required`). Formulár navyše vyžaduje počet kusov, pri diskoch šírku a ET, pri použitých pneumatikách dezén (`wheelKind`, `wheelMissing`, `wheelDefaults` v `lib/types.ts`).
+- Havarované vozidlá: nové stĺpce `body`, `power_kw`, `keys`, `origin`; palivo povinné (`car_listings_fuel_required`). Formulár vyžaduje aj karosériu, km (alebo „nepoznám“), naštartuje a kľúče. `search_cars` skladá riadok stĺpec po stĺpci – pri novom stĺpci v `car_listings` ho treba prepísať.
