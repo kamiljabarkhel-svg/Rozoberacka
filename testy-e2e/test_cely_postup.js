@@ -199,6 +199,7 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
   if (!process.env.RZ_CARS) await step("havarovane vozidla su skryte", async () => {
     const r = await b2.goto(B + "/havarovane-vozidla"); if (r.status() !== 404) throw new Error("stav " + r.status());
     await b2.goto(B + "/"); if (await b2.locator(".snav >> text=Havarované vozidlá").count()) throw new Error("odkaz v ponuke");
+    if (await b2.locator("a[href='/havarovane-vozidla']").count()) throw new Error("odkaz na stránke (napr. pätička)");
     if (await pg.locator(".pp-nav >> text=Havarované vozidlá").count()) throw new Error("záložka v portáli");
     if (await pg.locator("text=Predať celé vozidlo").count()) throw new Error("tlačidlo Predať celé vozidlo");
     const sm = await (await b2.request.get(B + "/sitemap.xml")).text(); if (/havarovane-vozidla/.test(sm)) throw new Error("v mape webu");

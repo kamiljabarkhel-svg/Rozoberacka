@@ -48,7 +48,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           <span>Katalóg vozidiel je predbežný (zostavený bez licencovaných dát) a môže obsahovať chyby.</span>
           <Pwa />
           <nav className="foot-l" aria-label="Pomoc">
-            <Link href="/navody/oem-cislo">Kde nájdem OEM číslo</Link><Link href="/navody/vin">Kde nájdem VIN</Link><Link href="/navody/bezpecny-nakup">Bezpečný nákup</Link><Link href="/dopyt">Dopyt na diel</Link><Link href="/havarovane-vozidla">Havarované vozidlá</Link><Link href="/pre-predajcov">Pre predajcov</Link><Link href="/ako-zoradujeme">Ako zoraďujeme ponuky</Link>
+            <Link href="/navody/oem-cislo">Kde nájdem OEM číslo</Link><Link href="/navody/vin">Kde nájdem VIN</Link><Link href="/navody/bezpecny-nakup">Bezpečný nákup</Link><Link href="/dopyt">Dopyt na diel</Link>{CARS_ENABLED && <Link href="/havarovane-vozidla">Havarované vozidlá</Link>}<Link href="/pre-predajcov">Pre predajcov</Link><Link href="/ako-zoradujeme">Ako zoraďujeme ponuky</Link>
           </nav>
           <nav className="foot-l" aria-label="Právne informácie">
             <a href="/obchodne-podmienky">Obchodné podmienky</a><a href="/ochrana-osobnych-udajov">Ochrana osobných údajov</a><a href="/cookies">Cookies</a><CookieSettingsLink />
