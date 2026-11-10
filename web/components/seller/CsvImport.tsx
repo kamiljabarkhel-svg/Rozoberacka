@@ -1,16 +1,17 @@
 "use client";
 // Import inzerátov z CSV (Excel → Uložiť ako CSV). Najprv náhľad s chybami, potom import.
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { Catalog, Condition } from "@/lib/types";
 import { CONDITIONS, condLabel, cleanSpecs, isUniversal, specsErrors, SPEC_LABEL, VEHICLE_TYPES, WHEEL_CAT, wheelDefaults, wheelKind, wheelMissing, type Specs } from "@/lib/types";
 import { SPEC_COLS } from "@/lib/csvExport";
 import { importMany, type ListingInput, type Profile } from "@/lib/seller";
+import { baseName, byExactName, groupByKey, isPhoto, keyOf, MAX_PHOTOS, sortPhotos, splitNames } from "@/lib/bulkPhotos";
 
 const MAX = 500;
 const REQ = ["nazov", "cena", "kategoria"];
 /** povinné pri bežných dieloch, pri univerzálnych (pneumatiky, výbava jazdca, iné…) nie */
 const REQ_PART = ["znacka", "model", "oem"];
-const OPT = ["druh", "motorizacia", "rocnik", "podkategoria", "stav", "zaruka", "popis", "mesto", "telefon", "pasuje", "strana", "odskusany", "vratenie", "km", "vyrobca", ...SPEC_COLS.map(([c]) => c)];
+const OPT = ["druh", "motorizacia", "rocnik", "podkategoria", "stav", "zaruka", "popis", "mesto", "telefon", "pasuje", "strana", "odskusany", "vratenie", "km", "vyrobca", "fotky", ...SPEC_COLS.map(([c]) => c)];
 const norm = (s: string) => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/\s+/g, " ").trim();
 
 function parse(text: string): string[][] {
@@ -29,12 +30,44 @@ function parse(text: string): string[][] {
   return rows.filter((r) => r.some((x) => x.trim()));
 }
 
-type Pre = { row: number; name: string; ok: boolean; errors: string[]; warns: string[]; data?: ListingInput };
+type Pre = { row: number; name: string; ok: boolean; errors: string[]; warns: string[]; data?: ListingInput; photoNames: string[]; oemKey: string };
+type Match = { files: File[]; missing: string[]; how: "" | "stĺpec fotky" | "číslo dielu"; cut: number; dupOem: boolean };
 
 export default function CsvImport({ uid, cat, prof, onDone }: { uid: string; cat: Catalog; prof: Profile | null; onDone: (n: number) => void }) {
   const [pre, setPre] = useState<Pre[] | null>(null);
   const [head, setHead] = useState("");
   const [busy, setBusy] = useState(false), [res, setRes] = useState<string[]>([]);
+  const [files, setFiles] = useState<File[]>([]), [done, setDone] = useState(0);
+  const addFiles = (list: FileList | null) => {
+    if (!list) return;
+    const add = [...list].filter(isPhoto);
+    setFiles((o) => { const seen = new Set(o.map((f) => baseName(f).toLowerCase() + f.size)); return [...o, ...add.filter((f) => !seen.has(baseName(f).toLowerCase() + f.size))]; });
+  };
+  // priradenie fotiek k riadkom: stĺpec „fotky“ (presné názvy) alebo číslo dielu v názve súboru
+  const matches = useMemo(() => {
+    const m = new Map<number, Match>();
+    if (!pre) return m;
+    const exact = byExactName(files), { byKey } = groupByKey(files);
+    const oemCount = new Map<string, number>(); for (const p of pre) if (p.oemKey.length >= 4) oemCount.set(p.oemKey, (oemCount.get(p.oemKey) || 0) + 1);
+    for (const p of pre) {
+      let list: File[] = [], missing: string[] = [], how: Match["how"] = "", dupOem = false;
+      if (p.photoNames.length) {
+        how = "stĺpec fotky";
+        for (const n of p.photoNames) { const f = exact.get(n.toLowerCase()); if (f) { if (!list.includes(f)) list.push(f); } else missing.push(n); }
+      } else if (p.oemKey.length >= 4 && byKey.has(p.oemKey)) {
+        if ((oemCount.get(p.oemKey) || 0) > 1) dupOem = true;
+        else { how = "číslo dielu"; list = sortPhotos(byKey.get(p.oemKey)!); }
+      }
+      if (!files.length) missing = [];
+      const cut = Math.max(0, list.length - MAX_PHOTOS);
+      m.set(p.row, { files: list.slice(0, MAX_PHOTOS), missing, how, cut, dupOem });
+    }
+    return m;
+  }, [pre, files]);
+  const urls = useMemo(() => new Map(files.map((f) => [f, URL.createObjectURL(f)])), [files]);
+  useEffect(() => () => { for (const u of urls.values()) URL.revokeObjectURL(u); }, [urls]);
+  const used = new Set([...matches.values()].flatMap((x) => x.files));
+  const unused = files.filter((f) => !used.has(f));
 
   function load(text: string) {
     setRes([]);
@@ -103,10 +136,9 @@ export default function CsvImport({ uid, cat, prof, onDone }: { uid: string; cat
           const rest = miss.filter((x) => !must.includes(x)); if (rest.length) warns.push(`odporúčame doplniť: ${rest.map((x) => SPEC_LABEL[x].toLowerCase()).join(", ")}`);
         }
       }
-      warns.push("bez fotky – doplňte cez Upraviť");
       const ok = !errors.length;
       return {
-        row: k + 2, name: name || "(bez názvu)", ok, errors, warns,
+        row: k + 2, name: name || "(bez názvu)", ok, errors, warns, photoNames: splitNames(g("fotky")), oemKey: keyOf(oem),
         data: ok ? { name, brandId: model ? brand!.id : 0, modelId: model?.id ?? 0, engineId: engine?.id ?? null, year: model ? year : 0,
           vtype: (VEHICLE_TYPES.find((t) => norm(t.name) === norm(g("druh")) || t.id === norm(g("druh")))?.id) ?? null, categoryId: c!.id, subcategoryId: sub?.id ?? null,
           oem, partMaker: g("vyrobca"), price, city, condition, description, warranty, shipping: "Len osobný odber", phone,
@@ -116,14 +148,15 @@ export default function CsvImport({ uid, cat, prof, onDone }: { uid: string; cat
   }
 
   const good = pre?.filter((p) => p.ok) || [];
+  const withPhoto = good.filter((p) => matches.get(p.row)?.files.length).length;
   async function run() {
-    setBusy(true);
-    const r = await importMany(uid, good.map((p) => p.data!));
+    setBusy(true); setDone(0);
+    const r = await importMany(uid, good.map((p) => ({ row: p.row, data: p.data!, files: matches.get(p.row)?.files || [] })), setDone);
     setBusy(false); setRes(r.errors);
     if (r.ok) onDone(r.ok);
   }
-  const sample = "nazov;znacka;model;motorizacia;rocnik;oem;cena;kategoria;podkategoria;stav;zaruka;popis;mesto;telefon;pasuje\n" +
-    "Predné ľavé svetlo;Škoda;Octavia III;;2015;5E1941015;120;Svetlá;Predné svetlá;Dobrý;12 mesiacov;Funkčné, bez prasklín, úchyty celé.;Žilina;0900123456;Škoda Octavia III Combi\n";
+  const sample = "nazov;znacka;model;motorizacia;rocnik;oem;cena;kategoria;podkategoria;stav;zaruka;popis;mesto;telefon;pasuje;fotky\n" +
+    "Predné ľavé svetlo;Škoda;Octavia III;;2015;5E1941015;120;Svetlá;Predné svetlá;Dobrý;12 mesiacov;Funkčné, bez prasklín, úchyty celé.;Žilina;0900123456;Škoda Octavia III Combi;svetlo1.jpg|svetlo2.jpg\n";
   const sampleHref = "data:text/csv;charset=utf-8," + encodeURIComponent("﻿" + sample);
 
   return (
@@ -132,19 +165,36 @@ export default function CsvImport({ uid, cat, prof, onDone }: { uid: string; cat
       <div className="pp-box">
         <p>Povinné stĺpce: <b>{[...REQ, ...REQ_PART].join(", ")}</b> – pri pneumatikách, diskoch, výbave jazdca, príslušenstve a „Iné“ stačí <b>{REQ.join(", ")}</b> (stĺpec <b>druh</b>: osobné, dodávky, nákladné, autobusy alebo motorky). Voliteľné: {OPT.join(", ")}. Oddeľovač <b>;</b> alebo <b>,</b>, najviac {MAX} riadkov. Stav: Nový, Repasovaný, Veľmi dobrý, Dobrý alebo Na opravu. V stĺpci <b>pasuje</b> oddeľte autá znakom | (napr. „Škoda Octavia III | VW Golf VII“).</p>
         <p className="mute">Pneumatiky a disky (kategória „Pneumatiky a disky“): stĺpce pneu_sirka (205), pneu_profil (55), priemer (16), sezona (letné/zimné/celoročné), dezen_mm, dot (rok), index_nosnosti, index_rychlosti, sirka_disku (7), roztec (5x112), et (49), stredovy_otvor (57.1), kusy, material (Hliník/Oceľ).</p>
-        <p className="mute">Popis musí mať aspoň 20 znakov. Mesto a telefón sa doplnia z profilu, ak ich v súbore nemáte. Importované inzeráty sú bez fotiek – doplníte ich cez Upraviť.</p>
-        <label className="pp-add pp-file"><input type="file" accept=".csv,text/csv" onChange={async (e) => { const f = e.target.files?.[0]; if (f) load(await f.text()); e.target.value = ""; }} /><span>Vybrať CSV súbor</span></label>
+        <p className="mute">Popis musí mať aspoň 20 znakov. Mesto a telefón sa doplnia z profilu, ak ich v súbore nemáte.</p>
+        <ol className="pp-steps2">
+          <li><b>Vyberte CSV súbor.</b>
+            <label className="pp-add pp-file"><input type="file" accept=".csv,text/csv" onChange={async (e) => { const f = e.target.files?.[0]; if (f) load(await f.text()); e.target.value = ""; }} /><span>Vybrať CSV súbor</span></label></li>
+          <li><b>Pridajte fotky</b> (nepovinné, ale bez fotky inzerát ostane pozastavený a kupujúci ho neuvidí).
+            <span className="pp-bulkbtns">
+              <label className="pp-add pp-bulkph"><input type="file" accept="image/*" multiple onChange={(e) => { addFiles(e.target.files); e.target.value = ""; }} /><span>Vybrať fotky</span></label>
+              <label className="pp-add pp-folder"><input type="file" multiple {...{ webkitdirectory: "" }} onChange={(e) => { addFiles(e.target.files); e.target.value = ""; }} /><span>Vybrať celý priečinok</span></label>
+              {files.length > 0 && <button type="button" className="lnk" onClick={() => setFiles([])}>Odobrať fotky ({files.length})</button>}
+            </span>
+            <span className="mute">Fotky sa k riadkom priradia: podľa stĺpca <b>fotky</b> (názvy súborov oddelené |, napr. <code>svetlo1.jpg|svetlo2.jpg</code>), alebo podľa <b>čísla dielu v názve súboru</b> (<code>5E1941015.jpg</code>, <code>5E1941015_2.jpg</code>). Najviac {MAX_PHOTOS} fotiek na inzerát, formát JPG, PNG alebo WebP (na iPhone zvoľte v Nastavenia → Fotoaparát → Formáty „Najkompatibilnejší“). Fotky sa pred nahraním zmenšia v prehliadači.</span></li>
+        </ol>
         {head && <p className="pp-err">{head}</p>}
       </div>
       {pre && (
         <div className="pp-box">
           <div className="pp-h"><h2>Náhľad: {good.length} v poriadku, {pre.length - good.length} s chybou</h2>
-            <button className="btn" disabled={!good.length || busy} onClick={run}>{busy ? "Importujem…" : `Importovať ${good.length}`}</button></div>
-          <ul className="pp-pre">{pre.map((p) => (
+            <button className="btn" disabled={!good.length || busy} onClick={run}>{busy ? `Importujem ${done} / ${good.length}…` : `Importovať ${good.length}`}</button></div>
+          {good.length > 0 && <p className="pp-photosum">{withPhoto} z {good.length} inzerátov má fotky a hneď sa zverejní{good.length - withPhoto > 0 ? `, ${good.length - withPhoto} bez fotky ostane pozastavených (fotky doplníte neskôr v „Fotky hromadne“)` : ""}.
+            {files.length > 0 && unused.length > 0 && <> {unused.length} {unused.length === 1 ? "fotka sa nepriradila" : "fotiek sa nepriradilo"}: <span className="mute">{unused.slice(0, 6).map(baseName).join(", ")}{unused.length > 6 ? "…" : ""}</span></>}</p>}
+          <ul className="pp-pre">{pre.map((p) => { const m = matches.get(p.row); return (
             <li key={p.row} className={p.ok ? "ok" : "err"}><b>Riadok {p.row}: {p.name}</b>
               {p.errors.map((x) => <span key={x} className="pp-ferr">✗ {x}</span>)}
+              {p.ok && m && m.files.length > 0 && <span className="pp-prephotos">{m.files.slice(0, 4).map((f) => <img key={baseName(f) + f.size} src={urls.get(f)} alt="" loading="lazy" decoding="async" />)}<span className="mute">{m.files.length} {m.files.length === 1 ? "fotka" : m.files.length < 5 ? "fotky" : "fotiek"} ({m.how})</span></span>}
+              {p.ok && m && m.missing.length > 0 && <span className="mute">! nenájdené fotky: {m.missing.join(", ")}</span>}
+              {p.ok && m && m.cut > 0 && <span className="mute">! {m.cut} fotiek navyše – použije sa prvých {MAX_PHOTOS}</span>}
+              {p.ok && m && m.dupOem && <span className="mute">! rovnaké číslo dielu má viac riadkov – fotky priraďte cez stĺpec fotky</span>}
+              {p.ok && !m?.files.length && <span className="mute">! bez fotky – inzerát bude pozastavený</span>}
               {p.ok && p.warns.map((x) => <span key={x} className="mute">! {x}</span>)}</li>
-          ))}</ul>
+          ); })}</ul>
           {res.length > 0 && <div className="pp-err">{res.map((r) => <div key={r}>{r}</div>)}</div>}
         </div>
       )}

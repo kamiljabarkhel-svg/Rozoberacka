@@ -21,9 +21,10 @@ import Donors from "./Donors";
 import Cars from "./Cars";
 import Requests from "./Requests";
 import CsvImport from "./CsvImport";
+import BulkPhotos from "./BulkPhotos";
 
-type Tab = "home" | "list" | "donor" | "cars" | "form" | "csv" | "req" | "msg" | "prof";
-const TABS: [Tab, string][] = [["home", "Nástenka"], ["list", "Moje inzeráty"], ["donor", "Autá na diely"], ["cars", "Havarované vozidlá"], ["form", "Pridať inzerát"], ["csv", "Import CSV"], ["req", "Dopyty"], ["msg", "Správy"], ["prof", "Profil"]];
+type Tab = "home" | "list" | "donor" | "cars" | "form" | "csv" | "photos" | "req" | "msg" | "prof";
+const TABS: [Tab, string][] = [["home", "Nástenka"], ["list", "Moje inzeráty"], ["donor", "Autá na diely"], ["cars", "Havarované vozidlá"], ["form", "Pridať inzerát"], ["csv", "Import CSV"], ["photos", "Fotky hromadne"], ["req", "Dopyty"], ["msg", "Správy"], ["prof", "Profil"]];
 const ST: Record<Status, string> = { active: "Aktívny", paused: "Pozastavený", sold: "Predaný", blocked: "Skrytý správcom" };
 
 export default function Portal() {
@@ -128,6 +129,7 @@ export default function Portal() {
         {tab === "form" && cat && <ListingForm key={edit?.id ?? "new-" + (donor?.id ?? "")} uid={session.user.id} cat={cat} prof={prof} edit={edit} donor={donor}
           onSaved={async (id) => { await reload(session); setEdit(null); go("list"); flash(edit ? "Zmeny uložené" : `Inzerát #${id} je zverejnený`); }} />}
         {tab === "csv" && cat && <CsvImport uid={session.user.id} cat={cat} prof={prof} onDone={async (n) => { await reload(session); flash(`Importované: ${n}`); go("list"); }} />}
+        {tab === "photos" && <BulkPhotos uid={session.user.id} items={items} onDone={async (m) => { await reload(session); flash(m); }} />}
         {tab === "msg" && <Messages msgs={msgs} onRead={(ids) => act(() => markRead(ids), "Označené ako prečítané")} />}
         {tab === "prof" && prof && <><ProfileTab prof={prof} onSave={async (p) => { await saveProfile(p); setProf(p); flash("Profil uložený"); }} onPw={() => setPwMode(true)} /><MyData uid={session.user.id} /></>}
       </section>
@@ -148,6 +150,7 @@ function Dashboard({ cat, prof, items, msgs, go }: { cat: Catalog | null; prof: 
     ["Inzeráty skryté správcom", items.filter((i) => i.status === "blocked").length, "list", "blocked"],
     ["Aktívne inzeráty bez fotky (kupujúci ich obchádzajú)", items.filter((i) => !i.photos.length && i.status === "active").length, "list", "nophoto"],
     [`Neaktualizované viac ako ${STALE_DAYS} dní – potvrďte, že diel stále máte`, items.filter(isStale).length, "list", "stale"],
+    ["Pozastavené inzeráty bez fotky – doplňte fotky hromadne", p.filter((i) => !i.photos.length).length, "photos"],
     ["Pozastavené inzeráty", p.length, "list", "paused"],
   ];
   const profMissing = !prof?.city || !prof?.phone;
@@ -163,7 +166,7 @@ function Dashboard({ cat, prof, items, msgs, go }: { cat: Catalog | null; prof: 
       <header className="pp-h"><div><h1>Dobrý deň{prof?.name ? ", " + prof.name : ""}</h1><p className="mute">{d}
           {prof && <> · <a className="lnk" href={sellerPath(prof.id, prof.name)} target="_blank" rel="noopener">Moja verejná stránka</a></>}
           {prof?.ratingCount ? <> · <Stars value={prof.ratingAvg ?? null} count={prof.ratingCount} small /></> : null}</p></div>
-        <div className="pp-quick"><button className="btn" onClick={() => go("form")}>+ Pridať inzerát</button><button className="ubtn" onClick={() => go("csv")}>Import CSV</button><button className="ubtn" onClick={() => go("list")}>Všetky inzeráty</button></div></header>
+        <div className="pp-quick"><button className="btn" onClick={() => go("form")}>+ Pridať inzerát</button><button className="ubtn" onClick={() => go("csv")}>Import CSV</button><button className="ubtn" onClick={() => go("photos")}>Fotky hromadne</button><button className="ubtn" onClick={() => go("list")}>Všetky inzeráty</button></div></header>
       <div className="pp-tiles">
         <Tile n={a.length} l="Aktívne inzeráty" s={fmtPrice(a.reduce((x, i) => x + i.price, 0)) + " hodnota"} />
         <Tile n={views} l="Zobrazenia" s="spolu za všetky inzeráty" />
@@ -275,7 +278,7 @@ function MyList({ initial, items, cat, onEdit, onStatus, onTop, onDup, onDelete,
               <div className="pp-th">{l.photos[0] ? <img src={l.photos[0].url} alt="" loading="lazy" /> : <span>bez fotky</span>}</div>
               <div className="pp-ri">
                 {l.status === "active" ? <a href={listingHref(l.id, l.name, carName(l, cat))} target="_blank" rel="noreferrer" title="Otvoriť, ako ho vidia kupujúci"><b>{l.name}</b></a> : <b>{l.name}</b>}
-                <span className="mute"><span className="tg">{VEHICLE_TYPES.find((t) => t.id === vtOf(l))?.short}</span> {vehicle(l)} · {catName(l.categoryId)}{l.oem || !isUniversal(l.categoryId) ? <> · číslo dielu {l.oem || "—"}</> : null}</span>
+                <span className="mute"><span className="tg">{VEHICLE_TYPES.find((t) => t.id === vtOf(l))?.short}</span> <span className="pp-id" title="Číslo inzerátu – použite ho v názve fotky, napr. ID{l.id}_1.jpg">ID{l.id}</span> · {vehicle(l)} · {catName(l.categoryId)}{l.oem || !isUniversal(l.categoryId) ? <> · číslo dielu {l.oem || "—"}</> : null}</span>
                 <span className="pp-meta"><span className={"pp-st " + l.status}>{ST[l.status]}</span>{l.top && <span className="toptag">TOP</span>}<b>{fmtPrice(l.price)}</b><span className="mute">{plural(l.views, "zobrazenie", "zobrazenia", "zobrazení")} · {plural(l.calls, "telefón", "telefóny", "telefónov")}</span>{isStale(l) && <span className="pp-stale">neaktualizované {Math.floor((Date.now() - Date.parse(l.updatedAt)) / 86400000)} dní · <button className="lnk" onClick={() => onFresh([l.id])}>Stále aktuálne</button></span>}</span>
               </div>
               <div className="pp-ra">

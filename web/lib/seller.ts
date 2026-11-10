@@ -194,6 +194,19 @@ export async function shrink(file: File): Promise<{ big: Blob; medium: Blob; thu
 
 export type PhotoItem = { path?: string; url: string; file?: File };
 
+/** Zmenší a nahrá jednu fotku inzerátu; vráti cestu veľkej verzie. */
+async function uploadPhoto(c: SupabaseClient, uid: string, lid: number, file: File, k: number): Promise<string> {
+  const { big, medium, thumb, small } = await shrink(file);
+  const path = `${uid}/${lid}/${Date.now()}-${k}${small === "webp" ? ".w" : ""}.jpg`;
+  const up = await c.storage.from(PHOTO_BUCKET).upload(path, big, { contentType: "image/jpeg", upsert: false });
+  if (up.error) throw new Error("Fotku sa nepodarilo nahrať: " + up.error.message);
+  // menšie verzie; ak zlyhajú, web použije veľkú
+  const st = small === "webp" ? "image/webp" : "image/jpeg";
+  await c.storage.from(PHOTO_BUCKET).upload(thumbPath(path), thumb, { contentType: st, upsert: false });
+  await c.storage.from(PHOTO_BUCKET).upload(mediumPath(path), medium, { contentType: st, upsert: false });
+  return path;
+}
+
 /** Uloží nový alebo upravený inzerát vrátane telefónu, „pasuje aj na“ a fotiek. */
 export async function saveListing(uid: string, id: number | null, x: ListingInput, photos: PhotoItem[], oldPaths: string[]): Promise<number> {
   const c = sellerClient();
@@ -220,15 +233,7 @@ export async function saveListing(uid: string, id: number | null, x: ListingInpu
     const p = photos[k];
     if (p.path) { paths.push(p.path); continue; }
     if (!p.file) continue;
-    const { big, medium, thumb, small } = await shrink(p.file);
-    const path = `${uid}/${lid}/${Date.now()}-${k}${small === "webp" ? ".w" : ""}.jpg`;
-    const up = await c.storage.from(PHOTO_BUCKET).upload(path, big, { contentType: "image/jpeg", upsert: false });
-    if (up.error) throw new Error("Fotku sa nepodarilo nahrať: " + up.error.message);
-    // menšie verzie; ak zlyhajú, web použije veľkú
-    const st = small === "webp" ? "image/webp" : "image/jpeg";
-    await c.storage.from(PHOTO_BUCKET).upload(thumbPath(path), thumb, { contentType: st, upsert: false });
-    await c.storage.from(PHOTO_BUCKET).upload(mediumPath(path), medium, { contentType: st, upsert: false });
-    paths.push(path);
+    paths.push(await uploadPhoto(c, uid, lid, p.file, k));
   }
   const gone = oldPaths.filter((p) => !paths.includes(p));
   if (gone.length) await c.storage.from(PHOTO_BUCKET).remove(gone.flatMap(filesOf));
@@ -276,13 +281,34 @@ export async function duplicate(uid: string, l: MyListing): Promise<number> {
 }
 
 // ---------- IMPORT ----------
-export async function importMany(uid: string, rows: ListingInput[]): Promise<{ ok: number; errors: string[] }> {
-  const errors: string[] = []; let ok = 0;
+/** Import riadkov CSV aj s fotkami. Inzerát bez fotky vznikne pozastavený (kupujúci ho nevidí, kým predajca fotku nedoplní). */
+export async function importMany(uid: string, rows: { row: number; data: ListingInput; files: File[] }[], onProgress?: (done: number) => void): Promise<{ ok: number; active: number; errors: string[] }> {
+  const errors: string[] = []; let ok = 0, active = 0;
   for (let k = 0; k < rows.length; k++) {
-    try { await saveListing(uid, null, rows[k], [], []); ok++; }
-    catch (e) { errors.push(`Riadok ${k + 2}: ${skError(e)}`); }
+    const r = rows[k];
+    try {
+      const id = await saveListing(uid, null, r.data, r.files.map((file) => ({ file, url: "" })), []);
+      if (!r.files.length) await setStatus([id], "paused"); else active++;
+      ok++;
+    } catch (e) { errors.push(`Riadok ${r.row}: ${skError(e)}`); }
+    onProgress?.(k + 1);
   }
-  return { ok, errors };
+  return { ok, active, errors };
+}
+
+/** Pridá fotky k existujúcemu inzerátu (za tie, čo už má). activate = pozastavený inzerát bez fotiek sa zverejní. */
+export async function addPhotos(uid: string, l: MyListing, files: File[], activate: boolean): Promise<number> {
+  const c = sellerClient();
+  const start = l.photos.length;
+  const paths: string[] = [];
+  for (let k = 0; k < files.length; k++) paths.push(await uploadPhoto(c, uid, l.id, files[k], start + k));
+  if (paths.length) {
+    const ip = await c.from("listing_photos").insert(paths.map((path, k) => ({ listing_id: l.id, path, position: start + k })));
+    if (ip.error) { await c.storage.from(PHOTO_BUCKET).remove(paths.flatMap(filesOf)); throw new Error(skError(ip.error)); }
+  }
+  if (activate && l.status === "paused" && start === 0 && paths.length) await setStatus([l.id], "active");
+  else refreshPublic([l.id]);
+  return paths.length;
 }
 
 // ---------- SPRÁVY ----------

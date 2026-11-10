@@ -152,9 +152,12 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
   });
   await step("CSV import", async () => {
     await pg.click(".pp-nav >> text=Import CSV");
-    const csv = "nazov;znacka;model;rocnik;oem;cena;kategoria;stav;popis;pasuje\nAlternátor 140A;Volkswagen;Golf VII;2015;03L903023;85;Elektro;Dobrý;Odskúšaný alternátor, nabíja správne.;Škoda Octavia III\nZlý riadok;Tesla;X;;12;0;Nič;;krátky;\n";
-    require("fs").writeFileSync("i.csv", csv); await pg.setInputFiles(".pp-file input", "i.csv");
+    const csv = "nazov;znacka;model;rocnik;oem;cena;kategoria;stav;popis;pasuje;fotky\nAlternátor 140A;Volkswagen;Golf VII;2015;03L903023;85;Elektro;Dobrý;Odskúšaný alternátor, nabíja správne.;Škoda Octavia III;alt1.png|chyba.png\nZlý riadok;Tesla;X;;12;0;Nič;;krátky;;\n";
+    require("fs").writeFileSync("i.csv", csv); require("fs").copyFileSync("a.png", "alt1.png"); await pg.setInputFiles(".pp-file input", "i.csv");
     await pg.waitForSelector(".pp-pre li.err"); const okc = await pg.locator(".pp-pre li.ok").count(); if (okc !== 1) throw new Error("ok rows " + okc + " :: " + (await pg.locator(".pp-pre").innerText()));
+    await pg.waitForSelector(".pp-pre li.ok:has-text('bez fotky – inzerát bude pozastavený')");
+    await pg.setInputFiles(".pp-bulkph input", ["alt1.png"]); await pg.waitForSelector(".pp-pre li.ok .pp-prephotos img");
+    await pg.waitForSelector(".pp-pre li.ok:has-text('nenájdené fotky: chyba.png')"); await pg.waitForSelector(".pp-photosum:has-text('1 z 1 inzerátov má fotky')");
     await pg.click("text=Importovať 1"); await pg.waitForSelector(".pp-toast:has-text('Importované: 1')", { timeout: 15000 });
   });
   await step("auto na diely + rychle pridanie dielov", async () => {
@@ -226,6 +229,16 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
     await pg.click(".pp-chips >> text=Pozastavené"); await pg.check(".pp-rowh input"); await pg.click("text=Zmeniť cenu");
     await pg.fill(".pp-price input", "-10"); await pg.click(".pp-price >> text=Použiť na"); await pg.waitForSelector(".pp-toast:has-text('Ceny zmenené')");
     await pg.waitForSelector(".pp-row:has-text('Kapota') >> text=81 €");
+  });
+  await step("fotky hromadne podla cisla dielu", async () => {
+    await pg.click(".pp-nav >> text=Fotky hromadne"); await pg.waitForSelector("h1:has-text('Fotky hromadne')");
+    require("fs").copyFileSync("a.png", "5E0823031_1.png"); require("fs").copyFileSync("a.png", "nic-nesedi.png");
+    await pg.setInputFiles(".pp-bulkph input", ["5E0823031_1.png", "nic-nesedi.png"]);
+    await pg.waitForSelector(".pp-pre li:has-text('Kapota') .pp-prephotos img"); await pg.waitForSelector("text=Nepriradené (1)");
+    await pg.waitForSelector(".pp-photosum:has-text('po pridaní fotiek zverejní')");
+    await pg.click("text=Pridať fotky"); await pg.waitForSelector(".pp-toast:has-text('Fotky doplnené k 1 inzerátu')", { timeout: 20000 });
+    await pg.click(".pp-nav >> text=Moje inzeráty"); await pg.waitForSelector(".pp-row:has-text('Kapota') .pp-th img");
+    await pg.click(".pp-chips >> text=Aktívne"); await pg.waitForSelector(".pp-row:has-text('Kapota')");
   });
   let reqUrl = "";
   await step("dopyt: kupujuci zada", async () => {

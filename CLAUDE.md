@@ -235,3 +235,8 @@ Overené na Slov-Lexe: Občiansky zákonník § 597, 599, 612, 618, 619 (znenie 
 ## Povinné polia pri pneumatikách a vozidlách (9. 11. 2026, 22:25)
 - `supabase/23`: pri kategórii `kol` je povinná podkategória („Čo predávate?“) a rozmer – pneumatiky šírka + profil + priemer, disky rozteč + priemer, kolesá oboje (trigger `listing_required`). Formulár navyše vyžaduje počet kusov, pri diskoch šírku a ET, pri použitých pneumatikách dezén (`wheelKind`, `wheelMissing`, `wheelDefaults` v `lib/types.ts`).
 - Havarované vozidlá: nové stĺpce `body`, `power_kw`, `keys`, `origin`; palivo povinné (`car_listings_fuel_required`). Formulár vyžaduje aj karosériu, km (alebo „nepoznám“), naštartuje a kľúče. `search_cars` skladá riadok stĺpec po stĺpci – pri novom stĺpci v `car_listings` ho treba prepísať.
+
+## Hromadné fotky (10. 11. 2026, 19:40)
+- Import CSV: stĺpec `fotky` (názvy súborov oddelené |) alebo fotka pomenovaná číslom dielu (`5E1941015.jpg`, `5E1941015_2.jpg`, „5E1941015 (3).jpg“). Inzerát bez fotky sa naimportuje **pozastavený**.
+- Záložka „Fotky hromadne“: fotky k existujúcim inzerátom podľa čísla dielu alebo `ID<číslo inzerátu>_1.jpg`; najviac 8 fotiek na inzerát, pridávajú sa za existujúce. Pravidlá názvov v `web/lib/bulkPhotos.ts` (rovnaké pre oba spôsoby).
+- Fotky sa zmenšujú v prehliadači (JPG, PNG, WebP; HEIC z iPhonu nie – v nastaveniach fotoaparátu „Najkompatibilnejší“).
