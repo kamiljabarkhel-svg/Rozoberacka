@@ -14,7 +14,7 @@ export const revalidate = 300;
 const TITLE = "Havarované a nepojazdné vozidlá na predaj";
 const DESC = "Havarované, nepojazdné a na diely určené autá, dodávky, nákladné autá, autobusy a motorky od vrakovísk a predajcov zo Slovenska. Predajcovi zavoláte bez registrácie.";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = !CARS_ENABLED ? { title: "Stránka neexistuje", robots: { index: false } } : {
   title: TITLE, description: DESC, alternates: { canonical: "/havarovane-vozidla" },
   openGraph: { title: `${TITLE} | ${SITE_NAME}`, description: DESC, url: "/havarovane-vozidla", siteName: SITE_NAME, locale: "sk_SK", type: "website" },
 };
