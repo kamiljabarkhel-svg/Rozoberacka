@@ -43,11 +43,11 @@ export default function ContactBox({ id, name, seller, path, cat, car = false }:
         <button className="chip" aria-expanded={mode === "msg"} onClick={openMsg}>✉ Napísať predajcovi</button>
         <button className="chip" aria-expanded={mode === "share"} onClick={share}>{car ? "↗ Poslať odkaz" : "↗ Poslať odkaz mechanikovi"}</button>
       </div>
-      {mode === "msg" && (st.ok ? <div className="warn">Správa bola odoslaná predajcovi. Ozve sa vám na kontakt, ktorý ste uviedli.</div> : (
+      {mode === "msg" && (st.ok ? <div className="warn">Správa bola odoslaná predajcovi. Ozve sa vám na kontakt, ktorý ste uviedli – ak ste zadali e-mail, odpoveď vám príde e-mailom (pozrite aj priečinok Spam).</div> : (
         <div className="msgbox">
           <b>Správa pre {seller}</b>
           <label>Vaše meno<input value={nm} onChange={(e) => setNm(e.target.value)} autoComplete="name" /></label>
-          <label>Telefón alebo e-mail na odpoveď<input value={ct} onChange={(e) => setCt(e.target.value)} autoComplete="email" /></label>
+          <label>Telefón alebo e-mail na odpoveď<input value={ct} onChange={(e) => setCt(e.target.value)} autoComplete="email" /><small className="mute">Ak zadáte e-mail, predajca vám môže odpísať e-mailom.</small></label>
           <label>Správa<textarea value={tx} maxLength={800} onChange={(e) => setTx(e.target.value)} /></label>
           <button className="call" disabled={st.busy} onClick={send}>{st.busy ? "Odosielam…" : "Odoslať správu"}</button>
           {st.err && <p className="ferr2" role="alert">{st.err}</p>}

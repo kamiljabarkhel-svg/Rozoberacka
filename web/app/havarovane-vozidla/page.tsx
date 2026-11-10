@@ -7,6 +7,8 @@ import { emptyCarFilters } from "@/lib/types";
 import { JsonLd, SITE_NAME, SITE_URL, breadcrumbLd, vehiclePath, vehicleTitle } from "@/lib/seo";
 import CarsBrowse from "@/components/CarsBrowse";
 import Disclaimer from "@/components/Disclaimer";
+import { CARS_ENABLED } from "@/lib/features";
+import { notFound } from "next/navigation";
 
 export const revalidate = 300;
 const TITLE = "Havarované a nepojazdné vozidlá na predaj";
@@ -18,6 +20,7 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
+  if (!CARS_ENABLED) notFound();   // sekcia je vypnutá (lib/features.ts)
   const cat = await getCatalog();
   const initial = await searchCars({ ...emptyCarFilters, vtype: "osobne" }, 0, 24).catch(() => ({ items: [], total: 0, conds: {} }));
   const packed = packCatalog({ ...cat, engines: [], subcategories: [] });

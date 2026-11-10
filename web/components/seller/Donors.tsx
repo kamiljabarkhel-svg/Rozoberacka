@@ -80,7 +80,7 @@ export default function Donors({ uid, cat, prof, items, onAddOne, onSellCar, onD
   return (
     <div>
       <header className="pp-h"><h1>Autá na diely</h1><button className="btn" onClick={() => setEdit({ id: null, v: emptyCar() })}>+ Pridať vozidlo</button></header>
-      <p className="mute pp-note"><b>Rozoberáte auto, dodávku, kamión alebo motorku?</b> Zapíšte vozidlo raz a jedným formulárom z neho pridajte desiatky dielov – značka, model, motor, ročník, km a prevodovka sa pri každom diele vyplnia samy. Kupujúci pri dieli uvidí, z akého vozidla je, a nájde aj ďalšie diely z neho. VIN vidíte len vy. Ak chcete predať vozidlo celé, použite „Predať celé vozidlo“.</p>
+      <p className="mute pp-note"><b>Rozoberáte auto, dodávku, kamión alebo motorku?</b> Zapíšte vozidlo raz a jedným formulárom z neho pridajte desiatky dielov – značka, model, motor, ročník, km a prevodovka sa pri každom diele vyplnia samy. Kupujúci pri dieli uvidí, z akého vozidla je, a nájde aj ďalšie diely z neho. VIN vidíte len vy.{onSellCar ? " Ak chcete predať vozidlo celé, použite „Predať celé vozidlo“." : ""}</p>
       {err && <p className="pp-err">{err}</p>}
       {list && !list.length && <div className="empty">Zatiaľ nemáte žiadne vozidlo na diely.<br /><button className="add" onClick={() => setEdit({ id: null, v: emptyCar() })}>Pridať prvé vozidlo</button></div>}
       <ul className="pp-rows">{list?.map((d) => {

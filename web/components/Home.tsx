@@ -22,6 +22,7 @@ import ListingCard from "./ListingCard";
 import Disclaimer from "./Disclaimer";
 import ListingDetail from "./ListingDetail";
 import SellersSoon from "./SellersSoon";
+import { CARS_ENABLED } from "@/lib/features";
 
 const PAGE = 12;
 // Najhľadanejšie diely: tlačidlo nastaví kategóriu (a podkategóriu podľa názvu v katalógu), nie skrytý text.
@@ -480,7 +481,7 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
           <div className="rq-cta"><p><b>Nenašli ste svoj diel?</b> Zadajte dopyt – vrakoviská vám pošlú ponuku. Bez registrácie.</p>
             <a className="btn2" href={`/dopyt?${new URLSearchParams({ ...(f.brand ? { znacka: String(f.brand) } : {}), ...(f.model ? { model: String(f.model) } : {}), ...(f.q.trim() ? { q: f.q.trim() } : {}) }).toString()}`}>Zadať dopyt na diel</a></div>
         )}
-        {!STATIC_PREVIEW && <div className="rq-cta"><p><b>Hľadáte celé vozidlo na diely?</b> Havarované a nepojazdné autá, dodávky, kamióny aj motorky od vrakovísk.</p>
+        {!STATIC_PREVIEW && CARS_ENABLED && <div className="rq-cta"><p><b>Hľadáte celé vozidlo na diely?</b> Havarované a nepojazdné autá, dodávky, kamióny aj motorky od vrakovísk.</p>
           <Link className="btn2" href="/havarovane-vozidla">Havarované vozidlá</Link></div>}
         <Disclaimer kind="short" />
 

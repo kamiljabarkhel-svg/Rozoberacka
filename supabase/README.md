@@ -153,6 +153,30 @@ E-maily posiela Edge Function `supabase/functions/strazca` (otestovaná lokálne
    ```
 5. Vo Verceli nastavte `NEXT_PUBLIC_EMAIL_ALERTS=1` a nasaďte web znova. Tlačidlo „Posielať nové diely e-mailom“ sa zobrazí pri uloženom hľadaní.
 
+## Odpovede na správy e-mailom (10. 11. 2026)
+`24_odpovede_na_spravy.sql`: predajca v portáli („Správy“) odpovie kupujúcemu, ktorý zadal e-mail. Kupujúcemu príde e-mail z adresy portálu
+s tajným odkazom `/sprava/<token>`, kde vidí konverzáciu a odpovie; predajcovi príde upozornenie a správa sa mu označí ako nová.
+E-mail predajcu ani kupujúceho druhá strana nevidí. Test `testy/31_test_24.sql` (21 kontrol), funkcia `testy-e2e/test_odpovede.mjs` (9/9).
+
+**Zapnutie e-mailov (až po Brevo a doméne)** – postup je rovnaký ako pri strážcovi:
+1. V Brevo overte doménu a adresu odosielateľa, napr. `spravy@autosuciastky.eu` (bez overenej domény končia e-maily v spame).
+2. Supabase → Edge Functions → **Deploy a new function** → názov `odpovede`, vložte `supabase/functions/odpovede/index.ts` a `handler.ts` → Deploy. Vypnite „Verify JWT“ (chráni ju `CRON_SECRET`).
+3. Secrets: rovnaké ako pri strážcovi (`BREVO_API_KEY`, `SITE_URL`, `MAIL_FROM`, `MAIL_FROM_NAME` = autosuciastky.eu, `OPERATOR`, `CRON_SECRET`).
+4. SQL Editor – spúšťanie každú minútu (heslo z Vault, ak už existuje `strazca_secret`, použite ho):
+   ```sql
+   create extension if not exists pg_net;
+   select cron.schedule('autosuciastky-odpovede', '* * * * *', $$
+     select net.http_post(
+       url := 'https://sbfhmlayemaiinuismhh.supabase.co/functions/v1/odpovede',
+       headers := jsonb_build_object('x-cron-secret', (select decrypted_secret from vault.decrypted_secrets where name = 'strazca_secret'))
+     ) $$);
+   ```
+5. Vo Verceli nastavte `NEXT_PUBLIC_EMAIL_REPLIES=1` a nasaďte web znova. Dovtedy portál odpoveď uloží a predajca ju pošle tlačidlom „Poslať zo svojej pošty“.
+
+## Havarované vozidlá – vypnuté (10. 11. 2026)
+Sekcia je skrytá z celého webu (`web/lib/features.ts`, `CARS_ENABLED`). Tabuľky `car_listings`, `car_contacts`, `car_photos` a funkcie ostávajú, sú prázdne.
+Zapnutie: vo Verceli `NEXT_PUBLIC_CARS=1` a nové nasadenie.
+
 ## Správca s dvojitým overením (7. 11. 2026)
 Na ostrej Supabase je spustený `11_spravca_dvojite_overenie.sql` (obsah overený odtlačkom SHA-256); test `testy/24_test_11.sql` prešiel priamo na nej v zrušenej transakcii 11/11.
 - Práva správcu (`is_admin()`) platia len pri prihlásení s kódom z aplikácie v mobile (úroveň `aal2`). Samotné heslo nestačí – databáza správcovi bez kódu neukáže nahlásenia, skryté inzeráty ani záznam akcií a odmietne všetky funkcie správcu.

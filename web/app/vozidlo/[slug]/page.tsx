@@ -11,6 +11,7 @@ import Crumbs from "@/components/Crumbs";
 import CarDetail from "@/components/CarDetail";
 import LandingGrid from "@/components/LandingGrid";
 import Disclaimer from "@/components/Disclaimer";
+import { CARS_ENABLED } from "@/lib/features";
 
 export const revalidate = 300;
 // Prázdny zoznam = stránky sa pripravia pri prvej návšteve a potom sa podávajú z vyrovnávacej pamäte (ISR).
@@ -24,6 +25,7 @@ async function load(slug: string) {
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  if (!CARS_ENABLED) return { robots: { index: false } };
   const d = await load((await params).slug);
   if (!d) return { title: "Inzerát sa nenašiel", robots: { index: false } };
   const title = vehicleTitle(d.c, d.cat);
@@ -39,6 +41,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 }
 
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
+  if (!CARS_ENABLED) notFound();   // sekcia je vypnutá (lib/features.ts)
   const d = await load((await params).slug);
   if (!d) notFound();
   const { cat, c } = d;

@@ -6,6 +6,7 @@ import { Icon } from "./Icons";
 import { STATIC_PREVIEW, homeHref, sellersHref } from "@/lib/paths";
 import { getSession, onAuthChange } from "@/lib/seller";
 import HeaderSearch, { type Pick } from "./HeaderSearch";
+import { CARS_ENABLED } from "@/lib/features";
 
 /** Hlavička: logo, hľadanie (na úvode filtruje hneď), „Pre predajcov“. */
 export default function Header() {
@@ -66,7 +67,7 @@ export default function Header() {
         <a href="/" aria-current={path === "/" && !wheels ? "page" : undefined}>Autodiely</a>
         <a href="/?kat=kol#pneu" aria-current={path === "/" && wheels ? "page" : undefined}>Pneumatiky a disky</a>
         {/* eslint-enable @next/next/no-html-link-for-pages */}
-        <Link href="/havarovane-vozidla" aria-current={path?.startsWith("/havarovane-vozidla") || path?.startsWith("/vozidlo/") ? "page" : undefined}>Havarované vozidlá</Link>
+        {CARS_ENABLED && <Link href="/havarovane-vozidla" aria-current={path?.startsWith("/havarovane-vozidla") || path?.startsWith("/vozidlo/") ? "page" : undefined}>Havarované vozidlá</Link>}
         <Link href="/dopyt" aria-current={path?.startsWith("/dopyt") ? "page" : undefined}>Dopyt na diel</Link>
       </nav>}
     </>

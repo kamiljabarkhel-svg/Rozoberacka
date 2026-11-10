@@ -30,7 +30,10 @@ export type MyListing = {
   photos: { path: string; url: string }[]; fits: { brandId: number; modelId: number | null; engineId: number | null }[];
 };
 export type ListingInput = Omit<MyListing, "id" | "status" | "views" | "calls" | "createdAt" | "updatedAt" | "top" | "photos" | "moderationNote">;
-export type Message = { id: number; listingId: number; carId?: number | null; listingName: string; name: string; contact: string; body: string; createdAt: string; read: boolean };
+export type Reply = { author: "seller" | "buyer"; body: string; createdAt: string; emailed: boolean; emailError: string };
+export type Message = { id: number; listingId: number; carId?: number | null; listingName: string; name: string; contact: string; body: string; createdAt: string; read: boolean;
+  /** e-mail kupujúceho, ak ho zadal – len vtedy sa dá odpovedať cez portál (24) */
+  buyerEmail: string | null; lastAt: string; replies: Reply[] };
 
 const SKMSG: [RegExp, string][] = [
   [/Invalid login credentials/i, "Nesprávny e-mail alebo heslo."],
@@ -313,16 +316,25 @@ export async function addPhotos(uid: string, l: MyListing, files: File[], activa
 
 // ---------- SPRÁVY ----------
 export async function myMessages(): Promise<Message[]> {
-  const sel = "id,listing_id,car_id,sender_name,sender_contact,body,created_at,read_at,listings(name)";
-  let r: { data: unknown; error: { message: string } | null } = await sellerClient().from("messages").select(sel).order("created_at", { ascending: false }).limit(300);
-  if (r.error && /car_id/.test(r.error.message)) r = await sellerClient().from("messages").select(sel.replace("car_id,", "")).order("created_at", { ascending: false }).limit(300); // pred migráciou 19
+  const sel = "id,listing_id,car_id,sender_name,sender_contact,body,created_at,read_at,buyer_email,last_at,listings(name),message_replies(author,body,created_at,emailed_at,email_error)";
+  let r: { data: unknown; error: { message: string } | null } = await sellerClient().from("messages").select(sel).order("last_at", { ascending: false }).limit(300);
+  if (r.error && /buyer_email|last_at|message_replies/.test(r.error.message)) // pred migráciou 24
+    r = await sellerClient().from("messages").select("id,listing_id,car_id,sender_name,sender_contact,body,created_at,read_at,listings(name)").order("created_at", { ascending: false }).limit(300);
   const { data, error } = r;
   if (error) throw new Error(skError(error));
   return ((data || []) as unknown as Row[]).map((m) => ({
     id: Number(m.id), listingId: Number(m.listing_id || 0), carId: (m.car_id as number) ?? null,
     listingName: m.car_id ? "Celé vozidlo (inzerát č. " + m.car_id + ")" : String((m.listings as Row | null)?.name || "zmazaný inzerát"),
     name: String(m.sender_name), contact: String(m.sender_contact), body: String(m.body), createdAt: String(m.created_at), read: !!m.read_at,
+    buyerEmail: (m.buyer_email as string) ?? null, lastAt: String(m.last_at || m.created_at),
+    replies: ((m.message_replies || []) as Row[]).map((x) => ({ author: x.author as Reply["author"], body: String(x.body), createdAt: String(x.created_at), emailed: !!x.emailed_at, emailError: String(x.email_error || "") }))
+      .sort((a, b) => a.createdAt.localeCompare(b.createdAt)),
   }));
+}
+/** Odpoveď predajcu kupujúcemu (e-mail mu pošle funkcia „odpovede“ do minúty). */
+export async function sellerReply(messageId: number, body: string) {
+  const { error } = await sellerClient().rpc("seller_reply", { p_message: messageId, p_body: body });
+  if (error) throw new Error(skError(error));
 }
 export async function markRead(ids: number[]) {
   if (!ids.length) return;

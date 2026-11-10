@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { LegalPage, OperatorBox } from "@/components/Legal";
 import { OPERATOR, fill } from "@/lib/operator";
+import { CARS_ENABLED } from "@/lib/features";
 
 export const metadata: Metadata = { title: "Obchodné podmienky", alternates: { canonical: "/obchodne-podmienky" } };
 
@@ -15,7 +16,7 @@ export default function Page() {
 
       <h2>2. Čo portál robí a čo nie</h2>
       <ul>
-        <li>Portál zverejňuje inzeráty predajcov autodielov (vrátane pneumatík a diskov) na osobné autá, dodávky, nákladné autá, autobusy a motorky a inzeráty celých <b>havarovaných, nepojazdných alebo na diely určených vozidiel</b>. Sprostredkúva len kontakt medzi predajcom a kupujúcim.</li>
+        <li>Portál zverejňuje inzeráty predajcov autodielov (vrátane pneumatík a diskov) na osobné autá, dodávky, nákladné autá, autobusy a motorky{CARS_ENABLED && <> a inzeráty celých <b>havarovaných, nepojazdných alebo na diely určených vozidiel</b></>}. Sprostredkúva len kontakt medzi predajcom a kupujúcim.</li>
         <li>Prevádzkovateľ <b>nie je predávajúcim ani účastníkom</b> kúpnej zmluvy. Zmluva vzniká priamo medzi predajcom a kupujúcim, ktorí sa dohodnú na cene, platbe, odovzdaní aj reklamácii.</li>
         <li>Portál neprijíma platby a neposiela tovar.</li>
         <li>Inzeráty zverejňujeme len na tomto portáli. Neposielame ich na iné weby ani do partnerských programov; vyhľadávače (napr. Google) však verejné stránky portálu indexujú.</li>
@@ -42,11 +43,12 @@ export default function Page() {
         <li>Predajca zodpovedá za obsah inzerátu, fotky (musia byť jeho alebo ich smie použiť) a za vybavenie reklamácie.</li>
         <li>Autorské práva k fotkám a textom ostávajú predajcovi. Zverejnením inzerátu udeľuje prevádzkovateľovi bezplatný, nevýhradný súhlas ich zobrazovať na portáli, zmenšovať a upravovať ich formát (napr. náhľady) po dobu, kým je inzerát na portáli. Zmazaním inzerátu alebo účtu súhlas zaniká.</li>
         <li>Predajca neposiela kupujúcim nevyžiadanú reklamu a kontakty kupujúcich (zo správ aj z dopytov na diely) používa len na ponuku a dohodu o danom diele.</li>
-        <li>VIN vozidla na diely alebo havarovaného vozidla, ktorý predajca zadá v portáli, je neverejný; portál ho kupujúcim nezobrazuje a predajca ho zadáva len pre svoju evidenciu.</li>
+        <li>VIN vozidla na diely{CARS_ENABLED ? " alebo havarovaného vozidla" : ""}, ktorý predajca zadá v portáli, je neverejný; portál ho kupujúcim nezobrazuje a predajca ho zadáva len pre svoju evidenciu.</li>
         <li>Pri pneumatikách a diskoch predajca uvádza rozmery a parametre (napr. šírka, profil, priemer, rozteč, ET) podľa skutočnosti a pri pneumatikách aj hĺbku dezénu a rok výroby (DOT), ak ich pozná.</li>
         <li>Prístup k účtu chráni heslom a nezdieľa ho.</li>
       </ul>
 
+      {CARS_ENABLED && <>
       <h2>3a1. Predaj celých vozidiel</h2>
       <ul>
         <li>Celé vozidlá sa na portáli predávajú len ako <b>havarované, nepojazdné, po požiari alebo povodni alebo určené na diely</b>. Bežné jazdené vozidlá sem nepatria a môžeme ich skryť.</li>
@@ -54,6 +56,7 @@ export default function Page() {
         <li>Predajca pravdivo uvedie stav, rozsah poškodenia, najazdené kilometre a doklady (prihlásené, odhlásené, bez dokladov). Vozidlo bez dokladov sa ponúka len na diely.</li>
         <li>Vozidlo, ktoré je odpadom (staré vozidlo), smie držiteľ odovzdať len osobe oprávnenej na spracovanie starých vozidiel podľa zákona č. 79/2015 Z. z. o odpadoch. Za dodržanie týchto pravidiel, prepis vozidla a ďalšie povinnosti voči úradom zodpovedajú predajca a kupujúci, nie prevádzkovateľ.</li>
       </ul>
+      </>}
 
       <h2>3b. Údaje predajcu a prístup k nim</h2>
       <ul>

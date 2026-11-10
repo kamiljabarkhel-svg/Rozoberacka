@@ -999,3 +999,19 @@ h1,h2,h3,.cnt,.price,.brand,.btn,.btn2,.mp,.tile b{letter-spacing:0}
 .pp-box code { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 12.5px; padding: 1px 4px; border: 1px solid var(--line); border-radius: 3px; }
 .pp-bulkbtns .pp-add span { font-size: 14px; }
 .pp-steps2 .pp-file { margin-top: 0; min-height: 52px; }
+
+/* ===== Konverzácia predajca ↔ kupujúci ===== */
+.pp-thread, .thr-list { list-style: none; margin: 10px 0; padding: 0; display: grid; gap: 8px; }
+.pp-thread li, .thr-list li { border: 1px solid var(--line); border-radius: 4px; padding: 8px 12px; background: var(--card); max-width: 88%; }
+.pp-thread li p, .thr-list li p { margin: 4px 0 0; white-space: pre-wrap; }
+.pp-thread li.me, .thr-list li.me { justify-self: end; border-left: 3px solid var(--pet2); }
+.pp-thread li.them, .thr-list li.them { justify-self: start; border-left: 3px solid var(--acc); }
+.pp-thread li .mute, .thr-list li .mute { font-size: 12.5px; }
+.pp-reply { margin-top: 10px; display: grid; gap: 8px; }
+.pp-reply label { display: grid; gap: 4px; }
+.pp-reply textarea { width: 100%; }
+.thr { max-width: 760px; margin: 0 auto; }
+.thr h1 { margin-bottom: 4px; }
+.thr-reply { margin-top: 12px; }
+.thr-note { font-size: 13px; margin-top: 16px; }
+.msgbox label small { display: block; font-weight: 400; margin-top: 2px; }

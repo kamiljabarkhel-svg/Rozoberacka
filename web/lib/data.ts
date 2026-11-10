@@ -266,6 +266,27 @@ export async function sendMessage(id: number, name: string, contact: string, bod
   if (error) throw new Error(error.message);
 }
 
+// ---------- KONVERZÁCIA KUPUJÚCEHO (tajný odkaz z e-mailu, 24) ----------
+export type Thread = { listingId: number | null; listingName: string; listingActive: boolean; sellerName: string; sellerCity: string | null;
+  buyerName: string; body: string; createdAt: string; replies: { author: "seller" | "buyer"; body: string; createdAt: string }[] };
+export async function getThread(token: string): Promise<Thread | null> {
+  if (IS_DEMO || !/^[0-9a-f-]{36}$/i.test(token)) return null;
+  const { data, error } = await client().rpc("thread_get", { p_token: token });
+  if (error) throw new Error(error.message);
+  if (!data) return null;
+  const r = data as Row;
+  return {
+    listingId: (r.listing_id as number) ?? null, listingName: String(r.listing_name || ""), listingActive: !!r.listing_active,
+    sellerName: String(r.seller_name || ""), sellerCity: (r.seller_city as string) ?? null, buyerName: String(r.buyer_name || ""),
+    body: String(r.body || ""), createdAt: String(r.created_at),
+    replies: ((r.replies || []) as Row[]).map((x) => ({ author: x.author as "seller" | "buyer", body: String(x.body), createdAt: String(x.created_at) })),
+  };
+}
+export async function threadReply(token: string, body: string): Promise<void> {
+  const { error } = await client().rpc("thread_reply", { p_token: token, p_body: body });
+  if (error) throw new Error(error.message);
+}
+
 /** Id ukážkových inzerátov (pre statické stránky detailu). */
 export async function demoListingIds(): Promise<number[]> {
   return (await demoData()).listings.map((l) => l.id);

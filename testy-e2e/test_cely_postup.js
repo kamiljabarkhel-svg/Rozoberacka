@@ -136,6 +136,29 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
     const t = await pg.locator(".pp-tiles").innerText(); console.log("   tiles:", t.replace(/\n/g, " | "));
     await pg.click(".pp-nav >> text=Správy"); await pg.waitForSelector(".pp-msgs li.unread:has-text('Jano Kupec')"); await pg.click("text=Označiť ako prečítané >> nth=0"); await pg.waitForSelector(".pp-msgs li:not(.unread)");
   });
+  await step("odpoved predajcu a konverzacia kupujuceho", async () => {
+    global.CUR = b2;
+    await b2.goto(B + "/?q=" + encodeURIComponent("ľavé svetlo")); await b2.click(".card:has-text('Predné ľavé svetlo LED') a >> nth=0"); await b2.waitForURL("**/diel/**");
+    await b2.click("text=Napísať predajcovi"); const box = b2.locator(".msgbox");
+    await box.locator("input >> nth=0").fill("Mila Kupcova"); await box.locator("input >> nth=1").fill("Mila.Kupcova@test.sk"); await box.locator("textarea").fill("Dobrý deň, pošlete svetlo na dobierku?");
+    await box.locator("text=Odoslať správu").click(); await b2.waitForSelector("text=odpoveď vám príde e-mailom");
+    global.CUR = pg; await pg.reload(); await pg.click(".pp-nav >> text=Správy");
+    const th = pg.locator(".pp-msgs > li", { hasText: "Mila Kupcova" }); await th.locator(".pp-reply textarea").waitFor();
+    if (!(await pg.locator(".pp-msgs > li", { hasText: "Jano Kupec" }).locator("text=Kupujúci nezadal e-mail").count())) throw new Error("pri telefóne chýba upozornenie");
+    await th.locator(".pp-reply textarea").fill("Áno, pošlem na dobierku, 8 € poštovné.");
+    await th.locator("button:has-text('odpoveď')").click(); await pg.waitForSelector(".pp-toast:has-text('Odpoveď')");
+    await pg.waitForSelector(".pp-msgs > li:has-text('Mila Kupcova') .pp-thread li.me:has-text('8 € poštovné')");
+    const token = require("child_process").execSync("psql -h /tmp/pgt -p 5499 -U postgres -d e2e -tAq", { input: "select reply_token from messages where sender_name = 'Mila Kupcova'" }).toString().trim();
+    if (!/^[0-9a-f-]{36}$/.test(token)) throw new Error("token " + token);
+    global.CUR = b2; await b2.goto(B + "/sprava/" + token);
+    await b2.waitForSelector(".thr-list li.them:has-text('8 € poštovné')"); if (/Mila\.Kupcova@test\.sk/i.test(await b2.content())) throw new Error("e-mail v konverzácii");
+    await b2.fill(".thr-reply textarea", "Super, posielam adresu: Hlavná 1, Trnava."); await b2.click(".thr-reply >> text=Odoslať"); await b2.waitForSelector("text=Odoslané.");
+    await b2.waitForSelector(".thr-list li.me:has-text('Hlavná 1')");
+    await b2.goto(B + "/sprava/00000000-0000-0000-0000-000000000000"); await b2.waitForSelector("text=Konverzácia sa nenašla");
+    global.CUR = pg; await pg.reload(); await pg.click(".pp-nav >> text=Správy"); await pg.waitForSelector(".pp-msgs li.unread:has-text('Hlavná 1')");
+    const n = require("child_process").execSync("psql -h /tmp/pgt -p 5499 -U postgres -d e2e -tAq", { input: "set role service_role; select count(*) from reply_outbox()" }).toString().trim();
+    if (n.split("\n").pop() !== "2") throw new Error("fronta e-mailov " + n);
+  });
   await step("upravit inzerat", async () => {
     await pg.click(".pp-nav >> text=Moje inzeráty"); await pg.click(".pp-row:has-text('Predné ľavé') >> text=Upraviť");
     await pg.fill("label:has-text('Názov dielu') input", "Predné ľavé svetlo LED Octavia"); await pg.click("text=Uložiť zmeny"); await pg.waitForSelector(".pp-toast:has-text('Zmeny uložené')");
@@ -173,7 +196,14 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
     await pg.click("text=Vytvoriť 2 inzeráty"); await pg.waitForSelector(".pp-toast:has-text('Vytvorené: 2')", { timeout: 20000 });
     await pg.waitForSelector(".pp-row:has-text('Diely z vozidla: 2')");
   });
-  await step("havarovane vozidlo: predajca prida z auta na diely", async () => {
+  if (!process.env.RZ_CARS) await step("havarovane vozidla su skryte", async () => {
+    const r = await b2.goto(B + "/havarovane-vozidla"); if (r.status() !== 404) throw new Error("stav " + r.status());
+    await b2.goto(B + "/"); if (await b2.locator(".snav >> text=Havarované vozidlá").count()) throw new Error("odkaz v ponuke");
+    if (await pg.locator(".pp-nav >> text=Havarované vozidlá").count()) throw new Error("záložka v portáli");
+    if (await pg.locator("text=Predať celé vozidlo").count()) throw new Error("tlačidlo Predať celé vozidlo");
+    const sm = await (await b2.request.get(B + "/sitemap.xml")).text(); if (/havarovane-vozidla/.test(sm)) throw new Error("v mape webu");
+  });
+  if (process.env.RZ_CARS) await step("havarovane vozidlo: predajca prida z auta na diely", async () => {
     await pg.click(".pp-row:has-text('Diely z vozidla: 2') >> text=Predať celé vozidlo"); await pg.waitForSelector("h1:has-text('Predať havarované vozidlo')");
     await pg.waitForSelector(".pp-donor-note:has-text('Octavia III')");
     await pg.click("text=Zverejniť vozidlo"); await pg.waitForSelector(".pp-err:has-text('Vyberte stav vozidla')");
@@ -188,7 +218,7 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
     await pg.click("text=Zverejniť vozidlo"); await pg.waitForSelector(".pp-toast:has-text('je zverejnené')", { timeout: 20000 });
     await pg.waitForSelector(".car-row:has-text('Octavia III') >> text=Havarované – nepojazdné");
   });
-  await step("havarovane vozidla: zoznam, detail, telefon, sprava", async () => {
+  if (process.env.RZ_CARS) await step("havarovane vozidla: zoznam, detail, telefon, sprava", async () => {
     global.CUR = b2;
     await b2.goto(B + "/havarovane-vozidla"); await b2.waitForSelector(".carcard:has-text('Octavia III')");
     await b2.click(".cs-vt >> text=Motorky a štvorkolky"); await b2.waitForSelector("text=0 vozidiel"); await b2.click(".cs-vt >> text=Osobné autá"); await b2.waitForSelector(".carcard");

@@ -13,7 +13,7 @@ import { isAdminCandidate } from "@/lib/admin";
 import { download, listingsCsv } from "@/lib/csvExport";
 import { plural, price as fmtPrice } from "@/lib/format";
 import {
-  changePassword, confirmFresh, setPrices, deleteAccount, deleteListings, exportMyData, duplicate, ensureProfile, getSession, markRead, myListings, myMessages, onAuthChange,
+  changePassword, confirmFresh, setPrices, deleteAccount, deleteListings, exportMyData, duplicate, ensureProfile, getSession, markRead, myListings, myMessages, onAuthChange, sellerReply,
   saveProfile, setStatus, setTop, signOut, skError, type Donor, type Message, type MyListing, type Profile, type Status,
 } from "@/lib/seller";
 import ListingForm from "./ListingForm";
@@ -22,9 +22,10 @@ import Cars from "./Cars";
 import Requests from "./Requests";
 import CsvImport from "./CsvImport";
 import BulkPhotos from "./BulkPhotos";
+import { CARS_ENABLED, EMAIL_REPLIES } from "@/lib/features";
 
 type Tab = "home" | "list" | "donor" | "cars" | "form" | "csv" | "photos" | "req" | "msg" | "prof";
-const TABS: [Tab, string][] = [["home", "Nástenka"], ["list", "Moje inzeráty"], ["donor", "Autá na diely"], ["cars", "Havarované vozidlá"], ["form", "Pridať inzerát"], ["csv", "Import CSV"], ["photos", "Fotky hromadne"], ["req", "Dopyty"], ["msg", "Správy"], ["prof", "Profil"]];
+const TABS: [Tab, string][] = [["home", "Nástenka"], ["list", "Moje inzeráty"], ["donor", "Autá na diely"], ["form", "Pridať inzerát"], ["csv", "Import CSV"], ["photos", "Fotky hromadne"], ["req", "Dopyty"], ["msg", "Správy"], ["prof", "Profil"]];
 const ST: Record<Status, string> = { active: "Aktívny", paused: "Pozastavený", sold: "Predaný", blocked: "Skrytý správcom" };
 
 export default function Portal() {
@@ -123,14 +124,15 @@ export default function Portal() {
         {tab === "req" && cat && <Requests uid={session.user.id} cat={cat} prof={prof} items={items} onSent={flash} />}
         {tab === "donor" && cat && <Donors uid={session.user.id} cat={cat} prof={prof} items={items}
           onAddOne={(d) => { setEdit(null); setDonor(d); setTab("form"); window.scrollTo({ top: 0 }); }}
-          onSellCar={(d) => { setSellDonor(d); setTab("cars"); history.replaceState(null, "", "#cars"); window.scrollTo({ top: 0 }); }}
+          onSellCar={CARS_ENABLED ? (d) => { setSellDonor(d); setTab("cars"); history.replaceState(null, "", "#cars"); window.scrollTo({ top: 0 }); } : undefined}
           onDone={async (m) => { await reload(session); flash(m); }} />}
-        {tab === "cars" && cat && <Cars key={sellDonor?.id ?? "cars"} uid={session.user.id} cat={cat} prof={prof} fromDonor={sellDonor} onDone={(m) => { setSellDonor(null); flash(m); }} />}
+        {CARS_ENABLED && tab === "cars" && cat && <Cars key={sellDonor?.id ?? "cars"} uid={session.user.id} cat={cat} prof={prof} fromDonor={sellDonor} onDone={(m) => { setSellDonor(null); flash(m); }} />}
         {tab === "form" && cat && <ListingForm key={edit?.id ?? "new-" + (donor?.id ?? "")} uid={session.user.id} cat={cat} prof={prof} edit={edit} donor={donor}
           onSaved={async (id) => { await reload(session); setEdit(null); go("list"); flash(edit ? "Zmeny uložené" : `Inzerát #${id} je zverejnený`); }} />}
         {tab === "csv" && cat && <CsvImport uid={session.user.id} cat={cat} prof={prof} onDone={async (n) => { await reload(session); flash(`Importované: ${n}`); go("list"); }} />}
         {tab === "photos" && <BulkPhotos uid={session.user.id} items={items} onDone={async (m) => { await reload(session); flash(m); }} />}
-        {tab === "msg" && <Messages msgs={msgs} onRead={(ids) => act(() => markRead(ids), "Označené ako prečítané")} />}
+        {tab === "msg" && <Messages msgs={msgs} onRead={(ids) => act(() => markRead(ids), "Označené ako prečítané")}
+          onReply={async (id, body) => { try { await sellerReply(id, body); await reload(session); flash(EMAIL_REPLIES ? "Odpoveď odoslaná – kupujúcemu príde e-mailom" : "Odpoveď uložená"); return true; } catch (e) { flash(skError(e)); return false; } }} />}
         {tab === "prof" && prof && <><ProfileTab prof={prof} onSave={async (p) => { await saveProfile(p); setProf(p); flash("Profil uložený"); }} onPw={() => setPwMode(true)} /><MyData uid={session.user.id} /></>}
       </section>
       {toast && <div className="pp-toast" role="status">{toast}</div>}
@@ -303,22 +305,47 @@ function MyList({ initial, items, cat, onEdit, onStatus, onTop, onDup, onDelete,
 }
 
 // ---------- SPRÁVY ----------
-function Messages({ msgs, onRead }: { msgs: Message[]; onRead: (ids: number[]) => void }) {
+function Messages({ msgs, onRead, onReply }: { msgs: Message[]; onRead: (ids: number[]) => void; onReply: (id: number, body: string) => Promise<boolean> }) {
   const unread = msgs.filter((m) => !m.read).map((m) => m.id);
   return (
     <div>
       <header className="pp-h"><h1>Správy od kupujúcich</h1>{unread.length > 0 && <button className="ubtn" onClick={() => onRead(unread)}>Označiť všetky ako prečítané</button>}</header>
+      <p className="mute pp-note">Ak kupujúci zadal e-mail, odpíšte mu priamo tu – {EMAIL_REPLIES ? "odpoveď mu príde e-mailom z adresy portálu a odpovedať vám môže cez odkaz v e-maile. Váš e-mail neuvidí." : "odpoveď sa uloží do konverzácie. Kým nezapneme odosielanie e-mailov z portálu, pošlite ju kupujúcemu aj tlačidlom „Poslať zo svojej pošty“."} Ak zadal telefón, zavolajte mu.</p>
       {!msgs.length ? <div className="empty">Zatiaľ žiadne správy. Kupujúci vám môžu napísať z detailu inzerátu.</div> : (
-        <ul className="pp-msgs">{msgs.map((m) => (
-          <li key={m.id} className={m.read ? "" : "unread"}>
-            <div className="pp-mh"><b>{m.name}</b><span className="mute">{new Date(m.createdAt).toLocaleString("sk-SK", { dateStyle: "short", timeStyle: "short" })}</span></div>
-            <div className="mute">K inzerátu: <a href={m.carId ? "/vozidlo/" + m.carId : listingHref(m.listingId)} target="_blank" rel="noreferrer">{m.listingName}</a></div>
-            <p>{m.body}</p>
-            <div className="pp-mf"><span>Kontakt: <b>{/@/.test(m.contact) ? <a href={"mailto:" + m.contact}>{m.contact}</a> : <a href={"tel:" + m.contact.replace(/\s/g, "")}>{m.contact}</a>}</b></span>
-              {!m.read && <button className="lnk" onClick={() => onRead([m.id])}>Označiť ako prečítané</button>}</div>
-          </li>))}</ul>
+        <ul className="pp-msgs">{msgs.map((m) => <Thread key={m.id} m={m} onRead={onRead} onReply={onReply} />)}</ul>
       )}
     </div>
+  );
+}
+const when = (d: string) => new Date(d).toLocaleString("sk-SK", { dateStyle: "short", timeStyle: "short" });
+function Thread({ m, onRead, onReply }: { m: Message; onRead: (ids: number[]) => void; onReply: (id: number, body: string) => Promise<boolean> }) {
+  const [text, setText] = useState(""), [busy, setBusy] = useState(false), [open, setOpen] = useState(!m.read && !!m.buyerEmail), [last, setLast] = useState("");
+  const send = async () => {
+    if (text.trim().length < 2) return;
+    setBusy(true); const ok = await onReply(m.id, text.trim()); setBusy(false);
+    if (ok) { setLast(text.trim()); setText(""); }
+  };
+  const mailto = (body: string) => "mailto:" + encodeURIComponent(m.buyerEmail || "") + "?subject=" + encodeURIComponent("Re: " + m.listingName) + "&body=" + encodeURIComponent(body + "\n\n---\n" + m.name + " napísal(a):\n" + m.body);
+  return (
+    <li className={m.read ? "" : "unread"}>
+      <div className="pp-mh"><b>{m.name}</b><span className="mute">{when(m.createdAt)}</span></div>
+      <div className="mute">K inzerátu: <a href={m.carId ? "/vozidlo/" + m.carId : listingHref(m.listingId)} target="_blank" rel="noreferrer">{m.listingName}</a></div>
+      <p>{m.body}</p>
+      {m.replies.length > 0 && <ol className="pp-thread">{m.replies.map((r, i) => (
+        <li key={i} className={r.author === "seller" ? "me" : "them"}>
+          <span className="mute">{r.author === "seller" ? "Vy" : m.name} · {when(r.createdAt)}{r.author === "seller" && EMAIL_REPLIES ? (r.emailed ? " · odoslané e-mailom" : r.emailError ? " · e-mail sa nepodarilo odoslať" : " · odosiela sa…") : ""}</span>
+          <p>{r.body}</p></li>))}</ol>}
+      <div className="pp-mf"><span>Kontakt: <b>{m.buyerEmail ? <a href={"mailto:" + m.buyerEmail}>{m.contact}</a> : <a href={"tel:" + m.contact.replace(/\s/g, "")}>{m.contact}</a>}</b></span>
+        {m.buyerEmail && !open && <button className="ubtn" onClick={() => setOpen(true)}>Odpovedať</button>}
+        {!m.read && <button className="lnk" onClick={() => onRead([m.id])}>Označiť ako prečítané</button>}</div>
+      {m.buyerEmail && open && <div className="pp-reply">
+        <label><span>Vaša odpoveď pre {m.name}</span><textarea rows={3} maxLength={2000} value={text} onChange={(e) => setText(e.target.value)} placeholder="Dobrý deň, diel je k dispozícii…" /></label>
+        <div className="pp-actions"><button className="btn" disabled={busy || text.trim().length < 2} onClick={send}>{busy ? "Odosielam…" : EMAIL_REPLIES ? "Odoslať odpoveď" : "Uložiť odpoveď"}</button>
+          {!EMAIL_REPLIES && <a className="ubtn" href={mailto(text.trim() || last)}>Poslať zo svojej pošty</a>}</div>
+        {last && !EMAIL_REPLIES && <small className="mute">Odpoveď je uložená. Kupujúcemu ju pošlite tlačidlom „Poslať zo svojej pošty“ – e-maily z portálu ešte nie sú zapnuté.</small>}
+      </div>}
+      {!m.buyerEmail && <small className="mute">Kupujúci nezadal e-mail – odpovedzte mu telefonicky alebo SMS.</small>}
+    </li>
   );
 }
 

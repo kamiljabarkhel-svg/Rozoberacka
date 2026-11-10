@@ -1,6 +1,7 @@
 // Po zmene inzerátu v portáli predajcu obnoví verejné stránky dielov (inak by sa zmena ukázala až o pár minút).
 // Neprijíma žiadne údaje okrem čísla inzerátu; proti zneužitiu má jednoduchý limit.
 import { revalidatePath } from "next/cache";
+import { CARS_ENABLED } from "@/lib/features";
 
 const hits: number[] = [];
 export async function POST(req: Request) {
@@ -19,7 +20,7 @@ export async function POST(req: Request) {
   revalidatePath("/diely/[...path]", "page");
   revalidatePath("/kategoria/[...path]", "page");
   revalidatePath("/mesto/[...path]", "page");
-  revalidatePath("/havarovane-vozidla");
+  if (CARS_ENABLED) revalidatePath("/havarovane-vozidla");
   revalidatePath("/vozidlo/[slug]", "page");
   return Response.json({ ok: true });
 }

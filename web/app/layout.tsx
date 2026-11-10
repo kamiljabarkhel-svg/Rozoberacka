@@ -18,6 +18,7 @@ import { IconSprite } from "@/components/Icons";
 import { IS_DEMO } from "@/lib/data";
 import { OPERATOR } from "@/lib/operator";
 import { SITE_URL } from "@/lib/seo";
+import { CARS_ENABLED } from "@/lib/features";
 
 
 export const metadata: Metadata = {
@@ -43,7 +44,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         {children}
         <footer className="foot2">
           <b>autosuciastky.eu</b>
-          <span><b>Inzertný portál</b> na autodiely a havarované vozidlá. Prevádzkovateľ {OPERATOR.name} tovar nepredáva, neoveruje ho a nie je stranou kúpnej zmluvy. Za inzeráty, správnosť údajov, zhodu dielu s vozidlom, vady a reklamácie zodpovedá predajca – pred nákupom preto vždy porovnajte číslo dielu (OEM). <Link href="/obchodne-podmienky#zodpovednost">Zodpovednosť</Link></span>
+          <span><b>Inzertný portál</b> na autodiely{CARS_ENABLED ? " a havarované vozidlá" : ""}. Prevádzkovateľ {OPERATOR.name} tovar nepredáva, neoveruje ho a nie je stranou kúpnej zmluvy. Za inzeráty, správnosť údajov, zhodu dielu s vozidlom, vady a reklamácie zodpovedá predajca – pred nákupom preto vždy porovnajte číslo dielu (OEM). <Link href="/obchodne-podmienky#zodpovednost">Zodpovednosť</Link></span>
           <span>Katalóg vozidiel je predbežný (zostavený bez licencovaných dát) a môže obsahovať chyby.</span>
           <Pwa />
           <nav className="foot-l" aria-label="Pomoc">

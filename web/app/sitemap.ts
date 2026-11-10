@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { getActiveSellers, getCatalog, getCities, getSeoCounts, getSitemapListings, sitemapCars } from "@/lib/data";
 import { NAVODY, navodPath } from "@/lib/navody";
 import { SITE_URL, carName, landingPath, listingPath, sellerPath, vehiclePath, vehicleTitle, type Landing } from "@/lib/seo";
+import { CARS_ENABLED } from "@/lib/features";
 
 export const revalidate = 3600;
 
@@ -11,7 +12,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const out: MetadataRoute.Sitemap = [
     { url: SITE_URL + "/", lastModified: now, changeFrequency: "hourly", priority: 1 },
     { url: SITE_URL + "/dopyt", changeFrequency: "monthly", priority: 0.6 },
-    { url: SITE_URL + "/havarovane-vozidla", changeFrequency: "daily", priority: 0.7 },
+    ...(CARS_ENABLED ? [{ url: SITE_URL + "/havarovane-vozidla", changeFrequency: "daily" as const, priority: 0.7 }] : []),
     { url: SITE_URL + "/pre-predajcov", changeFrequency: "monthly", priority: 0.5 },
     { url: SITE_URL + "/obchodne-podmienky", changeFrequency: "yearly", priority: 0.2 },
     { url: SITE_URL + "/ochrana-osobnych-udajov", changeFrequency: "yearly", priority: 0.2 },
@@ -34,7 +35,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     for (const c of cities) add({ brandId: null, modelId: null, cat: "", sub: null, city: c });
     for (const p of pages) out.push({ url: SITE_URL + p, changeFrequency: "daily", priority: 0.7 });
     for (const v of sellers) out.push({ url: SITE_URL + sellerPath(v.id, v.name), changeFrequency: "daily", priority: 0.5 });
-    for (const c of await sitemapCars().catch(() => [])) out.push({ url: SITE_URL + vehiclePath(c.id, vehicleTitle(c, cat), c.condition), lastModified: new Date(c.updatedAt), changeFrequency: "weekly", priority: 0.5 });
+    if (CARS_ENABLED) for (const c of await sitemapCars().catch(() => [])) out.push({ url: SITE_URL + vehiclePath(c.id, vehicleTitle(c, cat), c.condition), lastModified: new Date(c.updatedAt), changeFrequency: "weekly", priority: 0.5 });
     for (const l of listings) out.push({ url: SITE_URL + listingPath(l.id, l.name, carName(l, cat)), lastModified: new Date(l.updatedAt), changeFrequency: "weekly", priority: 0.6 });
   } catch { /* pri výpadku databázy aspoň základné stránky */ }
   return out;
