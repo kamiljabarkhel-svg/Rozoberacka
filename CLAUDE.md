@@ -240,3 +240,7 @@ Overené na Slov-Lexe: Občiansky zákonník § 597, 599, 612, 618, 619 (znenie 
 - Import CSV: stĺpec `fotky` (názvy súborov oddelené |) alebo fotka pomenovaná číslom dielu (`5E1941015.jpg`, `5E1941015_2.jpg`, „5E1941015 (3).jpg“). Inzerát bez fotky sa naimportuje **pozastavený**.
 - Záložka „Fotky hromadne“: fotky k existujúcim inzerátom podľa čísla dielu alebo `ID<číslo inzerátu>_1.jpg`; najviac 8 fotiek na inzerát, pridávajú sa za existujúce. Pravidlá názvov v `web/lib/bulkPhotos.ts` (rovnaké pre oba spôsoby).
 - Fotky sa zmenšujú v prehliadači (JPG, PNG, WebP; HEIC z iPhonu nie – v nastaveniach fotoaparátu „Najkompatibilnejší“).
+
+## Odpovede na správy, havarované vozidlá vypnuté (10. 11. 2026, 21:25)
+- `supabase/24`: predajca odpovedá kupujúcemu v „Správy“ (`seller_reply`), len ak kupujúci zadal e-mail (`messages.buyer_email`). Kupujúci píše cez tajný odkaz `/sprava/<token>` (`thread_get`, `thread_reply`, až po odpovedi predajcu). Predajca token nevidí. E-maily posiela funkcia `odpovede` z fronty `reply_outbox()`; zapnutie e-mailov `NEXT_PUBLIC_EMAIL_REPLIES=1` až po Brevo (návod `supabase/README.md`).
+- Havarované vozidlá sú **skryté** (`web/lib/features.ts`, `CARS_ENABLED`; zapnutie `NEXT_PUBLIC_CARS=1`). Kód a tabuľky ostali.
