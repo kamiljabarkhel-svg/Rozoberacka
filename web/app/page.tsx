@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import HomeIntro from "@/components/HomeIntro";
 import Home, { type HomeSsr } from "@/components/Home";
 import { IS_DEMO, getCatalog, getCities, getSeoCounts, getStats, searchListings } from "@/lib/data";
 import { emptyFilters } from "@/lib/types";
@@ -35,6 +36,7 @@ export default async function Page() {
   return (
     <>
       <JsonLd data={siteLd()} />
+      <HomeIntro parts={ssr?.stats.parts} sellers={ssr?.stats.sellers} />
       <Home ssr={ssr} />
       {cat && (models.length > 0 || cats.length > 0) && (
         <nav className="wrap seo-links" aria-label="Diely podľa auta a kategórie">

@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Icon } from "./Icons";
+import { LogoMark, Wordmark } from "./Logo";
 import { STATIC_PREVIEW, homeHref, sellersHref } from "@/lib/paths";
 import { getSession, onAuthChange } from "@/lib/seller";
 import HeaderSearch, { type Pick } from "./HeaderSearch";
@@ -52,7 +52,7 @@ export default function Header() {
     <>
     <header className="site-header">
       <div className="tb">
-        <Brand className="brand" href={homeHref}><Icon id="i-pr" />autosuciastky.eu</Brand>
+        <Brand className="brand" href={homeHref} aria-label="autosuciastky.eu – úvod"><LogoMark size={34} /><Wordmark /></Brand>
         <form className="gs" role="search" onSubmit={(e) => { e.preventDefault(); send(q, true); }}>
           <HeaderSearch value={q} onChange={(v) => { setQ(v); if (onHome) send(v, false); }} onPick={pick} />
         </form>

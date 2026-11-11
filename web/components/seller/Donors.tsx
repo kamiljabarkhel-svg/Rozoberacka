@@ -8,7 +8,7 @@ import { carName } from "@/lib/seo";
 import { createFromDonor, deleteDonor, myDonors, saveDonor, skError, type Donor, type ListingInput, type MyListing, type Profile } from "@/lib/seller";
 import ScanText from "../ScanText";
 
-type Part = { on: boolean; custom?: boolean; name: string; cat: string; sub: string; side: string; oem: string; price: string; cond: Condition };
+type Part = { on: boolean; custom?: boolean; name: string; cat: string; sub: string; side: string; oem: string; price: string; cond: Condition; files?: File[] };
 export type Common = [string, string, string, string?][];
 const CAR_COMMON: Common = [
   ["Predné svetlo ľavé", "sv", "Predné svetlá", "Ľavá"], ["Predné svetlo pravé", "sv", "Predné svetlá", "Pravá"],
@@ -75,7 +75,7 @@ export default function Donors({ uid, cat, prof, items, onAddOne, onSellCar, onD
     const id = await saveDonor(uid, v, edit.id); setEdit(null); await reload(); onDone(edit.id == null ? "Vozidlo pridané – teraz z neho pridajte diely" : "Vozidlo uložené");
     if (edit.id == null) setQuick({ ...v, id, createdAt: new Date().toISOString() });
   }} />;
-  if (quick) return <QuickAdd uid={uid} cat={cat} prof={prof} donor={quick} onCancel={() => setQuick(null)} onDone={(n) => { setQuick(null); onDone(`Vytvorené: ${n} inzerátov. Sú pozastavené – doplňte fotky a aktivujte ich.`); }} />;
+  if (quick) return <QuickAdd uid={uid} cat={cat} prof={prof} donor={quick} onCancel={() => setQuick(null)} onDone={(n, active) => { setQuick(null); onDone(active === n ? `Zverejnené: ${n} ${n === 1 ? "inzerát" : n <= 4 ? "inzeráty" : "inzerátov"}` : `Vytvorené: ${n} ${n === 1 ? "inzerát" : n <= 4 ? "inzeráty" : "inzerátov"}, zverejnené ${active}. Diely bez fotky sú pozastavené – doplňte fotky a aktivujte ich.`); }} />;
 
   return (
     <div>
@@ -142,10 +142,10 @@ function CarForm({ cat, init, isNew, onSave, onCancel }: { cat: Catalog; init: O
   );
 }
 
-function QuickAdd({ uid, cat, prof, donor, onCancel, onDone }: { uid: string; cat: Catalog; prof: Profile | null; donor: Donor; onCancel: () => void; onDone: (n: number) => void }) {
+function QuickAdd({ uid, cat, prof, donor, onCancel, onDone }: { uid: string; cat: Catalog; prof: Profile | null; donor: Donor; onCancel: () => void; onDone: (n: number, active: number) => void }) {
   const auto = donor.gearbox === "Automatická";
   const [rows, setRows] = useState<Part[]>(() => commonFor(typeOf(cat, donor.modelId)).map(([name, c, sub, side]) => ({ on: false, name, cat: c, sub: name === "Prevodovka" && auto ? "Automatické prevodovky" : sub, side: side || "", oem: "", price: "", cond: "Dobrý" })));
-  const [bad, setBad] = useState<Set<number>>(new Set()); const [err, setErr] = useState<string[]>([]); const [busy, setBusy] = useState(false);
+  const [bad, setBad] = useState<Set<number>>(new Set()); const [err, setErr] = useState<string[]>([]); const [busy, setBusy] = useState(false); const [done, setDone] = useState(0);
   const firm = (prof?.type || "Firma") === "Firma";
   const car = `${carName(donor, cat, true)}, ${donor.year}`;
   const vt = typeOf(cat, donor.modelId);
@@ -160,26 +160,26 @@ function QuickAdd({ uid, cat, prof, donor, onCancel, onDone }: { uid: string; ca
     if (b.size) return setErr([`Doplňte názov, OEM číslo (aspoň 4 znaky) a cenu pri označených riadkoch (${b.size}).`]);
     if (!chosen) return setErr(["Označte aspoň jeden diel."]);
     const desc = `Diel z vozidla ${car}${donor.km != null ? `, ${donor.km.toLocaleString("sk-SK")} km` : ""}${donor.gearbox ? `, ${donor.gearbox.toLowerCase()} prevodovka` : ""}${donor.color ? `, farba ${donor.color}` : ""}.`;
-    const input: ListingInput[] = rows.filter((r) => r.on).map((r) => ({
+    const input: { input: ListingInput; files: File[] }[] = rows.filter((r) => r.on).map((r) => ({ files: r.files || [], input: {
       name: r.name.trim(), brandId: donor.brandId, modelId: donor.modelId, engineId: donor.engineId, year: donor.year, categoryId: r.cat,
       subcategoryId: cat.subcategories.find((s) => s.categoryId === r.cat && s.name === r.sub)?.id ?? null, oem: r.oem.trim(), partMaker: "",
       price: Math.round(Number(r.price.replace(",", ".")) * 100) / 100, city: prof?.city || "", condition: r.cond, description: desc,
       warranty: firm ? "12 mesiacov" : "Bez záruky", shipping: "Len osobný odber", phone: prof?.phone || "", side: r.side, gearbox: donor.gearbox,
       km: donor.km, tested: false, returns14: false, fits: [], specs: {}, vtype: null, donorId: donor.id,
-    }));
-    setBusy(true);
-    const res = await createFromDonor(uid, input);
+    } }));
+    setBusy(true); setDone(0);
+    const res = await createFromDonor(uid, input, setDone);
     setBusy(false);
-    if (res.errors.length) { setErr(res.errors); if (res.ok) onDone(res.ok); return; }
-    onDone(res.ok);
+    if (res.errors.length) { setErr(res.errors); if (res.ok) onDone(res.ok, res.active); return; }
+    onDone(res.ok, res.active);
   };
   if (missingProfile) return <div className="pp-box"><h2>Najprv doplňte profil</h2><p>Mesto a telefón z profilu sa použijú pri všetkých dieloch z auta. Doplňte ich v záložke Profil.</p><button className="ubtn" onClick={onCancel}>Späť</button></div>;
   return (
     <div>
       <header className="pp-h"><h1>Diely z vozidla {car}</h1><span className="mute">Označené: {chosen}</span></header>
-      <p className="mute pp-note">Zaškrtnite diely, ktoré máte, a doplňte OEM číslo a cenu. Inzeráty vzniknú pozastavené – potom im v „Moje inzeráty“ pridajte fotky a aktivujte ich. Mesto a telefón sa vezmú z profilu.</p>
+      <p className="mute pp-note">Zaškrtnite diely, ktoré máte, doplňte OEM číslo, cenu a pridajte fotky (tlačidlo „Fotky“ v riadku, najviac 8 na diel). Diel s fotkou sa hneď zverejní, diel bez fotky vznikne pozastavený – fotky mu doplníte neskôr. Mesto a telefón sa vezmú z profilu.</p>
       <div className="pp-quick-t" role="table">
-        <div className="pp-qh" role="row"><span /><span>Diel</span><span>OEM číslo *</span><span>Cena € *</span><span>Stav</span></div>
+        <div className="pp-qh" role="row"><span /><span>Diel</span><span>OEM číslo *</span><span>Cena € *</span><span>Stav</span><span>Fotky</span></div>
         {rows.map((r, i) => (
           <div key={i} className={"pp-qr" + (r.on ? " on" : "") + (bad.has(i) ? " bad" : "")} role="row">
             <input type="checkbox" checked={r.on} onChange={(e) => upd(i, { on: e.target.checked })} aria-label={"Vybrať " + r.name} />
@@ -191,12 +191,17 @@ function QuickAdd({ uid, cat, prof, donor, onCancel, onDone }: { uid: string; ca
             <input value={r.oem} onChange={(e) => upd(i, { oem: e.target.value })} placeholder="OEM" aria-label={"OEM " + r.name} />
             <input value={r.price} inputMode="decimal" onChange={(e) => upd(i, { price: e.target.value })} placeholder="€" aria-label={"Cena " + r.name} />
             <select value={r.cond} onChange={(e) => upd(i, { cond: e.target.value as Condition })} aria-label={"Stav " + r.name}><option>Veľmi dobrý</option><option>Dobrý</option><option>Na opravu</option><option>Repasovaný</option></select>
+            <label className={"pp-qph" + (r.files?.length ? " has" : "")} title="Pridať fotky k tomuto dielu">
+              <input type="file" accept="image/*" multiple onChange={(e) => { const fs = [...(e.target.files || [])].filter((f) => f.type.startsWith("image/") || /\.(jpe?g|png|webp)$/i.test(f.name)); e.target.value = ""; if (fs.length) upd(i, { files: [...(r.files || []), ...fs].slice(0, 8) }); }} aria-label={"Fotky " + r.name} />
+              <span>{r.files?.length ? `${r.files.length} ${r.files.length === 1 ? "fotka" : r.files.length <= 4 ? "fotky" : "fotiek"}` : "Fotky"}</span>
+            </label>
+            {r.files?.length ? <button type="button" className="lnk pp-qphx" onClick={() => setRows((rs) => rs.map((x, k) => (k === i ? { ...x, files: [] } : x)))} aria-label={"Odobrať fotky " + r.name}>×</button> : <span />}
           </div>
         ))}
       </div>
       <button className="lnk" onClick={() => setRows((r) => [...r, { on: true, custom: true, name: "", cat: vt === "motorky" ? "mrm" : "kar", sub: "", side: "", oem: "", price: "", cond: "Dobrý" }])}>+ Pridať iný diel</button>
       {err.map((x) => <p key={x} className="pp-err">{x}</p>)}
-      <div className="pp-actions"><button className="ubtn" onClick={onCancel}>Zrušiť</button><button className="btn" disabled={busy} onClick={submit}>{busy ? "Vytváram…" : `Vytvoriť ${chosen} ${chosen === 1 ? "inzerát" : chosen >= 2 && chosen <= 4 ? "inzeráty" : "inzerátov"}`}</button></div>
+      <div className="pp-actions"><button className="ubtn" onClick={onCancel}>Zrušiť</button><button className="btn" disabled={busy} onClick={submit}>{busy ? `Vytváram ${done} / ${chosen}…` : `Vytvoriť ${chosen} ${chosen === 1 ? "inzerát" : chosen >= 2 && chosen <= 4 ? "inzeráty" : "inzerátov"}`}</button></div>
     </div>
   );
 }

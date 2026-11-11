@@ -1279,9 +1279,9 @@ a{color:var(--link)}
    Majiteľ: priveľa odtieňov zelenej, zle čitateľné a nudné. Jedna hlavná farba – sýta modrá –
    na hlavičku aj lištu hľadania (jeden farebný blok), žltá na hlavné tlačidlá a ceny,
    texty neutrálne sivé (bez zeleného nádychu), tmavý režim neutrálny. Zelená ostáva len pre „v poriadku“. */
-:root{--pet:#1840a0;--pet2:#2456cc;--link:#1c4fc4;--icoink:#1840a0;--ink:#1d2127;--mute:#565e69;--line:#dcdfe4;--bg:#f3f4f6;--chip:#eceef2;--ico:#e6e9ef;--acc:#ffd43b;--accink:#1d2127;--ok:#1e8a4c}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#101216;--card:#191c22;--ink:#eceef2;--mute:#a3a9b3;--line:#2c3038;--chip:#22262d;--ico:#232831;--icoink:#9db8ff;--pet:#1a3a8a;--pet2:#2c5bd0;--link:#9db8ff;--field:#4a505b;--acc:#ffd43b;--accink:#1d2127}}
-:root[data-theme="dark"]{--bg:#101216;--card:#191c22;--ink:#eceef2;--mute:#a3a9b3;--line:#2c3038;--chip:#22262d;--ico:#232831;--icoink:#9db8ff;--pet:#1a3a8a;--pet2:#2c5bd0;--link:#9db8ff;--field:#4a505b;--acc:#ffd43b;--accink:#1d2127}
+:root{--pet:#1a2d6d;--pet2:#2f49a8;--link:#2742b0;--icoink:#1a2d6d;--ink:#1d2127;--mute:#565e69;--line:#dcdfe4;--bg:#f3f4f6;--chip:#eceef2;--ico:#e6e9ef;--acc:#ffd43b;--accink:#1d2127;--ok:#1e8a4c}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#101216;--card:#191c22;--ink:#eceef2;--mute:#a3a9b3;--line:#2c3038;--chip:#22262d;--ico:#232831;--icoink:#aab8ff;--pet:#18275e;--pet2:#3550b8;--link:#aab8ff;--field:#4a505b;--acc:#ffd43b;--accink:#1d2127}}
+:root[data-theme="dark"]{--bg:#101216;--card:#191c22;--ink:#eceef2;--mute:#a3a9b3;--line:#2c3038;--chip:#22262d;--ico:#232831;--icoink:#aab8ff;--pet:#18275e;--pet2:#3550b8;--link:#aab8ff;--field:#4a505b;--acc:#ffd43b;--accink:#1d2127}
 /* hlavička = modrý pás; logo biele so žltým „.eu“ cez farbu, hľadanie biele so žltým tlačidlom */
 .site-header{background:var(--pet)!important;color:#fff;border:0}
 .site-header .brand,:root .site-header .brand{color:#fff!important;border:0!important}
@@ -1315,3 +1315,49 @@ nav.snav a[aria-current="page"]{color:#fff!important;border-bottom-color:var(--a
 }
 :root[data-theme="dark"] .call{background:var(--pet2);color:#fff}
 :root[data-theme="dark"] .chip[aria-pressed="true"]{background:var(--pet2);border-color:var(--pet2);color:#fff}
+/* auto na diely: fotky v riadku */
+.pp-qh,.pp-qr{grid-template-columns:28px minmax(0,2.2fr) minmax(0,1.4fr) 90px 130px 96px 22px}
+.pp-qph{position:relative;display:flex;align-items:center;justify-content:center;height:36px;border:1.5px dashed var(--field);border-radius:4px;font:650 .85rem/1 var(--f-b);color:var(--link);cursor:pointer;background:var(--card)}
+.pp-qph input{position:absolute;opacity:0;width:1px;height:1px}
+.pp-qph:focus-within{outline:2px solid var(--pet2);outline-offset:1px}
+.pp-qph.has{border-style:solid;border-color:var(--ok);color:var(--ok)}
+.pp-qphx{font-size:1.1rem;padding:0;color:var(--mute)}
+@media(max-width:700px){.pp-qr{grid-template-columns:28px 1fr 1fr 22px}.pp-qr>input:nth-child(2){grid-column:2/5}.pp-qr>select{grid-column:2/5}.pp-qph{grid-column:2/4}}
+
+/* ================= Tmavomodrá (indigo) + logo + pás „Rady a návody“ (11. 11. 2026, 21:10) =================
+   Modrá #1840a0 bola podobná autobazar.eu – nová hlavná farba je tmavá indigová #1a2d6d.
+   Logo: náboj kolesa (žltý) v indigovom štvorci + „autosuciastky.eu“, „.eu“ žltou. */
+.site-header .brand{display:inline-flex;align-items:center;gap:10px}
+.site-header .brand svg{display:block!important;flex:0 0 auto;padding:0!important;background:none!important;width:38px!important;height:38px!important;margin:-4px -2px -4px -6px}
+.site-header .brand svg rect{fill:transparent}
+.site-header .brand svg circle:not(:nth-of-type(1)){fill:var(--pet)}
+.wm{font:800 1.42rem/1 var(--f-b);letter-spacing:-.025em;color:#fff}
+.wm-eu{color:var(--acc)}
+/* pás medzi hlavičkou a hľadaním: biely, logo vľavo, články vpravo */
+.intro{background:var(--card);border-bottom:1px solid var(--line)}
+.intro-in{max-width:1248px;margin:0 auto;padding:22px 16px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.35fr);gap:20px 40px;align-items:center}
+.intro-brand{display:flex;gap:18px;align-items:flex-start}
+.intro-mark{flex:0 0 auto;width:64px;height:64px}
+.intro-t{margin:0 0 10px;font:750 1.35rem/1.25 var(--f-b);letter-spacing:-.015em;color:var(--ink);max-width:24em}
+.intro-pts{list-style:none;margin:0;padding:0;display:grid;gap:5px;color:var(--mute);font-size:.95rem}
+.intro-pts li{padding-left:18px;position:relative}
+.intro-pts li::before{content:"";position:absolute;left:0;top:.5em;width:8px;height:8px;border-radius:2px;background:var(--acc);box-shadow:inset 0 0 0 1.5px var(--pet)}
+.intro-pts b{color:var(--ink)}
+.intro-bh{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:10px}
+.intro-bh h2{margin:0;font:750 1.05rem/1.2 var(--f-b);color:var(--ink)}
+.intro-bh a{font-size:.9rem;font-weight:650}
+.intro-blog ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.intro-blog li a{display:flex;flex-direction:column;gap:6px;height:100%;padding:12px 14px;border:1px solid var(--line);border-top:3px solid var(--pet);border-radius:6px;text-decoration:none;color:var(--ink);background:var(--card)}
+.intro-blog li a:hover{border-color:var(--pet2);border-top-color:var(--acc)}
+.intro-blog li b{font:700 .97rem/1.3 var(--f-b);color:var(--link)}
+.intro-blog li span{font-size:.86rem;line-height:1.45;color:var(--mute)}
+@media (max-width:960px){.intro-in{grid-template-columns:1fr;gap:16px;padding:16px}}
+@media (max-width:700px){
+  .intro-mark{width:44px;height:44px}
+  .intro-t{font-size:1.08rem;margin-bottom:0}
+  .intro-pts{display:none}
+  .intro-blog ul{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:8px;margin:0 -16px;padding:0 16px 4px}
+  .intro-blog li{flex:0 0 72%;scroll-snap-align:start}
+  .intro-blog li span{display:none}
+}
+@media (max-width:560px){.wm{font-size:1.06rem}.site-header .brand{gap:6px;min-width:0}.site-header .brand svg{width:30px!important;height:30px!important}.site-header .ubtn{font-size:.82rem;padding:8px 9px;white-space:nowrap}}

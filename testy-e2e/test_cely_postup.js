@@ -205,8 +205,10 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
     const row = (n) => pg.locator(".pp-qr", { has: pg.locator(`input[value="${n}"]`) });
     await row("Kapota").locator("input[aria-label^='OEM']").fill("5E0823031"); await row("Kapota").locator("input[aria-label^='Cena']").fill("90");
     await row("Alternátor").locator("input[aria-label^='OEM']").fill("04L903023"); await row("Alternátor").locator("input[aria-label^='Cena']").fill("70");
-    await pg.click("text=Vytvoriť 2 inzeráty"); await pg.waitForSelector(".pp-toast:has-text('Vytvorené: 2')", { timeout: 20000 });
-    await pg.waitForSelector(".pp-row:has-text('Diely z vozidla: 2')");
+    const zr = row("Spätné zrkadlo ľavé"); await zr.locator("input[aria-label^='OEM']").fill("5E1857507"); await zr.locator("input[aria-label^='Cena']").fill("40");
+    await zr.locator(".pp-qph input").setInputFiles(["a.png"]); await zr.locator(".pp-qph:has-text('1 fotka')").waitFor();
+    await pg.click("text=Vytvoriť 3 inzeráty"); await pg.waitForSelector(".pp-toast:has-text('Vytvorené: 3 inzeráty, zverejnené 1')", { timeout: 30000 });
+    await pg.waitForSelector(".pp-row:has-text('Diely z vozidla: 3')");
   });
   if (!process.env.RZ_CARS) await step("havarovane vozidla su skryte", async () => {
     const r = await b2.goto(B + "/havarovane-vozidla"); if (r.status() !== 404) throw new Error("stav " + r.status());

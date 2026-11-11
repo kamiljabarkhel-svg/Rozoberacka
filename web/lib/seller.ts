@@ -401,13 +401,18 @@ export async function deleteDonor(id: number) {
   if (error) throw new Error(skError(error));
 }
 /** Viac dielov z jedného auta naraz. Vzniknú pozastavené (bez fotiek) – predajca doplní fotky a aktivuje. */
-export async function createFromDonor(uid: string, rows: ListingInput[]): Promise<{ ok: number; errors: string[] }> {
-  const errors: string[] = []; let ok = 0;
-  for (const x of rows) {
-    try { const id = await saveListing(uid, null, x, [], []); await setStatus([id], "paused"); ok++; }
-    catch (e) { errors.push(`${x.name}: ${skError(e)}`); }
+/** Diely z auta na diely: s fotkou sa hneď zverejnia, bez fotky ostanú pozastavené (fotky sa dajú doplniť neskôr). */
+export async function createFromDonor(uid: string, rows: { input: ListingInput; files: File[] }[], onProgress?: (n: number) => void): Promise<{ ok: number; active: number; errors: string[] }> {
+  const errors: string[] = []; let ok = 0, active = 0, k = 0;
+  for (const { input: x, files } of rows) {
+    try {
+      const id = await saveListing(uid, null, x, files.slice(0, 8).map((file) => ({ file, url: "" })), []);
+      if (files.length) active++; else await setStatus([id], "paused");
+      ok++;
+    } catch (e) { errors.push(`${x.name}: ${skError(e)}`); }
+    onProgress?.(++k);
   }
-  return { ok, errors };
+  return { ok, active, errors };
 }
 
 // ---------- EXPORT A HROMADNÉ CENY ----------
