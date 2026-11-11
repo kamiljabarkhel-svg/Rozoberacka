@@ -76,7 +76,7 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
   });
   await step("formular vyplnit a ulozit", async () => {
     await pg.fill("label:has-text('Názov dielu') input", "Predné ľavé svetlo LED");
-    await pg.selectOption("label:has-text('Kategória') select", { label: "Svetlá" });
+    await pg.selectOption(".fp-cat select", { label: "Svetlá" });
     await pg.selectOption("label:has-text('Podkategória') select", { label: "Predné svetlá" });
     await pg.fill("label:has-text('OEM') input:not([type=file])", "5E1 941 015");
     await pg.click("text=Ďalej →");
@@ -107,7 +107,7 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
   await step("ulozene hladanie (strazca)", async () => {
     await b2.selectOption(".panel label:has-text('Značka') select", { label: "Škoda" }); await b2.waitForTimeout(500);
     await b2.click("text=Uložiť hľadanie"); await b2.waitForSelector(".saved-i:has-text('Škoda')");
-    await b2.goto(B + "/"); await b2.waitForSelector(".saved-i:has-text('Škoda')"); await b2.click(".saved-i .chip"); await b2.waitForSelector("text=✓ Hľadanie uložené");
+    await b2.goto(B + "/"); await b2.waitForSelector(".saved-i:has-text('Škoda')"); await b2.click(".saved-i .chip"); await b2.waitForSelector(".saved-ok:has-text('Hľadanie uložené')");
     await b2.goto(B + "/");
   });
   await step("verejne: hladanie OEM bez medzier", async () => { await b2.fill(".oemrow input:not([type=file])", "5e1941015"); await b2.click("text=Hľadať podľa čísla"); await b2.waitForSelector(".cnt:has-text('1')"); });
@@ -280,7 +280,10 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
     await pg.setInputFiles(".pp-bulkph input", ["5E0823031_1.png", "nic-nesedi.png"]);
     await pg.waitForSelector(".pp-pre li:has-text('Kapota') .pp-prephotos img"); await pg.waitForSelector("text=Nepriradené (1)");
     await pg.waitForSelector(".pp-photosum:has-text('po pridaní fotiek zverejní')");
-    await pg.click("text=Pridať fotky"); await pg.waitForSelector(".pp-toast:has-text('Fotky doplnené k 1 inzerátu')", { timeout: 20000 });
+    const cons = []; pg.on("console", (m) => cons.push(m.text()));
+    await pg.click(".pp-box .btn:has-text('Pridať fotky')");
+    try { await pg.waitForSelector(".pp-toast:has-text('Fotky doplnené k 1 inzerátu')", { timeout: 30000 }); }
+    catch (e) { console.log("DEBUG", (await pg.locator(".pp-body").innerText()).slice(0, 800), cons.slice(-10)); throw e; }
     await pg.click(".pp-nav button:has-text('Moje inzeráty')"); await pg.waitForSelector(".pp-row:has-text('Kapota') .pp-th img");
     await pg.click(".pp-chips >> text=Aktívne"); await pg.waitForSelector(".pp-row:has-text('Kapota')");
   });
@@ -298,9 +301,9 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
     await pg.click("text=Zverejniť 2 inzeráty"); await pg.waitForSelector(".pp-err:has-text('Doplňte údaje pri 2 dieloch')");
     const p0 = pg.locator(".fp-parts > li >> nth=0"), p1 = pg.locator(".fp-parts > li >> nth=1");
     await p0.locator(".fp-name input").fill("Predné svetlo ľavé");
-    if ((await p0.locator("label:has-text('Kategória') select").inputValue()) !== "sv") throw new Error("kategoria sa nedoplnila z nazvu");
+    if ((await p0.locator(".fp-cat select").inputValue()) !== "sv") throw new Error("kategoria sa nedoplnila z nazvu");
     await p0.locator(".fp-oem input").fill("5E1941015B"); await p0.locator("label:has-text('Cena') input").fill("120");
-    await p1.locator(".fp-name input").fill("Volant kožený"); await p1.locator("label:has-text('Kategória') select").selectOption("int");
+    await p1.locator(".fp-name input").fill("Volant kožený"); await p1.locator(".fp-cat select").selectOption("int");
     await p1.locator(".fp-oem input").fill("5E0419091"); await p1.locator("label:has-text('Cena') input").fill("45");
     await pg.click("text=Zverejniť 2 inzeráty"); await pg.waitForSelector(".pp-toast:has-text('Zverejnené: 2 inzeráty')", { timeout: 30000 });
     await pg.click(".pp-nav button:has-text('Moje inzeráty')"); await pg.click(".pp-chips >> text=Aktívne");

@@ -1259,7 +1259,8 @@ a{color:var(--link)}
 .fp-th button{position:absolute;top:3px;right:3px;width:22px;height:22px;border:0;border-radius:3px;background:rgba(0,0,0,.65);color:#fff;font-size:1rem;line-height:1;cursor:pointer}
 .fp-f{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
 .fp-name{grid-column:1/-1}
-.fp .oemin{display:flex;gap:6px}
+.fp .oemin{display:flex;gap:6px;flex-wrap:nowrap}
+.fp .oemin input{flex:1 1 auto;width:auto}
 .fp-oem input{font-variant-numeric:tabular-nums;letter-spacing:.03em}
 @media (max-width:760px){.fp-parts>li{grid-template-columns:1fr}.fp-f{grid-template-columns:1fr 1fr}.fp-pool{grid-template-columns:repeat(3,minmax(0,1fr))}.fp-th:first-child{width:120px;height:90px}}
 /* portál: menu v skupinách */
