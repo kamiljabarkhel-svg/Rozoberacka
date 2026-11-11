@@ -1274,3 +1274,44 @@ a{color:var(--link)}
   .pp-grp+.pp-grp{border:0;padding:0}
   .pp-grp-h{display:none}
 }
+
+/* ================= Farby „modrá + žltá“ (11. 11. 2026, 20:40) =================
+   Majiteľ: priveľa odtieňov zelenej, zle čitateľné a nudné. Jedna hlavná farba – sýta modrá –
+   na hlavičku aj lištu hľadania (jeden farebný blok), žltá na hlavné tlačidlá a ceny,
+   texty neutrálne sivé (bez zeleného nádychu), tmavý režim neutrálny. Zelená ostáva len pre „v poriadku“. */
+:root{--pet:#1840a0;--pet2:#2456cc;--link:#1c4fc4;--icoink:#1840a0;--ink:#1d2127;--mute:#565e69;--line:#dcdfe4;--bg:#f3f4f6;--chip:#eceef2;--ico:#e6e9ef;--acc:#ffd43b;--accink:#1d2127;--ok:#1e8a4c}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#101216;--card:#191c22;--ink:#eceef2;--mute:#a3a9b3;--line:#2c3038;--chip:#22262d;--ico:#232831;--icoink:#9db8ff;--pet:#1a3a8a;--pet2:#2c5bd0;--link:#9db8ff;--field:#4a505b;--acc:#ffd43b;--accink:#1d2127}}
+:root[data-theme="dark"]{--bg:#101216;--card:#191c22;--ink:#eceef2;--mute:#a3a9b3;--line:#2c3038;--chip:#22262d;--ico:#232831;--icoink:#9db8ff;--pet:#1a3a8a;--pet2:#2c5bd0;--link:#9db8ff;--field:#4a505b;--acc:#ffd43b;--accink:#1d2127}
+/* hlavička = modrý pás; logo biele so žltým „.eu“ cez farbu, hľadanie biele so žltým tlačidlom */
+.site-header{background:var(--pet)!important;color:#fff;border:0}
+.site-header .brand,:root .site-header .brand{color:#fff!important;border:0!important}
+.site-header .gs{border:0;border-radius:4px;background:#fff;box-shadow:none}
+.site-header .gs input{color:#1d2127;background:#fff}
+.site-header .gs input::placeholder{color:#6b7280}
+.site-header .gs button,.site-header .gs .gsb{background:var(--acc)!important;color:#1d2127!important}
+.site-header .ubtn,:root .site-header .ubtn{color:#fff!important;border-color:rgba(255,255,255,.7)!important;background:transparent}
+.site-header .ubtn:hover,:root .site-header .ubtn:hover{background:#fff!important;color:var(--pet)!important;border-color:#fff!important}
+nav.snav{background:var(--pet)!important;border-top:1px solid rgba(255,255,255,.16);border-bottom:0}
+nav.snav a{color:rgba(255,255,255,.86)!important}
+nav.snav a:hover{color:#fff!important}
+nav.snav a[aria-current="page"]{color:#fff!important;border-bottom-color:var(--acc)!important}
+/* lišta hľadania nadväzuje na hlavičku – rovnaká modrá, oddelená tenkou čiarou; popisy plne biele */
+.panel.finder{background:var(--pet);border-top:1px solid rgba(255,255,255,.16)}
+.finder label,.finder .find-l,.finder .lt{color:#fff!important}
+.finder .mute,.finder small{color:rgba(255,255,255,.85)!important}
+.panel.finder .vtabs button{border-color:rgba(255,255,255,.45)}
+.panel.finder .vtabs button.on{background:var(--acc);color:#1d2127;border-color:var(--acc)}
+.finder select:disabled{background:#c9d2e6!important;color:#3d4552!important}
+.find-foot a,.finder a{color:#fff;text-decoration-color:rgba(255,255,255,.6)}
+/* zvyšok: modrá na výber, odkazy a telefón; aktívna kategória vľavo žltý pruh pre lepšiu orientáciu */
+.c-cats button[aria-pressed="true"]{background:var(--pet);color:#fff;box-shadow:inset 4px 0 0 var(--acc)}
+.grid.rows .card:hover{border-color:var(--pet2)}
+.call{background:var(--pet)}
+.call:hover{background:var(--pet2)}
+.price{color:var(--ink)}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]) .call{background:var(--pet2);color:#fff}
+  :root:not([data-theme="light"]) .chip[aria-pressed="true"]{background:var(--pet2);border-color:var(--pet2);color:#fff}
+}
+:root[data-theme="dark"] .call{background:var(--pet2);color:#fff}
+:root[data-theme="dark"] .chip[aria-pressed="true"]{background:var(--pet2);border-color:var(--pet2);color:#fff}

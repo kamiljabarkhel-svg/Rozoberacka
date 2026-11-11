@@ -259,3 +259,11 @@ Overené na Slov-Lexe: Občiansky zákonník § 597, 599, 612, 618, 619 (znenie 
 - CSS: vrstva „Vzhľad C“ na konci `web/app/globals.css` (prepisuje staršie vrstvy). Rohy max. 6 px a bez tieňov platí ďalej.
 - **Hromadne z fotiek** (záložka portálu): „Nové inzeráty z fotiek“ (`components/seller/FromPhotos.tsx`) – predajca nahrá všetky fotky naraz, vyberie rozoberané vozidlo alebo značku/model/ročník a raz zadá stav, záruku, odovzdanie, mesto a telefón; klikaním označí fotky jedného dielu → „Vytvoriť diel z označených“ (alebo „Každá fotka = 1 diel“), doplní názov (bežné názvy doplnia kategóriu a stranu), číslo dielu a cenu → „Zverejniť“. Popis vznikne sám (vozidlo + spoločný doplnok). Pneumatiky a disky sa takto nepridávajú (potrebujú rozmery – bežný formulár). Druhý režim „Doplniť fotky k existujúcim inzerátom“ je pôvodné priradenie podľa názvu súboru.
 - Menu portálu predajcu je v skupinách s nadpismi: Prehľad (Nástenka, Moje inzeráty), Pridať inzeráty (Jeden inzerát, Hromadne z fotiek, Import z CSV, Z auta na diely), Kupujúci (Správy od kupujúcich, Dopyty na diely), Môj účet (Profil a nastavenia). Na mobile záložky bez nadpisov. `NAV_GROUPS` v `components/seller/Portal.tsx`.
+
+## Farby modrá + žltá (11. 11. 2026, 20:45)
+- Majiteľ: priveľa odtieňov zelenej, zle čitateľné a nudné. Petrolejová a zelené odtiene sú preč.
+- Hlavná farba **modrá #1840a0** (`--pet`, svetlejšia `--pet2` #2456cc, odkazy `--link` #1c4fc4): hlavička, lišta sekcií a lišta hľadania tvoria jeden modrý blok; logo a texty v ňom biele.
+- **Žltá #ffd43b** (`--acc`): tlačidlo hľadania, „Hľadať“, aktívna sekcia (podčiarknutie), vybraný druh vozidla, zvýrazňovač ceny, TOP, pruh pri vybranej časti auta.
+- Texty neutrálne sivé (#1d2127, #565e69), tmavý režim neutrálny (#101216 / #191c22). Zelená len pre stav „v poriadku“ (`--ok`).
+- CSS: vrstva „Farby modrá + žltá“ úplne na konci `web/app/globals.css`.
+
