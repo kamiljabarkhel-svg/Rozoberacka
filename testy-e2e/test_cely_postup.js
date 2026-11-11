@@ -76,7 +76,7 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
   });
   await step("formular vyplnit a ulozit", async () => {
     await pg.fill("label:has-text('Názov dielu') input", "Predné ľavé svetlo LED");
-    await pg.selectOption(".fp-cat select", { label: "Svetlá" });
+    await pg.selectOption("label:has-text('Kategória') select", { label: "Svetlá" });
     await pg.selectOption("label:has-text('Podkategória') select", { label: "Predné svetlá" });
     await pg.fill("label:has-text('OEM') input:not([type=file])", "5E1 941 015");
     await pg.click("text=Ďalej →");
@@ -302,9 +302,9 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
     const p0 = pg.locator(".fp-parts > li >> nth=0"), p1 = pg.locator(".fp-parts > li >> nth=1");
     await p0.locator(".fp-name input").fill("Predné svetlo ľavé");
     if ((await p0.locator(".fp-cat select").inputValue()) !== "sv") throw new Error("kategoria sa nedoplnila z nazvu");
-    await p0.locator(".fp-oem input").fill("5E1941015B"); await p0.locator("label:has-text('Cena') input").fill("120");
+    await p0.locator(".fp-oem input:not([type=file])").fill("5E1941015B"); await p0.locator("label:has-text('Cena') input").fill("120");
     await p1.locator(".fp-name input").fill("Volant kožený"); await p1.locator(".fp-cat select").selectOption("int");
-    await p1.locator(".fp-oem input").fill("5E0419091"); await p1.locator("label:has-text('Cena') input").fill("45");
+    await p1.locator(".fp-oem input:not([type=file])").fill("5E0419091"); await p1.locator("label:has-text('Cena') input").fill("45");
     await pg.click("text=Zverejniť 2 inzeráty"); await pg.waitForSelector(".pp-toast:has-text('Zverejnené: 2 inzeráty')", { timeout: 30000 });
     await pg.click(".pp-nav button:has-text('Moje inzeráty')"); await pg.click(".pp-chips >> text=Aktívne");
     await pg.waitForSelector(".pp-row:has-text('Volant kožený') .pp-th img"); await pg.waitForSelector(".pp-row:has-text('Predné svetlo ľavé') .pp-th img");
