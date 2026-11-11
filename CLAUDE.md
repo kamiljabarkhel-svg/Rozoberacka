@@ -273,3 +273,7 @@ Overené na Slov-Lexe: Občiansky zákonník § 597, 599, 612, 618, 619 (znenie 
 - **Pás na úvode** medzi hlavičkou a hľadaním (`components/HomeIntro.tsx`): logo, krátky popis portálu a „Rady a návody“ – návody z `lib/navody.tsx` ako články. Nový článok = nová položka v `NAVODY` (pribudne aj tu, na /navody a v mape webu).
 - **Z auta na diely**: pri každom diele tlačidlo „Fotky“ (najviac 8); diel s fotkou sa hneď zverejní, bez fotky vznikne pozastavený (`createFromDonor`).
 
+## Svetlá lišta hľadania, filtre až po hľadaní (11. 11. 2026, 22:00)
+- Lišta hľadania je **biela karta** na sivom pozadí (nie tmavomodrý blok): druh vozidla ako záložky karty (vybraná biela so žltým pásikom), polia s okrajom `--field`, „Hľadať“ a „Zobraziť pneumatiky“ indigové, „Mám číslo dielu“ a „Mám VIN“ ako svetlosivé políčka. Indigová hlavička ostáva. CSS: vrstva „Svetlá lišta hľadania“ na konci `globals.css`.
+- **Bočné filtre** (časť auta, cena, stav, mesto…) sa na úvode ukážu až keď človek hľadá: klikne „Hľadať“/číslo dielu/VIN/najhľadanejší diel, vyberie značku, časť auta alebo filter, alebo je v Pneumatikách (`searched` v `Home.tsx`, trieda `no-side`).
+

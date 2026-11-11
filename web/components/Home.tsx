@@ -139,7 +139,9 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
   useEffect(() => { if (ready.current) writeUrl(f); }, [f]);
 
   // Hľadanie z hlavičky
-  const toRes = useCallback(() => resRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), []);
+  // Bočné filtre sa ukážu až potom, čo človek niečo hľadá (na úvodnej stránke len najnovšie diely bez filtrov)
+  const [went, setWent] = useState(false);
+  const toRes = useCallback(() => { setWent(true); resRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }); }, []);
   useEffect(() => {
     const h = (e: Event) => {
       const d = (e as CustomEvent<{ q: string; scroll: boolean }>).detail;
@@ -257,6 +259,7 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
     : "Použité autodiely z vrakovísk";
   const pops = (f.vtype === "motorky" ? POP_MOTO : POP).filter((p) => cats.some((c) => c.id === p.cat));
   const filtersOn = f.year != null || f.max != null || !!f.cond || !!f.city || !!f.side || f.tested || f.ret;
+  const searched = went || wheels || f.brand != null || !!f.cat || !!f.q || f.fav || filtersOn;
 
   return (
     <main id="pub" tabIndex={-1}>
@@ -367,8 +370,8 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
         </div>
       </section>
 
-      <div className="wrap c-layout">
-        <aside className="c-side" aria-label="Filtre">
+      <div className={"wrap c-layout" + (searched ? "" : " no-side")}>
+        {searched && <aside className="c-side" aria-label="Filtre">
           {!wheels && <div className="c-group">
             <h2>Časť auta</h2>
             <ul className="c-cats">
@@ -414,7 +417,7 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
             <label className="chk"><input type="checkbox" checked={f.ret} onChange={(e) => set({ ret: e.target.checked })} /> Len s možnosťou vrátenia</label>
             {filtersOn && <button className="lnk" onClick={() => set({ year: null, max: null, cond: "", city: "", side: "", tested: false, ret: false })}>Zrušiť filtre</button>}
           </div>
-        </aside>
+        </aside>}
 
         <section className="c-res" aria-labelledby="c-title">
           <div id="vysledky" ref={resRef} className="head">
