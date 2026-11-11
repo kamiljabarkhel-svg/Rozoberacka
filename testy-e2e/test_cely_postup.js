@@ -103,7 +103,7 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
   await ctx.storageState({ path: "seller.json" });
   // verejná časť v novom kontexte (kupujúci)
   const c2 = await br.newContext(); await c2.addInitScript(seen); const b2 = await c2.newPage(); global.CUR = b2; b2.on("pageerror", (e) => errs.push("buyer pageerror: " + e.message)); b2.on("console", (m) => { if (m.type() === "error") errs.push("buyer console: " + m.text()); });
-  await step("verejne: inzerat na uvode", async () => { await b2.goto(B + "/"); await b2.waitForSelector(".card:has-text('Predné ľavé svetlo LED')"); await b2.waitForSelector(".stats:has-text('1')"); });
+  await step("verejne: inzerat na uvode", async () => { await b2.goto(B + "/"); await b2.waitForSelector(".card:has-text('Predné ľavé svetlo LED')"); await b2.waitForSelector(".find-foot:has-text('1')"); });
   await step("ulozene hladanie (strazca)", async () => {
     await b2.selectOption(".panel label:has-text('Značka') select", { label: "Škoda" }); await b2.waitForTimeout(500);
     await b2.click("text=Uložiť hľadanie"); await b2.waitForSelector(".saved-i:has-text('Škoda')");
@@ -274,7 +274,8 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
     await pg.waitForSelector(".pp-row:has-text('Kapota') >> text=81 €");
   });
   await step("fotky hromadne podla cisla dielu", async () => {
-    await pg.click(".pp-nav >> text=Fotky hromadne"); await pg.waitForSelector("h1:has-text('Fotky hromadne')");
+    await pg.click(".pp-nav >> text=Hromadne z fotiek"); await pg.waitForSelector("h1:has-text('Hromadne z fotiek')");
+    await pg.click(".fp-mode >> text=Doplniť fotky k existujúcim inzerátom");
     require("fs").copyFileSync("a.png", "5E0823031_1.png"); require("fs").copyFileSync("a.png", "nic-nesedi.png");
     await pg.setInputFiles(".pp-bulkph input", ["5E0823031_1.png", "nic-nesedi.png"]);
     await pg.waitForSelector(".pp-pre li:has-text('Kapota') .pp-prephotos img"); await pg.waitForSelector("text=Nepriradené (1)");
@@ -282,6 +283,28 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
     await pg.click("text=Pridať fotky"); await pg.waitForSelector(".pp-toast:has-text('Fotky doplnené k 1 inzerátu')", { timeout: 20000 });
     await pg.click(".pp-nav >> text=Moje inzeráty"); await pg.waitForSelector(".pp-row:has-text('Kapota') .pp-th img");
     await pg.click(".pp-chips >> text=Aktívne"); await pg.waitForSelector(".pp-row:has-text('Kapota')");
+  });
+  await step("hromadne z fotiek: nove inzeraty (najprv fotky)", async () => {
+    await pg.click(".pp-nav >> text=Hromadne z fotiek"); await pg.waitForSelector(".fp-mode button[aria-selected='true']:has-text('Nové inzeráty z fotiek')");
+    await pg.selectOption(".fp-donor select", { index: 1 });
+    for (const n of ["h1.png", "h2.png", "h3.png"]) require("fs").copyFileSync("a.png", n);
+    // rôzny obsah, aby sa súbory nezlúčili ako duplikáty
+    require("fs").appendFileSync("h2.png", Buffer.from([0])); require("fs").appendFileSync("h3.png", Buffer.from([0, 0]));
+    await pg.setInputFiles(".fp-pick input", ["h1.png", "h2.png", "h3.png"]); await pg.waitForFunction(() => document.querySelectorAll(".fp-pool li").length === 3);
+    await pg.click(".fp-pool li >> nth=0 >> button"); await pg.click(".fp-pool li >> nth=1 >> button"); await pg.waitForSelector(".fp-pool .fp-n:has-text('2')");
+    await pg.click("text=Vytvoriť diel z označených"); await pg.waitForFunction(() => document.querySelectorAll(".fp-pool li").length === 1);
+    await pg.click(".fp-pool li >> nth=0 >> button"); await pg.click("text=Vytvoriť diel z označených"); await pg.waitForSelector(".fp-parts > li >> nth=1");
+    if ((await pg.locator(".fp-parts > li >> nth=0 >> .fp-th").count()) !== 2) throw new Error("prvy diel nema 2 fotky");
+    await pg.click("text=Zverejniť 2 inzeráty"); await pg.waitForSelector(".pp-err:has-text('Doplňte údaje pri 2 dieloch')");
+    const p0 = pg.locator(".fp-parts > li >> nth=0"), p1 = pg.locator(".fp-parts > li >> nth=1");
+    await p0.locator(".fp-name input").fill("Predné svetlo ľavé");
+    if ((await p0.locator("label:has-text('Kategória') select").inputValue()) !== "sv") throw new Error("kategoria sa nedoplnila z nazvu");
+    await p0.locator(".fp-oem input").fill("5E1941015B"); await p0.locator("label:has-text('Cena') input").fill("120");
+    await p1.locator(".fp-name input").fill("Volant kožený"); await p1.locator("label:has-text('Kategória') select").selectOption("int");
+    await p1.locator(".fp-oem input").fill("5E0419091"); await p1.locator("label:has-text('Cena') input").fill("45");
+    await pg.click("text=Zverejniť 2 inzeráty"); await pg.waitForSelector(".pp-toast:has-text('Zverejnené: 2 inzeráty')", { timeout: 30000 });
+    await pg.click(".pp-nav >> text=Moje inzeráty"); await pg.click(".pp-chips >> text=Aktívne");
+    await pg.waitForSelector(".pp-row:has-text('Volant kožený') .pp-th img"); await pg.waitForSelector(".pp-row:has-text('Predné svetlo ľavé') .pp-th img");
   });
   let reqUrl = "";
   await step("dopyt: kupujuci zada", async () => {

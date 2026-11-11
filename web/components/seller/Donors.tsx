@@ -9,7 +9,7 @@ import { createFromDonor, deleteDonor, myDonors, saveDonor, skError, type Donor,
 import ScanText from "../ScanText";
 
 type Part = { on: boolean; custom?: boolean; name: string; cat: string; sub: string; side: string; oem: string; price: string; cond: Condition };
-type Common = [string, string, string, string?][];
+export type Common = [string, string, string, string?][];
 const CAR_COMMON: Common = [
   ["Predné svetlo ľavé", "sv", "Predné svetlá", "Ľavá"], ["Predné svetlo pravé", "sv", "Predné svetlá", "Pravá"],
   ["Zadné svetlo ľavé", "sv", "Zadné svetlá", "Ľavá"], ["Zadné svetlo pravé", "sv", "Zadné svetlá", "Pravá"],
@@ -49,7 +49,7 @@ const MOTO_COMMON: Common = [
   ["Reťazová sada", "mpo", "Reťazové sady"], ["Výfuk", "pal", "Výfuky"], ["Predný brzdový strmeň", "brz", "Strmene"], ["Brzdový kotúč", "brz", "Kotúče"],
   ["Predný disk (koleso)", "kol", "Disky hliníkové"], ["Zadný disk (koleso)", "kol", "Disky hliníkové"], ["Štartér", "el", "Štartéry"],
 ];
-function commonFor(t: VehicleType): Common {
+export function commonFor(t: VehicleType): Common {
   if (t === "motorky") return MOTO_COMMON;
   if (t === "nakladne") return [...TRUCK_COMMON, ...LORRY_EXTRA];
   if (t === "autobusy") return [...TRUCK_COMMON.filter(([n]) => n !== "Kabína"), ...BUS_EXTRA];

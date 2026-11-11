@@ -203,13 +203,13 @@ Overené na Slov-Lexe: Občiansky zákonník § 597, 599, 612, 618, 619 (znenie 
 
 ## Nový vzhľad „pult v predajni dielov“ (9. 11. 2026, 17:30)
 - Úvod sa pýta ako predavač: „Na aké vozidlo hľadáte diel?“; záložky druhov vozidiel sú horná hrana panelu hľadania.
-- Písma: IBM Plex Sans Condensed (nadpisy), IBM Plex Sans (text), IBM Plex Mono len na čísla dielov a VIN. Barlow sme skúsili a zamietli – zle rozostavené „ľ“.
+- ~~Písma IBM Plex~~ – nahradené písmom Inter (pozri „Vzhľad C“ nižšie). Barlow sme skúsili a zamietli – zle rozostavené „ľ“.
 - Farby: petrolejová #0f3d47 (značka, tlačidlá telefónu), pozadie oceľovo-sivé #eef2f4, žltá #f2b300 len na hlavné „Hľadať“ a štítok TOP (aj v tmavom režime).
 - Číslo dielu je všade rovnaký „štítok“ (tenký tmavý rámik, Plex Mono). Odkazy bez šípky „→“, štítky bez veľkých písmen.
 - Nové pravidlá sú vrstva na konci `web/app/globals.css` („Vzhľad pult v predajni dielov“). Pravidlá z „Tvar dizajnu“ (rohy max. 6 px, bez tieňov) platia ďalej.
 
 ## Sekcie a druh vozidla (9. 11. 2026, 18:30)
-- Sekcie Autodiely / Pneumatiky a disky / Havarované vozidlá / Dopyt na diel sú výrazný **žltý** pás pod hlavičkou (aktívna sekcia petrolejová; na mobile 2 × 2) – na želanie majiteľa, aby si ho ľudia všimli.
+- ~~Žltý pás sekcií~~ – od 11. 11. 2026 podčiarknuté záložky (pozri „Vzhľad C“). Pôvodne: sekcie Autodiely / Pneumatiky a disky / Havarované vozidlá / Dopyt na diel boli výrazný **žltý** pás pod hlavičkou (aktívna sekcia petrolejová; na mobile 2 × 2) – na želanie majiteľa, aby si ho ľudia všimli.
 - Úvod aj havarované vozidlá majú **predvolené osobné autá**; „Všetky vozidlá“ je posledná záložka (v adrese `druh=vsetky`, osobné sa do adresy nepíšu).
 - Hľadanie podľa VIN sa ukáže len pri osobných autách, dodávkach a „všetkých“; pri nákladných, autobusoch a motorkách nie.
 - Číslo dielu (OEM) aj text sa hľadá len v zvolenom druhu vozidla (pri poli je napísané, v akom). Odkaz „Rovnaké číslo u iných predajcov“ nesie druh vozidla dielu. Motorky majú vlastné „Najhľadanejšie diely“.
@@ -238,7 +238,7 @@ Overené na Slov-Lexe: Občiansky zákonník § 597, 599, 612, 618, 619 (znenie 
 
 ## Hromadné fotky (10. 11. 2026, 19:40)
 - Import CSV: stĺpec `fotky` (názvy súborov oddelené |) alebo fotka pomenovaná číslom dielu (`5E1941015.jpg`, `5E1941015_2.jpg`, „5E1941015 (3).jpg“). Inzerát bez fotky sa naimportuje **pozastavený**.
-- Záložka „Fotky hromadne“: fotky k existujúcim inzerátom podľa čísla dielu alebo `ID<číslo inzerátu>_1.jpg`; najviac 8 fotiek na inzerát, pridávajú sa za existujúce. Pravidlá názvov v `web/lib/bulkPhotos.ts` (rovnaké pre oba spôsoby).
+- Záložka „Hromadne z fotiek“ → „Doplniť fotky k existujúcim inzerátom“: fotky k existujúcim inzerátom podľa čísla dielu alebo `ID<číslo inzerátu>_1.jpg`; najviac 8 fotiek na inzerát, pridávajú sa za existujúce. Pravidlá názvov v `web/lib/bulkPhotos.ts` (rovnaké pre oba spôsoby).
 - Fotky sa zmenšujú v prehliadači (JPG, PNG, WebP; HEIC z iPhonu nie – v nastaveniach fotoaparátu „Najkompatibilnejší“).
 
 ## Odpovede na správy, havarované vozidlá vypnuté (10. 11. 2026, 21:25)
@@ -251,3 +251,11 @@ Overené na Slov-Lexe: Občiansky zákonník § 597, 599, 612, 618, 619 (znenie 
 
 ## Kolesá s jedným rozmerom (11. 11. 2026, 18:10)
 - `supabase/25`: „Kolesá s pneumatikami“ stačí s rozmerom pneumatiky (šírka, profil, priemer) alebo disku (rozteč, priemer). `wheelMissing`/`wheelHalves` v `lib/types.ts`. Hľadanie (`l.specs @> sp`) porovnáva len vyplnené parametre.
+
+## Vzhľad C „Bez rečí“ a hromadne z fotiek (11. 11. 2026)
+- Majiteľ vybral smer C z návrhov (Claude Design „autosuciastky.eu – nový dizajn“). Písmo **Inter** (`@fontsource-variable/inter`) na všetko, aj na čísla dielov (tabuľkové číslice). IBM Plex odinštalované.
+- Úvod: žiadny veľký úvodný pás – hneď petrolejová lišta hľadania („Hľadám diely na“ Značka / Model / Motorizácia / Časť auta + žlté „Hľadať“), pod ňou „Mám číslo dielu“ a „Mám VIN“, potom vľavo zoznam častí auta s počtami a filtre, vpravo výsledky ako riadky (fotka | údaje | cena a telefón). Na mobile sú číslo/VIN a filtre zbalené za tlačidlami.
+- Sekcie v hlavičke sú podčiarknuté záložky (nie žltý pás). Cena má žltý „zvýrazňovač“, žltá inak len na „Hľadať“ a TOP. Pätička je biely pás cez celú šírku.
+- CSS: vrstva „Vzhľad C“ na konci `web/app/globals.css` (prepisuje staršie vrstvy). Rohy max. 6 px a bez tieňov platí ďalej.
+- **Hromadne z fotiek** (záložka portálu): „Nové inzeráty z fotiek“ (`components/seller/FromPhotos.tsx`) – predajca nahrá všetky fotky naraz, vyberie rozoberané vozidlo alebo značku/model/ročník a raz zadá stav, záruku, odovzdanie, mesto a telefón; klikaním označí fotky jedného dielu → „Vytvoriť diel z označených“ (alebo „Každá fotka = 1 diel“), doplní názov (bežné názvy doplnia kategóriu a stranu), číslo dielu a cenu → „Zverejniť“. Popis vznikne sám (vozidlo + spoločný doplnok). Pneumatiky a disky sa takto nepridávajú (potrebujú rozmery – bežný formulár). Druhý režim „Doplniť fotky k existujúcim inzerátom“ je pôvodné priradenie podľa názvu súboru.
+

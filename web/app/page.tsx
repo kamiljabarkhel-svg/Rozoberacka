@@ -48,8 +48,8 @@ export default async function Page() {
           {cityList.length > 0 && <section><h2>Diely podľa mesta</h2><ul>
             {cityList.map((c) => <li key={c}><Link href={landingPath({ brandId: null, modelId: null, cat: "", sub: null, city: c }, cat)}>Autodiely {c}</Link></li>)}
           </ul></section>}
-          <section><h2>Značky</h2><ul>
-            {[...cat.brands].sort((a, b) => sk(a.name, b.name)).map((b) => <li key={b.id}><Link href={landingPath({ brandId: b.id, modelId: null, cat: "", sub: null }, cat)}>Použité diely {b.name}</Link></li>)}
+          <section><h2>Použité diely podľa značky</h2><ul className="seo-cols">
+            {[...cat.brands].sort((a, b) => sk(a.name, b.name)).map((b) => <li key={b.id}><Link href={landingPath({ brandId: b.id, modelId: null, cat: "", sub: null }, cat)}>{b.name}</Link></li>)}
           </ul></section>
         </nav>
       )}

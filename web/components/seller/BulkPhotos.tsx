@@ -68,8 +68,7 @@ export default function BulkPhotos({ uid, items, onDone }: { uid: string; items:
 
   return (
     <div>
-      <header className="pp-h"><h1>Fotky hromadne</h1></header>
-      <div className="pp-box">
+            <div className="pp-box">
         <p>Nafoťte diely a pomenujte súbory podľa <b>čísla dielu</b> – web ich sám priradí k vašim inzerátom. Napríklad <code>5E1941015.jpg</code>, <code>5E1941015_2.jpg</code>, <code>5E1941015 (3).jpg</code>. Medzery a pomlčky v čísle nevadia.</p>
         <p className="mute">Ak má viac inzerátov rovnaké číslo dielu, použite číslo inzerátu: <code>ID123_1.jpg</code> (číslo nájdete v „Moje inzeráty“ pri inzeráte). Fotky sa pridajú za existujúce, najviac {MAX_PHOTOS} na inzerát. Formát JPG, PNG alebo WebP; na iPhone zvoľte v Nastavenia → Fotoaparát → Formáty „Najkompatibilnejší“.</p>
         {noPhoto.length > 0 && <p className="pp-photosum">Bez fotky máte {noPhoto.length} {noPhoto.length === 1 ? "inzerát" : noPhoto.length < 5 ? "inzeráty" : "inzerátov"}.</p>}

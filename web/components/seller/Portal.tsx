@@ -22,10 +22,11 @@ import Cars from "./Cars";
 import Requests from "./Requests";
 import CsvImport from "./CsvImport";
 import BulkPhotos from "./BulkPhotos";
+import FromPhotos from "./FromPhotos";
 import { CARS_ENABLED, EMAIL_REPLIES } from "@/lib/features";
 
-type Tab = "home" | "list" | "donor" | "cars" | "form" | "csv" | "photos" | "req" | "msg" | "prof";
-const TABS: [Tab, string][] = [["home", "Nástenka"], ["list", "Moje inzeráty"], ["donor", "Autá na diely"], ["form", "Pridať inzerát"], ["csv", "Import CSV"], ["photos", "Fotky hromadne"], ["req", "Dopyty"], ["msg", "Správy"], ["prof", "Profil"]];
+type Tab = "home" | "list" | "donor" | "cars" | "form" | "csv" | "photos" | "addph" | "req" | "msg" | "prof";
+const TABS: [Tab, string][] = [["home", "Nástenka"], ["list", "Moje inzeráty"], ["donor", "Autá na diely"], ["form", "Pridať inzerát"], ["csv", "Import CSV"], ["photos", "Hromadne z fotiek"], ["req", "Dopyty"], ["msg", "Správy"], ["prof", "Profil"]];
 const ST: Record<Status, string> = { active: "Aktívny", paused: "Pozastavený", sold: "Predaný", blocked: "Skrytý správcom" };
 
 export default function Portal() {
@@ -71,7 +72,7 @@ export default function Portal() {
 
   // záložka podľa adresy (#list, #msg…) aj pri tlačidle Späť
   useEffect(() => {
-    const read = () => { const h = window.location.hash.replace("#", "") as Tab; if (TABS.some(([t]) => t === h)) setTab(h); };
+    const read = () => { const h = window.location.hash.replace("#", "") as Tab; if (TABS.some(([t]) => t === h) || h === "addph") setTab(h); };
     read(); window.addEventListener("hashchange", read);
     return () => window.removeEventListener("hashchange", read);
   }, []);
@@ -100,7 +101,7 @@ export default function Portal() {
         <div className="pp-who"><b>{prof?.name || "Predajca"}</b><span className="mute">{prof?.email}</span></div>
         <nav>
           {TABS.map(([t, l]) => (
-            <button key={t} type="button" aria-current={tab === t ? "page" : undefined} onClick={() => go(t)}>
+            <button key={t} type="button" aria-current={tab === t || (t === "photos" && tab === "addph") ? "page" : undefined} onClick={() => go(t)}>
               {t === "form" && edit ? "Upraviť inzerát" : l}{t === "msg" && unread > 0 && <span className="pp-badge">{unread}</span>}
             </button>
           ))}
@@ -110,7 +111,7 @@ export default function Portal() {
       </aside>
       <section className="pp-body">
         {err && <div className="pp-box pp-errbox"><p className="pp-err">Niečo sa nenačítalo: {err}</p><button className="ubtn" onClick={() => window.location.reload()}>Skúsiť znova</button></div>}
-        {(tab === "form" || tab === "csv" || tab === "cars" || tab === "donor") && !cat && !err && <p className="mute">Načítavam katalóg áut…</p>}
+        {(tab === "form" || tab === "csv" || tab === "cars" || tab === "donor" || tab === "photos") && !cat && !err && <p className="mute">Načítavam katalóg áut…</p>}
         {pwMode && <NewPassword onDone={() => { setPwMode(false); flash("Heslo je zmenené."); }} />}
         {tab === "home" && <Dashboard cat={cat} prof={prof} items={items} msgs={msgs} go={go} />}
         {tab === "list" && <MyList key={listF.n} initial={listF.f} items={items} cat={cat}
@@ -130,7 +131,15 @@ export default function Portal() {
         {tab === "form" && cat && <ListingForm key={edit?.id ?? "new-" + (donor?.id ?? "")} uid={session.user.id} cat={cat} prof={prof} edit={edit} donor={donor}
           onSaved={async (id) => { await reload(session); setEdit(null); go("list"); flash(edit ? "Zmeny uložené" : `Inzerát #${id} je zverejnený`); }} />}
         {tab === "csv" && cat && <CsvImport uid={session.user.id} cat={cat} prof={prof} onDone={async (n) => { await reload(session); flash(`Importované: ${n}`); go("list"); }} />}
-        {tab === "photos" && <BulkPhotos uid={session.user.id} items={items} onDone={async (m) => { await reload(session); flash(m); }} />}
+        {(tab === "photos" || tab === "addph") && <div>
+          <header className="pp-h"><h1>Hromadne z fotiek</h1></header>
+          <div className="fp-mode" role="tablist" aria-label="Spôsob">
+            <button type="button" role="tab" aria-selected={tab === "photos"} onClick={() => go("photos")}>Nové inzeráty z fotiek</button>
+            <button type="button" role="tab" aria-selected={tab === "addph"} onClick={() => go("addph")}>Doplniť fotky k existujúcim inzerátom</button>
+          </div>
+          {tab === "photos" && cat && <FromPhotos uid={session.user.id} cat={cat} prof={prof} onDone={async (m) => { await reload(session); flash(m); }} />}
+          {tab === "addph" && <BulkPhotos uid={session.user.id} items={items} onDone={async (m) => { await reload(session); flash(m); }} />}
+        </div>}
         {tab === "msg" && <Messages msgs={msgs} onRead={(ids) => act(() => markRead(ids), "Označené ako prečítané")}
           onReply={async (id, body) => { try { await sellerReply(id, body); await reload(session); flash(EMAIL_REPLIES ? "Odpoveď odoslaná – kupujúcemu príde e-mailom" : "Odpoveď uložená"); return true; } catch (e) { flash(skError(e)); return false; } }} />}
         {tab === "prof" && prof && <><ProfileTab prof={prof} onSave={async (p) => { await saveProfile(p); setProf(p); flash("Profil uložený"); }} onPw={() => setPwMode(true)} /><MyData uid={session.user.id} /></>}
@@ -152,7 +161,7 @@ function Dashboard({ cat, prof, items, msgs, go }: { cat: Catalog | null; prof: 
     ["Inzeráty skryté správcom", items.filter((i) => i.status === "blocked").length, "list", "blocked"],
     ["Aktívne inzeráty bez fotky (kupujúci ich obchádzajú)", items.filter((i) => !i.photos.length && i.status === "active").length, "list", "nophoto"],
     [`Neaktualizované viac ako ${STALE_DAYS} dní – potvrďte, že diel stále máte`, items.filter(isStale).length, "list", "stale"],
-    ["Pozastavené inzeráty bez fotky – doplňte fotky hromadne", p.filter((i) => !i.photos.length).length, "photos"],
+    ["Pozastavené inzeráty bez fotky – doplňte fotky hromadne", p.filter((i) => !i.photos.length).length, "addph"],
     ["Pozastavené inzeráty", p.length, "list", "paused"],
   ];
   const profMissing = !prof?.city || !prof?.phone;
@@ -168,7 +177,7 @@ function Dashboard({ cat, prof, items, msgs, go }: { cat: Catalog | null; prof: 
       <header className="pp-h"><div><h1>Dobrý deň{prof?.name ? ", " + prof.name : ""}</h1><p className="mute">{d}
           {prof && <> · <a className="lnk" href={sellerPath(prof.id, prof.name)} target="_blank" rel="noopener">Moja verejná stránka</a></>}
           {prof?.ratingCount ? <> · <Stars value={prof.ratingAvg ?? null} count={prof.ratingCount} small /></> : null}</p></div>
-        <div className="pp-quick"><button className="btn" onClick={() => go("form")}>+ Pridať inzerát</button><button className="ubtn" onClick={() => go("csv")}>Import CSV</button><button className="ubtn" onClick={() => go("photos")}>Fotky hromadne</button><button className="ubtn" onClick={() => go("list")}>Všetky inzeráty</button></div></header>
+        <div className="pp-quick"><button className="btn" onClick={() => go("form")}>+ Pridať inzerát</button><button className="ubtn" onClick={() => go("csv")}>Import CSV</button><button className="ubtn" onClick={() => go("photos")}>Hromadne z fotiek</button><button className="ubtn" onClick={() => go("list")}>Všetky inzeráty</button></div></header>
       <div className="pp-tiles">
         <Tile n={a.length} l="Aktívne inzeráty" s={fmtPrice(a.reduce((x, i) => x + i.price, 0)) + " hodnota"} />
         <Tile n={views} l="Zobrazenia" s="spolu za všetky inzeráty" />

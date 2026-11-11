@@ -1,15 +1,8 @@
 import CookieBar, { CookieSettingsLink } from "@/components/CookieBar";
 import type { Metadata, Viewport } from "next";
-// Písma: balíky @fontsource, web ich podáva sám (návštevník nevolá Google – lepšie pre GDPR).
-// IBM Plex: Sans Condensed na nadpisy, Sans na text, Mono len na čísla dielov a VIN (jedna technická rodina ako v katalógu dielov; dobre zvláda ľ, ť, ď).
-import "@fontsource/ibm-plex-sans-condensed/600.css";
-import "@fontsource/ibm-plex-sans-condensed/700.css";
-import "@fontsource/ibm-plex-sans/400.css";
-import "@fontsource/ibm-plex-sans/500.css";
-import "@fontsource/ibm-plex-sans/600.css";
-import "@fontsource/ibm-plex-sans/700.css";
-import "@fontsource/ibm-plex-mono/500.css";
-import "@fontsource/ibm-plex-mono/600.css";
+// Písmo Inter (balík @fontsource-variable, web ho podáva sám – návštevník nevolá Google, lepšie pre GDPR; má ľ, ť, ď).
+// Jedno písmo na všetko (vzhľad C „Bez rečí“, 11. 11. 2026); čísla dielov tučne s rovnakou šírkou číslic.
+import "@fontsource-variable/inter";
 import "./globals.css";
 import Header from "@/components/Header";
 import Pwa from "@/components/Pwa";
@@ -31,7 +24,7 @@ export const metadata: Metadata = {
   appleWebApp: { capable: true, title: "autosuciastky.eu", statusBarStyle: "default" },
 };
 export const viewport: Viewport = { width: "device-width", initialScale: 1, viewportFit: "cover",
-  themeColor: [{ media: "(prefers-color-scheme: light)", color: "#0a3b44" }, { media: "(prefers-color-scheme: dark)", color: "#0a2f37" }] };
+  themeColor: [{ media: "(prefers-color-scheme: light)", color: "#ffffff" }, { media: "(prefers-color-scheme: dark)", color: "#131e23" }] };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (

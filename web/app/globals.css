@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 /* Vzhľad „pult v predajni dielov“ (9. 11. 2026): petrolejová značka, oceľovo-sivé pozadie, signálna žltá len na hlavnú akciu a TOP.
-   Písma IBM Plex Sans Condensed (nadpisy), IBM Plex Sans (text), IBM Plex Mono (len čísla dielov a VIN) – balíky @fontsource, web ich podáva sám. */
-:root{--bg:#eef2f4;--card:#fff;--ink:#121d24;--mute:#56656d;--line:#d3dce0;--chip:#e6ecef;--ico:#dce4e8;--icoink:#0f5562;--pet:#0f3d47;--pet2:#17606e;--acc:#f2b300;--accink:#1e1600;--link:#0f5f6d;--ok:#1d8a5f;--warn:#b97a00;--bad:#c93c3c;--sh1:none;--sh2:0 8px 24px rgba(13,43,52,.16);color-scheme:light;box-sizing:border-box;padding-bottom:env(safe-area-inset-bottom,0px);--f-d:"IBM Plex Sans Condensed","Arial Narrow",system-ui,sans-serif;--f-b:"IBM Plex Sans","Segoe UI",system-ui,sans-serif;--f-m:"IBM Plex Mono",ui-monospace,Menlo,monospace}
+   Písmo Inter (balík @fontsource-variable, web ho podáva sám) – vzhľad C „Bez rečí“ od 11. 11. 2026. */
+:root{--bg:#eef2f4;--card:#fff;--ink:#121d24;--mute:#56656d;--line:#d3dce0;--chip:#e6ecef;--ico:#dce4e8;--icoink:#0f5562;--pet:#0f3d47;--pet2:#17606e;--acc:#f2b300;--accink:#1e1600;--link:#0f5f6d;--ok:#1d8a5f;--warn:#b97a00;--bad:#c93c3c;--sh1:none;--sh2:0 8px 24px rgba(13,43,52,.16);color-scheme:light;box-sizing:border-box;padding-bottom:env(safe-area-inset-bottom,0px);--f-d:"Inter Variable","Inter",system-ui,sans-serif;--f-b:"Inter Variable","Inter",system-ui,sans-serif;--f-m:"Inter Variable","Inter",system-ui,sans-serif}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0c1418;--card:#131e23;--ink:#e6edf0;--mute:#97a8b0;--line:#27353c;--chip:#1a272d;--ico:#1c2a31;--icoink:#7ccfd9;--pet:#0b2e36;--pet2:#2a7f8c;--link:#7ccfd9;--ok:#46c593;--warn:#f0b73c;--bad:#f08a8a;--sh1:none;--sh2:0 14px 34px rgba(0,0,0,.5);color-scheme:dark}}
 :root[data-theme="dark"]{--bg:#0c1418;--card:#131e23;--ink:#e6edf0;--mute:#97a8b0;--line:#27353c;--chip:#1a272d;--ico:#1c2a31;--icoink:#7ccfd9;--pet:#0b2e36;--pet2:#2a7f8c;--link:#7ccfd9;--ok:#46c593;--warn:#f0b73c;--bad:#f08a8a;--sh1:none;--sh2:0 14px 34px rgba(0,0,0,.5);color-scheme:dark}
 *{box-sizing:border-box}
@@ -995,8 +995,8 @@ h1,h2,h3,.cnt,.price,.brand,.btn,.btn2,.mp,.tile b{letter-spacing:0}
 .pp-prephotos { display: flex !important; flex-wrap: wrap; gap: 4px; align-items: center; margin-top: 4px; }
 .pp-prephotos img { width: 48px; height: 48px; object-fit: cover; border-radius: 3px; border: 1px solid var(--line); }
 .pp-prephotos .mute { margin-left: 4px; }
-.pp-id { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 12px; }
-.pp-box code { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 12.5px; padding: 1px 4px; border: 1px solid var(--line); border-radius: 3px; }
+.pp-id { font-family: var(--f-b); font-weight: 700; font-variant-numeric: tabular-nums; font-size: 13px; }
+.pp-box code { font-family: var(--f-b); font-weight: 600; font-size: 13px; padding: 1px 4px; border: 1px solid var(--line); border-radius: 3px; }
 .pp-bulkbtns .pp-add span { font-size: 14px; }
 .pp-steps2 .pp-file { margin-top: 0; min-height: 52px; }
 
@@ -1015,3 +1015,250 @@ h1,h2,h3,.cnt,.price,.brand,.btn,.btn2,.mp,.tile b{letter-spacing:0}
 .thr-reply { margin-top: 12px; }
 .thr-note { font-size: 13px; margin-top: 16px; }
 .msgbox label small { display: block; font-weight: 400; margin-top: 2px; }
+
+/* ================= Vzhľad C „Bez rečí“ (11. 11. 2026) – vrstva navrchu všetkých starších =================
+   Jedno písmo Inter, sivobiely podklad, petrolejová len na hlavnú lištu hľadania a tlačidlá telefónu,
+   žltý zvýrazňovač len pod cenou a pri TOP. Bez veľkého úvodného pásu – hneď hľadanie a zoznam dielov. */
+:root{--bg:#f4f5f6;--card:#fff;--ink:#24292d;--mute:#59626a;--line:#dde1e4;--chip:#edeff1;--ico:#e4e8ea;--icoink:#0f3d47;--pet:#0f3d47;--pet2:#17606e;--acc:#ffe14d;--accink:#24292d;--link:#0f3d47;--field:#9aa3aa}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--acc:#e8c93a;--accink:#1e1600;--field:#4a5a62}}
+:root[data-theme="dark"]{--acc:#e8c93a;--accink:#1e1600;--field:#4a5a62}
+body{font:400 16px/1.55 var(--f-b);font-feature-settings:"cv11","ss01";letter-spacing:-.003em}
+h1,h2,h3,.cnt,.price,.brand,.btn,.btn2,.sh{font-family:var(--f-b);letter-spacing:-.012em}
+a{color:var(--link)}
+/* hlavička: logo písmom, hľadanie s tmavým okrajom, sekcie ako podčiarknuté záložky */
+.site-header{background:var(--card);border-bottom:0}
+.brand{font:750 1.45rem/1 var(--f-b);color:var(--pet);letter-spacing:-.02em}
+.brand svg{display:none}
+.gs{border:2px solid var(--ink);border-radius:4px;background:var(--card)}
+.gs input{font-size:1.05rem}
+.gs button,.gs .gsb{background:var(--ink);color:#fff;border-radius:0}
+.ubtn{border:1.5px solid var(--pet);color:var(--pet);font-weight:650;background:transparent;border-radius:3px}
+.ubtn:hover{background:var(--pet);color:#fff}
+.snav{background:var(--card);border-bottom:1px solid var(--line);display:flex;gap:28px;padding:0 max(16px,calc((100% - 1248px)/2));flex-wrap:wrap}
+.snav a{background:none!important;color:var(--mute)!important;font:700 1.05rem/1 var(--f-b)!important;padding:12px 0 11px!important;border:0!important;border-bottom:4px solid transparent!important;opacity:1!important;border-radius:0!important;flex:0 0 auto!important;text-align:left!important}
+.snav a:hover{color:var(--ink)!important}
+.snav a[aria-current="page"]{color:var(--ink)!important;border-bottom-color:var(--pet)!important}
+/* hlavná lišta hľadania (petrolejová) */
+.panel.finder{background:var(--pet);color:#fff;border:0;border-radius:0;margin:0;padding:0;max-width:none;overflow:visible;display:block}
+.finder .in{max-width:1248px;margin:0 auto;padding:16px 16px 18px;display:flex;flex-direction:column;gap:14px}
+.panel.finder>.in>.vtabs{order:0;margin:0;display:flex;flex-wrap:wrap;gap:4px;background:none;border:0}
+.panel.finder .vtabs button{border:1px solid rgba(255,255,255,.28);border-radius:3px;background:transparent;color:#fff;padding:8px 13px;font:600 .95rem/1 var(--f-b);box-shadow:none;margin:0;cursor:pointer}
+.panel.finder .vtabs button:hover{border-color:#fff}
+.panel.finder .vtabs button.on{background:#fff;color:var(--pet);border-color:#fff;box-shadow:none}
+.find-car{display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px 14px}
+.find-l{font:700 1.15rem/1.2 var(--f-b);padding-bottom:12px;white-space:nowrap}
+.finder .pg{flex:1 1 640px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:0}
+.finder label{color:rgba(255,255,255,.82);font:600 .84rem/1.3 var(--f-b);display:flex;flex-direction:column;gap:5px}
+.finder select,.finder input{background:#fff!important;color:var(--ink)!important;border:0!important;border-radius:3px!important;height:46px;padding:0 12px!important;font:500 1rem var(--f-b)!important;box-shadow:none!important}
+.finder select:disabled{background:#d7dee1!important;color:#59626a!important}
+.finder .pa{margin:0;padding:0;border:0;display:flex}
+.finder .btn,.btn{background:var(--acc);color:var(--accink);border:0;border-radius:3px;height:46px;padding:0 28px;font:750 1.05rem/1 var(--f-b);cursor:pointer}
+.finder .btn:hover{filter:brightness(.95)}
+.find-alt{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 24px;border-top:1px solid rgba(255,255,255,.2);padding-top:14px}
+.finder .oemrow{border:0;padding:0;margin:0;display:flex;align-items:flex-end;gap:10px}
+.finder .oemrow label{flex:1;min-width:0}
+.finder .oemin{display:flex;gap:6px}
+.finder .oemin input,.finder .pl input{flex:1;min-width:0;font:650 1.02rem var(--f-b)!important;letter-spacing:.04em;font-variant-numeric:tabular-nums}
+.finder .oem-scope{display:inline;font-weight:400;color:rgba(255,255,255,.7);margin-left:4px}
+.finder .oem-scope a{color:#fff}
+.finder .plate{background:none;border:0;padding:0;margin:0;border-radius:0}
+.finder .plate .pg2{display:flex;align-items:flex-end;gap:10px;margin:0}
+.finder .plate .pg2>label{flex:1;min-width:0}
+.finder .pl{display:flex;gap:6px;border:0!important;background:none!important;border-radius:0}
+.finder .eu{display:none}
+.finder .btn2{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.75);border-radius:3px;height:46px;padding:0 16px;font:650 .95rem/1 var(--f-b);white-space:nowrap;cursor:pointer}
+.finder .btn2:hover{border-color:#fff;background:rgba(255,255,255,.08)}
+.finder .scan,.finder .scanbtn,.finder .oemin button,.finder .pl button{background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.45);color:#fff;border-radius:3px;min-width:46px;height:46px}
+.finder .vmsg{color:#fff!important;margin:6px 0 0;font-weight:600}
+.finder .vmsg:empty{display:none}
+.find-foot{margin:0;font-size:.92rem;color:rgba(255,255,255,.8)}
+.find-foot b{color:#fff}
+.find-foot a{color:#fff;font-weight:650}
+.finder .mycar{border:1px solid rgba(255,255,255,.3);color:#fff;background:rgba(255,255,255,.06)}
+.finder .mycar.on{border-color:#fff}
+.finder .mycar a,.finder .mycar button{color:#fff}
+/* pneumatiky a disky: biela karta v lište */
+.finder .wheelbox{background:var(--card);color:var(--ink);border-radius:6px;padding:16px 18px;gap:12px}
+.finder .wheelbox label{color:var(--mute)}
+.finder .wheelbox select,.finder .wheelbox input{border:1.5px solid var(--field)!important;height:42px}
+.finder .wheelbox .wb-hint{color:var(--mute);margin:0}
+.finder .wheelbox .pa{justify-content:flex-end;gap:16px;align-items:center}
+.finder .wheelbox .lnk{color:var(--pet)}
+/* rozloženie: filtre vľavo, výsledky vpravo */
+.c-layout{display:grid;grid-template-columns:240px minmax(0,1fr);gap:28px;align-items:start;padding-top:24px}
+.c-side{display:flex;flex-direction:column;gap:22px;position:sticky;top:12px}
+.c-group h2{font:700 1rem/1.2 var(--f-b);margin:0 0 8px}
+.c-cats,.c-subs{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+.c-subs{margin:2px 0 6px 12px;padding-left:8px;border-left:2px solid var(--line)}
+.c-cats button{width:100%;display:flex;justify-content:space-between;gap:8px;align-items:center;text-align:left;background:none;border:0;border-radius:3px;padding:7px 10px;font:500 .97rem/1.25 var(--f-b);color:var(--ink);cursor:pointer}
+.c-cats button:hover{background:var(--chip)}
+.c-cats button[aria-pressed="true"]{background:var(--pet);color:#fff;font-weight:650}
+.c-cats button span{font-size:.85rem;color:var(--mute);font-variant-numeric:tabular-nums}
+.c-cats button[aria-pressed="true"] span{color:rgba(255,255,255,.8)}
+.c-subs button{font-size:.92rem;padding:5px 8px}
+.c-side .adv{display:flex!important;flex-direction:column;gap:12px;padding:0;margin:0;border:0;background:none;grid-template-columns:none}
+.c-side .adv label{display:flex;flex-direction:column;gap:5px;font:600 .88rem/1.3 var(--f-b);color:var(--ink)}
+.c-side .adv label.chk{flex-direction:row;align-items:center;gap:8px;font-weight:500;font-size:.95rem}
+.c-side select,.c-side input:not([type=checkbox]){height:42px;border:1.5px solid var(--field);border-radius:3px;padding:0 10px;font:400 .97rem var(--f-b);background:var(--card);color:var(--ink)}
+.c-side .lnk{align-self:flex-start;color:var(--pet)}
+/* hlavička výsledkov */
+.c-res .head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:10px 16px;margin:0 0 14px}
+.head-t{display:flex;flex-direction:column;gap:4px}
+.head-t h1{font:750 clamp(1.5rem,2.6vw,1.9rem)/1.15 var(--f-b);margin:0;color:var(--ink)}
+.c-res .cnt{font:500 1rem/1.3 var(--f-b);color:var(--mute);letter-spacing:0}
+.cnt-w{display:flex;gap:14px;align-items:baseline;flex-wrap:wrap}
+.sortinfo{font-size:.88rem;color:var(--mute)}
+.head-a{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.sortsel{display:flex;align-items:center;gap:8px;font-size:.92rem;color:var(--mute)}
+.sortsel select{height:38px;border:1.5px solid var(--field);border-radius:3px;padding:0 8px;font:500 .95rem var(--f-b);background:var(--card);color:var(--ink)}
+.chip{border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:3px;padding:7px 12px;font:600 .92rem/1.1 var(--f-b);cursor:pointer}
+.chip:hover{border-color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--pet);border-color:var(--pet);color:#fff}
+.qline{margin:-4px 0 12px;color:var(--mute);font-size:.95rem;display:flex;gap:8px;align-items:center}
+.pop{margin:0 0 16px}
+.pop .sh{font:700 1rem/1.2 var(--f-b);margin:0 0 8px}
+.pop .chips{display:flex;flex-wrap:wrap;gap:6px}
+/* zoznam dielov ako riadky */
+.grid.rows{display:flex;flex-direction:column;gap:10px}
+.grid.rows .card{display:grid;grid-template-columns:168px minmax(0,1fr) 210px;gap:18px;align-items:center;background:var(--card);border:1.5px solid var(--line);border-radius:6px;padding:14px;box-shadow:none;transform:none;cursor:pointer}
+.grid.rows .card:hover{border-color:var(--pet);transform:none;box-shadow:none}
+.grid.rows .card .ph{width:168px;height:126px;aspect-ratio:auto;border-radius:4px;overflow:hidden;position:relative;background:var(--chip)}
+.grid.rows .card .ph img{width:100%;height:100%;object-fit:cover}
+.grid.rows .card .nop{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:var(--mute);font-size:.82rem}
+.grid.rows .card .cb{padding:0;gap:4px;display:flex;flex-direction:column;min-width:0}
+.grid.rows .card h2{font:700 1.18rem/1.3 var(--f-b);margin:0;letter-spacing:-.01em}
+.grid.rows .card h2 a{color:var(--ink);text-decoration:none}
+.grid.rows .card h2 a:hover{text-decoration:underline;text-underline-offset:3px}
+.grid.rows .card .car{font:500 .98rem/1.35 var(--f-b);color:var(--ink);margin:0}
+.grid.rows .cardoem{margin:2px 0 0;font-size:.95rem;color:var(--mute);display:block}
+.grid.rows .cardoem b{font:700 .97rem/1 var(--f-b);background:none;border:0;padding:0;letter-spacing:.03em;color:var(--ink);font-variant-numeric:tabular-nums}
+.grid.rows .card .meta{font-size:.9rem;color:var(--mute);display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:2px}
+.grid.rows .card .side{padding:0;display:flex;flex-direction:column;align-items:flex-end;justify-content:center;gap:10px;text-align:right;border:0}
+.price{font:800 1.6rem/1 var(--f-b);letter-spacing:-.02em;color:var(--ink);background:linear-gradient(transparent 55%,var(--acc) 55%,var(--acc) 92%,transparent 92%);padding:0 4px}
+.call{background:var(--pet);color:#fff;border-radius:3px;font:650 .95rem/1 var(--f-b);padding:11px 16px}
+.call:hover{background:var(--pet2)}
+.grid.rows .card.is-top{border-color:var(--ink)}
+.toptag{background:var(--acc);color:var(--accink);font:800 .75rem/1 var(--f-b);border-radius:2px;padding:4px 6px}
+.grid.rows .more{align-self:center;margin-top:6px}
+.add{border:1.5px solid var(--pet);color:var(--pet);background:var(--card);border-radius:3px;font:650 .95rem/1 var(--f-b);padding:11px 18px;cursor:pointer}
+.empty{background:var(--card);border:1.5px dashed var(--field);border-radius:6px;padding:28px 20px;text-align:center;color:var(--ink)}
+.rq-cta{background:var(--card);border:1.5px dashed var(--field);border-radius:6px;padding:16px 20px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin:18px 0;box-shadow:none}
+.rq-cta p{margin:0;max-width:62ch}
+.rq-cta .btn2,.btn2{background:transparent;color:var(--pet);border:2px solid var(--pet);border-radius:3px;padding:10px 16px;font:650 .95rem/1 var(--f-b);cursor:pointer;text-decoration:none}
+.saved{margin:0 0 14px}
+/* ostatné stránky: jednotné nadpisy a štítky čísla dielu bez strojopisu */
+.hero{background:var(--pet);padding:28px 16px 32px}
+.hero h1{font:750 clamp(1.7rem,3.4vw,2.4rem)/1.1 var(--f-b);max-width:28ch;margin:0 0 8px}
+.hero .sub{font-size:1.02rem}
+.oem,.oem-line,.cardoem b{font-family:var(--f-b);font-variant-numeric:tabular-nums}
+.di h2{font:750 1.7rem/1.15 var(--f-b)}
+.sh{font:700 1.2rem/1.2 var(--f-b)}
+.foot2{border-top:1px solid var(--line);background:var(--card);max-width:none;margin-top:32px;padding-left:max(16px,calc((100% - 1128px)/2));padding-right:max(16px,calc((100% - 1128px)/2))}
+/* mobil */
+@media (max-width:900px){
+  .c-layout{grid-template-columns:minmax(0,1fr);gap:16px;padding-top:16px}
+  .c-side{position:static;gap:14px;order:0}
+  .c-cats{flex-direction:row;flex-wrap:nowrap;overflow-x:auto;gap:6px;padding-bottom:4px;scrollbar-width:thin}
+  .c-cats>li{flex:0 0 auto}
+  .c-cats button{border:1.5px solid var(--line);background:var(--card);white-space:nowrap}
+  .c-subs{display:none}
+  .c-side .adv{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .c-side .adv h2,.c-side .adv .lnk{grid-column:1/-1}
+  .finder .pg{grid-template-columns:repeat(2,minmax(0,1fr));flex-basis:100%}
+  .find-l{padding:0;flex-basis:100%}
+  .finder .pa,.finder .pa .btn{width:100%}
+  .find-alt{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:600px){
+  .grid.rows .card{grid-template-columns:104px minmax(0,1fr);gap:12px;padding:12px}
+  .grid.rows .card .ph{width:104px;height:84px}
+  .grid.rows .card .side{grid-column:1/-1;flex-direction:row;justify-content:space-between;align-items:center}
+  .grid.rows .card h2{font-size:1.05rem}
+  .finder .oemrow,.finder .plate .pg2{flex-wrap:wrap}
+  .finder .oemrow .btn2,.finder .plate .btn2{width:100%}
+  .snav{gap:18px}
+}
+/* zarovnanie hlavičky, sekcií, lišty a obsahu na jednu šírku (1216 px obsahu) */
+.site-header .tb{max-width:1248px;padding:12px 16px;box-sizing:border-box}
+.snav{display:flex!important;flex-wrap:nowrap!important;overflow-x:auto;gap:28px!important;padding:0 max(16px,calc((100% - 1216px)/2))!important;grid-template-columns:none!important}
+.c-layout.wrap{max-width:1248px;box-sizing:border-box;padding-left:16px;padding-right:16px}
+.find-alt-t{display:none}
+@media (max-width:600px){
+  .snav{gap:20px!important}
+  .snav a{white-space:nowrap}
+  .panel.finder>.in>.vtabs{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin-right:-16px;padding-right:16px}
+  .panel.finder .vtabs button{flex:0 0 auto}
+  .find-l{font-size:1.05rem}
+  .find-alt{display:none}
+  .find-alt.open{display:grid}
+  .find-alt-t{display:block;background:none;border:0;color:#fff;font:650 .97rem var(--f-b);text-decoration:underline;text-underline-offset:3px;padding:2px 0;text-align:left;cursor:pointer}
+}
+/* odkazy pre vyhľadávače na úvode: tichý zoznam v stĺpcoch */
+.seo-links{max-width:1248px;box-sizing:border-box;padding:8px 16px 28px;display:grid;gap:18px;border-top:1px solid var(--line);margin-top:12px}
+.seo-links h2{font:700 .98rem/1.2 var(--f-b);margin:0 0 8px;color:var(--ink)}
+.seo-links ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:4px 16px;font-size:.92rem}
+.seo-links ul.seo-cols{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:4px 16px}
+.seo-links a{color:var(--mute);text-decoration:none}
+.seo-links a:hover{color:var(--ink);text-decoration:underline}
+.c-filt-t{display:none}
+@media (max-width:900px){
+  .c-filt-t{display:block;align-self:flex-start;border:1.5px solid var(--field);background:var(--card);color:var(--ink);border-radius:3px;padding:9px 14px;font:650 .95rem var(--f-b);cursor:pointer}
+  .c-side .adv{display:none!important}
+  .c-side .adv.open{display:grid!important}
+}
+@media (max-width:600px){
+  .site-header .tb{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center}
+  .site-header .tb .brand{font-size:1.25rem}
+  .site-header .tb .gs{grid-column:1/-1;order:3}
+  .site-header #user .ubtn{padding:8px 10px;font-size:.88rem}
+}
+@media (max-width:420px){.site-header .tb .brand{font-size:1.1rem}.site-header #user .ubtn{font-size:.8rem;padding:7px 8px}}
+/* vzhľad C – tmavý režim */
+.finder select,.finder input{color:#24292d!important}
+.finder input::placeholder{color:#7a848b}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]) .brand,:root:not([data-theme="light"]) .ubtn{color:var(--link);border-color:var(--link)}
+  :root:not([data-theme="light"]) .ubtn:hover{background:var(--link);color:#0d1a1f}
+  :root:not([data-theme="light"]) .price{background:linear-gradient(transparent 60%,rgba(232,201,58,.38) 60%,rgba(232,201,58,.38) 92%,transparent 92%)}
+}
+:root[data-theme="dark"] .brand,:root[data-theme="dark"] .ubtn{color:var(--link);border-color:var(--link)}
+:root[data-theme="dark"] .ubtn:hover{background:var(--link);color:#0d1a1f}
+:root[data-theme="dark"] .price{background:linear-gradient(transparent 60%,rgba(232,201,58,.38) 60%,rgba(232,201,58,.38) 92%,transparent 92%)}
+/* hromadne z fotiek (najprv fotky) */
+.fp-mode{display:flex;gap:24px;border-bottom:1px solid var(--line);margin:0 0 16px;flex-wrap:wrap}
+.fp-mode button{background:none;border:0;border-bottom:3px solid transparent;padding:8px 0;font:650 .98rem var(--f-b);color:var(--mute);cursor:pointer}
+.fp-mode button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--pet)}
+.fp{display:grid;gap:14px}
+.fp label{display:flex;flex-direction:column;gap:4px;font-weight:600;font-size:.88rem;color:var(--mute)}
+.fp select,.fp input:not([type=file]){background:var(--card);color:var(--ink);border:1px solid var(--field);border-radius:3px;padding:8px 10px;font:500 .95rem var(--f-b);min-width:0;width:100%}
+.fp-car{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px 12px;margin:12px 0}
+.fp-donor{max-width:420px;margin-bottom:10px}
+.fp-note{margin-top:4px}
+.fp-hint{font-size:.86rem;margin:6px 0 0}
+.fp-pick input,.pp-folder input{position:absolute;opacity:0;width:1px;height:1px}
+.fp-bar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
+.fp-bar h2{margin:0!important}
+.fp-acts{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.fp-acts .btn{height:40px;padding:0 16px;font-size:.95rem}
+.fp-pool{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:8px}
+.fp-pool button{position:relative;display:block;width:100%;aspect-ratio:4/3;padding:0;border:2px solid var(--line);border-radius:4px;background:var(--chip);cursor:pointer;overflow:hidden}
+.fp-pool button img{width:100%;height:100%;object-fit:cover;display:block}
+.fp-pool button:hover{border-color:var(--mute)}
+.fp-pool button.on{border:3px solid var(--pet2);outline:2px solid var(--pet2);outline-offset:-1px}
+.fp-pool button.on img{opacity:.8}
+.fp-n{position:absolute;top:6px;left:6px;background:var(--pet2);color:#fff;font:700 .85rem/1 var(--f-b);padding:5px 7px;border-radius:3px}
+.fp-parts{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.fp-parts>li{border:1px solid var(--line);border-radius:6px;padding:12px;display:grid;grid-template-columns:minmax(0,260px) minmax(0,1fr);gap:12px 16px;align-items:start}
+.fp-parts>li.bad{border-color:var(--bad,#c0392b)}
+.fp-parts>li>.pp-err,.fp-parts>li>.fp-rm{grid-column:1/-1;margin:0;justify-self:start}
+.fp-ph{display:flex;flex-wrap:wrap;gap:6px}
+.fp-th{position:relative;width:80px;height:60px;border-radius:3px;overflow:hidden;background:var(--chip)}
+.fp-th:first-child{width:160px;height:120px}
+.fp-th img{width:100%;height:100%;object-fit:cover;display:block}
+.fp-th em{position:absolute;left:4px;bottom:4px;background:rgba(0,0,0,.65);color:#fff;font:600 .72rem/1 var(--f-b);font-style:normal;padding:3px 5px;border-radius:2px}
+.fp-th button{position:absolute;top:3px;right:3px;width:22px;height:22px;border:0;border-radius:3px;background:rgba(0,0,0,.65);color:#fff;font-size:1rem;line-height:1;cursor:pointer}
+.fp-f{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.fp-name{grid-column:1/-1}
+.fp .oemin{display:flex;gap:6px}
+.fp-oem input{font-variant-numeric:tabular-nums;letter-spacing:.03em}
+@media (max-width:760px){.fp-parts>li{grid-template-columns:1fr}.fp-f{grid-template-columns:1fr 1fr}.fp-pool{grid-template-columns:repeat(3,minmax(0,1fr))}.fp-th:first-child{width:120px;height:90px}}
