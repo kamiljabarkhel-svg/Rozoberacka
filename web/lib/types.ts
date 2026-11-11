@@ -167,7 +167,8 @@ export function wheelKind(subName: string | null | undefined): WheelKind {
   if (n === "Kolesá s pneumatikami" || n === "Rezervné a dojazdové kolesá") return "kolesa";
   return "ine";
 }
-/** Povinné parametre podľa druhu (dezén len pri použitých pneumatikách – rieši formulár). Databáza vyžaduje rozmer: pneu tw+tp+rd, disk pcd+rd, kolesá oboje. */
+/** Povinné parametre podľa druhu (dezén len pri použitých pneumatikách – rieši formulár). Databáza vyžaduje rozmer: pneu tw+tp+rd, disk pcd+rd,
+ *  kolesá aspoň jedno z toho (predajca často pozná len rozmer pneumatiky alebo len disku). */
 export const WHEEL_REQ: Record<WheelKind, (keyof Specs)[]> = {
   pneu: ["tw", "tp", "rd", "pcs"], disk: ["rd", "pcd", "rw", "et", "pcs"], kolesa: ["tw", "tp", "rd", "pcd", "pcs"], ine: [],
 };
@@ -180,8 +181,21 @@ export function wheelDefaults(subName: string | null | undefined): Specs {
 }
 /** Chýbajúce povinné parametre kolesa (prázdne polia). */
 export function wheelMissing(kind: WheelKind, s: Specs | null | undefined, isNew = false): (keyof Specs)[] {
-  const req = [...WHEEL_REQ[kind]]; if ((kind === "pneu" || kind === "kolesa") && !isNew) req.push("tread");
-  return req.filter((k) => !(s?.[k] || "").trim());
+  const has = (k: keyof Specs) => !!(s?.[k] || "").trim();
+  if (kind === "kolesa") {
+    const tire = has("tw") && has("tp") && has("rd"), disk = has("pcd") && has("rd");
+    const req: (keyof Specs)[] = ["pcs"];
+    if (!tire && !disk) req.push("tw", "tp", "rd", "pcd");   // stačí rozmer pneumatiky ALEBO disku
+    if (tire && !isNew) req.push("tread");
+    return req.filter((k) => !has(k));
+  }
+  const req = [...WHEEL_REQ[kind]]; if (kind === "pneu" && !isNew) req.push("tread");
+  return req.filter((k) => !has(k));
+}
+/** Kolesá: je vyplnený celý rozmer pneumatiky alebo disku? */
+export function wheelHalves(s: Specs | null | undefined): { tire: boolean; disk: boolean } {
+  const has = (k: keyof Specs) => !!(s?.[k] || "").trim();
+  return { tire: has("tw") && has("tp") && has("rd"), disk: has("pcd") && has("rd") };
 }
 
 // ---------- Havarované vozidlá na predaj ----------

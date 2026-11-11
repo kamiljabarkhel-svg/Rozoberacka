@@ -132,7 +132,7 @@ export default function CsvImport({ uid, cat, prof, onDone }: { uid: string; cat
           const kind = wheelKind(sub.name); specs = { ...wheelDefaults(sub.name), ...specs };
           const miss = wheelMissing(kind, specs, condition === "Nový");
           const must = miss.filter((x) => ["tw", "tp", "rd", "pcd"].includes(x));   // rozmer stráži aj databáza
-          if (must.length) errors.push(`chýba rozmer: ${must.map((x) => SPEC_LABEL[x].toLowerCase()).join(", ")}`);
+          if (must.length) errors.push(kind === "kolesa" ? "pri kolesách vyplňte rozmer pneumatiky (pneu_sirka, pneu_profil, priemer) alebo disku (roztec, priemer)" : `chýba rozmer: ${must.map((x) => SPEC_LABEL[x].toLowerCase()).join(", ")}`);
           const rest = miss.filter((x) => !must.includes(x)); if (rest.length) warns.push(`odporúčame doplniť: ${rest.map((x) => SPEC_LABEL[x].toLowerCase()).join(", ")}`);
         }
       }

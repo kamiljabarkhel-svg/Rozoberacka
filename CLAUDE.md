@@ -248,3 +248,6 @@ Overené na Slov-Lexe: Občiansky zákonník § 597, 599, 612, 618, 619 (znenie 
 ## Cookies overené, VIN pre všetky vozidlá (11. 11. 2026, 17:45)
 - Cookies s Google Analytics overené v prehliadači (`testy-e2e/test_cookies.js`, 18/18): nič pred súhlasom, rovnocenné tlačidlá, odvolanie v pätičke a na /cookies zmaže _ga cookies.
 - VIN (`web/lib/vin.ts`): WMI s druhom vozidla (motorka Honda `JH2` vs auto `JHM`), rok len pri výrobcoch, ktorí ho zapisujú do 10. znaku; dvojznačný rok = obe možnosti. Ročník z VIN sa **nenastavuje ako filter**, len sa zobrazí. Ak značka nie je v zvolenom druhu vozidla, úvod prepne druh. Test `testy-e2e/test_vin.mjs` – každá značka z tabuľky VIN musí byť v katalógu.
+
+## Kolesá s jedným rozmerom (11. 11. 2026, 18:10)
+- `supabase/25`: „Kolesá s pneumatikami“ stačí s rozmerom pneumatiky (šírka, profil, priemer) alebo disku (rozteč, priemer). `wheelMissing`/`wheelHalves` v `lib/types.ts`. Hľadanie (`l.specs @> sp`) porovnáva len vyplnené parametre.

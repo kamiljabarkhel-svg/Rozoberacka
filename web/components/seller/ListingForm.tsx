@@ -145,7 +145,7 @@ export default function ListingForm({ uid, cat, prof, edit, donor, onSaved }: { 
   const vname = (b: number, m: number | null, e: number | null) =>
     [cat.brands.find((x) => x.id === b)?.name, m ? cat.models.find((x) => x.id === m)?.name : "všetky modely", e ? cat.engines.find((x) => x.id === e)?.name : m ? "všetky motorizácie" : ""].filter(Boolean).join(" ");
 
-  const reqK = kind ? wheelMissing(kind, {}, v.condition === "Nový") : [];
+  const reqK = kind === "kolesa" ? (["pcs"] as (keyof Specs)[]) : kind ? wheelMissing(kind, {}, v.condition === "Nový") : [];
   const SI = (k: keyof Specs, el: React.ReactNode) => <label key={k} className={specBad.includes(k) ? "bad" : ""}><span>{SPEC_LABEL[k]}{reqK.includes(k) && <em>*</em>}</span>{el}</label>;
   const L = ({ k, t, req = true, children }: { k?: Key; t: string; req?: boolean; children: React.ReactNode }) => (
     <label className={k && bad.has(k) ? "bad" : ""}><span className="lt">{t}{req && <em>*</em>}</span>{children}{k && bad.has(k) && <small className="pp-ferr">{MSG[k]}</small>}</label>
@@ -182,7 +182,7 @@ export default function ListingForm({ uid, cat, prof, edit, donor, onSaved }: { 
           {wheel && !kind && <p className="full mute pp-hint">Najprv vyberte, <b>čo predávate</b> – podľa toho sa ukážu správne polia (rozmer pneumatiky, rozteč disku…).</p>}
           {kind && kind !== "ine" && <div className={"full pp-specs" + (bad.has("specs") ? " bad" : "")}>
             <b>{kind === "pneu" ? "Rozmer a stav pneumatík" : kind === "disk" ? "Rozmer diskov" : "Rozmer pneumatík a diskov"}</b>
-            <span className="mute">Polia s <em className="req">*</em> sú povinné – kupujúci podľa nich hľadajú.{kind !== "disk" && " Rozmer nájdete na boku pneumatiky (napr. 205/55 R16 91V), rok výroby v kóde DOT (posledné 4 číslice, napr. 2321 = 2021)."}{kind !== "pneu" && " Rozmer disku je vyrazený na jeho zadnej strane (napr. 7Jx16 ET49)."}</span>
+            <span className="mute">Polia s <em className="req">*</em> sú povinné – kupujúci podľa nich hľadajú.{kind !== "disk" && " Rozmer nájdete na boku pneumatiky (napr. 205/55 R16 91V), rok výroby v kóde DOT (posledné 4 číslice, napr. 2321 = 2021)."}{kind !== "pneu" && " Rozmer disku je vyrazený na jeho zadnej strane (napr. 7Jx16 ET49)."}{kind === "kolesa" && <> <b>Stačí rozmer pneumatiky alebo rozmer disku</b> – vyplňte, čo viete; čím viac údajov, tým ľahšie vás kupujúci nájde.</>}</span>
             <div className="pp-specg">
               {kind !== "disk" && <fieldset><legend>Pneumatika</legend>
                 {SI("tw", <input inputMode="numeric" placeholder="205" value={specs.tw || ""} onChange={(e) => setSpec("tw", e.target.value)} />)}

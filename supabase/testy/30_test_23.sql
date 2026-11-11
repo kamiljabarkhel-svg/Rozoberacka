@@ -26,9 +26,9 @@ select pg_temp.bad($q$insert into public.listings (seller_id, name, category_id,
   from public.subcategories where category_id = 'kol' and name = 'Disky oceľové'$q$,
   '23: disky bez rozteče odmietnuté');
 select pg_temp.bad($q$insert into public.listings (seller_id, name, category_id, subcategory_id, price, city, description, warranty, condition, specs)
-  select 'f1111111-0000-0000-0000-0000000000f1', 'Kolesá len s pneu', 'kol', id, 100, 'Žilina', 'Kolesá komplet, pneumatiky 5 mm.', 'Bez záruky', 'Dobrý', '{"tw":"205","tp":"55","rd":"16"}'
+  select 'f1111111-0000-0000-0000-0000000000f1', 'Kolesá bez rozmeru', 'kol', id, 100, 'Žilina', 'Kolesá komplet, pneumatiky 5 mm.', 'Bez záruky', 'Dobrý', '{"season":"zimné"}'
   from public.subcategories where category_id = 'kol' and name = 'Kolesá s pneumatikami'$q$,
-  '23: kolesá bez rozteče odmietnuté');
+  '25: kolesá bez rozmeru pneumatiky aj disku odmietnuté');
 insert into public.listings (seller_id, name, category_id, subcategory_id, price, city, description, warranty, condition, specs)
 select 'f1111111-0000-0000-0000-0000000000f1', 'Kolesá 205/55 R16 5x112', 'kol', id, 300, 'Žilina', 'Kolesá komplet, pneumatiky zimné 5 mm.', 'Bez záruky', 'Dobrý',
        '{"tw":"205","tp":"55","rd":"16","pcd":"5x112","season":"zimné","tread":"5","pcs":"4"}'
