@@ -68,11 +68,11 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
   await step("hlavicka ukazuje portal", async () => { await pg.waitForSelector(".site-header >> text=Portál predajcu"); });
   await step("nastenka: profil chyba", async () => { await pg.waitForSelector("text=Doplňte mesto a telefón"); });
   await step("profil ulozit", async () => {
-    await pg.click(".pp-nav >> text=Profil"); await pg.fill(".pp-form label:has-text('Mesto') input", "Žilina"); await pg.fill(".pp-form label:has-text('Telefón') input", "0905 111 222");
+    await pg.click(".pp-nav button:has-text('Profil a nastavenia')"); await pg.fill(".pp-form label:has-text('Mesto') input", "Žilina"); await pg.fill(".pp-form label:has-text('Telefón') input", "0905 111 222");
     await pg.click("text=Uložiť profil"); await pg.waitForSelector(".pp-toast:has-text('Profil uložený')");
   });
   await step("formular prazdny -> chyby", async () => {
-    await pg.click(".pp-nav >> text=Pridať inzerát"); await pg.click("text=Ďalej →"); await pg.waitForSelector("label.bad"); const n = await pg.locator("label.bad").count(); if (n < 3) throw new Error("bad=" + n);
+    await pg.click(".pp-nav button:has-text('Jeden inzerát')"); await pg.click("text=Ďalej →"); await pg.waitForSelector("label.bad"); const n = await pg.locator("label.bad").count(); if (n < 3) throw new Error("bad=" + n);
   });
   await step("formular vyplnit a ulozit", async () => {
     await pg.fill("label:has-text('Názov dielu') input", "Predné ľavé svetlo LED");
@@ -146,7 +146,7 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
   await step("portal: statistiky a sprava", async () => {
     await pg.goto(B + "/predajca#home"); await pg.reload(); await pg.waitForSelector(".pp-tile");
     const t = await pg.locator(".pp-tiles").innerText(); console.log("   tiles:", t.replace(/\n/g, " | "));
-    await pg.click(".pp-nav >> text=Správy"); await pg.waitForSelector(".pp-msgs li.unread:has-text('Jano Kupec')"); await pg.click("text=Označiť ako prečítané >> nth=0"); await pg.waitForSelector(".pp-msgs li:not(.unread)");
+    await pg.click(".pp-nav button:has-text('Správy od kupujúcich')"); await pg.waitForSelector(".pp-msgs li.unread:has-text('Jano Kupec')"); await pg.click("text=Označiť ako prečítané >> nth=0"); await pg.waitForSelector(".pp-msgs li:not(.unread)");
   });
   await step("odpoved predajcu a konverzacia kupujuceho", async () => {
     global.CUR = b2;
@@ -154,7 +154,7 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
     await b2.click("text=Napísať predajcovi"); const box = b2.locator(".msgbox");
     await box.locator("input >> nth=0").fill("Mila Kupcova"); await box.locator("input >> nth=1").fill("Mila.Kupcova@test.sk"); await box.locator("textarea").fill("Dobrý deň, pošlete svetlo na dobierku?");
     await box.locator("text=Odoslať správu").click(); await b2.waitForSelector("text=odpoveď vám príde e-mailom");
-    global.CUR = pg; await pg.reload(); await pg.click(".pp-nav >> text=Správy");
+    global.CUR = pg; await pg.reload(); await pg.click(".pp-nav button:has-text('Správy od kupujúcich')");
     const th = pg.locator(".pp-msgs > li", { hasText: "Mila Kupcova" }); await th.locator(".pp-reply textarea").waitFor();
     if (!(await pg.locator(".pp-msgs > li", { hasText: "Jano Kupec" }).locator("text=Kupujúci nezadal e-mail").count())) throw new Error("pri telefóne chýba upozornenie");
     await th.locator(".pp-reply textarea").fill("Áno, pošlem na dobierku, 8 € poštovné.");
@@ -167,12 +167,12 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
     await b2.fill(".thr-reply textarea", "Super, posielam adresu: Hlavná 1, Trnava."); await b2.click(".thr-reply >> text=Odoslať"); await b2.waitForSelector("text=Odoslané.");
     await b2.waitForSelector(".thr-list li.me:has-text('Hlavná 1')");
     await b2.goto(B + "/sprava/00000000-0000-0000-0000-000000000000"); await b2.waitForSelector("text=Konverzácia sa nenašla");
-    global.CUR = pg; await pg.reload(); await pg.click(".pp-nav >> text=Správy"); await pg.waitForSelector(".pp-msgs li.unread:has-text('Hlavná 1')");
+    global.CUR = pg; await pg.reload(); await pg.click(".pp-nav button:has-text('Správy od kupujúcich')"); await pg.waitForSelector(".pp-msgs li.unread:has-text('Hlavná 1')");
     const n = require("child_process").execSync("psql -h /tmp/pgt -p 5499 -U postgres -d e2e -tAq", { input: "set role service_role; select count(*) from reply_outbox()" }).toString().trim();
     if (n.split("\n").pop() !== "2") throw new Error("fronta e-mailov " + n);
   });
   await step("upravit inzerat", async () => {
-    await pg.click(".pp-nav >> text=Moje inzeráty"); await pg.click(".pp-row:has-text('Predné ľavé') >> text=Upraviť");
+    await pg.click(".pp-nav button:has-text('Moje inzeráty')"); await pg.click(".pp-row:has-text('Predné ľavé') >> text=Upraviť");
     await pg.fill("label:has-text('Názov dielu') input", "Predné ľavé svetlo LED Octavia"); await pg.click("text=Uložiť zmeny"); await pg.waitForSelector(".pp-toast:has-text('Zmeny uložené')");
     await pg.waitForSelector(".pp-row:has-text('LED Octavia') img");
   });
@@ -186,7 +186,7 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
     await pg.click(".pp-row >> nth=0 >> button.del"); await pg.click("text=Naozaj zmazať?"); await pg.waitForFunction((n) => document.querySelectorAll(".pp-row").length === n - 1, n0);
   });
   await step("CSV import", async () => {
-    await pg.click(".pp-nav >> text=Import CSV");
+    await pg.click(".pp-nav button:has-text('Import z CSV')");
     const csv = "nazov;znacka;model;rocnik;oem;cena;kategoria;stav;popis;pasuje;fotky\nAlternátor 140A;Volkswagen;Golf VII;2015;03L903023;85;Elektro;Dobrý;Odskúšaný alternátor, nabíja správne.;Škoda Octavia III;alt1.png|chyba.png\nZlý riadok;Tesla;X;;12;0;Nič;;krátky;;\n";
     require("fs").writeFileSync("i.csv", csv); require("fs").copyFileSync("a.png", "alt1.png"); await pg.setInputFiles(".pp-file input", "i.csv");
     await pg.waitForSelector(".pp-pre li.err"); const okc = await pg.locator(".pp-pre li.ok").count(); if (okc !== 1) throw new Error("ok rows " + okc + " :: " + (await pg.locator(".pp-pre").innerText()));
@@ -196,7 +196,7 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
     await pg.click("text=Importovať 1"); await pg.waitForSelector(".pp-toast:has-text('Importované: 1')", { timeout: 15000 });
   });
   await step("auto na diely + rychle pridanie dielov", async () => {
-    await pg.click(".pp-nav >> text=Autá na diely"); await pg.click("text=+ Pridať vozidlo");
+    await pg.click(".pp-nav button:has-text('Z auta na diely')"); await pg.click("text=+ Pridať vozidlo");
     await pg.selectOption("label:has-text('Značka') select", { label: "Škoda" });
     const m = pg.locator("label:has-text('Model') select"); const o = (await m.locator("option").allTextContents()).find((t) => /^Octavia III/.test(t)); await m.selectOption({ label: o });
     await pg.selectOption("label:has-text('Ročník') select", "2016"); await pg.fill("label:has-text('Najazdené km') input", "150000");
@@ -247,7 +247,7 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
     global.CUR = pg; await pg.goto(B + "/predajca#msg"); await pg.reload(); await pg.waitForSelector(".pp-msgs li:has-text('Celé vozidlo')");
   });
   await step("pneumatiky a disky: parametre vo formulari a filtri", async () => {
-    await pg.click(".pp-nav >> text=Pridať inzerát"); await pg.fill(".pp-form label:has-text('Názov dielu') input", "Disky 16 Škoda 5x112");
+    await pg.click(".pp-nav button:has-text('Jeden inzerát')"); await pg.fill(".pp-form label:has-text('Názov dielu') input", "Disky 16 Škoda 5x112");
     await pg.selectOption(".pp-form select:has(option:text-is('Pneumatiky a disky'))", { label: "Pneumatiky a disky" });
     await pg.click("text=Ďalej →"); await pg.waitForSelector(".pp-ferr:has-text('čo predávate')");
     // pneumatiky: rozmer, sezóna zo zvolenej podkategórie, bez čísla dielu
@@ -266,7 +266,7 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
     if (await pg.locator(".pp-form label:has-text('Prevodovka auta')").count()) throw new Error("pri diskoch je prevodovka auta");
   });
   await step("export CSV a hromadna cena", async () => {
-    await pg.click(".pp-nav >> text=Moje inzeráty"); await pg.waitForSelector(".pp-row");
+    await pg.click(".pp-nav button:has-text('Moje inzeráty')"); await pg.waitForSelector(".pp-row");
     const [dl] = await Promise.all([pg.waitForEvent("download"), pg.click("text=Export CSV")]);
     const t = require("fs").readFileSync(await dl.path(), "utf8"); if (!/^\uFEFFnazov;druh;znacka;model/.test(t) || !/Kapota/.test(t)) throw new Error(t.slice(0, 120));
     await pg.click(".pp-chips >> text=Pozastavené"); await pg.check(".pp-rowh input"); await pg.click("text=Zmeniť cenu");
@@ -274,18 +274,18 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
     await pg.waitForSelector(".pp-row:has-text('Kapota') >> text=81 €");
   });
   await step("fotky hromadne podla cisla dielu", async () => {
-    await pg.click(".pp-nav >> text=Hromadne z fotiek"); await pg.waitForSelector("h1:has-text('Hromadne z fotiek')");
+    await pg.click(".pp-nav button:has-text('Hromadne z fotiek')"); await pg.waitForSelector("h1:has-text('Hromadne z fotiek')");
     await pg.click(".fp-mode >> text=Doplniť fotky k existujúcim inzerátom");
     require("fs").copyFileSync("a.png", "5E0823031_1.png"); require("fs").copyFileSync("a.png", "nic-nesedi.png");
     await pg.setInputFiles(".pp-bulkph input", ["5E0823031_1.png", "nic-nesedi.png"]);
     await pg.waitForSelector(".pp-pre li:has-text('Kapota') .pp-prephotos img"); await pg.waitForSelector("text=Nepriradené (1)");
     await pg.waitForSelector(".pp-photosum:has-text('po pridaní fotiek zverejní')");
     await pg.click("text=Pridať fotky"); await pg.waitForSelector(".pp-toast:has-text('Fotky doplnené k 1 inzerátu')", { timeout: 20000 });
-    await pg.click(".pp-nav >> text=Moje inzeráty"); await pg.waitForSelector(".pp-row:has-text('Kapota') .pp-th img");
+    await pg.click(".pp-nav button:has-text('Moje inzeráty')"); await pg.waitForSelector(".pp-row:has-text('Kapota') .pp-th img");
     await pg.click(".pp-chips >> text=Aktívne"); await pg.waitForSelector(".pp-row:has-text('Kapota')");
   });
   await step("hromadne z fotiek: nove inzeraty (najprv fotky)", async () => {
-    await pg.click(".pp-nav >> text=Hromadne z fotiek"); await pg.waitForSelector(".fp-mode button[aria-selected='true']:has-text('Nové inzeráty z fotiek')");
+    await pg.click(".pp-nav button:has-text('Hromadne z fotiek')"); await pg.waitForSelector(".fp-mode button[aria-selected='true']:has-text('Nové inzeráty z fotiek')");
     await pg.selectOption(".fp-donor select", { index: 1 });
     for (const n of ["h1.png", "h2.png", "h3.png"]) require("fs").copyFileSync("a.png", n);
     // rôzny obsah, aby sa súbory nezlúčili ako duplikáty
@@ -303,7 +303,7 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
     await p1.locator(".fp-name input").fill("Volant kožený"); await p1.locator("label:has-text('Kategória') select").selectOption("int");
     await p1.locator(".fp-oem input").fill("5E0419091"); await p1.locator("label:has-text('Cena') input").fill("45");
     await pg.click("text=Zverejniť 2 inzeráty"); await pg.waitForSelector(".pp-toast:has-text('Zverejnené: 2 inzeráty')", { timeout: 30000 });
-    await pg.click(".pp-nav >> text=Moje inzeráty"); await pg.click(".pp-chips >> text=Aktívne");
+    await pg.click(".pp-nav button:has-text('Moje inzeráty')"); await pg.click(".pp-chips >> text=Aktívne");
     await pg.waitForSelector(".pp-row:has-text('Volant kožený') .pp-th img"); await pg.waitForSelector(".pp-row:has-text('Predné svetlo ľavé') .pp-th img");
   });
   let reqUrl = "";
@@ -314,7 +314,7 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
     await b2.waitForSelector("text=Dopyt je odoslaný"); reqUrl = await b2.locator(".rq-url a").getAttribute("href");
   });
   await step("dopyt: predajca posle ponuku", async () => {
-    await pg.click(".pp-nav >> text=Dopyty"); await pg.waitForSelector(".pp-msgs li:has-text('Ľavé predné svetlo xenón')");
+    await pg.click(".pp-nav button:has-text('Dopyty na diely')"); await pg.waitForSelector(".pp-msgs li:has-text('Ľavé predné svetlo xenón')");
     await pg.click("text=Mám tento diel – poslať ponuku"); await pg.fill(".rq-offer label:has-text('Cena') input", "95"); await pg.click(".rq-offer >> text=Poslať ponuku");
     await pg.waitForSelector("text=Ponuka odoslaná");
   });
@@ -382,7 +382,7 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
     await b2.check(".rep .pp-chk input"); await b2.click("text=Odoslať nahlásenie"); await b2.waitForSelector("text=nahlásenie sme prijali");
   });
   await step("zaruka firmy bez moznosti Bez zaruky", async () => {
-    await pg.click(".pp-nav >> text=Pridať inzerát"); await pg.click(".pp-steps >> text=Stav, cena");
+    await pg.click(".pp-nav button:has-text('Jeden inzerát')"); await pg.click(".pp-steps >> text=Stav, cena");
     const o = await pg.locator("label:has-text('Záruka') select option").allTextContents(); if (o.includes("Bez záruky")) throw new Error(o.join("|"));
   });
   await step("admin: nahlasenie -> skryt inzerat", async () => {
@@ -411,7 +411,7 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
   });
   await step("export mojich udajov", async () => {
     await pg.goto(B + "/pre-predajcov"); await pg.fill("input[type=email]", "test@rz.sk"); await pg.fill("input[type=password]", "heslo1234"); await pg.click("form button.btn"); await pg.waitForSelector(".pp-dash");
-    await pg.click(".pp-nav >> text=Profil");
+    await pg.click(".pp-nav button:has-text('Profil a nastavenia')");
     const [dl] = await Promise.all([pg.waitForEvent("download"), pg.click("text=Stiahnuť moje údaje")]);
     const j = JSON.parse(require("fs").readFileSync(await dl.path(), "utf8"));
     if (!j.profil || j.profil.terms_version !== TERMS || !Array.isArray(j.inzeraty) || !j.inzeraty.length) throw new Error(JSON.stringify(j).slice(0, 200));

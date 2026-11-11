@@ -1262,3 +1262,14 @@ a{color:var(--link)}
 .fp .oemin{display:flex;gap:6px}
 .fp-oem input{font-variant-numeric:tabular-nums;letter-spacing:.03em}
 @media (max-width:760px){.fp-parts>li{grid-template-columns:1fr}.fp-f{grid-template-columns:1fr 1fr}.fp-pool{grid-template-columns:repeat(3,minmax(0,1fr))}.fp-th:first-child{width:120px;height:90px}}
+/* portál: menu v skupinách */
+.pp-nav nav{gap:14px}
+.pp-grp{display:grid;gap:2px}
+.pp-grp+.pp-grp{border-top:1px solid var(--line);padding-top:12px}
+.pp-grp-h{font:650 .8rem/1.2 var(--f-b);color:var(--mute);padding:0 12px 4px}
+@media (max-width:860px){
+  .pp-nav nav{display:flex;overflow-x:auto;gap:6px}
+  .pp-grp{display:contents}
+  .pp-grp+.pp-grp{border:0;padding:0}
+  .pp-grp-h{display:none}
+}

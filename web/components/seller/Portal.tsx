@@ -26,7 +26,15 @@ import FromPhotos from "./FromPhotos";
 import { CARS_ENABLED, EMAIL_REPLIES } from "@/lib/features";
 
 type Tab = "home" | "list" | "donor" | "cars" | "form" | "csv" | "photos" | "addph" | "req" | "msg" | "prof";
-const TABS: [Tab, string][] = [["home", "Nástenka"], ["list", "Moje inzeráty"], ["donor", "Autá na diely"], ["form", "Pridať inzerát"], ["csv", "Import CSV"], ["photos", "Hromadne z fotiek"], ["req", "Dopyty"], ["msg", "Správy"], ["prof", "Profil"]];
+const TABS: [Tab, string][] = [["home", "Nástenka"], ["list", "Moje inzeráty"], ["donor", "Z auta na diely"], ["form", "Jeden inzerát"], ["csv", "Import z CSV"], ["photos", "Hromadne z fotiek"], ["req", "Dopyty na diely"], ["msg", "Správy od kupujúcich"], ["prof", "Profil a nastavenia"]];
+const TAB_LABEL = Object.fromEntries(TABS) as Record<Tab, string>;
+/** Menu v skupinách s nadpismi, aby predajca hneď videl, kde čo je. */
+const NAV_GROUPS: [string, Tab[]][] = [
+  ["Prehľad", ["home", "list"]],
+  ["Pridať inzeráty", ["form", "photos", "csv", "donor"]],
+  ["Kupujúci", ["msg", "req"]],
+  ["Môj účet", ["prof"]],
+];
 const ST: Record<Status, string> = { active: "Aktívny", paused: "Pozastavený", sold: "Predaný", blocked: "Skrytý správcom" };
 
 export default function Portal() {
@@ -99,11 +107,16 @@ export default function Portal() {
     <div className="pp">
       <aside className="pp-nav">
         <div className="pp-who"><b>{prof?.name || "Predajca"}</b><span className="mute">{prof?.email}</span></div>
-        <nav>
-          {TABS.map(([t, l]) => (
-            <button key={t} type="button" aria-current={tab === t || (t === "photos" && tab === "addph") ? "page" : undefined} onClick={() => go(t)}>
-              {t === "form" && edit ? "Upraviť inzerát" : l}{t === "msg" && unread > 0 && <span className="pp-badge">{unread}</span>}
-            </button>
+        <nav aria-label="Portál predajcu">
+          {NAV_GROUPS.map(([h, ts]) => (
+            <div key={h} className="pp-grp" role="group" aria-label={h}>
+              <span className="pp-grp-h">{h}</span>
+              {ts.map((t) => (
+                <button key={t} type="button" aria-current={tab === t || (t === "photos" && tab === "addph") ? "page" : undefined} onClick={() => go(t)}>
+                  {t === "form" && edit ? "Upraviť inzerát" : TAB_LABEL[t]}{t === "msg" && unread > 0 && <span className="pp-badge">{unread}</span>}
+                </button>
+              ))}
+            </div>
           ))}
         </nav>
         {adm && <a className="lnk pp-out" href="/admin">Administrácia portálu</a>}
