@@ -1,6 +1,6 @@
 "use client";
 // Portál predajcu: Nástenka, Moje inzeráty, Pridať/Upraviť, Import CSV, Správy, Profil.
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Session } from "@supabase/supabase-js";
 import { getCatalog, IS_DEMO } from "@/lib/data";
@@ -56,7 +56,8 @@ export default function Portal() {
   const [adm, setAdm] = useState(false);
   useEffect(() => { isAdminCandidate().then(setAdm).catch(() => {}); }, []);
 
-  const flash = (t: string) => { setToast(t); window.setTimeout(() => setToast(""), 3200); };
+  const toastTimer = useRef<number | undefined>(undefined);
+  const flash = (t: string) => { setToast(t); window.clearTimeout(toastTimer.current); toastTimer.current = window.setTimeout(() => setToast(""), 3200); };
 
   const reload = useCallback(async (s: Session) => {
     try {
