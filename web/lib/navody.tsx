@@ -34,7 +34,7 @@ export const NAVODY: Navod[] = [
     slug: "vin",
     title: "Kde nájdem VIN číslo auta",
     short: "VIN číslo",
-    description: "Kde je VIN (výrobné číslo karosérie) na aute a v osvedčení o evidencii a čo z neho zistíte: výrobcu a modelový rok.",
+    description: "Kde je VIN (výrobné číslo karosérie) na aute a v osvedčení o evidencii a čo z neho zistíte: výrobcu, druh vozidla a pri niektorých značkách modelový rok.",
     updated: "2026-11-06",
     body: <>
       <p><b>VIN je 17-miestne výrobné číslo auta.</b> Obsahuje písmená a číslice, ale nikdy písmená I, O a Q (aby sa nepliedli s 1 a 0).</p>
@@ -47,9 +47,10 @@ export const NAVODY: Navod[] = [
       <h2>Čo z neho zistíte</h2>
       <ul>
         <li><b>Prvé 3 znaky</b> označujú výrobcu, napríklad <code>TMB</code> Škoda, <code>WVW</code> Volkswagen, <code>WAU</code> Audi, <code>WBA</code> BMW.</li>
-        <li><b>10. znak</b> je u väčšiny výrobcov modelový rok: … <code>G</code> 2016, <code>H</code> 2017, <code>J</code> 2018, <code>K</code> 2019, <code>L</code> 2020, <code>M</code> 2021, <code>N</code> 2022, <code>P</code> 2023, <code>R</code> 2024, <code>S</code> 2025. Modelový rok sa môže líšiť od roku výroby.</li>
+        <li>Prvé 3 znaky prezradia aj <b>druh vozidla</b> – napríklad <code>JH2</code> je motorka Honda, <code>JHM</code> auto Honda, <code>YS2</code> nákladné auto Scania, <code>WKK</code> autobus Setra.</li>
+        <li><b>10. znak</b> je modelový rok – ale len u niektorých výrobcov (napr. Škoda, Volkswagen, Audi, Seat, Hyundai, Kia, Toyota, Volvo, japonské motorky): … <code>G</code> 2016, <code>H</code> 2017, <code>J</code> 2018, <code>K</code> 2019, <code>L</code> 2020, <code>M</code> 2021, <code>N</code> 2022, <code>P</code> 2023, <code>R</code> 2024, <code>S</code> 2025, <code>T</code> 2026. Kód sa opakuje každých 30 rokov (<code>S</code> je aj 1995). Mercedes-Benz, BMW, Renault, Peugeot, Citroën, Fiat, Opel, Ford (Európa) a väčšina nákladných áut a autobusov rok do 10. znaku nezapisujú – ročník nájdete v technickom preukaze. Modelový rok sa môže líšiť od roku výroby.</li>
       </ul>
-      <p>Na úvodnej stránke zadajte VIN do poľa <Link href="/#vin">VIN</Link> a autosuciastky.eu podľa neho predvyplní značku a ročník. Presný model a motorizáciu vyberte sami. VIN môžete aj odfotiť – číta sa priamo v telefóne.</p>
+      <p>Na úvodnej stránke zadajte VIN do poľa <Link href="/#vin">VIN</Link> a autosuciastky.eu podľa neho vyberie výrobcu a druh vozidla a ukáže približný ročník, ak ho výrobca do VIN zapisuje. Presný model, motorizáciu a ročník vyberte sami. VIN môžete aj odfotiť – číta sa priamo v telefóne.</p>
       <p>VIN pomôže aj predajcovi pri dopyte: <Link href="/dopyt">zadajte dopyt na diel</Link> a VIN pripíšte – predajca ho uvidí, verejne sa nezobrazuje.</p>
     </>,
   },

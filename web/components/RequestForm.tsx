@@ -49,7 +49,15 @@ export default function RequestForm() {
   const onVin = (s: string) => {
     set({ vin: s.toUpperCase() });
     const r = decodeVin(s);
-    if (r.ok && r.brand && cat) { const b = cat.brands.find((x) => x.name === r.brand); if (b && b.id !== v.brand) set({ vin: s.toUpperCase(), brand: b.id, model: 0, engine: 0, year: r.year || 0 }); }
+    if (r.ok && r.brand && cat) {
+      const b = cat.brands.find((x) => x.name === r.brand);
+      // ročník len ak ho VIN určí jednoznačne a model ešte nie je vybraný
+      if (b && b.id !== v.brand) {
+        const types = new Set(cat.models.filter((m) => m.brandId === b.id).map((m) => m.vehicleType || "osobne"));
+        if (!types.has(vt)) { const t = r.vtype && types.has(r.vtype) ? r.vtype : [...types][0]; if (t === "osobne" || t === "dodavky") setVt(t); else return; }
+        set({ vin: s.toUpperCase(), brand: b.id, model: 0, engine: 0, year: r.year || 0 });
+      }
+    }
   };
   async function submit(e: React.FormEvent) {
     e.preventDefault(); setErr("");

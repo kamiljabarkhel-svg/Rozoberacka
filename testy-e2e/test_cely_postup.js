@@ -24,6 +24,18 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
     await pg.click(".pop .chip:has-text('Zadné svetlo')"); await pg.waitForFunction(() => !location.search.includes("kat="));
     if ((await pg.locator(".pa .btn").innerText()) !== "Hľadať" || !(await pg.locator("#vin .btn2").innerText()).includes("Hľadať podľa VIN")) throw new Error("texty tlacidiel");
   });
+  await step("VIN: auto, rok 1995/2025, nakladne auto prepne druh", async () => {
+    await pg.goto(B + "/"); await pg.waitForSelector("#vin input");
+    await pg.fill("#vin input:not([type=file])", "WVWZZZ1HZSW123456"); await pg.click("#vin .btn2");
+    await pg.waitForSelector("#vin .vmsg:has-text('Volkswagen')"); await pg.waitForSelector("#vin .vmsg:has-text('2025 alebo 1995')");
+    if (/rok=|rocnik=/.test(pg.url())) throw new Error("VIN nastavil ročník ako filter: " + pg.url());
+    await pg.fill("#vin input:not([type=file])", "WDD2050041F123456"); await pg.click("#vin .btn2"); await pg.waitForSelector("#vin .vmsg:has-text('nezapisuje')");
+    await pg.fill("#vin input:not([type=file])", "YS2R4X20005123456"); await pg.click("#vin .btn2");
+    await pg.waitForSelector(".vmsg-res:has-text('Scania')"); await pg.waitForSelector(".vmsg-res:has-text('Nákladné autá')");
+    if (await pg.locator("[role=tab][aria-selected=true]").innerText() !== (await pg.locator("[role=tab]:has-text('Nákladné')").innerText())) throw new Error("druh sa neprepol");
+    if (await pg.locator("#vin").count()) throw new Error("pri nákladných je VIN");
+    await pg.goto(B + "/");
+  });
   await step("cookies: lista, nastavenia, odkaz v paticke", async () => {
     const c0 = await br.newContext(); const p0 = await c0.newPage();
     await p0.goto(B + "/ako-zoradujeme"); await p0.waitForSelector(".ckbar"); await p0.waitForSelector("h1:has-text('Ako zoraďujeme')");

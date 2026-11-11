@@ -244,3 +244,7 @@ Overené na Slov-Lexe: Občiansky zákonník § 597, 599, 612, 618, 619 (znenie 
 ## Odpovede na správy, havarované vozidlá vypnuté (10. 11. 2026, 21:25)
 - `supabase/24`: predajca odpovedá kupujúcemu v „Správy“ (`seller_reply`), len ak kupujúci zadal e-mail (`messages.buyer_email`). Kupujúci píše cez tajný odkaz `/sprava/<token>` (`thread_get`, `thread_reply`, až po odpovedi predajcu). Predajca token nevidí. E-maily posiela funkcia `odpovede` z fronty `reply_outbox()`; zapnutie e-mailov `NEXT_PUBLIC_EMAIL_REPLIES=1` až po Brevo (návod `supabase/README.md`).
 - Havarované vozidlá sú **skryté** (`web/lib/features.ts`, `CARS_ENABLED`; zapnutie `NEXT_PUBLIC_CARS=1`). Kód a tabuľky ostali.
+
+## Cookies overené, VIN pre všetky vozidlá (11. 11. 2026, 17:45)
+- Cookies s Google Analytics overené v prehliadači (`testy-e2e/test_cookies.js`, 18/18): nič pred súhlasom, rovnocenné tlačidlá, odvolanie v pätičke a na /cookies zmaže _ga cookies.
+- VIN (`web/lib/vin.ts`): WMI s druhom vozidla (motorka Honda `JH2` vs auto `JHM`), rok len pri výrobcoch, ktorí ho zapisujú do 10. znaku; dvojznačný rok = obe možnosti. Ročník z VIN sa **nenastavuje ako filter**, len sa zobrazí. Ak značka nie je v zvolenom druhu vozidla, úvod prepne druh. Test `testy-e2e/test_vin.mjs` – každá značka z tabuľky VIN musí byť v katalógu.

@@ -6,7 +6,7 @@ import Link from "next/link";
 import type { Catalog, Filters, Specs, VehicleType } from "@/lib/types";
 import { cleanSpecs, CONDITIONS, condLabel, emptyFilters, PCDS, RIM_DIAMETERS, RIM_WIDTHS, SEASONS, TIRE_PROFILES, TIRE_WIDTHS, VEHICLE_TYPES, WHEEL_CAT } from "@/lib/types";
 import { getCatalog, getCities, getStats, initialData, searchListings, type SearchPage } from "@/lib/data";
-import { decodeVin } from "@/lib/vin";
+import { decodeVin, vinYearText } from "@/lib/vin";
 import { pieces, plural, sk } from "@/lib/format";
 import { useFavs } from "@/lib/favs";
 import { filterKey, hasCriteria, MAX_SAVED, useSaved } from "@/lib/saved";
@@ -232,17 +232,24 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
   const onVin = () => {
     const r = decodeVin(vin);
     if (!r.ok) { setVinMsg(r.msg); return; }
-    if (!r.brand) { setVinMsg("VIN je platný, ale výrobcu v ukážke nepoznáme. Vyberte auto ručne v paneli vyššie."); return; }
+    const yt = vinYearText(r);
+    if (!r.brand) { setVinMsg(`VIN je platný, ale výrobcu (kód ${r.wmi}) zatiaľ nepoznáme${yt ? "; " + yt : ""}. Vyberte vozidlo ručne v paneli vyššie.`); return; }
     const b = catalog?.brands.find((x) => x.name === r.brand);
-    if (!b) { setVinMsg(`Rozpoznané: ${r.brand}${r.year ? ", ročník približne " + r.year : ""}. Táto značka zatiaľ nie je v katalógu.`); return; }
-    set({ brand: b.id, model: null, engine: null, year: r.year, cat: vinCat, sub: null });
-    if (r.year) setAdv(true);
-    setVinMsg(`Rozpoznané: ${b.name}${r.year ? ", ročník približne " + r.year : ""}. Model a motorizáciu z VIN určiť nevieme, vyberte ich v paneli vyššie.`);
+    if (!b || !catalog) { setVinMsg(`Rozpoznané: ${r.brand}${yt ? ", " + yt : ""}. Táto značka zatiaľ nie je v katalógu.`); return; }
+    // druh vozidla: z VIN (napr. motorka Honda) alebo podľa toho, aké vozidlá značka vyrába; ročník len ako informácia (VIN ho určí len približne)
+    const types = new Set(catalog.models.filter((m) => m.brandId === b.id).map((m) => m.vehicleType || "osobne"));
+    let vt: Filters["vtype"] = f.vtype;
+    if (r.vtype && types.has(r.vtype)) vt = r.vtype;
+    else if (vt && !types.has(vt)) vt = types.size === 1 ? ([...types][0] as Filters["vtype"]) : "";
+    set({ vtype: vt, brand: b.id, model: null, engine: null, year: null, cat: vinCat, sub: null });
+    const vtName = vt !== f.vtype ? (vt ? VEHICLE_TYPES.find((t) => t.id === vt)?.name : "Všetky vozidlá") : "";
+    setVinMsg(`Rozpoznané: ${b.name}${yt ? ", " + yt : ""}.${vtName ? ` Prepli sme na: ${vtName}.` : ""} Model a motorizáciu z VIN určiť nevieme, vyberte ich v paneli vyššie.`);
     setTimeout(toRes, 30);
   };
 
   const opt = (v: string | number, label: string) => <option key={v} value={v}>{label}</option>;
   const wheels = f.cat === WHEEL_CAT;
+  const vinShown = !f.vtype || f.vtype === "osobne" || f.vtype === "dodavky";
   const numOrNull = (v: string) => (v === "" ? null : Number(v));
 
   const detailId = STATIC_PREVIEW && hash.startsWith("#inzerat-") ? Number(hash.slice(9)) : null;
@@ -398,7 +405,7 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
           </>}
         </section>
 
-        {!wheels && (!f.vtype || f.vtype === "osobne" || f.vtype === "dodavky") && <section id="vin" className="plate" aria-label="Hľadanie podľa VIN">
+        {!wheels && vinShown && <section id="vin" className="plate" aria-label="Hľadanie podľa VIN">
           <h2>Hľadať podľa VIN</h2>
           <div className="pg2">
             <label>VIN (17 znakov)
@@ -412,7 +419,7 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
             </label>
             <button className="btn2" onClick={onVin}>Hľadať podľa VIN</button>
           </div>
-          <p>VIN nájdete v osvedčení o evidencii (časť I, pole E) a na štítku pri čelnom skle (<Link href="/navody/vin">kde presne</Link>). Z VIN prečítame značku a približný ročník, model a motorizáciu potom vyberte v paneli vyššie. Podľa ŠPZ nehľadáme.</p>
+          <p>VIN nájdete v osvedčení o evidencii (časť I, pole E) a na štítku pri čelnom skle (<Link href="/navody/vin">kde presne</Link>). Z VIN prečítame výrobcu, druh vozidla a pri niektorých značkách približný ročník; model, motorizáciu a ročník potom vyberte v paneli vyššie. Podľa ŠPZ nehľadáme.</p>
           <p className="vmsg" role="status">{vinMsg}</p>
         </section>}
 
@@ -430,6 +437,7 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
         </div></div>}
 
         <div id="vysledky" ref={resRef} className="head">
+          {vinMsg && !vinShown && <p className="vmsg vmsg-res" role="status">{vinMsg}</p>}
           <span className="cnt-w"><span className="cnt" aria-live="polite">{res ? (wheels ? plural(res.total, "ponuka", "ponuky", "ponúk") : pieces(res.total)) : "Načítavam…"}</span>{!STATIC_PREVIEW && <Link className="sortinfo" href="/ako-zoradujeme">Ako zoraďujeme ponuky</Link>}</span>
           <span className="head-a">
             {hasCriteria(f) && !f.fav && (isSaved
