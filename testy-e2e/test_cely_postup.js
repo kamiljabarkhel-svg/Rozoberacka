@@ -349,8 +349,10 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
     const q = (x) => require("child_process").execSync(`psql -h /tmp/pgt -p 5499 -U postgres -d e2e -tAc "${x}"`).toString().trim();
     const [id, st] = q("select id || '|' || status from listings where status in ('active','paused') order by id desc limit 1").split("|");
     q(`update listings set status='sold' where id=${id}`);
+    const obnov = () => fetch(B + "/api/obnovit", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ids: [Number(id)] }) });
+    await obnov();
     const r = await fetch(B + "/diel/" + id); const h = await r.text();
-    q(`update listings set status='${st}' where id=${id}`);
+    q(`update listings set status='${st}' where id=${id}`); await obnov();
     if (r.status !== 200 || !/Predané/.test(h) || !/noindex/.test(h) || /class="dacts"/.test(h))
       throw new Error(`id ${id} (${st}) status ${r.status} predane=${/Predané/.test(h)} noindex=${/noindex/.test(h)} detail=${/class="dacts"/.test(h)} ${h.length}`);
   });

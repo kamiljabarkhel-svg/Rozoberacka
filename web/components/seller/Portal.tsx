@@ -139,7 +139,7 @@ export default function Portal() {
         {tab === "donor" && cat && <Donors uid={session.user.id} cat={cat} prof={prof} items={items}
           onAddOne={(d) => { setEdit(null); setDonor(d); setTab("form"); window.scrollTo({ top: 0 }); }}
           onSellCar={CARS_ENABLED ? (d) => { setSellDonor(d); setTab("cars"); history.replaceState(null, "", "#cars"); window.scrollTo({ top: 0 }); } : undefined}
-          onDone={async (m) => { await reload(session); flash(m); }} />}
+          onDone={async (m) => { flash(m); await reload(session); }} />}
         {CARS_ENABLED && tab === "cars" && cat && <Cars key={sellDonor?.id ?? "cars"} uid={session.user.id} cat={cat} prof={prof} fromDonor={sellDonor} onDone={(m) => { setSellDonor(null); flash(m); }} />}
         {tab === "form" && cat && <ListingForm key={edit?.id ?? "new-" + (donor?.id ?? "")} uid={session.user.id} cat={cat} prof={prof} edit={edit} donor={donor}
           onSaved={async (id) => { await reload(session); setEdit(null); go("list"); flash(edit ? "Zmeny uložené" : `Inzerát #${id} je zverejnený`); }} />}
@@ -150,8 +150,8 @@ export default function Portal() {
             <button type="button" role="tab" aria-selected={tab === "photos"} onClick={() => go("photos")}>Nové inzeráty z fotiek</button>
             <button type="button" role="tab" aria-selected={tab === "addph"} onClick={() => go("addph")}>Doplniť fotky k existujúcim inzerátom</button>
           </div>
-          {tab === "photos" && cat && <FromPhotos uid={session.user.id} cat={cat} prof={prof} onDone={async (m) => { await reload(session); flash(m); }} />}
-          {tab === "addph" && <BulkPhotos uid={session.user.id} items={items} onDone={async (m) => { await reload(session); flash(m); }} />}
+          {tab === "photos" && cat && <FromPhotos uid={session.user.id} cat={cat} prof={prof} onDone={async (m) => { flash(m); await reload(session); }} />}
+          {tab === "addph" && <BulkPhotos uid={session.user.id} items={items} onDone={async (m) => { flash(m); await reload(session); }} />}
         </div>}
         {tab === "msg" && <Messages msgs={msgs} onRead={(ids) => act(() => markRead(ids), "Označené ako prečítané")}
           onReply={async (id, body) => { try { await sellerReply(id, body); await reload(session); flash(EMAIL_REPLIES ? "Odpoveď odoslaná – kupujúcemu príde e-mailom" : "Odpoveď uložená"); return true; } catch (e) { flash(skError(e)); return false; } }} />}
