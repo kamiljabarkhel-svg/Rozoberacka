@@ -83,7 +83,8 @@ export function search(listings: Listing[], f: Filters, cat: Catalog, favs: numb
     if (f.tested && !l.tested) return false;
     if (f.ret && !l.returns14) return false;
     if (q) {
-      const h = norm([l.name, brandName.get(l.brandId ?? -1) || "", modelName.get(l.modelId ?? -1) || "", l.oem || "", l.city || "",
+      // číslo dielu aj v tvare bez medzier/pomlčiek, aby „5E1 941 015“ našlo „5E1941015“ a naopak (ako search_text v databáze)
+      const h = norm([l.name, brandName.get(l.brandId ?? -1) || "", modelName.get(l.modelId ?? -1) || "", l.oem || "", oemKey(l.oem), l.city || "",
         subName.get(l.subcategoryId ?? -1) || "", l.description || ""].join(" "));
       if (!h.includes(q) && !(oemKey(f.q).length >= OEM_MIN && oemKey(l.oem).includes(oemKey(f.q)))) return false;
     }
