@@ -25,9 +25,9 @@ export async function landingMetadata(x: Landing | null): Promise<Metadata> {
   const path = landingPath(x, cat);
   const minP = res.items.length ? Math.min(...res.items.map((l) => l.price)) : 0;
   const description = res.total && x.city
-    ? `${title}: ${pieces(res.total)} od vrakovísk a predajcov z mesta ${x.city}${minP ? `, ceny od ${minP.toLocaleString("sk-SK")} €` : ""}. Osobný odber, predajcovi zavoláte bez registrácie.`
+    ? `${title}: ${pieces(res.total)} od predajcov z mesta ${x.city}${minP ? `, ceny od ${minP.toLocaleString("sk-SK")} €` : ""}. Osobný odber, predajcovi zavoláte bez registrácie.`
     : res.total
-    ? `${title} z vrakovísk a od predajcov z celého Slovenska: ${pieces(res.total)}${minP ? `, ceny od ${minP.toLocaleString("sk-SK")} €` : ""}. Predajcovi zavoláte bez registrácie${x.cat && isUniversal(x.cat) ? "" : ", pred kúpou porovnajte OEM číslo"}.`
+    ? `${title} od predajcov z celého Slovenska: ${pieces(res.total)}${minP ? `, ceny od ${minP.toLocaleString("sk-SK")} €` : ""}. Predajcovi zavoláte bez registrácie${x.cat && isUniversal(x.cat) ? "" : ", pred kúpou porovnajte OEM číslo"}.`
     : `${title}: zatiaľ tu nie sú ponuky. Uložte si hľadanie a pozrite sa neskôr.`;
   return {
     title, description, alternates: { canonical: path },
@@ -89,8 +89,8 @@ export default async function LandingPage({ x }: { x: Landing }) {
       <Crumbs items={crumbs.slice(0, -1)} last={crumbs[crumbs.length - 1]?.name} />
       <h1>{title}</h1>
       <p className="landing-lead">
-        {res.total ? <>{x.city ? <>V meste {x.city} {jeSu(res.total)} na autosuciastky.eu {pieces(res.total)} od miestnych vrakovísk a predajcov – diel si môžete prevziať osobne. </>
-          : <>Na autosuciastky.eu {jeSu(res.total)} {pieces(res.total)}{car ? ` na auto ${car}` : ""} od vrakovísk a predajcov z celého Slovenska. </>}
+        {res.total ? <>{x.city ? <>V meste {x.city} {jeSu(res.total)} na autosuciastky.eu {pieces(res.total)} od miestnych predajcov – diel si môžete prevziať osobne. </>
+          : <>Na autosuciastky.eu {jeSu(res.total)} {pieces(res.total)}{car ? ` na auto ${car}` : ""} od predajcov z celého Slovenska. </>}
         {x.cat === "kol" ? "Pred kúpou porovnajte rozmer pneumatiky alebo disku s údajmi pre vaše auto (nájdete ich v technickom preukaze alebo na starej pneumatike). Predajcovi zavoláte bez registrácie."
           : x.cat && isUniversal(x.cat) ? "Predajcovi zavoláte bez registrácie – pred kúpou si vyžiadajte ďalšie fotky."
           : "Zoznam zahŕňa aj diely, ktoré podľa predajcov pasujú cez rovnaké OEM číslo. Predajcovi zavoláte bez registrácie – pred kúpou porovnajte OEM číslo so starým dielom."}</>
@@ -99,7 +99,7 @@ export default async function LandingPage({ x }: { x: Landing }) {
       {res.total > 0 && <p><Link className="btn2" href={`/?${qs.toString()}#vysledky`}>Filtrovať podľa ceny, stavu a mesta</Link></p>}
       {res.items.length ? <LandingGrid items={res.items} cat={pickCatalog(cat, res.items)} /> : <div className="empty">Pre tento výber zatiaľ nemáme diely. <Link href={`/?${qs.toString()}#vysledky`}>Uložte si hľadanie</Link> a pri ďalšej návšteve uvidíte, či pribudol vhodný diel.</div>}
       {res.total > res.items.length && <p className="landing-more"><Link className="btn2" href={`/?${qs.toString()}#vysledky`}>Zobraziť všetkých {res.total}</Link></p>}
-      <div className="rq-cta"><p><b>Nenašli ste diel{car ? ` na auto ${car}` : ""}?</b> Zadajte dopyt – vrakoviská vám pošlú ponuku. Bez registrácie.</p>
+      <div className="rq-cta"><p><b>Nenašli ste diel{car ? ` na auto ${car}` : ""}?</b> Zadajte dopyt – predajcovia vám pošlú ponuku. Bez registrácie.</p>
         <Link className="btn2" href={`/dopyt?${new URLSearchParams({ ...(x.brandId != null ? { znacka: String(x.brandId) } : {}), ...(x.modelId != null ? { model: String(x.modelId) } : {}) }).toString()}`}>Zadať dopyt na diel</Link></div>
       {groups.map((g) => (
         <section key={g.title} className="landing-links"><h2>{g.title}</h2>

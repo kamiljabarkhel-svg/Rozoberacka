@@ -10,7 +10,7 @@ export default function HomeIntro({ parts, sellers }: { parts?: number; sellers?
       <div className="intro-in">
         <div className="intro-brand">
           <LogoMark size={52} className="intro-mark" />
-          <p className="intro-t">Použité autodiely z vrakovísk a od predajcov na Slovensku</p>
+          <p className="intro-t">Použité autodiely z celého Slovenska</p>
           <ul className="intro-pts">
             <li><b>Podľa auta, čísla dielu alebo VIN</b><span>nájdete diel, ktorý naozaj pasuje</span></li>
             <li><b>Priamo s predajcom</b><span>zavoláte alebo napíšete, bez registrácie</span></li>

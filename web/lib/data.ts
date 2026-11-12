@@ -136,7 +136,7 @@ async function fetchCatalog(): Promise<Catalog> {
 
 /** Filtre v tvare pre databázovú funkciu search_listings (aj pre strážcu e-mailom). */
 export function filterParams(f: Filters): Record<string, unknown> {
-  const p: Record<string, unknown> = { vtype: f.vtype, wtype: f.cat === "kol" ? f.wtype || null : null, specs: Object.keys(cleanSpecs(f.specs)).length ? cleanSpecs(f.specs) : null, q: f.q.trim(), brand: f.brand, model: f.model, engine: f.engine, year: f.year, cat: f.cat, sub: f.sub,
+  const p: Record<string, unknown> = { vtype: f.cat === "kol" ? "" : f.vtype, wtype: f.cat === "kol" ? f.wtype || null : null, specs: Object.keys(cleanSpecs(f.specs)).length ? cleanSpecs(f.specs) : null, q: f.q.trim(), brand: f.brand, model: f.model, engine: f.engine, year: f.year, cat: f.cat, sub: f.sub,
     max: f.max, cond: f.cond, city: f.city, side: f.side, tested: f.tested, ret: f.ret };
   for (const k of Object.keys(p)) if (p[k] === null || p[k] === "" || p[k] === false) delete p[k];
   return p;

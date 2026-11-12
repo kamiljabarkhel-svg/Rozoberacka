@@ -25,13 +25,13 @@ import BulkPhotos from "./BulkPhotos";
 import FromPhotos from "./FromPhotos";
 import { CARS_ENABLED, EMAIL_REPLIES } from "@/lib/features";
 
-type Tab = "home" | "list" | "donor" | "cars" | "form" | "csv" | "photos" | "addph" | "req" | "msg" | "prof";
-const TABS: [Tab, string][] = [["home", "Nástenka"], ["list", "Moje inzeráty"], ["donor", "Z auta na diely"], ["form", "Jeden inzerát"], ["csv", "Import z CSV"], ["photos", "Hromadne z fotiek"], ["req", "Dopyty na diely"], ["msg", "Správy od kupujúcich"], ["prof", "Profil a nastavenia"]];
+type Tab = "home" | "list" | "donor" | "cars" | "form" | "csv" | "photos" | "addph" | "wheels" | "req" | "msg" | "prof";
+const TABS: [Tab, string][] = [["home", "Nástenka"], ["list", "Moje inzeráty"], ["donor", "Z auta na diely"], ["form", "Jeden inzerát"], ["wheels", "Pneumatiky, disky, puklice"], ["csv", "Import z CSV"], ["photos", "Hromadne z fotiek"], ["req", "Dopyty na diely"], ["msg", "Správy od kupujúcich"], ["prof", "Profil a nastavenia"]];
 const TAB_LABEL = Object.fromEntries(TABS) as Record<Tab, string>;
 /** Menu v skupinách s nadpismi, aby predajca hneď videl, kde čo je. */
 const NAV_GROUPS: [string, Tab[]][] = [
   ["Prehľad", ["home", "list"]],
-  ["Pridať inzeráty", ["form", "photos", "csv", "donor"]],
+  ["Pridať inzeráty", ["form", "wheels", "photos", "csv", "donor"]],
   ["Kupujúci", ["msg", "req"]],
   ["Môj účet", ["prof"]],
 ];
@@ -125,7 +125,7 @@ export default function Portal() {
       </aside>
       <section className="pp-body">
         {err && <div className="pp-box pp-errbox"><p className="pp-err">Niečo sa nenačítalo: {err}</p><button className="ubtn" onClick={() => window.location.reload()}>Skúsiť znova</button></div>}
-        {(tab === "form" || tab === "csv" || tab === "cars" || tab === "donor" || tab === "photos") && !cat && !err && <p className="mute">Načítavam katalóg áut…</p>}
+        {(tab === "form" || tab === "csv" || tab === "cars" || tab === "donor" || tab === "photos" || tab === "wheels") && !cat && !err && <p className="mute">Načítavam katalóg áut…</p>}
         {pwMode && <NewPassword onDone={() => { setPwMode(false); flash("Heslo je zmenené."); }} />}
         {tab === "home" && <Dashboard cat={cat} prof={prof} items={items} msgs={msgs} go={go} />}
         {tab === "list" && <MyList key={listF.n} initial={listF.f} items={items} cat={cat}
@@ -143,7 +143,10 @@ export default function Portal() {
           onDone={async (m) => { flash(m); await reload(session); }} />}
         {CARS_ENABLED && tab === "cars" && cat && <Cars key={sellDonor?.id ?? "cars"} uid={session.user.id} cat={cat} prof={prof} fromDonor={sellDonor} onDone={(m) => { setSellDonor(null); flash(m); }} />}
         {tab === "form" && cat && <ListingForm key={edit?.id ?? "new-" + (donor?.id ?? "")} uid={session.user.id} cat={cat} prof={prof} edit={edit} donor={donor}
+          onWheels={() => { setEdit(null); go("wheels"); }}
           onSaved={async (id) => { await reload(session); setEdit(null); go("list"); flash(edit ? "Zmeny uložené" : `Inzerát #${id} je zverejnený`); }} />}
+        {tab === "wheels" && cat && <ListingForm key="wheels" wheelOnly uid={session.user.id} cat={cat} prof={prof} edit={null}
+          onSaved={async (id) => { await reload(session); go("list"); flash(`Inzerát #${id} je zverejnený`); }} />}
         {tab === "csv" && cat && <CsvImport uid={session.user.id} cat={cat} prof={prof} onDone={async (n) => { await reload(session); flash(`Importované: ${n}`); go("list"); }} />}
         {(tab === "photos" || tab === "addph") && <div>
           <header className="pp-h"><h1>Hromadne z fotiek</h1></header>
@@ -191,7 +194,7 @@ function Dashboard({ cat, prof, items, msgs, go }: { cat: Catalog | null; prof: 
       <header className="pp-h"><div><h1>Dobrý deň{prof?.name ? ", " + prof.name : ""}</h1><p className="mute">{d}
           {prof && <> · <a className="lnk" href={sellerPath(prof.id, prof.name)} target="_blank" rel="noopener">Moja verejná stránka</a></>}
           {prof?.ratingCount ? <> · <Stars value={prof.ratingAvg ?? null} count={prof.ratingCount} small /></> : null}</p></div>
-        <div className="pp-quick"><button className="btn" onClick={() => go("form")}>+ Pridať inzerát</button><button className="ubtn" onClick={() => go("csv")}>Import CSV</button><button className="ubtn" onClick={() => go("photos")}>Hromadne z fotiek</button><button className="ubtn" onClick={() => go("list")}>Všetky inzeráty</button></div></header>
+        <div className="pp-quick"><button className="btn" onClick={() => go("form")}>+ Pridať inzerát</button><button className="ubtn" onClick={() => go("wheels")}>Pneumatiky a disky</button><button className="ubtn" onClick={() => go("csv")}>Import CSV</button><button className="ubtn" onClick={() => go("photos")}>Hromadne z fotiek</button><button className="ubtn" onClick={() => go("list")}>Všetky inzeráty</button></div></header>
       <div className="pp-tiles">
         <Tile n={a.length} l="Aktívne inzeráty" s={fmtPrice(a.reduce((x, i) => x + i.price, 0)) + " hodnota"} />
         <Tile n={views} l="Zobrazenia" s="spolu za všetky inzeráty" />

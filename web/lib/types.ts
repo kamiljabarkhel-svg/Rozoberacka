@@ -75,7 +75,7 @@ export type Listing = {
 export type Filters = {
   vtype: VehicleType | "";
   /** pri Pneumatikách a diskoch: pneu, disk, kolesa (prázdne = všetko) */
-  wtype: "" | "pneu" | "disk" | "kolesa";
+  wtype: "" | "pneu" | "disk" | "kolesa" | "puklice";
   specs: Specs;
   q: string;
   brand: number | null;
@@ -158,19 +158,20 @@ export function specsErrors(s: Specs | null | undefined): (keyof Specs)[] {
   return (Object.entries(s || {}) as [keyof Specs, string][]).filter(([k, v]) => v && v.trim() && !SPEC_RULES[k]?.(normSpec(k, v))).map(([k]) => k);
 }
 
-/** Druh ponuky v kategórii Pneumatiky a disky podľa podkategórie (rovnaké pravidlá ako trigger listing_required v supabase/23). */
-export type WheelKind = "pneu" | "disk" | "kolesa" | "ine";
+/** Druh ponuky v kategórii Pneumatiky a disky podľa podkategórie (rovnaké pravidlá ako trigger listing_required v supabase/23, 25, 26). */
+export type WheelKind = "pneu" | "disk" | "kolesa" | "puklice" | "ine";
 export function wheelKind(subName: string | null | undefined): WheelKind {
   const n = subName || "";
   if (n.startsWith("Pneumatiky")) return "pneu";
   if (n.startsWith("Disky")) return "disk";
   if (n === "Kolesá s pneumatikami" || n === "Rezervné a dojazdové kolesá") return "kolesa";
+  if (n === "Puklice") return "puklice";
   return "ine";
 }
 /** Povinné parametre podľa druhu (dezén len pri použitých pneumatikách – rieši formulár). Databáza vyžaduje rozmer: pneu tw+tp+rd, disk pcd+rd,
  *  kolesá aspoň jedno z toho (predajca často pozná len rozmer pneumatiky alebo len disku). */
 export const WHEEL_REQ: Record<WheelKind, (keyof Specs)[]> = {
-  pneu: ["tw", "tp", "rd", "pcs"], disk: ["rd", "pcd", "rw", "et", "pcs"], kolesa: ["tw", "tp", "rd", "pcd", "pcs"], ine: [],
+  pneu: ["tw", "tp", "rd", "pcs"], disk: ["rd", "pcd", "rw", "et", "pcs"], kolesa: ["tw", "tp", "rd", "pcd", "pcs"], puklice: ["rd", "pcs"], ine: [],
 };
 /** Sezóna a materiál vyplývajúce z podkategórie (napr. „Pneumatiky zimné“ → zimné). */
 export function wheelDefaults(subName: string | null | undefined): Specs {
@@ -229,3 +230,8 @@ export function universalLabel(vtype: VehicleType | null | undefined): string {
   const t = VEHICLE_TYPES.find((x) => x.id === vtype);
   return t ? `Na ${t.name.toLowerCase()} – nie je viazané na konkrétny model` : "Univerzálne – pre všetky vozidlá";
 }
+
+/** Stav pri pneumatikách a diskoch – kupujúci volí len nové / použité ("pouzite" = všetko okrem „Nový“, supabase/26). */
+export const WHEEL_CONDS = [["", "Nové aj použité"], ["Nový", "Nové"], ["pouzite", "Použité"]] as const;
+/** Hlavné druhy ponuky v Pneumatikách a diskoch – dlaždice vo formulári predajcu (podkategórie z supabase/18). */
+export const WHEEL_SUBS = ["Pneumatiky letné", "Pneumatiky zimné", "Pneumatiky celoročné", "Disky hliníkové", "Disky oceľové", "Kolesá s pneumatikami", "Puklice"] as const;

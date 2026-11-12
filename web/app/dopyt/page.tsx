@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import RequestForm from "@/components/RequestForm";
 
 export const metadata: Metadata = {
-  title: "Dopyt na autodiel – vrakoviská vám pošlú ponuku",
-  description: "Nenašli ste použitý diel? Zadajte auto a diel, vrakoviská a predajcovia z celého Slovenska vám pošlú ponuku. Bez registrácie a zadarmo.",
+  title: "Dopyt na autodiel – predajcovia vám pošlú ponuku",
+  description: "Nenašli ste použitý diel? Zadajte auto a diel, predajcovia z celého Slovenska vám pošlú ponuku. Bez registrácie a zadarmo.",
   alternates: { canonical: "/dopyt" },
 };
 

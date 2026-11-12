@@ -84,7 +84,7 @@ export const NAVODY: Navod[] = [
       </ul>
       <p className="mute">Toto je všeobecná informácia, nie právna rada.</p>
       <h2>Nenašli ste diel?</h2>
-      <p><Link href="/dopyt">Zadajte dopyt</Link> – vrakoviská vám pošlú ponuky. Alebo si v hľadaní zapnite strážcu a pri ďalšej návšteve uvidíte nové diely.</p>
+      <p><Link href="/dopyt">Zadajte dopyt</Link> – predajcovia vám pošlú ponuky. Alebo si v hľadaní zapnite strážcu a pri ďalšej návšteve uvidíte nové diely.</p>
     </>,
   },
 ];

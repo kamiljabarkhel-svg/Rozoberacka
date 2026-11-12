@@ -8,7 +8,7 @@ import { JsonLd, SITE_NAME, breadcrumbLd } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Blog – rady pri kúpe auta, dielov a pneumatík",
-  description: "Praktické články o kúpe ojazdeného auta, použitých dieloch z vrakovísk a pneumatikách. Bez reklamných rečí.",
+  description: "Praktické články o kúpe ojazdeného auta, použitých autodieloch a pneumatikách. Bez reklamných rečí.",
   alternates: { canonical: "/blog" },
   openGraph: { title: `Blog | ${SITE_NAME}`, url: "/blog", siteName: SITE_NAME, locale: "sk_SK", type: "website" },
 };

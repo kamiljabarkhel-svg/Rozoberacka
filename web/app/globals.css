@@ -1512,3 +1512,13 @@ nav.snav{border-bottom:0}
 .bpost-more{margin-top:44px;border-top:1px solid var(--line);padding-top:20px}
 .intro-in>*{min-width:0}
 @media (max-width:700px){.intro-brand{padding-right:0}.intro-t{min-width:0}}
+/* formulár: pneumatiky, disky, puklice */
+.pp-wheels-cta{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:12px 14px;border:1px solid var(--line);border-left:4px solid var(--acc);border-radius:6px;background:var(--chip);margin:0}
+.pp-wheels-cta span{flex:1;min-width:240px}
+.pp-wtiles{display:grid;gap:10px}
+.pp-wt-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:8px}
+.pp-wt-g button{min-height:56px;padding:10px 12px;border:1.5px solid var(--field);border-radius:4px;background:var(--card);color:var(--ink);font:650 .98rem/1.25 var(--f-b);text-align:left;cursor:pointer}
+.pp-wt-g button:hover{border-color:var(--ink)}
+.pp-wt-g button.on{border-color:var(--pet);background:var(--pet);color:#fff}
+.pp-wtiles.bad .pp-wt-g button{border-color:var(--bad,#c0392b)}
+.pp-wt-other{max-width:340px}

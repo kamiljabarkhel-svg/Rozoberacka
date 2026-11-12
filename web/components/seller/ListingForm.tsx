@@ -3,18 +3,20 @@
 // Povinné polia podľa CLAUDE.md; tie isté pravidlá stráži aj databáza (04_funkcie.sql).
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { Catalog, Condition, Specs, VehicleType } from "@/lib/types";
-import { CONDITIONS, condLabel, isUniversal, PCDS, RIM_DIAMETERS, SEASONS, SPEC_LABEL, specsErrors, VEHICLE_TYPES, WHEEL_CAT, wheelDefaults, wheelKind, wheelMissing, type WheelKind } from "@/lib/types";
+import { CONDITIONS, condLabel, isUniversal, PCDS, RIM_DIAMETERS, SEASONS, SPEC_LABEL, specsErrors, VEHICLE_TYPES, WHEEL_CAT, WHEEL_SUBS, wheelDefaults, wheelKind, wheelMissing, type WheelKind } from "@/lib/types";
 import { carName } from "@/lib/seo";
 import { saveListing, skError, type Donor, type ListingInput, type MyListing, type PhotoItem, type Profile } from "@/lib/seller";
 import ScanText from "../ScanText";
 
 const STEPS = ["Diel", "Auto", "Stav, cena a podmienky", "Fotky a popis", "Kontakt"];
+const WSTEPS = ["Čo predávate", "Auto (nepovinné)", "Stav, cena a podmienky", "Fotky a popis", "Kontakt"];
 const MAX_PHOTOS = 8;
 /** Ktoré parametre patria k druhu ponuky (ostatné sa pri uložení vynechajú). */
 const WHEEL_KEYS: Record<WheelKind, (keyof Specs)[]> = {
   pneu: ["tw", "tp", "rd", "season", "tread", "dot", "li", "si", "pcs"],
   disk: ["rd", "pcd", "rw", "et", "cb", "mat", "pcs"],
   kolesa: ["tw", "tp", "rd", "season", "tread", "dot", "li", "si", "pcd", "rw", "et", "cb", "mat", "pcs"],
+  puklice: ["rd", "pcs"],
   ine: [],
 };
 type Key = "name" | "cat" | "sub" | "oem" | "specs" | "brand" | "model" | "year" | "cond" | "price" | "war" | "ship" | "photos" | "desc" | "city" | "phone";
@@ -24,14 +26,17 @@ const MSG: Record<Key, string> = {
   brand: "Vyberte značku auta.", model: "Vyberte model.", year: "Vyberte ročník.", cond: "Vyberte stav.", price: "Zadajte cenu väčšiu ako 0 €.",
   war: "Vyberte záruku.", ship: "Vyberte odovzdanie.", photos: "Pridajte aspoň 1 fotku.", desc: "Popis musí mať aspoň 20 znakov.",
   specs: "Doplňte alebo opravte parametre označené červenou (rozmer, rozteč, počet kusov…).",
-  sub: "Vyberte, čo predávate – pneumatiky, disky alebo kolesá.",
+  sub: "Vyberte, čo predávate – pneumatiky, disky, kolesá alebo puklice.",
   city: "Zadajte mesto.", phone: "Telefón musí mať aspoň 9 číslic.",
 };
 
-export default function ListingForm({ uid, cat, prof, edit, donor, onSaved }: { uid: string; cat: Catalog; prof: Profile | null; edit: MyListing | null; donor?: Donor | null; onSaved: (id: number) => void }) {
+export default function ListingForm({ uid, cat, prof, edit, donor, onSaved, wheelOnly, onWheels }: { uid: string; cat: Catalog; prof: Profile | null; edit: MyListing | null; donor?: Donor | null; onSaved: (id: number) => void; wheelOnly?: boolean; onWheels?: () => void }) {
+  // Režim „Pneumatiky, disky a puklice“: kategória je pevná, prvá otázka je „Čo predávate?“ (dlaždice), druh vozidla sa nepýta.
+  const wheelMode = !!wheelOnly || edit?.categoryId === WHEEL_CAT;
+  const STEP_NAMES = wheelMode ? WSTEPS : STEPS;
   const [step, setStep] = useState(0);
   const [v, setV] = useState({
-    name: edit?.name || "", categoryId: edit?.categoryId || "", subcategoryId: edit?.subcategoryId ?? null as number | null,
+    name: edit?.name || "", categoryId: edit?.categoryId || (wheelOnly ? WHEEL_CAT : ""), subcategoryId: edit?.subcategoryId ?? null as number | null,
     oem: edit?.oem || "", partMaker: edit?.partMaker || "",
     brandId: edit?.brandId ?? donor?.brandId ?? 0, modelId: edit?.modelId ?? donor?.modelId ?? 0, engineId: edit ? edit.engineId : donor?.engineId ?? null as number | null, year: edit?.year ?? donor?.year ?? 0,
     gearbox: edit?.gearbox || donor?.gearbox || "", km: edit?.km != null ? String(edit.km) : donor?.km != null ? String(donor.km) : "", side: edit?.side || "",
@@ -59,7 +64,7 @@ export default function ListingForm({ uid, cat, prof, edit, donor, onSaved }: { 
   const vtOf = (m: { vehicleType?: VehicleType }) => m.vehicleType || "osobne";
   const vtModels = cat.models.filter((m) => vtOf(m) === vt);
   const vtBrands = useMemo(() => { const ids = new Set(vtModels.map((m) => m.brandId)); return cat.brands.filter((b) => ids.has(b.id)); }, [vtModels, cat.brands]);
-  const vtCats = cat.categories.filter((c) => !c.vtypes?.length || c.vtypes.includes(vt));
+  const vtCats = cat.categories.filter((c) => c.id !== WHEEL_CAT && (!c.vtypes?.length || c.vtypes.includes(vt)));
   const models = vtModels.filter((m) => m.brandId === v.brandId);
   const wheel = v.categoryId === WHEEL_CAT;
   const subName = cat.subcategories.find((x) => x.id === v.subcategoryId)?.name;
@@ -124,7 +129,7 @@ export default function ListingForm({ uid, cat, prof, edit, donor, onSaved }: { 
       subcategoryId: v.subcategoryId, oem: v.oem, partMaker: v.partMaker, price: Math.round(Number(v.price.replace(",", ".")) * 100) / 100,
       city: v.city, condition: v.condition as Condition, description: v.description, warranty: v.warranty, shipping: v.shipping,
       phone: v.phone, km: isUniversal(v.categoryId) ? null : v.km ? Math.max(0, parseInt(v.km.replace(/\D/g, ""), 10) || 0) : null,
-      vtype: vt, tested: wheel ? false : v.tested, returns14: v.returns14, fits,
+      vtype: wheelMode ? (subName === "Pneumatiky nákladné a autobusové" ? "nakladne" : subName === "Pneumatiky na motorky" ? "motorky" : "osobne") : vt, tested: wheel ? false : v.tested, returns14: v.returns14, fits,
       specs: kind ? Object.fromEntries(WHEEL_KEYS[kind].filter((k) => specs[k]).map((k) => [k, specs[k]])) : {},
       side: isUniversal(v.categoryId) ? "" : v.side, gearbox: isUniversal(v.categoryId) ? "" : v.gearbox, donorId: edit ? edit.donorId : donor?.id ?? null,
     };
@@ -147,44 +152,59 @@ export default function ListingForm({ uid, cat, prof, edit, donor, onSaved }: { 
 
   const reqK = kind === "kolesa" ? (["pcs"] as (keyof Specs)[]) : kind ? wheelMissing(kind, {}, v.condition === "Nový") : [];
   const SI = (k: keyof Specs, el: React.ReactNode) => <label key={k} className={specBad.includes(k) ? "bad" : ""}><span>{SPEC_LABEL[k]}{reqK.includes(k) && <em>*</em>}</span>{el}</label>;
+  const cleanKind = (o: Specs, k: WheelKind): Specs => { const keep = new Set(WHEEL_KEYS[k]); return Object.fromEntries(Object.entries(o).filter(([x]) => keep.has(x as keyof Specs))) as Specs; };
   const L = ({ k, t, req = true, children }: { k?: Key; t: string; req?: boolean; children: React.ReactNode }) => (
     <label className={k && bad.has(k) ? "bad" : ""}><span className="lt">{t}{req && <em>*</em>}</span>{children}{k && bad.has(k) && <small className="pp-ferr">{MSG[k]}</small>}</label>
   );
 
   return (
     <div ref={top}>
-      <header className="pp-h"><h1>{edit ? "Upraviť inzerát" : "Pridať inzerát"}</h1><span className="mute">Polia s <em className="req">*</em> sú povinné.</span></header>
+      <header className="pp-h"><h1>{edit ? "Upraviť inzerát" : wheelMode ? "Predať pneumatiky, disky alebo puklice" : "Pridať inzerát"}</h1><span className="mute">Polia s <em className="req">*</em> sú povinné.</span></header>
       {firm && prof && (!prof.ico || !prof.address) && <p className="pp-warnbox" role="alert">Ako podnikateľ musíte mať v profile vyplnené <b>IČO a sídlo</b> – kupujúci musí vedieť, s kým uzatvára zmluvu. Bez nich inzerát nezverejníte. Doplňte ich v záložke Profil.</p>}
       {donor && !edit && <p className="pp-donor-note">Diel z auta na diely <b>{carName(donor, cat, true)}, {donor.year}{donor.km != null ? `, ${donor.km.toLocaleString("sk-SK")} km` : ""}</b>. Údaje o aute sú predvyplnené.</p>}
-      <ol className="pp-steps">{STEPS.map((s, i) => (
+      <ol className="pp-steps">{STEP_NAMES.map((s, i) => (
         <li key={s}><button type="button" aria-current={i === step ? "step" : undefined} className={(i !== step && i < step && !stepBad(i, cur) ? "done " : "") + (stepBad(i) ? "bad" : "")} onClick={() => goStep(i)} aria-label={`Krok ${i + 1}: ${s}`}><span>{i + 1}</span><em>{s}</em></button></li>
       ))}</ol>
       <div className="pp-form pp-grid pp-card">
         {step === 0 && <>
-          <div className="full pp-vt pp-vt-big" role="radiogroup" aria-label="Druh vozidla"><span className="lt">Na aké vozidlo je diel? <em>*</em><small className="mute">Podľa toho ho nájdu správni kupujúci – diel na motorku uvidia len tí, čo hľadajú diely na motorky.</small></span>
+          {!wheelMode && !edit && onWheels && <p className="full pp-wheels-cta"><span><b>Predávate pneumatiky, disky alebo puklice?</b> Majú vlastný jednoduchší formulár – stačí rozmer, auto netreba.</span><button type="button" className="ubtn" onClick={onWheels}>Pridať pneumatiky a disky</button></p>}
+          {wheelMode && <div className={"full pp-wtiles" + (bad.has("sub") ? " bad" : "")} role="radiogroup" aria-label="Čo predávate?">
+            <span className="lt">Čo predávate? <em>*</em></span>
+            <div className="pp-wt-g">{WHEEL_SUBS.map((n) => { const sc = subs.find((x) => x.name === n); if (!sc) return null; const on = v.subcategoryId === sc.id;
+              return <button key={n} type="button" role="radio" aria-checked={on} className={on ? "on" : ""} onClick={() => {
+                set("subcategoryId", sc.id); clear("sub"); const d = wheelDefaults(n); setSpecs((o) => ({ ...cleanKind(o, wheelKind(n)), ...d })); clear("specs");
+              }}>{n}</button>; })}</div>
+            <label className="pp-wt-other"><span className="lt">Alebo iné</span><select value={v.subcategoryId != null && !WHEEL_SUBS.includes((subName || "") as (typeof WHEEL_SUBS)[number]) ? v.subcategoryId : ""} onChange={(e) => { const id = e.target.value ? Number(e.target.value) : null; set("subcategoryId", id); clear("sub"); }}>
+              <option value="">Vyberte…</option>{subs.filter((x) => !WHEEL_SUBS.includes(x.name as (typeof WHEEL_SUBS)[number])).map((x) => <option key={x.id} value={x.id}>{x.name}</option>)}</select></label>
+            {bad.has("sub") && <small className="pp-ferr">{MSG.sub}</small>}
+          </div>}
+          {!wheelMode && <div className="full pp-vt pp-vt-big" role="radiogroup" aria-label="Druh vozidla"><span className="lt">Na aké vozidlo je diel? <em>*</em><small className="mute">Podľa toho ho nájdu správni kupujúci – diel na motorku uvidia len tí, čo hľadajú diely na motorky.</small></span>
             {VEHICLE_TYPES.map((t) => <button key={t.id} type="button" role="radio" aria-checked={vt === t.id} className={vt === t.id ? "on" : ""} onClick={() => {
               if (t.id === vt) return; setVt(t.id); try { localStorage.setItem("rozoberacka-druh", t.id); } catch {}
               set("brandId", 0); set("modelId", 0); set("engineId", null); set("year", 0);
               const c = cat.categories.find((x) => x.id === v.categoryId); if (c?.vtypes?.length && !c.vtypes.includes(t.id)) { set("categoryId", ""); set("subcategoryId", null); }
             }}>{t.name}</button>)}
-          </div>
+          </div>}
           <div className="full">{L({ k: "name", t: wheel ? "Názov inzerátu" : "Názov dielu", children: <input value={v.name} maxLength={120} placeholder={wheel ? "napr. Zimné pneumatiky Michelin Alpin 6 205/55 R16" : "napr. Predné ľavé svetlo LED"} onChange={(e) => { set("name", e.target.value); clear("name"); }} /> })}</div>
-          {L({ k: "cat", t: "Kategória", children: <select value={v.categoryId} onChange={(e) => { set("categoryId", e.target.value); set("subcategoryId", null); clear("cat"); clear("sub"); }}><option value="">Vyberte…</option>{vtCats.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}</select> })}
-          {L({ k: "sub", t: wheel ? "Čo predávate?" : "Podkategória", req: wheel, children: <select value={v.subcategoryId ?? ""} disabled={!subs.length} onChange={(e) => {
+          {!wheelMode && L({ k: "cat", t: "Kategória", children: <select value={v.categoryId} onChange={(e) => { set("categoryId", e.target.value); set("subcategoryId", null); clear("cat"); clear("sub"); }}><option value="">Vyberte…</option>{vtCats.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}</select> })}
+          {!wheelMode && L({ k: "sub", t: "Podkategória", req: false, children: <select value={v.subcategoryId ?? ""} disabled={!subs.length} onChange={(e) => {
             const id = e.target.value ? Number(e.target.value) : null; set("subcategoryId", id); clear("sub");
             if (wheel) { const d = wheelDefaults(cat.subcategories.find((x) => x.id === id)?.name); if (Object.keys(d).length) { setSpecs((o) => ({ ...o, ...d })); clear("specs"); } }
           }}><option value="">{!v.categoryId ? "Najprv vyberte kategóriu" : wheel ? "Vyberte…" : "Nevybraná"}</option>{subs.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}</select> })}
-          {kind !== "pneu" && L({ k: "oem", t: isUniversal(v.categoryId) ? "Číslo dielu (OEM) – nepovinné" : "Kód súčiastky / OEM číslo", req: !isUniversal(v.categoryId), children: <span className="oemin"><input value={v.oem} maxLength={40} placeholder={wheel ? "napr. 5E0601025 (originálne disky)" : "napr. 5E1941015"} onChange={(e) => { set("oem", e.target.value); clear("oem"); }} />
+          {kind !== "pneu" && kind !== "puklice" && L({ k: "oem", t: isUniversal(v.categoryId) ? "Číslo dielu (OEM) – nepovinné" : "Kód súčiastky / OEM číslo", req: !isUniversal(v.categoryId), children: <span className="oemin"><input value={v.oem} maxLength={40} placeholder={wheel ? "napr. 5E0601025 (originálne disky)" : "napr. 5E1941015"} onChange={(e) => { set("oem", e.target.value); clear("oem"); }} />
             <ScanText kind="oem" onResult={(x) => { set("oem", x); clear("oem"); }} /></span> })}
           {L({ t: kind === "pneu" ? "Značka pneumatík" : kind === "disk" ? "Výrobca diskov" : kind === "kolesa" ? "Značka pneumatík / diskov" : "Výrobca dielu", req: false,
             children: <input value={v.partMaker} maxLength={60} placeholder={kind === "pneu" ? "Michelin, Continental, Nokian…" : kind === "disk" ? "originál Škoda, BBS, Borbet, OZ…" : kind === "kolesa" ? "Continental / originál VW" : "Bosch, Valeo, Hella…"} onChange={(e) => set("partMaker", e.target.value)} /> })}
           {!isUniversal(v.categoryId) && <p className="full mute pp-hint"><b>Číslo dielu je najdôležitejší údaj inzerátu.</b> Nájdete ho na štítku alebo vyrazené na diele. Kupujúci podľa neho overí, že diel pasuje – aj pri rovnakom modeli auta sa diely líšia podľa motora, výbavy či roku. Web podľa čísla spojí aj rovnaké diely iných áut.</p>}
-          {wheel && !kind && <p className="full mute pp-hint">Najprv vyberte, <b>čo predávate</b> – podľa toho sa ukážu správne polia (rozmer pneumatiky, rozteč disku…).</p>}
+          {wheel && !kind && !wheelMode && <p className="full mute pp-hint">Najprv vyberte, <b>čo predávate</b> – podľa toho sa ukážu správne polia (rozmer pneumatiky, rozteč disku…).</p>}
           {kind && kind !== "ine" && <div className={"full pp-specs" + (bad.has("specs") ? " bad" : "")}>
-            <b>{kind === "pneu" ? "Rozmer a stav pneumatík" : kind === "disk" ? "Rozmer diskov" : "Rozmer pneumatík a diskov"}</b>
-            <span className="mute">Polia s <em className="req">*</em> sú povinné – kupujúci podľa nich hľadajú.{kind !== "disk" && " Rozmer nájdete na boku pneumatiky (napr. 205/55 R16 91V), rok výroby v kóde DOT (posledné 4 číslice, napr. 2321 = 2021)."}{kind !== "pneu" && " Rozmer disku je vyrazený na jeho zadnej strane (napr. 7Jx16 ET49)."}{kind === "kolesa" && <> <b>Stačí rozmer pneumatiky alebo rozmer disku</b> – vyplňte, čo viete; čím viac údajov, tým ľahšie vás kupujúci nájde.</>}</span>
+            <b>{kind === "pneu" ? "Rozmer a stav pneumatík" : kind === "disk" ? "Rozmer diskov" : kind === "puklice" ? "Rozmer puklíc" : "Rozmer pneumatík a diskov"}</b>
+            <span className="mute">Polia s <em className="req">*</em> sú povinné – kupujúci podľa nich hľadajú.{(kind === "pneu" || kind === "kolesa") && " Rozmer nájdete na boku pneumatiky (napr. 205/55 R16 91V), rok výroby v kóde DOT (posledné 4 číslice, napr. 2321 = 2021)."}{(kind === "disk" || kind === "kolesa") && " Rozmer disku je vyrazený na jeho zadnej strane (napr. 7Jx16 ET49)."}{kind === "puklice" && " Priemer puklice = priemer disku (číslo za R na pneumatike, napr. R15 = 15\")."}{kind === "kolesa" && <> <b>Stačí rozmer pneumatiky alebo rozmer disku</b> – vyplňte, čo viete; čím viac údajov, tým ľahšie vás kupujúci nájde.</>}</span>
             <div className="pp-specg">
-              {kind !== "disk" && <fieldset><legend>Pneumatika</legend>
+              {kind === "puklice" && <fieldset><legend>Puklice</legend>
+                {SI("rd", <select value={specs.rd || ""} onChange={(e) => setSpec("rd", e.target.value)}><option value="">–</option>{RIM_DIAMETERS.map((d) => <option key={d} value={d}>{d}"</option>)}</select>)}
+              </fieldset>}
+              {(kind === "pneu" || kind === "kolesa") && <fieldset><legend>Pneumatika</legend>
                 {SI("tw", <input inputMode="numeric" placeholder="205" value={specs.tw || ""} onChange={(e) => setSpec("tw", e.target.value)} />)}
                 {SI("tp", <input inputMode="numeric" placeholder="55" value={specs.tp || ""} onChange={(e) => setSpec("tp", e.target.value)} />)}
                 {SI("rd", <select value={specs.rd || ""} onChange={(e) => setSpec("rd", e.target.value)}><option value="">–</option>{RIM_DIAMETERS.map((d) => <option key={d} value={d}>R{d}</option>)}</select>)}
@@ -194,7 +214,7 @@ export default function ListingForm({ uid, cat, prof, edit, donor, onSaved }: { 
                 {SI("li", <input placeholder="91" value={specs.li || ""} onChange={(e) => setSpec("li", e.target.value)} />)}
                 {SI("si", <input placeholder="V" maxLength={2} value={specs.si || ""} onChange={(e) => setSpec("si", e.target.value.toUpperCase())} />)}
               </fieldset>}
-              {kind !== "pneu" && <fieldset><legend>Disk</legend>
+              {(kind === "disk" || kind === "kolesa") && <fieldset><legend>Disk</legend>
                 {kind === "disk" && SI("rd", <select value={specs.rd || ""} onChange={(e) => setSpec("rd", e.target.value)}><option value="">–</option>{RIM_DIAMETERS.map((d) => <option key={d} value={d}>R{d}</option>)}</select>)}
                 {SI("pcd", <><input list="pp-pcds" placeholder="5x112" value={specs.pcd || ""} onChange={(e) => setSpec("pcd", e.target.value)} /><datalist id="pp-pcds">{PCDS.map((x) => <option key={x} value={x} />)}</datalist></>)}
                 {SI("rw", <input inputMode="decimal" placeholder="7" value={specs.rw || ""} onChange={(e) => setSpec("rw", e.target.value)} />)}
@@ -207,11 +227,12 @@ export default function ListingForm({ uid, cat, prof, edit, donor, onSaved }: { 
               </fieldset>
             </div>
             {bad.has("specs") && <small className="pp-ferr">{MSG.specs}{missing.length ? ` Chýba: ${missing.map((k) => SPEC_LABEL[k].toLowerCase()).join(", ")}.` : ""}</small>}
-            {kind !== "disk" && <small className="mute">Dezén zmerajte v strede pneumatiky (pri nových pneumatikách nepovinné).</small>}
+            {(kind === "pneu" || kind === "kolesa") && <small className="mute">Dezén zmerajte v strede pneumatiky (pri nových pneumatikách nepovinné).</small>}
           </div>}
         </>}
         {step === 1 && <>
-          {isUniversal(v.categoryId) && <p className="full pp-resp">Pri kategórii <b>{cat.categories.find((c) => c.id === v.categoryId)?.name}</b> auto vyplniť <b>nemusíte</b> – diel sa ukáže pri všetkých vozidlách zvoleného druhu ({VEHICLE_TYPES.find((t) => t.id === vt)?.name.toLowerCase()}). Auto vyberte len vtedy, ak sa diel hodí iba naň (napr. originálne disky na konkrétny model).</p>}
+          {wheelMode && <p className="full pp-resp">Pneumatiky, disky aj puklice kupujúci hľadajú <b>podľa rozmeru</b> – auto vyplniť <b>nemusíte</b>. Vyberte ho len pri originálnych diskoch alebo puklicích na konkrétny model.</p>}
+          {isUniversal(v.categoryId) && !wheelMode && <p className="full pp-resp">Pri kategórii <b>{cat.categories.find((c) => c.id === v.categoryId)?.name}</b> auto vyplniť <b>nemusíte</b> – diel sa ukáže pri všetkých vozidlách zvoleného druhu ({VEHICLE_TYPES.find((t) => t.id === vt)?.name.toLowerCase()}). Auto vyberte len vtedy, ak sa diel hodí iba naň (napr. originálne disky na konkrétny model).</p>}
           {L({ k: "brand", t: "Značka auta", req: !isUniversal(v.categoryId), children: <select value={v.brandId || ""} onChange={(e) => { set("brandId", Number(e.target.value)); set("modelId", 0); set("engineId", null); set("year", 0); clear("brand"); }}><option value="">Vyberte…</option>{vtBrands.map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}</select> })}
           {L({ k: "model", t: "Model", req: !isUniversal(v.categoryId) || !!v.brandId, children: <select value={v.modelId || ""} disabled={!models.length} onChange={(e) => { set("modelId", Number(e.target.value)); set("engineId", null); set("year", 0); clear("model"); }}><option value="">Vyberte…</option>{models.map((m) => <option key={m.id} value={m.id}>{m.name} ({m.yearFrom}–{m.yearTo ?? ""})</option>)}</select> })}
           {L({ t: "Motorizácia", req: false, children: <select value={v.engineId ?? ""} disabled={!engines.length} onChange={(e) => set("engineId", e.target.value ? Number(e.target.value) : null)}><option value="">Všetky motorizácie</option>{engines.map((x) => <option key={x.id} value={x.id}>{x.name}</option>)}</select> })}
@@ -270,8 +291,8 @@ export default function ListingForm({ uid, cat, prof, edit, donor, onSaved }: { 
         {err && <p className="full pp-err" role="alert">{err}</p>}
         <div className="full pp-actions">
           {step > 0 && <button type="button" className="ubtn" onClick={() => goStep(step - 1)}>← Späť</button>}
-          {step < STEPS.length - 1 && <button type="button" className="btn" onClick={next}>Ďalej →</button>}
-          {(step === STEPS.length - 1 || edit) && <button type="button" className={step === STEPS.length - 1 ? "btn" : "ubtn"} disabled={busy} onClick={save}>{busy ? "Ukladám…" : edit ? "Uložiť zmeny" : "Zverejniť inzerát"}</button>}
+          {step < STEP_NAMES.length - 1 && <button type="button" className="btn" onClick={next}>Ďalej →</button>}
+          {(step === STEP_NAMES.length - 1 || edit) && <button type="button" className={step === STEP_NAMES.length - 1 ? "btn" : "ubtn"} disabled={busy} onClick={save}>{busy ? "Ukladám…" : edit ? "Uložiť zmeny" : "Zverejniť inzerát"}</button>}
         </div>
       </div>
     </div>

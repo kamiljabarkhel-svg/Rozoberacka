@@ -5,7 +5,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "autosuciastky.eu – použité autodiely",
     short_name: "autosuciastky.eu",
-    description: "Použité autodiely z vrakovísk presne na vaše auto.",
+    description: "Použité autodiely presne na vaše auto.",
     lang: "sk",
     start_url: "/",
     scope: "/",

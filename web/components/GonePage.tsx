@@ -28,7 +28,7 @@ export default async function GonePage({ g }: { g: GoneListing }) {
       </div>
       {items.length ? <LandingGrid items={items} cat={pickCatalog(cat, items)} /> : <div className="empty">Podobný diel teraz nikto neponúka.</div>}
       <p className="landing-more"><Link className="btn2" href={more}>Všetky podobné diely</Link></p>
-      <div className="rq-cta"><p><b>Nenašli ste náhradu?</b> Zadajte dopyt – vrakoviská vám pošlú ponuku. Bez registrácie.</p>
+      <div className="rq-cta"><p><b>Nenašli ste náhradu?</b> Zadajte dopyt – predajcovia vám pošlú ponuku. Bez registrácie.</p>
         <Link className="btn2" href={`/dopyt?${rq.toString()}`}>Zadať dopyt na diel</Link></div>
     </main>
   );
