@@ -1628,3 +1628,14 @@ nav.snav a[aria-current="page"]{color:#fff!important;border-bottom-color:var(--a
 }
 /* tlačidlá v hlavičke: text zvisle v strede */
 .site-header #user .ubtn,.site-header .regbtn{display:inline-flex;align-items:center;justify-content:center;line-height:1.1}
+
+/* ===== Odkazy podľa druhu vozidla (12. 11. 2026) – úvod ukáže len skupinu zvoleného druhu ===== */
+.seo-links section[data-vt]:not([data-vt="osobne"]),.seo-links section[data-cat]:not([data-cat="osobne"]){display:none}
+html[data-vt]:not([data-vt="osobne"]):not([data-vt="vsetky"]) .seo-links section[data-vt="osobne"],html[data-vt]:not([data-vt="osobne"]) .seo-links section[data-cat="osobne"]{display:none}
+html[data-vt="dodavky"] .seo-links [data-vt="dodavky"],html[data-vt="dodavky"] .seo-links [data-cat="dodavky"],
+html[data-vt="nakladne"] .seo-links [data-vt="nakladne"],html[data-vt="nakladne"] .seo-links [data-cat="nakladne"],
+html[data-vt="autobusy"] .seo-links [data-vt="autobusy"],html[data-vt="autobusy"] .seo-links [data-cat="autobusy"],
+html[data-vt="motorky"] .seo-links [data-vt="motorky"],html[data-vt="motorky"] .seo-links [data-cat="motorky"],
+html[data-vt="vsetky"] .seo-links section[data-vt],html[data-vt="vsetky"] .seo-links [data-cat="vsetky"]{display:block}
+html[data-vt="kol"] .seo-links{display:none}
+html[data-vt="dodavky"] .seo-links:not(:has([data-vt="dodavky"],[data-cat="dodavky"])),html[data-vt="nakladne"] .seo-links:not(:has([data-vt="nakladne"],[data-cat="nakladne"])),html[data-vt="autobusy"] .seo-links:not(:has([data-vt="autobusy"],[data-cat="autobusy"])),html[data-vt="motorky"] .seo-links:not(:has([data-vt="motorky"],[data-cat="motorky"])),html[data-vt="osobne"] .seo-links:not(:has([data-vt="osobne"],[data-cat="osobne"])){display:none}

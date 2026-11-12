@@ -243,6 +243,8 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
 
   const opt = (v: string | number, label: string) => <option key={v} value={v}>{label}</option>;
   const wheels = f.cat === WHEEL_CAT;
+  // odkazy pod výsledkami (app/page.tsx) ukazujú len zvolený druh vozidla – CSS číta <html data-vt>
+  useEffect(() => { document.documentElement.dataset.vt = wheels ? "kol" : f.vtype || "vsetky"; return () => { delete document.documentElement.dataset.vt; }; }, [wheels, f.vtype]);
   const vinShown = !f.vtype || f.vtype === "osobne" || f.vtype === "dodavky";
   const numOrNull = (v: string) => (v === "" ? null : Number(v));
 
