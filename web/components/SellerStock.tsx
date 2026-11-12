@@ -64,6 +64,7 @@ export default function SellerStock({ seller, cat: cat0, initial }: {
           <select value={sort} onChange={(e) => setSort(e.target.value as Filters["sort"])} aria-label="Zoradiť">
             <option value="new">Najnovšie</option><option value="asc">Najlacnejšie</option><option value="desc">Najdrahšie</option>
           </select>
+          <a className="rank-note" href="/ako-zoradujeme">Ako zoraďujeme ponuky</a>
         </div>}
       </div>
       {initial.total > 0 && catList.length > 1 && <div className="chips" aria-label="Kategórie v ponuke predajcu">

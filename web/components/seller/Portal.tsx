@@ -1,4 +1,5 @@
 "use client";
+import { OPERATOR } from "@/lib/operator";
 // Portál predajcu: Nástenka, Moje inzeráty, Pridať/Upraviť, Import CSV, Správy, Profil.
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -310,7 +311,7 @@ function MyList({ initial, items, cat, onEdit, onStatus, onTop, onDup, onDelete,
                 <span className="pp-meta"><span className={"pp-st " + l.status}>{ST[l.status]}</span>{l.top && <span className="toptag">TOP</span>}<b>{fmtPrice(l.price)}</b><span className="mute">{plural(l.views, "zobrazenie", "zobrazenia", "zobrazení")} · {plural(l.calls, "telefón", "telefóny", "telefónov")}</span>{isStale(l) && <span className="pp-stale">neaktualizované {Math.floor((Date.now() - Date.parse(l.updatedAt)) / 86400000)} dní · <button className="lnk" onClick={() => onFresh([l.id])}>Stále aktuálne</button></span>}</span>
               </div>
               <div className="pp-ra">
-                {l.status === "blocked" ? <span className="mute pp-blk">Inzerát skryl správca portálu{l.moderationNote ? ": " + l.moderationNote : ""}. Upravte ho a napíšte nám.</span> : null}
+                {l.status === "blocked" ? <span className="mute pp-blk">Inzerát skryl správca portálu – rozhodol človek, nie automat – pre rozpor so zákonom alebo s obchodnými podmienkami{l.moderationNote ? ". Dôvod: " + l.moderationNote : ""}. Ak nesúhlasíte, upravte inzerát alebo nám napíšte na {OPERATOR.email} – váš podnet bezplatne znova posúdi človek. Môžete sa obrátiť aj na súd alebo podať sťažnosť koordinátorovi digitálnych služieb (Rada pre mediálne služby); viac v <a href="/obchodne-podmienky" target="_blank">obchodných podmienkach, časť 4</a>.</span> : null}
                 <button className="ubtn" onClick={() => onEdit(l)}>Upraviť</button>
                 {l.status !== "blocked" && <>
                 {l.status === "active" ? <button className="ubtn" onClick={() => onStatus([l.id], "paused")}>Pozastaviť</button> : <button className="ubtn" onClick={() => onStatus([l.id], "active")}>Aktivovať</button>}

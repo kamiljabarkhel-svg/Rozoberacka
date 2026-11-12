@@ -73,7 +73,7 @@ export default function Page() {
       <ul>
         <li>Ktokoľvek môže nahlásiť inzerát tlačidlom „Nahlásiť inzerát“ v detaile. V nahlásení uvedie dôvod a vysvetlenie, nepovinne meno a e-mail, a potvrdí, že údaje uvádza v dobrej viere. Prijatie nahlásenia potvrdíme hneď na stránke. Nahlásenie posúdime bez zbytočného odkladu, nestranne a starostlivo; ak oznamovateľ zadal kontakt, oznámime mu rozhodnutie.</li>
         <li>O skrytí inzerátu alebo zablokovaní účtu <b>rozhoduje vždy človek</b> (správca portálu). Automaticky len obmedzujeme počet odkrytí telefónu, správ, dopytov a nahlásení z jedného pripojenia (ochrana pred robotmi); obsah inzerátov automaticky neposudzujeme.</li>
-        <li>Inzerát, ktorý porušuje zákon alebo tieto podmienky, môžeme skryť. Predajca v portáli najneskôr pri skrytí uvidí, že inzerát skryl správca, a konkrétny dôvod. Proti rozhodnutiu sa môže ohradiť e-mailom na adrese prevádzkovateľa; jeho podnet bezplatne a znova posúdi človek. Predajca sa môže obrátiť aj na súd.</li>
+        <li>Inzerát, ktorý porušuje zákon alebo tieto podmienky, môžeme skryť. Predajca v portáli najneskôr pri skrytí uvidí, že inzerát skryl správca, a konkrétny dôvod. Proti rozhodnutiu sa môže ohradiť e-mailom na adrese prevádzkovateľa; jeho podnet bezplatne a znova posúdi človek. Predajca sa môže obrátiť aj na súd, prípadne na orgán mimosúdneho riešenia sporov certifikovaný podľa čl. 21 nariadenia (EÚ) 2022/2065, a sťažnosť na porušenie tohto nariadenia môže podať koordinátorovi digitálnych služieb – na Slovensku je ním Rada pre mediálne služby (<a href="https://www.rpms.sk" rel="noreferrer">rpms.sk</a>).</li>
         <li>Pri opakovanom alebo závažnom porušení (podvod, kradnuté diely) môžeme účet zablokovať; dôvod oznámime predajcovi e-mailom alebo v portáli. Zablokovaný predajca nemôže zverejňovať inzeráty.</li>
         <li>Ak zistíme informácie o trestnom čine, ktorý ohrozuje život alebo bezpečnosť osôb, oznámime to orgánom činným v trestnom konaní.</li>
       </ul>
@@ -103,10 +103,10 @@ export default function Page() {
       <h2>8. Záverečné ustanovenia</h2>
       <ul>
         <li>Podmienky sa riadia právom Slovenskej republiky.</li>
-        <li>Predajca, ktorý je spotrebiteľom, sa môže so sporom obrátiť aj na subjekt alternatívneho riešenia spotrebiteľských sporov, napríklad Slovenskú obchodnú inšpekciu.</li>
+        <li>Predajca, ktorý je spotrebiteľom, sa môže so sporom obrátiť aj na subjekt alternatívneho riešenia spotrebiteľských sporov podľa zákona č. 391/2015 Z. z., najmä na Slovenskú obchodnú inšpekciu (<a href="https://www.soi.sk" rel="noreferrer">soi.sk</a>); zoznam subjektov vedie Ministerstvo hospodárstva SR. Najprv nám však napíšte – väčšinu vecí vyriešime hneď.</li>
         <li>Od 1. 7. 2027 nahrádza doterajší Občiansky zákonník nový Občiansky zákonník (zákon č. 260/2026 Z. z.). Odkazy na ustanovenia v týchto podmienkach sa potom vzťahujú na zodpovedajúce ustanovenia nového zákona.</li>
         <li>Zmenu podmienok oznámime predajcom e-mailom najmenej 15 dní vopred. Ak so zmenou nesúhlasia, môžu účet zrušiť. Zmeny nepôsobia spätne.</li>
-        <li>Sťažnosti a podnety predajcov a kupujúcich vybavujeme bezplatne e-mailom na adrese prevádzkovateľa. Orgánom dozoru nad dodržiavaním predpisov o elektronickom obchode a ochrane spotrebiteľa je Slovenská obchodná inšpekcia; nad ochranou osobných údajov Úrad na ochranu osobných údajov SR.</li>
+        <li>Sťažnosti a podnety predajcov a kupujúcich vybavujeme bezplatne e-mailom na adrese prevádzkovateľa. Orgánom dozoru nad dodržiavaním predpisov o elektronickom obchode a ochrane spotrebiteľa je Slovenská obchodná inšpekcia; nad ochranou osobných údajov Úrad na ochranu osobných údajov SR; nad dodržiavaním nariadenia (EÚ) 2022/2065 o digitálnych službách Rada pre mediálne služby ako koordinátor digitálnych služieb.</li>
       </ul>
     </LegalPage>
   );

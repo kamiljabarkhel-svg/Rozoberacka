@@ -297,3 +297,11 @@ Overené na Slov-Lexe: Občiansky zákonník § 597, 599, 612, 618, 619 (znenie 
 - **Správy**: e-mailom ide len **odpoveď predajcu kupujúcemu** (`reply_outbox` od 27 vynecháva odpovede kupujúceho). Odpoveď kupujúceho cez `/sprava/<token>` predajca vidí len v portáli (Správy). Kým nie sú zapnuté e-maily (Brevo + doména, `NEXT_PUBLIC_EMAIL_REPLIES=1`), predajca posiela odpoveď tlačidlom „Poslať e-mailom“ (mailto).
 - Blog: článok o vrakovisku nahradený „Autobatéria v zime“ (`/blog/autobateria-v-zime`), stará adresa presmeruje na `/blog`.
 
+
+## Registrácia a kontrola zákonov (12. 11. 2026, 19:55)
+- V hlavičke je tlačidlo **Registrácia** (žlté, `.regbtn`) vedľa „Prihlásenie predajcu“ – len pre neprihlásených, vedie na `/pre-predajcov?registracia=1`.
+- Overené na Slov-Lexe: 22/2004 § 4 (znenie od 28. 6. 2025), 108/2024 § 11 ods. 6, § 16, § 20a (znenie od 27. 9. 2026), 264/2022 (regulátor = Rada pre mediálne služby, koordinátor digitálnych služieb).
+- Každý zoznam inzerátov musí mať odkaz „Ako zoraďujeme ponuky“ (§ 16 ods. 2). Pri hodnoteniach text „Ako overujeme hodnotenia“ – kúpu neoverujeme (§ 11 ods. 6 písm. a).
+- Skrytý inzerát: dôvod + „rozhodol človek“ + možnosti nápravy (DSA čl. 17). Koordinátor digitálnych služieb: Rada pre mediálne služby (podmienky časť 4 a 8, pätička).
+- Fotky z cudzích webov nenačítavať priamo v prehliadači (IP návštevníka = osobný údaj) – cez `/_next/image` (`images.remotePatterns` v `next.config.ts`). V CSP `img-src` preto nie je Unsplash.
+- Keď bude TOP platený: označiť ho ako platené zvýraznenie/reklamu (zákon 108/2024, príloha – nekalé praktiky) a upraviť `/ako-zoradujeme`.

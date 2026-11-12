@@ -25,7 +25,7 @@ function securityHeaders() {
     `script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' blob:${dev ? " 'unsafe-eval'" : ""}${an ? " " + an : ""}${gaScript}`,
     "worker-src 'self' blob:",
     "style-src 'self' 'unsafe-inline'",
-    `img-src 'self' data: blob: https://images.unsplash.com ${supa}${gaImg}`.trim(),
+    `img-src 'self' data: blob: ${supa}${gaImg}`.trim(),
     "font-src 'self' data:",
     `connect-src 'self' ${supa} ${ws} ${an}${gaConnect}`.trim(),
     "manifest-src 'self'",
@@ -50,6 +50,8 @@ const nextConfig: NextConfig = {
   ...(preview ? { output: "export" as const, assetPrefix: ".", trailingSlash: true, images: { unoptimized: true } } : {}),
   env: { NEXT_PUBLIC_STATIC_PREVIEW: preview ? "1" : "" },
   poweredByHeader: false,
+  // fotky blogu z Unsplash podávame cez náš server (/_next/image) – prehliadač návštevníka sa na Unsplash nepripája
+  ...(preview ? {} : { images: { remotePatterns: [{ protocol: "https" as const, hostname: "images.unsplash.com", pathname: "/photo-*" }], deviceSizes: [400, 640, 960, 1200, 1600, 1920], imageSizes: [64, 128, 256], formats: ["image/avif" as const, "image/webp" as const], minimumCacheTTL: 2678400 } }),
   ...(preview ? {} : { async headers() { return [{ source: "/:path*", headers: securityHeaders() }]; } }),
   // nahradený článok (12. 11. 2026)
   ...(preview ? {} : { async redirects() { return [{ source: "/blog/pouzite-diely-z-vrakoviska", destination: "/blog", permanent: true }]; } }),

@@ -1,7 +1,8 @@
 // Blog autosuciastky.eu – články pre kupujúcich a vodičov.
 // Nový článok = nová položka v BLOG (najnovší hore). Pribudne na úvode (prvé tri), na /blog a v mape webu.
-// Fotky: Unsplash (licencia Unsplash – použitie zadarmo, aj komerčne), načítavajú sa priamo z images.unsplash.com;
-// pri každej fotke uvádzame autora. Fotky z Unsplash+ (platené) NEPOUŽÍVAŤ.
+// Fotky: Unsplash (licencia Unsplash – použitie zadarmo, aj komerčne). Prehliadač ich nesťahuje z Unsplash, ale cez
+// náš server (/_next/image), aby sa IP adresa návštevníka neposielala tretej strane (GDPR). Pri každej fotke uvádzame
+// autora. Fotky z Unsplash+ (platené) NEPOUŽÍVAŤ.
 import Link from "next/link";
 import type { ReactNode } from "react";
 
@@ -9,8 +10,11 @@ export type BlogPhoto = { id: string; alt: string; author: string; authorUrl: st
 export type BlogPost = { slug: string; title: string; short: string; description: string; date: string; readMin: number; tag: string; photo: BlogPhoto; body: ReactNode };
 
 export const blogPath = (slug: string) => `/blog/${slug}`;
-/** Adresa fotky z Unsplash v danej šírke (Unsplash ju zmenší a pošle vo WebP/AVIF, ak to prehliadač vie). */
-export const photoUrl = (p: BlogPhoto, w: number) => `https://images.unsplash.com/photo-${p.id}?auto=format&fit=crop&w=${w}&q=70`;
+/** Pôvodná fotka na Unsplash – len pre servery (náhľad pri zdieľaní, štruktúrované dáta), nie pre prehliadač návštevníka. */
+export const photoRemote = (p: BlogPhoto, w = 1600) => `https://images.unsplash.com/photo-${p.id}?auto=format&fit=crop&w=${w}&q=75`;
+const STATIC = process.env.NEXT_PUBLIC_STATIC_PREVIEW === "1";
+/** Fotka v danej šírke cez náš server (Next.js ju stiahne, zmenší a uloží; šírky povolené v next.config.ts images.deviceSizes). */
+export const photoUrl = (p: BlogPhoto, w: number) => STATIC ? photoRemote(p, w) : `/_next/image?url=${encodeURIComponent(photoRemote(p))}&w=${w}&q=75`;
 export const photoSrcSet = (p: BlogPhoto, ws: number[]) => ws.map((w) => `${photoUrl(p, w)} ${w}w`).join(", ");
 
 const fmtLink = (href: string, text: string) => <Link href={href}>{text}</Link>;

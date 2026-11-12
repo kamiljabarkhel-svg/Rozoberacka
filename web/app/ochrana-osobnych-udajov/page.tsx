@@ -42,6 +42,7 @@ export default function Page() {
       <p>Pri nahratí fotky web odstráni skryté údaje súboru vrátane polohy GPS.</p>
       <p>Kupujúci sa neregistruje. Obľúbené inzeráty, uložené hľadania a „Moje auto“ sa ukladajú len vo vašom prehliadači a my ich nevidíme.</p>
       <p>Pri odfotení OEM čísla alebo VIN sa text z fotky číta priamo vo vašom zariadení. Fotka sa nikam neposiela ani neukladá.</p>
+      <p>Fotky v blogu pochádzajú z Unsplash, ale podávame ich z nášho servera – váš prehliadač sa pri ich zobrazení na Unsplash ani na iné cudzie servery nepripája. Písma tiež podávame sami.</p>
 
       <h2>3. Komu údaje poskytujeme</h2>
       <ul>

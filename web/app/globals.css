@@ -1597,3 +1597,21 @@ nav.snav a[aria-current="page"]{color:#fff!important;border-bottom-color:var(--a
 .btn{background:var(--acc);color:#1c1e22}
 .pp-wt-g button.on{background:#2b2f36;border-color:#2b2f36;color:#fff}
 .price{background:linear-gradient(transparent 62%,rgba(255,198,26,.45) 62%,rgba(255,198,26,.45) 92%,transparent 92%)!important;color:var(--ink)}
+
+/* ===== Registrácia v hlavičke (12. 11. 2026) ===== */
+#user{display:flex;align-items:center;gap:8px}
+.site-header .regbtn{display:inline-flex;align-items:center;min-height:36px;padding:0 14px;border-radius:4px;background:var(--acc);color:var(--accink,#1d2127);font-weight:650;font-size:14px;text-decoration:none;border:1.5px solid var(--acc);white-space:nowrap}
+.site-header .regbtn:hover{filter:brightness(1.06);text-decoration:none}
+.site-header .regbtn:focus-visible{outline:2px solid #fff;outline-offset:2px}
+@media(max-width:520px){.hide-s{display:none}.site-header .regbtn,.site-header .ubtn{padding:0 10px;font-size:13px}}
+@media(max-width:440px){
+  .site-header{padding-left:0!important;padding-right:0!important}
+  .site-header .tb{padding-left:12px!important;padding-right:12px!important;grid-template-columns:auto auto!important;justify-content:space-between;column-gap:8px!important}
+  .site-header .tb .brand{gap:5px;min-width:0}
+  .site-header .tb .brand svg{width:26px!important;height:26px!important;margin:-4px -2px -4px -4px}
+  .site-header .tb .wm{font-size:14px}
+  #user{gap:5px}
+  .site-header .regbtn,.site-header #user .ubtn{min-height:32px;padding:0 7px!important;font-size:12.5px}
+}
+.rank-note{font-size:13px;color:var(--mute,#565e69);margin:10px 0 0}
+.stock-t .rank-note{margin:0;align-self:center;white-space:nowrap}

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import Crumbs from "@/components/Crumbs";
 import BlogCard from "@/components/BlogCard";
-import { BLOG, blogPath, fmtDate, photoSrcSet, photoUrl } from "@/lib/blog";
+import { BLOG, blogPath, fmtDate, photoRemote, photoSrcSet, photoUrl } from "@/lib/blog";
 import { JsonLd, SITE_NAME, SITE_URL, breadcrumbLd } from "@/lib/seo";
 import { OPERATOR } from "@/lib/operator";
 
@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const p = BLOG.find((x) => x.slug === slug);
   if (!p) return {};
   return { title: p.title, description: p.description, alternates: { canonical: blogPath(p.slug) },
-    openGraph: { title: p.title, description: p.description, url: blogPath(p.slug), siteName: SITE_NAME, locale: "sk_SK", type: "article", publishedTime: p.date, images: [{ url: photoUrl(p.photo, 1200), width: 1200, alt: p.photo.alt }] } };
+    openGraph: { title: p.title, description: p.description, url: blogPath(p.slug), siteName: SITE_NAME, locale: "sk_SK", type: "article", publishedTime: p.date, images: [{ url: photoRemote(p.photo, 1200), width: 1200, alt: p.photo.alt }] } };
 }
 
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
@@ -27,7 +27,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
   return (
     <main id="main" className="main blog-post">
       <JsonLd data={[breadcrumbLd([...crumbs, { name: p.title, href: blogPath(p.slug) }]),
-        { "@context": "https://schema.org", "@type": "BlogPosting", headline: p.title, description: p.description, inLanguage: "sk", datePublished: p.date, image: photoUrl(p.photo, 1200),
+        { "@context": "https://schema.org", "@type": "BlogPosting", headline: p.title, description: p.description, inLanguage: "sk", datePublished: p.date, image: photoRemote(p.photo, 1200),
           mainEntityOfPage: SITE_URL + blogPath(p.slug), author: { "@type": "Organization", name: SITE_NAME }, publisher: { "@type": "Organization", name: SITE_NAME, legalName: OPERATOR.name } }]} />
       <Crumbs items={crumbs} last={p.short} />
       <article>

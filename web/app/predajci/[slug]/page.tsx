@@ -64,7 +64,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
       <SellerStock seller={s.id} cat={pickCatalog(cat, res.items)} initial={{ items: res.items, total: res.total, cats: [...res.cats] }} />
       <section id="hodnotenia" className="reviews">
         <h2>Hodnotenia kupujúcich</h2>
-        <p className="mute small">Hodnotiť môže len kupujúci, ktorému predajca poslal ponuku na jeho dopyt. Hodnotenia nekontrolujeme vopred; nevhodné môžete nahlásiť na <Link href="/ochrana-osobnych-udajov#kontakt">kontakte prevádzkovateľa</Link>.</p>
+        <p className="mute small review-note"><b>Ako overujeme hodnotenia:</b> hodnotiť môže len kupujúci, ktorému predajca poslal ponuku na jeho dopyt na diel (za jeden dopyt jedno hodnotenie). Neoverujeme však, či kupujúci diel naozaj kúpil alebo použil – portál kúpu nesprostredkúva. Hodnotenia nekontrolujeme vopred, neplatí sa za ne a poradie neovplyvňujú; nevhodné môžete nahlásiť na <Link href="/ochrana-osobnych-udajov#kontakt">kontakte prevádzkovateľa</Link>.</p>
         {reviews.length ? <ul>{reviews.map((r) => (
           <li key={r.id}><Stars value={r.stars} small /> <b>{r.author}</b> <span className="mute">{new Date(r.createdAt).toLocaleDateString("sk-SK")}</span>{r.body && <p>{r.body}</p>}</li>
         ))}</ul> : <p>Zatiaľ žiadne hodnotenia.</p>}
