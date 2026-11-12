@@ -11,12 +11,17 @@ export function modelFamily(name: string): string {
   return s || name;
 }
 
+/** „Iná značka“ a „Iný model…“ (supabase/27) – pre autá, ktoré katalóg nepozná; v zoznamoch vždy na konci. */
+export const OTHER_BRAND = "Iná značka";
+export const isOtherModel = (name: string) => name.startsWith("Iný model");
+
 export function sortModels<T extends Pick<Model, "name" | "yearFrom">>(list: T[]): T[] {
-  return [...list].sort((a, b) => sk.compare(modelFamily(a.name), modelFamily(b.name)) || a.yearFrom - b.yearFrom || sk.compare(a.name, b.name));
+  return [...list].sort((a, b) => Number(isOtherModel(a.name)) - Number(isOtherModel(b.name)) || sk.compare(modelFamily(a.name), modelFamily(b.name)) || a.yearFrom - b.yearFrom || sk.compare(a.name, b.name));
 }
 
 export function sortCatalog(c: Catalog): Catalog {
-  return { ...c, models: sortModels(c.models) };
+  const brands = [...c.brands].sort((a, b) => Number(a.name === OTHER_BRAND) - Number(b.name === OTHER_BRAND));
+  return { ...c, brands, models: sortModels(c.models) };
 }
 
 // ---------- Menší katalóg pre stránky ----------

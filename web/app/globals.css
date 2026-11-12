@@ -1558,3 +1558,42 @@ nav.snav a[aria-current="page"]{color:var(--ink)!important;border-bottom-color:v
 .call{background:var(--ink);color:var(--card)}
 .call:hover{background:var(--acc);color:#fff}
 .grid.rows .card.is-top{border-color:var(--acc)}
+/* detail: popis hneď pod tlačidlom telefónu */
+.ddesc{margin:14px 0 4px;padding:12px 14px;border:1px solid var(--line);border-radius:6px;background:var(--card)}
+.ddesc h2{margin:0 0 6px;font:750 1rem/1.2 var(--f-b);color:var(--ink)}
+.ddesc .desc{margin:0;white-space:pre-line;line-height:1.6;color:var(--ink)}
+/* vypnuté tlačidlá: sivé, nie bledé farebné */
+.btn:disabled,.btn[disabled]{background:var(--chip)!important;color:var(--mute)!important;cursor:not-allowed;filter:none}
+.ubtn:disabled{opacity:.5;cursor:not-allowed}
+
+
+/* ================= Tmavosivá a žltá (12. 11. 2026, 20:00) – majiteľ vybral návrh G1 =================
+   Tmavosivá hlavička (#2b2f36) so žltou linkou, žltá (#ffc61a, tmavý text) na hlavné tlačidlá,
+   aktívnu sekciu, logo a TOP. Žltá sa nepoužíva na text na bielom – odkazy sú tmavo-jantárové #8a5a00. */
+:root{--pet:#2b2f36;--pet2:#3d424b;--link:#8a5a00;--icoink:#2b2f36;--acc:#ffc61a;--accink:#1c1e22;--acc2:#f0b400;--bg:#f4f5f7}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--pet:#2b2f36;--pet2:#3d424b;--link:#ffd25a;--icoink:#ffd25a;--acc:#ffc61a;--accink:#1c1e22;--acc2:#f0b400}}
+:root[data-theme="dark"]{--pet:#2b2f36;--pet2:#3d424b;--link:#ffd25a;--icoink:#ffd25a;--acc:#ffc61a;--accink:#1c1e22;--acc2:#f0b400}
+.site-header{background:#2b2f36!important;color:#fff;border-bottom:3px solid var(--acc)!important}
+.site-header .wm{color:#fff}.site-header .wm-eu{color:var(--acc)}
+.site-header .brand svg circle:first-of-type{fill:var(--acc)}.site-header .brand svg circle:not(:first-of-type){fill:#2b2f36}
+.site-header .gs{background:#fff!important;border:0!important}
+.site-header .gs input{background:#fff!important;color:#1c1e22!important}
+.site-header .gs input::placeholder{color:#6b7280}
+.site-header .gs button,.site-header .gs .gsb{background:var(--acc)!important;color:#1c1e22!important}
+.site-header .ubtn,:root .site-header .ubtn{color:#fff!important;border-color:rgba(255,255,255,.65)!important;background:transparent!important}
+.site-header .ubtn:hover,:root .site-header .ubtn:hover{background:#fff!important;color:#2b2f36!important;border-color:#fff!important}
+nav.snav{background:#2b2f36!important;border-top:1px solid rgba(255,255,255,.12)!important;border-bottom:0!important}
+nav.snav a{color:rgba(255,255,255,.82)!important}
+nav.snav a:hover{color:#fff!important}
+nav.snav a[aria-current="page"]{color:#fff!important;border-bottom-color:var(--acc)!important}
+.finder .pa .btn,.finder .btn,.intro-cta .btn{background:var(--acc)!important;color:#1c1e22!important}
+.finder .pa .btn:hover,.finder .btn:hover,.intro-cta .btn:hover{background:var(--acc2)!important}
+.panel.finder .vtabs button.on{box-shadow:inset 0 3px 0 var(--acc)}
+.intro-pts li{border-left-color:var(--acc)}
+.intro-mark rect{fill:#2b2f36}.intro-mark circle:first-of-type{fill:var(--acc)}.intro-mark circle:not(:first-of-type){fill:#2b2f36}
+.toptag{background:var(--acc)!important;color:#1c1e22!important}
+.call{background:#2b2f36;color:#fff}
+.call:hover{background:var(--acc);color:#1c1e22}
+.btn{background:var(--acc);color:#1c1e22}
+.pp-wt-g button.on{background:#2b2f36;border-color:#2b2f36;color:#fff}
+.price{background:linear-gradient(transparent 62%,rgba(255,198,26,.45) 62%,rgba(255,198,26,.45) 92%,transparent 92%)!important;color:var(--ink)}

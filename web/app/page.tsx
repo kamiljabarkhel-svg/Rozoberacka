@@ -26,7 +26,7 @@ async function ssrData(): Promise<HomeSsr | null> {
 }
 
 export default async function Page() {
-  const [ssr, counts, cityList] = await Promise.all([ssrData(), getSeoCounts().catch(() => []), getCities().catch(() => [] as string[])]);
+  const [ssr, counts] = await Promise.all([ssrData(), getSeoCounts().catch(() => [])]);
   const cat = ssr ? unpackCatalog(ssr.catalog) : (IS_DEMO ? await getCatalog() : null);
   // Interné odkazy na stránky áut a kategórií (len tie, kde sú inzeráty)
   const byModel = new Map<number, number>(), byCat = new Map<string, number>();
@@ -47,12 +47,6 @@ export default async function Page() {
           {cats.length > 0 && <section><h2>Diely podľa kategórie</h2><ul>
             {cats.map((c) => <li key={c.id}><Link href={landingPath({ brandId: null, modelId: null, cat: c.id, sub: null }, cat)}>{c.name}</Link> <span className="mute">({byCat.get(c.id)})</span></li>)}
           </ul></section>}
-          {cityList.length > 0 && <section><h2>Diely podľa mesta</h2><ul>
-            {cityList.map((c) => <li key={c}><Link href={landingPath({ brandId: null, modelId: null, cat: "", sub: null, city: c }, cat)}>Autodiely {c}</Link></li>)}
-          </ul></section>}
-          <section><h2>Použité diely podľa značky</h2><ul className="seo-cols">
-            {[...cat.brands].sort((a, b) => sk(a.name, b.name)).map((b) => <li key={b.id}><Link href={landingPath({ brandId: b.id, modelId: null, cat: "", sub: null }, cat)}>{b.name}</Link></li>)}
-          </ul></section>
         </nav>
       )}
     </>

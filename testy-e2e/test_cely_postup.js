@@ -158,7 +158,7 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
     const th = pg.locator(".pp-msgs > li", { hasText: "Mila Kupcova" }); await th.locator(".pp-reply textarea").waitFor();
     if (!(await pg.locator(".pp-msgs > li", { hasText: "Jano Kupec" }).locator("text=Kupujúci nezadal e-mail").count())) throw new Error("pri telefóne chýba upozornenie");
     await th.locator(".pp-reply textarea").fill("Áno, pošlem na dobierku, 8 € poštovné.");
-    await th.locator("button:has-text('odpoveď')").click(); await pg.waitForSelector(".pp-toast:has-text('Odpoveď')");
+    await th.locator(".pp-reply .pp-actions button").first().click(); await pg.waitForSelector(".pp-toast:has-text('Odpoveď')");
     await pg.waitForSelector(".pp-msgs > li:has-text('Mila Kupcova') .pp-thread li.me:has-text('8 € poštovné')");
     const token = require("child_process").execSync("psql -h /tmp/pgt -p 5499 -U postgres -d e2e -tAq", { input: "select reply_token from messages where sender_name = 'Mila Kupcova'" }).toString().trim();
     if (!/^[0-9a-f-]{36}$/.test(token)) throw new Error("token " + token);

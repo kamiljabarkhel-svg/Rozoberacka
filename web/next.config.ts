@@ -51,6 +51,8 @@ const nextConfig: NextConfig = {
   env: { NEXT_PUBLIC_STATIC_PREVIEW: preview ? "1" : "" },
   poweredByHeader: false,
   ...(preview ? {} : { async headers() { return [{ source: "/:path*", headers: securityHeaders() }]; } }),
+  // nahradený článok (12. 11. 2026)
+  ...(preview ? {} : { async redirects() { return [{ source: "/blog/pouzite-diely-z-vrakoviska", destination: "/blog", permanent: true }]; } }),
 };
 
 export default nextConfig;

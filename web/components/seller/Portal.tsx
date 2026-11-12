@@ -336,7 +336,7 @@ function Messages({ msgs, onRead, onReply }: { msgs: Message[]; onRead: (ids: nu
   return (
     <div>
       <header className="pp-h"><h1>Správy od kupujúcich</h1>{unread.length > 0 && <button className="ubtn" onClick={() => onRead(unread)}>Označiť všetky ako prečítané</button>}</header>
-      <p className="mute pp-note">Ak kupujúci zadal e-mail, odpíšte mu priamo tu – {EMAIL_REPLIES ? "odpoveď mu príde e-mailom z adresy portálu a odpovedať vám môže cez odkaz v e-maile. Váš e-mail neuvidí." : "odpoveď sa uloží do konverzácie. Kým nezapneme odosielanie e-mailov z portálu, pošlite ju kupujúcemu aj tlačidlom „Poslať zo svojej pošty“."} Ak zadal telefón, zavolajte mu.</p>
+      <p className="mute pp-note">{EMAIL_REPLIES ? "Vaša odpoveď príde kupujúcemu e-mailom. Keď odpíše, jeho správu uvidíte tu." : "E-maily z portálu ešte nie sú zapnuté – odpoveď pošlite kupujúcemu tlačidlom „Poslať e-mailom“."} Ak zadal telefón, zavolajte mu.</p>
       {!msgs.length ? <div className="empty">Zatiaľ žiadne správy. Kupujúci vám môžu napísať z detailu inzerátu.</div> : (
         <ul className="pp-msgs">{msgs.map((m) => <Thread key={m.id} m={m} onRead={onRead} onReply={onReply} />)}</ul>
       )}
@@ -366,9 +366,8 @@ function Thread({ m, onRead, onReply }: { m: Message; onRead: (ids: number[]) =>
         {!m.read && <button className="lnk" onClick={() => onRead([m.id])}>Označiť ako prečítané</button>}</div>
       {m.buyerEmail && open && <div className="pp-reply">
         <label><span>Vaša odpoveď pre {m.name}</span><textarea rows={3} maxLength={2000} value={text} onChange={(e) => setText(e.target.value)} placeholder="Dobrý deň, diel je k dispozícii…" /></label>
-        <div className="pp-actions"><button className="btn" disabled={busy || text.trim().length < 2} onClick={send}>{busy ? "Odosielam…" : EMAIL_REPLIES ? "Odoslať odpoveď" : "Uložiť odpoveď"}</button>
-          {!EMAIL_REPLIES && <a className="ubtn" href={mailto(text.trim() || last)}>Poslať zo svojej pošty</a>}</div>
-        {last && !EMAIL_REPLIES && <small className="mute">Odpoveď je uložená. Kupujúcemu ju pošlite tlačidlom „Poslať zo svojej pošty“ – e-maily z portálu ešte nie sú zapnuté.</small>}
+        <div className="pp-actions"><button className={EMAIL_REPLIES ? "btn" : "ubtn"} disabled={busy || text.trim().length < 2} onClick={send}>{busy ? "Odosielam…" : EMAIL_REPLIES ? "Odoslať odpoveď" : "Uložiť do konverzácie"}</button>
+          {!EMAIL_REPLIES && <a className="btn" href={mailto(text.trim() || last)}>Poslať e-mailom</a>}</div>
       </div>}
       {!m.buyerEmail && <small className="mute">Kupujúci nezadal e-mail – odpovedzte mu telefonicky alebo SMS.</small>}
     </li>

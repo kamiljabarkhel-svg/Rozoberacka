@@ -61,10 +61,10 @@ select pg_temp.ok((select read_at is null from public.messages where sender_name
 
 -- fronta e-mailov (service_role)
 set role service_role;
-select pg_temp.ok((select count(*) from public.reply_outbox()) = 2, '24: vo fronte 2 e-maily');
+select pg_temp.ok((select count(*) from public.reply_outbox()) = 1, '24/27: vo fronte 1 e-mail (len odpoveď predajcu)');
 select pg_temp.ok((select to_email from public.reply_outbox() where author = 'seller') = 'jana.kup@example.com', '24: odpoveď predajcu ide kupujúcemu');
-select pg_temp.ok((select to_email from public.reply_outbox() where author = 'buyer') = 'predajca24@test.invalid', '24: odpoveď kupujúceho ide predajcovi');
+select pg_temp.ok(not exists (select 1 from public.reply_outbox() where author = 'buyer'), '27: odpoveď kupujúceho nejde e-mailom, len do portálu');
 select public.reply_mark(reply_id) from public.reply_outbox() where author = 'seller';
-select pg_temp.ok((select count(*) from public.reply_outbox()) = 1, '24: odoslaný e-mail z fronty zmizol');
+select pg_temp.ok((select count(*) from public.reply_outbox()) = 0, '24: odoslaný e-mail z fronty zmizol');
 reset role;
 \echo HOTOVO

@@ -68,44 +68,58 @@ export const BLOG: BlogPost[] = [
     ),
   },
   {
-    slug: "pouzite-diely-z-vrakoviska",
-    title: "Použité diely z vrakoviska: kedy sa oplatia a na čo si dať pozor",
-    short: "Použité diely z vrakoviska",
-    description: "Ktoré použité diely sa oplatí kúpiť, ktoré radšej nové, ako overiť, že diel pasuje, a aké máte práva pri kúpe od firmy a od súkromnej osoby.",
+    slug: "autobateria-v-zime",
+    title: "Autobatéria v zime: ako spoznať, že dosluhuje, a ako vybrať novú",
+    short: "Autobatéria v zime",
+    description: "Prečo batéria v mraze slabne, ako ju jednoducho zmerať, kedy ju vymeniť a na čo sa pozrieť pri kúpe novej – kapacita, štartovací prúd, rozmery a autá so štart-stop.",
     date: "2026-11-10",
-    readMin: 6,
-    tag: "Autodiely",
-    photo: { id: "1642519527989-59d1955c7808", alt: "Staré autá uložené vedľa seba na vrakovisku", author: "Documerica", authorUrl: "https://unsplash.com/@documerica", pageUrl: "https://unsplash.com/photos/a-pile-of-old-cars-sitting-next-to-each-other-fk6hp2QTaVE" },
+    readMin: 5,
+    tag: "Údržba",
+    photo: { id: "1738123748481-5953edf462bb", alt: "Otvorený motorový priestor červeného auta", author: "Vasanth Rajasekaran", authorUrl: "https://unsplash.com/@vasanthr", pageUrl: "https://unsplash.com/photos/the-engine-compartment-of-a-red-car-with-its-hood-open-pm-r7o2F-VM" },
     body: (
       <>
-        <p className="lead">Pri autách starších ako päť či desať rokov dáva použitý originálny diel často väčší zmysel ako nový neznámej značky. Ušetríte, diel presne pasuje a do auta sa vráti súčiastka, s ktorou ho výrobca postavil. Treba však vedieť, čo kúpiť a čo si overiť.</p>
+        <p className="lead">Batéria najčastejšie vypovie službu v prvé mrazivé ráno. Nie je to náhoda: chlad spomaľuje chemické reakcie v batérii a studený motor zároveň potrebuje na naštartovanie viac energie. Ak viete, na čo sa pozrieť, výmenu si naplánujete skôr, ako vás auto nechá stáť.</p>
 
-        <h2>Kedy sa použitý diel oplatí</h2>
+        <h2>Príznaky, že batéria dosluhuje</h2>
         <ul>
-          <li><strong>Karoséria a výbava:</strong> dvere, kapota, blatníky, nárazníky, svetlá, zrkadlá, sedadlá a čalúnenie. Ideálne vo farbe vášho auta – ušetríte aj za lakovanie.</li>
-          <li><strong>Elektronika a ovládanie:</strong> riadiace jednotky, prístrojové dosky, spínače, multimédiá. Niektoré jednotky treba po výmene nakódovať na auto – opýtajte sa predajcu alebo servisu.</li>
-          <li><strong>Veľké mechanické celky:</strong> motor, prevodovka, turbo, alternátor či štartér. Tu je rozdiel v cene oproti novému dielu najväčší. Pýtajte sa na najazdené kilometre auta, z ktorého diel pochádza, a na to, či bol odskúšaný.</li>
+          <li>Motor sa pri štarte točí pomaly a „ťažko“, najmä ráno.</li>
+          <li>Pri štartovaní bliká alebo slabne osvetlenie prístrojov.</li>
+          <li>Systém štart-stop prestáva vypínať motor na semaforoch.</li>
+          <li>Auto po pár dňoch státia neštartuje vôbec.</li>
+          <li>Batéria je staršia ako 4 až 6 rokov – to je bežná životnosť.</li>
         </ul>
 
-        <h2>Čo radšej kupovať nové</h2>
-        <p>Diely, ktoré sa bežne opotrebúvajú a od ktorých závisí bezpečnosť, sa oplatí mať nové: brzdové platničky a kotúče, rozvody, filtre, tlmiče, ložiská a gumené diely zavesenia. Pri dieloch bezpečnostných systémov, napríklad airbagov, postupujte podľa odporúčania autorizovaného servisu.</p>
-
-        <h2>Ako overiť, že diel pasuje</h2>
-        <p>Najistejšie je <strong>číslo dielu (OEM)</strong> – kód vyrazený alebo nalepený priamo na súčiastke. Rovnaký model auta môže mať viac verzií toho istého dielu podľa motora, výbavy či roku výroby. Ak sa číslo starého dielu zhoduje s ponúkaným, máte istotu. Kde číslo nájsť, opisuje návod {fmtLink("/navody/oem-cislo", "Kde nájdem OEM číslo dielu")}. Na našom portáli môžete podľa čísla priamo hľadať – stačí ho zadať do poľa „Mám číslo dielu“.</p>
-
-        <h2>Na čo sa predajcu opýtať</h2>
+        <h2>Ako batériu jednoducho zmerať</h2>
+        <p>Stačí lacný multimeter. Merajte, keď auto aspoň niekoľko hodín stálo a nič nebolo zapnuté. Orientačne platí:</p>
         <ul>
-          <li>Z akého auta diel je (rok, motor, najazdené km)?</li>
-          <li>Bol diel odskúšaný pred demontážou?</li>
-          <li>Je možné diel vrátiť, ak nepasuje alebo nefunguje?</li>
-          <li>Pošlete ďalšie fotky čísla dielu a prípadného poškodenia?</li>
+          <li><strong>12,6 V a viac</strong> – batéria je nabitá,</li>
+          <li><strong>okolo 12,4 V</strong> – nabitá zhruba na tri štvrtiny,</li>
+          <li><strong>12,2 V a menej</strong> – je vybitá aspoň do polovice, treba ju dobiť a sledovať,</li>
+          <li><strong>pod 12 V</strong> – batéria je vybitá; ak sa to opakuje aj po nabití, blíži sa koniec.</li>
+        </ul>
+        <p>Napätie však neprezradí všetko. Spoľahlivý je test v servise alebo v predajni batérií, ktorý zmeria, koľko prúdu batéria dokáže dodať pri záťaži.</p>
+
+        <h2>Ako predĺžiť jej život</h2>
+        <ul>
+          <li>Ak jazdíte len krátke trasy, batériu raz za čas dobite nabíjačkou – alternátor ju za pár minút jazdy nestihne nabiť.</li>
+          <li>Pri dlhšom státí ju udržiavajte inteligentnou nabíjačkou.</li>
+          <li>Udržujte póly čisté a pevne dotiahnuté.</li>
+          <li>Pred štartom v mraze vypnite svetlá, kúrenie a ďalšie spotrebiče.</li>
         </ul>
 
-        <h2>Aké máte práva</h2>
-        <p>Pri kúpe od <strong>podnikateľa</strong> platí zodpovednosť za vady. Pri použitom diele môže byť dohodnutá kratšia doba, najmenej však 12 mesiacov. Ak kupujete na diaľku (cez telefón, e-mail, internet), máte spravidla právo odstúpiť od zmluvy do 14 dní. Pri kúpe od <strong>súkromnej osoby</strong> sa predpisy na ochranu spotrebiteľa nepoužijú – predávajúci zodpovedá za vady, na ktoré vás neupozornil. Preto si všetko dohodnite písomne a pýtajte si doklad.</p>
+        <h2>Ako vybrať novú batériu</h2>
+        <ul>
+          <li><strong>Kapacita (Ah) a štartovací prúd (A, EN)</strong> – mali by byť aspoň také ako pri pôvodnej batérii. Údaje nájdete na štítku starej batérie.</li>
+          <li><strong>Rozmery a umiestnenie pólov</strong> – batéria musí sedieť v držiaku a plus pól musí byť na rovnakej strane.</li>
+          <li><strong>Autá so štart-stop</strong> potrebujú batériu typu EFB alebo AGM podľa toho, akú malo auto z výroby. Obyčajná batéria v takom aute rýchlo odíde.</li>
+          <li><strong>Registrácia batérie</strong> – niektoré novšie autá treba po výmene „naučiť“ novú batériu diagnostikou, inak ju systém nabíja nesprávne.</li>
+        </ul>
 
-        <div className="blog-tip"><strong>Nenašli ste diel?</strong> Napíšte {fmtLink("/dopyt", "dopyt na diel")} – vrakoviská a predajcovia vám pošlú ponuky. Bez registrácie.</div>
-        <p className="mute small">Článok je všeobecná informácia, nie právne poradenstvo.</p>
+        <h2>Nová alebo použitá?</h2>
+        <p>Batéria je spotrebný diel, ktorý časom stráca kapacitu, preto sa pri nej oplatí kúpiť novú. Pri ostatných dieloch elektroinštalácie – alternátor, štartér, riadiace jednotky – však často dobre poslúži aj použitý originálny diel. Hľadajte podľa čísla dielu, aby ste mali istotu, že pasuje.</p>
+
+        <div className="blog-tip"><strong>Hľadáte alternátor alebo štartér?</strong> Zadajte číslo dielu do poľa „Mám číslo dielu“ na {fmtLink("/", "úvodnej stránke")} alebo napíšte {fmtLink("/dopyt", "dopyt na diel")} – predajcovia vám pošlú ponuky.</div>
+        <p className="mute small">Staré batérie nepatria do bežného odpadu – odovzdajte ich v predajni batérií alebo na zbernom dvore.</p>
       </>
     ),
   },

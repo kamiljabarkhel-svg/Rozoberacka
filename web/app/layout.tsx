@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   appleWebApp: { capable: true, title: "autosuciastky.eu", statusBarStyle: "default" },
 };
 export const viewport: Viewport = { width: "device-width", initialScale: 1, viewportFit: "cover",
-  themeColor: [{ media: "(prefers-color-scheme: light)", color: "#ffffff" }, { media: "(prefers-color-scheme: dark)", color: "#14161a" }] };
+  themeColor: [{ media: "(prefers-color-scheme: light)", color: "#2b2f36" }, { media: "(prefers-color-scheme: dark)", color: "#2b2f36" }] };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (

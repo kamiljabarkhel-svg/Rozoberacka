@@ -93,8 +93,9 @@ export default function ListingDetail({ id, onClose, initial, catalog }: { id: n
   if (s.st === "error") return <div className="dbox">{back}<div className="err" role="alert">Inzerát sa nepodarilo načítať: {s.msg}</div></div>;
 
   const { l, cat, vehicles, similar, more, sameCar } = s;
-  const bName = cat.brands.find((x) => x.id === l.brandId)?.name || "";
-  const mName = cat.models.find((x) => x.id === l.modelId)?.name || "";
+  const rawB = cat.brands.find((x) => x.id === l.brandId)?.name || "", rawM = cat.models.find((x) => x.id === l.modelId)?.name || "";
+  const bName = rawB === "Iná značka" ? "Iné vozidlo (uvedené v popise)" : rawB;
+  const mName = rawB === "Iná značka" ? "" : rawM.startsWith("Iný model") ? "iný model (uvedený v popise)" : rawM;
   const eName = cat.engines.find((x) => x.id === l.engineId)?.name || "";
   const cName = cat.categories.find((x) => x.id === l.categoryId)?.name || "";
   const sName = cat.subcategories.find((x) => x.id === l.subcategoryId)?.name || "";
@@ -156,6 +157,7 @@ export default function ListingDetail({ id, onClose, initial, catalog }: { id: n
             <PhoneButton id={l.id} />
             <button className="fav" aria-pressed={fav} onClick={() => toggle(l.id)}>{fav ? "♥" : "♡"} Obľúbené</button>
           </div>
+          <section className="ddesc" aria-labelledby="ddesc-h"><h2 id="ddesc-h">Popis</h2><p className="desc">{l.description || "Predajca nepridal popis."}</p></section>
           <ContactBox id={l.id} name={l.name} seller={l.seller.name} path={listingPath(l.id, l.name, carName(l, cat))} cat={cat} />
           <Tags l={l} />
           {!univ && <MyCarFit vehicles={vehicles} cat={cat} />}
@@ -169,9 +171,6 @@ export default function ListingDetail({ id, onClose, initial, catalog }: { id: n
           </div>
         </div>
       </div>
-
-      <h2 className="sh">Popis</h2>
-      <p className="desc">{l.description || "Predajca nepridal popis."}</p>
 
       <h2 className="sh">Parametre</h2>
       <dl className="dl">{rows.map(([k, v]) => <Fragment key={k}><dt>{k}</dt><dd>{v}</dd></Fragment>)}</dl>

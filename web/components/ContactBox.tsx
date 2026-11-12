@@ -15,7 +15,7 @@ export default function ContactBox({ id, name, seller, path, cat, car = false }:
   const openMsg = () => {
     if (!tx) { // predvyplnená správa; ak si kupujúci uložil „Moje auto“, doplníme ho
       if (car) setTx(`Dobrý deň, je vozidlo ${name} ešte na predaj? Kedy by sa dalo pozrieť?`);
-      else { const my = readMyCar(); setTx(`Dobrý deň, je diel „${name}“ ešte k dispozícii? Pasuje na moje auto: ${my && cat ? myCarName(my, cat) : ""}`); }
+      else { const my = readMyCar(); const car = my && cat ? myCarName(my, cat) : ""; setTx(`Dobrý deň, je diel „${name}“ ešte k dispozícii?${car ? ` Pasuje na moje auto ${car}?` : ""}`); }
     }
     setMode(mode === "msg" ? "" : "msg"); setSt({});
   };

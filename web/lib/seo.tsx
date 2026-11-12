@@ -13,8 +13,10 @@ export function slugify(s: string): string {
 }
 
 export function carName(l: Pick<Listing, "brandId" | "modelId" | "engineId">, cat: Catalog | null, withEngine = false): string {
-  const b = cat?.brands.find((x) => x.id === l.brandId)?.name || "";
-  const m = cat?.models.find((x) => x.id === l.modelId)?.name || "";
+  let b = cat?.brands.find((x) => x.id === l.brandId)?.name || "";
+  let m = cat?.models.find((x) => x.id === l.modelId)?.name || "";
+  if (m.startsWith("Iný model")) m = "";          // auto, ktoré katalóg nepozná (supabase/27)
+  if (b === "Iná značka") { b = "Iné vozidlo"; m = ""; }
   const e = withEngine ? cat?.engines.find((x) => x.id === l.engineId)?.name || "" : "";
   return [b, m, e].filter(Boolean).join(" ");
 }
