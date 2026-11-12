@@ -169,7 +169,7 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
     await b2.goto(B + "/sprava/00000000-0000-0000-0000-000000000000"); await b2.waitForSelector("text=Konverzácia sa nenašla");
     global.CUR = pg; await pg.reload(); await pg.click(".pp-nav button:has-text('Správy od kupujúcich')"); await pg.waitForSelector(".pp-msgs li.unread:has-text('Hlavná 1')");
     const n = require("child_process").execSync("psql -h /tmp/pgt -p 5499 -U postgres -d e2e -tAq", { input: "set role service_role; select count(*) from reply_outbox()" }).toString().trim();
-    if (n.split("\n").pop() !== "2") throw new Error("fronta e-mailov " + n);
+    if (n.split("\n").pop() !== "1") throw new Error("fronta e-mailov (len odpoveď predajcu) " + n);
   });
   await step("upravit inzerat", async () => {
     await pg.click(".pp-nav button:has-text('Moje inzeráty')"); await pg.click(".pp-row:has-text('Predné ľavé') >> text=Upraviť");
