@@ -1424,3 +1424,91 @@ nav.snav a[aria-current="page"]{color:#fff!important;border-bottom-color:var(--a
 }
 :root[data-theme="dark"] .panel.finder .vtabs button.on,:root[data-theme="dark"] .finder .find-alt button:not(.scan-b):not(.lnk){color:var(--link)!important;border-color:var(--link)!important}
 :root[data-theme="dark"] .panel.finder .vtabs button.on{border-color:var(--line)!important;border-bottom-color:var(--card)!important}
+
+
+/* ================= Grafit + oranžová, blog na úvode (12. 11. 2026) =================
+   Majiteľ: žlto-modrú používa aj autobazar.eu – nová kombinácia: grafitová (#24282e) hlavička a
+   oranžová (#ff7a1a) na hlavné akcie. Odkazy tmavooranžové (#b8420b, čitateľné na bielej). */
+:root{--pet:#24282e;--pet2:#3a4048;--link:#b8420b;--icoink:#24282e;--acc:#ff7a1a;--accink:#1b1e22;--acc2:#e8650a}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--pet:#1b1e23;--pet2:#3a4048;--link:#ff9a52;--icoink:#ff9a52;--acc:#ff7a1a;--accink:#1b1e22}}
+:root[data-theme="dark"]{--pet:#1b1e23;--pet2:#3a4048;--link:#ff9a52;--icoink:#ff9a52;--acc:#ff7a1a;--accink:#1b1e22}
+.site-header{border-bottom:3px solid var(--acc)!important}
+nav.snav{border-bottom:0}
+.price{background:linear-gradient(transparent 62%,rgba(255,122,26,.32) 62%,rgba(255,122,26,.32) 92%,transparent 92%)!important}
+.finder .pa .btn,.finder .btn,.intro-cta .btn{background:var(--acc)!important;color:var(--accink)!important;border:0}
+.finder .pa .btn:hover,.finder .btn:hover,.intro-cta .btn:hover{background:var(--acc2)!important}
+.finder .find-alt button:not(.scan-b):not(.lnk){color:var(--ink)!important;border-color:var(--ink)!important}
+.finder .find-alt button:not(.scan-b):not(.lnk):hover{background:var(--ink)!important;color:var(--card)!important}
+.panel.finder .vtabs button.on{color:var(--ink)!important;box-shadow:inset 0 3px 0 var(--acc)}
+.chip[aria-pressed="true"],.c-cats button[aria-pressed="true"]{background:var(--pet)!important;border-color:var(--pet)!important;color:#fff!important}
+.c-cats button[aria-pressed="true"]{box-shadow:inset 4px 0 0 var(--acc)}
+.is-top,.badge-top,.top-b{background:var(--acc)!important;color:var(--accink)!important}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .finder .find-alt button:not(.scan-b):not(.lnk){color:var(--ink)!important;border-color:var(--field)!important}
+  :root:not([data-theme="light"]) .panel.finder .vtabs button.on{color:var(--ink)!important}
+  :root:not([data-theme="light"]) .site-header{border-bottom-color:var(--acc)!important}}
+:root[data-theme="dark"] .finder .find-alt button:not(.scan-b):not(.lnk){color:var(--ink)!important;border-color:var(--field)!important}
+
+/* ---- pás na úvode: vľavo portál, vpravo 3 články s fotkami ---- */
+.intro{background:var(--card);border-bottom:1px solid var(--line)}
+.intro-in{max-width:1248px;margin:0 auto;padding:28px 16px 30px;display:grid;grid-template-columns:minmax(0,320px) minmax(0,1fr);gap:24px 40px;align-items:start}
+.intro-brand{display:flex;flex-direction:column;gap:14px;align-items:flex-start;padding-right:8px}
+.intro-mark{width:52px;height:52px}
+.intro-t{margin:0;font:800 1.5rem/1.2 var(--f-b);letter-spacing:-.02em;color:var(--ink)}
+.intro-pts{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.intro-pts li{display:grid;gap:1px;padding:0 0 0 14px;border-left:3px solid var(--acc)}
+.intro-pts li::before{display:none}
+.intro-pts b{font:700 .95rem/1.3 var(--f-b);color:var(--ink)}
+.intro-pts span{font-size:.88rem;color:var(--mute)}
+.intro-cta{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+.intro-cta .btn,.intro-cta .ubtn{height:42px;display:inline-flex;align-items:center;padding:0 16px;border-radius:4px;font:700 .95rem/1 var(--f-b);text-decoration:none}
+.intro-cta .ubtn{border:1.5px solid var(--ink);color:var(--ink);background:transparent}
+.intro-cta .ubtn:hover{background:var(--ink);color:var(--card)}
+.intro-bh{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:12px}
+.intro-bh h2{margin:0;font:800 1.2rem/1.2 var(--f-b);color:var(--ink)}
+.intro-bh a{font:650 .92rem var(--f-b);color:var(--link)}
+.intro-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+/* karta článku (úvod aj /blog) */
+.bcard{min-width:0}
+.bcard-a{display:flex;flex-direction:column;height:100%;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--card);color:var(--ink);text-decoration:none}
+.bcard-a:hover{border-color:var(--ink)}
+.bcard-a:hover .bcard-t{text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:3px}
+.bcard-a:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.bcard-img{position:relative;display:block;aspect-ratio:16/10;background:var(--chip);overflow:hidden}
+.bcard-img img{width:100%;height:100%;object-fit:cover;display:block}
+.bcard-tag{position:absolute;left:10px;top:10px;background:var(--pet);color:#fff;font:700 .74rem/1 var(--f-b);padding:5px 7px;border-radius:3px}
+.bcard-b{display:flex;flex-direction:column;gap:6px;padding:12px 14px 14px;flex:1}
+.bcard-t{font:750 1.02rem/1.3 var(--f-b);color:var(--ink)}
+.bcard-d{font-size:.86rem;line-height:1.45;color:var(--mute);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.bcard-m{margin-top:auto;padding-top:4px;font-size:.8rem;color:var(--mute)}
+@media (max-width:1000px){.intro-in{grid-template-columns:1fr}.intro-brand{flex-direction:row;flex-wrap:wrap;align-items:center}.intro-t{flex:1;min-width:220px}.intro-pts{grid-template-columns:repeat(3,minmax(0,1fr));width:100%}}
+@media (max-width:700px){
+  .intro-in{padding:18px 16px 20px;gap:18px}
+  .intro-mark{width:40px;height:40px}.intro-t{font-size:1.15rem}
+  .intro-pts{display:none}
+  .intro-cta{width:100%}.intro-cta .btn,.intro-cta .ubtn{flex:1;justify-content:center}
+  .intro-cards{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:10px;margin:0 -16px;padding:0 16px 4px;scrollbar-width:none}
+  .intro-cards .bcard{flex:0 0 78%;scroll-snap-align:start}
+  .bcard-d{display:none}
+}
+/* ---- /blog a článok ---- */
+.blog-list,.blog-post{max-width:1100px}
+.blog-list .lead{font-size:1.08rem;color:var(--mute);margin:-4px 0 20px}
+.bgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.blog-navody{margin-top:36px;border-top:1px solid var(--line);padding-top:18px}
+.blog-navody ul{padding-left:18px;line-height:1.9}
+.blog-post article{max-width:760px}
+.bpost-tag{display:inline-block;margin:6px 0 4px;background:var(--pet);color:#fff;font:700 .78rem/1 var(--f-b);padding:5px 8px;border-radius:3px}
+.blog-post h1{font:800 clamp(1.6rem,3.6vw,2.3rem)/1.15 var(--f-b);letter-spacing:-.02em;margin:6px 0 8px}
+.bpost-fig{margin:18px 0 22px}
+.bpost-fig img{width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;border-radius:6px;display:block;background:var(--chip)}
+.bpost-fig figcaption{font-size:.8rem;color:var(--mute);margin-top:6px}
+.bpost-body{font-size:1.04rem;line-height:1.7;color:var(--ink)}
+.bpost-body .lead{font-size:1.15rem;line-height:1.6;color:var(--ink);font-weight:500}
+.bpost-body h2{font:750 1.3rem/1.3 var(--f-b);margin:30px 0 8px}
+.bpost-body ul{padding-left:20px}
+.bpost-body li{margin:6px 0}
+.bpost-body a{color:var(--link);font-weight:600}
+.blog-tip{margin:26px 0 14px;padding:14px 16px;border-left:4px solid var(--acc);background:var(--chip);border-radius:0 6px 6px 0}
+.bpost-more{margin-top:44px;border-top:1px solid var(--line);padding-top:20px}
+.intro-in>*{min-width:0}
+@media (max-width:700px){.intro-brand{padding-right:0}.intro-t{min-width:0}}

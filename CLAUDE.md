@@ -101,7 +101,7 @@ Zdroj: analýza RRR.lt/Ovoko, Opisto.fr, Autobazar.sk (otvorené 2. 11. 2026). V
 8. **TOP zvýraznenie**: predajca zvýrazní inzerát, zobrazí sa medzi prvými so štítkom TOP. Neskôr platená služba. Do databázy: `listings.top_until timestamptz`.
 9. Mazanie inzerátu je dvojkrokové priamo na stránke (žiadne vyskakovacie okná prehliadača).
 
-Zámerne NEROBÍME teraz: online platby a doručenie cez portál (RRR, Opisto), hľadanie podľa ŠPZ (Opisto), platforma pre servisy so zľavou (Opisto.pro), blog, newsletter. Sú v denníku ako neskoršie nápady.
+Zámerne NEROBÍME teraz: online platby a doručenie cez portál (RRR, Opisto), hľadanie podľa ŠPZ (Opisto), platforma pre servisy so zľavou (Opisto.pro), newsletter. (Blog od 12. 11. 2026 robíme – pozri nižšie.) Sú v denníku ako neskoršie nápady.
 
 ## Formulár predajcu a nástenka (2. 11. 2026, 18:01)
 Vzor je v `prototyp.html`.
@@ -267,7 +267,7 @@ Overené na Slov-Lexe: Občiansky zákonník § 597, 599, 612, 618, 619 (znenie 
 - Texty neutrálne sivé (#1d2127, #565e69), tmavý režim neutrálny (#101216 / #191c22). Zelená len pre stav „v poriadku“ (`--ok`).
 - CSS: vrstva „Farby modrá + žltá“ úplne na konci `web/app/globals.css`.
 
-## Indigová, logo, Rady a návody (11. 11. 2026, 21:15)
+## Indigová, logo, Rady a návody (11. 11. 2026, 21:15) – farby NAHRADENÉ grafitovou + oranžovou (12. 11.)
 - Modrá #1840a0 bola podobná autobazar.eu → hlavná farba **tmavá indigová #1a2d6d** (`--pet`, `--pet2` #2f49a8, odkazy #2742b0), žltá #ffd43b ostáva. Tmavý režim `--pet` #18275e.
 - **Logo** (`components/Logo.tsx`): žltý náboj kolesa s 5 otvormi v indigovom štvorci + „autosuciastky“ a žlté „.eu“. V hlavičke bez štvorca. Ikony: `app/icon.svg`, `app/apple-icon.png`, `public/icons/*` (generované z icon.svg).
 - **Pás na úvode** medzi hlavičkou a hľadaním (`components/HomeIntro.tsx`): logo, krátky popis portálu a „Rady a návody“ – návody z `lib/navody.tsx` ako články. Nový článok = nová položka v `NAVODY` (pribudne aj tu, na /navody a v mape webu).
@@ -276,4 +276,9 @@ Overené na Slov-Lexe: Občiansky zákonník § 597, 599, 612, 618, 619 (znenie 
 ## Svetlá lišta hľadania, filtre až po hľadaní (11. 11. 2026, 22:00)
 - Lišta hľadania je **biela karta** na sivom pozadí (nie tmavomodrý blok): druh vozidla ako záložky karty (vybraná biela so žltým pásikom), polia s okrajom `--field`, „Hľadať“ a „Zobraziť pneumatiky“ indigové, „Mám číslo dielu“ a „Mám VIN“ ako svetlosivé políčka. Indigová hlavička ostáva. CSS: vrstva „Svetlá lišta hľadania“ na konci `globals.css`.
 - **Bočné filtre** (časť auta, cena, stav, mesto…) sa na úvode ukážu až keď človek hľadá: klikne „Hľadať“/číslo dielu/VIN/najhľadanejší diel, vyberie značku, časť auta alebo filter, alebo je v Pneumatikách (`searched` v `Home.tsx`, trieda `no-side`).
+
+## Grafit + oranžová a blog (12. 11. 2026)
+- Žlto-modrú používa aj autobazar.eu → nová kombinácia: **grafitová #24282e** (`--pet`; hlavička s oranžovou linkou dole, štítky, telefón) a **oranžová #ff7a1a** (`--acc`, text na nej tmavý `--accink`): „Hľadať“, lupa v hlavičke, aktívna sekcia, vybraný druh vozidla, zvýrazňovač ceny, TOP. Odkazy `--link` #b8420b (tmavý režim #ff9a52). Logo: oranžový náboj kolesa (`components/Logo.tsx`, `app/icon.svg`, ikony v `public/icons`). Žltá ani modrá sa nepoužívajú. CSS: vrstva „Grafit + oranžová“ na konci `globals.css`.
+- **Blog**: `lib/blog.tsx` (články ako dáta: nadpis, popis, dátum, téma, fotka, text), stránky `/blog` a `/blog/<slug>` (štruktúrované dáta BlogPosting), karta `components/BlogCard.tsx`, odkaz v hlavičke, pätičke a v mape webu. Na úvode (`components/HomeIntro.tsx`) vľavo čo portál ponúka a tlačidlá „Hľadať diel“ / „Predávam diely“, vpravo **3 najnovšie články** s fotkou.
+- Fotky článkov: **Unsplash, len s licenciou Unsplash (zadarmo)** – nie Unsplash+; načítavajú sa z images.unsplash.com (povolené v CSP `img-src`), pri fotke „Foto: autor / Unsplash“. Fakty v článkoch overovať (zdroje: slovensko.sk, rpzv.sk, výrobcovia pneumatík) a pri právnych veciach pridať upozornenie.
 

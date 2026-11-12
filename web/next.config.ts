@@ -25,7 +25,7 @@ function securityHeaders() {
     `script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' blob:${dev ? " 'unsafe-eval'" : ""}${an ? " " + an : ""}${gaScript}`,
     "worker-src 'self' blob:",
     "style-src 'self' 'unsafe-inline'",
-    `img-src 'self' data: blob: ${supa}${gaImg}`.trim(),
+    `img-src 'self' data: blob: https://images.unsplash.com ${supa}${gaImg}`.trim(),
     "font-src 'self' data:",
     `connect-src 'self' ${supa} ${ws} ${an}${gaConnect}`.trim(),
     "manifest-src 'self'",

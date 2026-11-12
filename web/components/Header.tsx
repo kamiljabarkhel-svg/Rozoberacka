@@ -69,6 +69,7 @@ export default function Header() {
         {/* eslint-enable @next/next/no-html-link-for-pages */}
         {CARS_ENABLED && <Link href="/havarovane-vozidla" aria-current={path?.startsWith("/havarovane-vozidla") || path?.startsWith("/vozidlo/") ? "page" : undefined}>Havarované vozidlá</Link>}
         <Link href="/dopyt" aria-current={path?.startsWith("/dopyt") ? "page" : undefined}>Dopyt na diel</Link>
+        <Link href="/blog" aria-current={path?.startsWith("/blog") ? "page" : undefined}>Blog</Link>
       </nav>}
     </>
   );

@@ -263,7 +263,7 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
 
   return (
     <main id="pub" tabIndex={-1}>
-      <section className={"panel finder" + (wheels ? " is-wheels" : "")} aria-label={wheels ? "Hľadanie pneumatík a diskov" : "Hľadanie dielov"} ref={panelRef}>
+      <section id="hladanie" className={"panel finder" + (wheels ? " is-wheels" : "")} aria-label={wheels ? "Hľadanie pneumatík a diskov" : "Hľadanie dielov"} ref={panelRef}>
         <div className="in"><span id="main" />
           <div className="vtabs" role="tablist" aria-label="Druh vozidla">
             {VEHICLE_TYPES.map((t) => <button key={t.id} role="tab" aria-selected={f.vtype === t.id} className={f.vtype === t.id ? "on" : ""} onClick={() => pickVt(t.id)}>{t.short}</button>)}
