@@ -3,7 +3,10 @@ import { LegalPage, OperatorBox } from "@/components/Legal";
 import { OPERATOR, fill } from "@/lib/operator";
 import { CARS_ENABLED } from "@/lib/features";
 
-const GA = /^G-[A-Z0-9]+$/.test((process.env.NEXT_PUBLIC_GA_ID || "").trim());
+// Texty o Google Analytics sú pripravené vždy (lišta sa naň pýta); GA_ON = meranie naozaj beží (NEXT_PUBLIC_GA_ID).
+const GA = true;
+const GA_ON = /^G-[A-Z0-9]+$/.test((process.env.NEXT_PUBLIC_GA_ID || "").trim());
+const NOT_YET = GA_ON ? "" : " Meranie zatiaľ nie je spustené – ak súhlasíte, začne sa až po jeho spustení; dovtedy sa kód Google nenačíta vôbec.";
 
 export const metadata: Metadata = { title: "Ochrana osobných údajov", alternates: { canonical: "/ochrana-osobnych-udajov" } };
 
@@ -69,7 +72,7 @@ export default function Page() {
       <p>Prístup k údajom stráži databáza pravidlami pre každý riadok (predajca vidí len svoje údaje), komunikácia je šifrovaná (HTTPS), heslá sa ukladajú len ako odtlačok a zásahy správcu sa zaznamenávajú.</p>
 
       <h2>6. Cookies</h2>
-      {GA && <p><b>Meranie návštevnosti (Google Analytics).</b> Ak v lište cookies súhlasíte, meriame návštevnosť nástrojom Google Analytics 4 od Google Ireland Ltd. (Gordon House, Barrow Street, Dublin 4, Írsko). Spracúvajú sa údaje o návšteve: navštívené stránky, odkiaľ ste prišli, približná poloha (krajina, mesto), typ zariadenia a prehliadača a identifikátor v cookies _ga. Účel: zistiť, ako sa web používa, a zlepšovať ho. Právny základ: váš súhlas (čl. 6 ods. 1 písm. a) GDPR a § 109 ods. 8 zákona č. 452/2021 Z. z.), ktorý môžete kedykoľvek odvolať v „Nastaveniach cookies“ v pätičke. Reklamné funkcie a Google signals máme vypnuté, údaje neprepájame s vaším menom ani účtom. Google je pre nás sprostredkovateľom; údaje môžu byť prenesené do USA na základe rámca EÚ – USA na ochranu údajov, ku ktorému je Google pripojený. Údaje v Google Analytics uchovávame 14 mesiacov.</p>}
+      {GA && <p><b>Meranie návštevnosti (Google Analytics).</b> Ak v lište cookies súhlasíte, meriame návštevnosť nástrojom Google Analytics 4 od Google Ireland Ltd. (Gordon House, Barrow Street, Dublin 4, Írsko). Spracúvajú sa údaje o návšteve: navštívené stránky, odkiaľ ste prišli, približná poloha (krajina, mesto), typ zariadenia a prehliadača a identifikátor v cookies _ga. Účel: zistiť, ako sa web používa, a zlepšovať ho. Právny základ: váš súhlas (čl. 6 ods. 1 písm. a) GDPR a § 109 ods. 8 zákona č. 452/2021 Z. z.), ktorý môžete kedykoľvek odvolať v „Nastaveniach cookies“ v pätičke. Reklamné funkcie a Google signals máme vypnuté, údaje neprepájame s vaším menom ani účtom. Google je pre nás sprostredkovateľom; údaje môžu byť prenesené do USA na základe rámca EÚ – USA na ochranu údajov, ku ktorému je Google pripojený. Údaje v Google Analytics uchovávame 14 mesiacov.{NOT_YET}</p>}
       <p>Používame len nevyhnutné úložisko prehliadača, na ktoré nie je potrebný súhlas{GA ? ", a so súhlasom Google Analytics (pozri vyššie). Reklamné cookies nepoužívame." : ". Reklamné ani analytické cookies nepoužívame."} {GA ? "Google Analytics aj prípadné ďalšie voliteľné nástroje načítame až po vašom súhlase," : "Keby sme v budúcnosti pridali voliteľné nástroje (napríklad meranie návštevnosti), načítame ich až po vašom súhlase,"} ktorý môžete kedykoľvek odvolať v „Nastaveniach cookies“ v pätičke. Podrobnosti a zoznam všetkých údajov sú na stránke <a href="/cookies">Cookies</a>.</p>
     </LegalPage>
   );

@@ -1615,3 +1615,16 @@ nav.snav a[aria-current="page"]{color:#fff!important;border-bottom-color:var(--a
 }
 .rank-note{font-size:13px;color:var(--mute,#565e69);margin:10px 0 0}
 .stock-t .rank-note{margin:0;align-self:center;white-space:nowrap}
+
+/* ===== Mobil: druh vozidla v 2 riadkoch, všetko viditeľné (12. 11. 2026) ===== */
+@media(max-width:640px){
+  .panel.finder>.in>.vtabs,.panel.finder .vtabs{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;overflow:visible!important;padding:10px 10px 4px;margin:0;background:transparent;border:0}
+  .panel.finder .vtabs button,:root .panel.finder .vtabs button{min-height:42px;padding:6px 4px!important;font-size:14px;font-weight:600;text-align:center;border:1.5px solid var(--line)!important;border-radius:4px!important;background:var(--card)!important;color:var(--ink)!important;box-shadow:none!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .panel.finder .vtabs button.on,:root .panel.finder .vtabs button.on,:root:not([data-theme="light"]) .panel.finder .vtabs button.on,:root[data-theme="dark"] .panel.finder .vtabs button.on{background:var(--acc)!important;color:var(--accink,#1d2127)!important;border-color:var(--acc)!important;font-weight:750;box-shadow:none!important}
+}
+@media(max-width:640px){
+  .panel.finder .vtabs::before{content:"Na aké vozidlo hľadáte diel?";grid-column:1/-1;font-weight:750;font-size:17px;color:var(--ink);margin:2px 0 4px}
+  .panel.finder:not(.is-wheels){border-top:3px solid var(--acc);padding-top:6px}
+}
+/* tlačidlá v hlavičke: text zvisle v strede */
+.site-header #user .ubtn,.site-header .regbtn{display:inline-flex;align-items:center;justify-content:center;line-height:1.1}

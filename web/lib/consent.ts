@@ -9,12 +9,16 @@ const KEY = "rozoberacka-suhlas";
 const EVT = "rz-consent";
 const OPEN = "rz-consent-open";
 /** Zvýšte, keď pribudne nový voliteľný nástroj – lišta sa zobrazí znova. */
-export const CONSENT_VERSION = 2; // 2 = pribudol Google Analytics (9. 11. 2026)
+export const CONSENT_VERSION = 3; // 2 = pribudol Google Analytics (9. 11. 2026); 3 = lišta so súhlasom pre všetkých, GA pripravený (12. 11. 2026)
 /** Adresa skriptu merania návštevnosti (napr. https://plausible.io/js/script.js). Prázdne = žiadne voliteľné cookies. */
 export const ANALYTICS_SRC = process.env.NEXT_PUBLIC_ANALYTICS_SRC || "";
 /** Google Analytics 4 – ID merania (G-XXXXXXX) z nastavenia v Google Analytics. Prázdne = vypnuté. */
 export const GA_ID = (process.env.NEXT_PUBLIC_GA_ID || "").trim();
 export const HAS_OPTIONAL = !!ANALYTICS_SRC || /^G-[A-Z0-9]+$/.test(GA_ID);
+/** Lišta so súhlasom (Prijať / Odmietnuť / Nastavenia) sa ukazuje vždy – je pripravená na Google Analytics.
+ *  Kým nie je nastavené NEXT_PUBLIC_GA_ID, súhlas sa len uloží a nič sa nenačíta. Pri zapnutí GA netreba lištu meniť
+ *  (návštevník súhlasil práve s Google Analytics); pri INOM novom nástroji zvýšiť CONSENT_VERSION. */
+export const CONSENT_UI = true;
 
 export type Consent = { v: number; at: string; analytics: boolean };
 

@@ -6,7 +6,7 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
 (async () => {
   const br = await chromium.launch(); const ctx = await br.newContext({ viewport: { width: 1280, height: 900 } }); const pg = await ctx.newPage();
   // voľba v lište cookies už je uložená (lištu testuje samostatný krok), aby neprekrývala tlačidlá
-  const seen = () => localStorage.setItem("rozoberacka-suhlas", JSON.stringify({ v: 2, at: new Date().toISOString(), analytics: false }));
+  const seen = () => localStorage.setItem("rozoberacka-suhlas", JSON.stringify({ v: 3, at: new Date().toISOString(), analytics: false }));
   await ctx.addInitScript(seen);
   pg.on("console", (m) => { if (m.type() === "error") errs.push("console: " + m.text()); });
   pg.on("response", (r) => { if (r.status() >= 400) errs.push("HTTP " + r.status() + " " + r.request().method() + " " + r.url().slice(0, 140)); }); pg.on("pageerror", (e) => errs.push("pageerror: " + e.message));
@@ -39,12 +39,16 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
   await step("cookies: lista, nastavenia, odkaz v paticke", async () => {
     const c0 = await br.newContext(); const p0 = await c0.newPage();
     await p0.goto(B + "/ako-zoradujeme"); await p0.waitForSelector(".ckbar"); await p0.waitForSelector("h1:has-text('Ako zoraďujeme')");
-    await p0.click(".ckbar button:has-text('Rozumiem')"); await p0.waitForSelector(".ckbar", { state: "detached" });
+    const btns = await p0.locator(".ckbar .ckbtn").allInnerTexts(); if (btns.join("|") !== "Prijať všetky|Odmietnuť|Nastavenia") throw new Error("tlacidla listy: " + btns.join("|"));
+    await p0.click(".ckbar button:has-text('Odmietnuť')"); await p0.waitForSelector(".ckbar", { state: "detached" });
     await p0.reload(); await p0.waitForTimeout(600); if (await p0.locator(".ckbar").count()) throw new Error("lista sa zobrazila znova");
     await p0.click("footer button:has-text('Nastavenia cookies')"); await p0.waitForSelector(".ckdlg:has-text('Nevyhnutné')");
-    await p0.click(".ckdlg button:has-text('Zavrieť')"); await p0.waitForSelector(".ckdlg", { state: "detached" });
+    if (!(await p0.locator(".ckdlg:has-text('Google Analytics')").count())) throw new Error("v nastaveniach chyba Google Analytics");
+    await p0.click(".ckdlg button:has-text('Odmietnuť všetky')");
+    if (await p0.evaluate(() => !!document.querySelector("script[data-rz-ga]"))) throw new Error("GA sa nacital bez suhlasu"); await p0.waitForSelector(".ckdlg", { state: "detached" });
     await c0.close();
   });
+  await step("hlavicka -> registracia", async () => { await pg.click(".site-header .regbtn"); await pg.waitForURL("**/pre-predajcov?registracia=1"); await pg.waitForSelector("button:has-text('Vytvoriť účet')"); await pg.goBack(); });
   await step("hlavicka -> prihlasenie", async () => { await pg.click("text=Prihlásenie predajcu"); await pg.waitForURL("**/pre-predajcov"); });
   await step("registracia validacia", async () => {
     await pg.click("role=tab[name='Registrácia']"); await pg.click("button:has-text('Vytvoriť účet')");

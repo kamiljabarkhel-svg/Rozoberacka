@@ -2,14 +2,17 @@ import type { Metadata } from "next";
 import { LegalPage } from "@/components/Legal";
 import { CookieSettingsLink } from "@/components/CookieBar";
 
-const GA = /^G-[A-Z0-9]+$/.test((process.env.NEXT_PUBLIC_GA_ID || "").trim());
+// Texty o Google Analytics sú pripravené vždy (lišta sa naň pýta); GA_ON = meranie naozaj beží (NEXT_PUBLIC_GA_ID).
+const GA = true;
+const GA_ON = /^G-[A-Z0-9]+$/.test((process.env.NEXT_PUBLIC_GA_ID || "").trim());
+const NOT_YET = GA_ON ? "" : " Meranie zatiaľ nie je spustené – ak súhlasíte, začne sa až po jeho spustení; dovtedy sa kód Google nenačíta vôbec.";
 
 export const metadata: Metadata = { title: "Cookies", alternates: { canonical: "/cookies" } };
 
 export default function Page() {
   return (
     <LegalPage title="Cookies a úložisko prehliadača">
-      {GA ? <p>autosuciastky.eu <b>nepoužíva reklamné cookies</b>. Návštevnosť meriame cez <b>Google Analytics</b>, ale <b>len ak s tým súhlasíte</b> – bez súhlasu sa kód Google vôbec nenačíta. Ostatné údaje v prehliadači sú nevyhnutné na fungovanie služieb, o ktoré ste požiadali (písma podávame sami, nie z Google).</p> : <></>}
+      {GA ? <p>autosuciastky.eu <b>nepoužíva reklamné cookies</b>. Návštevnosť meriame cez <b>Google Analytics</b>, ale <b>len ak s tým súhlasíte</b> – bez súhlasu sa kód Google vôbec nenačíta. Ostatné údaje v prehliadači sú nevyhnutné na fungovanie služieb, o ktoré ste požiadali (písma podávame sami, nie z Google).{NOT_YET}</p> : <></>}
       {!GA && <p>autosuciastky.eu <b>nepoužíva reklamné, analytické ani sledovacie cookies</b> a nevkladá kód tretích strán, ktorý by vás sledoval (ani písma z Google – web ich podáva sám). V prehliadači ukladáme len údaje nevyhnutné na fungovanie služieb, o ktoré ste požiadali. Na ne podľa § 109 ods. 8 zákona č. 452/2021 Z. z. o elektronických komunikáciách nie je potrebný súhlas.</p>}
       <h2>Ako funguje súhlas</h2>
       <ul>

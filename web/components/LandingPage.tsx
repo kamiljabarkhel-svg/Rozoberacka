@@ -63,7 +63,7 @@ function related(x: Landing, cat: Catalog, counts: Awaited<ReturnType<typeof get
       groups.push({ title: "Podkategórie", links: [...s].map(([id, n]) => ({ name: cat.subcategories.find((v) => v.id === Number(id))?.name || id, href: landingPath({ brandId: null, modelId: null, cat: x.cat, sub: Number(id) }, cat), n })) });
     }
     const b = sum((c) => (c.categoryId === x.cat && (x.sub == null || c.subcategoryId === x.sub) ? String(c.brandId) : null));
-    groups.push({ title: "Podľa značky auta", links: [...b].map(([id, n]) => ({ name: cat.brands.find((v) => v.id === Number(id))?.name || id, href: landingPath({ brandId: Number(id), modelId: null, cat: x.cat, sub: null }, cat), n })) });
+    groups.push({ title: "Podľa značky vozidla", links: [...b].map(([id, n]) => ({ name: cat.brands.find((v) => v.id === Number(id))?.name || id, href: landingPath({ brandId: Number(id), modelId: null, cat: x.cat, sub: null }, cat), n })) });
   }
   return groups.map((g) => ({ ...g, links: g.links.sort((a, b) => b.n - a.n || sk(a.name, b.name)) })).filter((g) => g.links.length);
 }

@@ -3,8 +3,8 @@ import Link from "next/link";
 import HomeIntro from "@/components/HomeIntro";
 import Home, { type HomeSsr } from "@/components/Home";
 import { IS_DEMO, getCatalog, getCities, getSeoCounts, getStats, searchListings } from "@/lib/data";
-import { emptyFilters } from "@/lib/types";
-import { packCatalog, unpackCatalog } from "@/lib/catalogSort";
+import { OTHER_BRAND, isOtherModel, packCatalog, unpackCatalog } from "@/lib/catalogSort";
+import { VEHICLE_TYPES, emptyFilters, type VehicleType } from "@/lib/types";
 import { sk } from "@/lib/format";
 import { JsonLd, landingPath, siteLd } from "@/lib/seo";
 
@@ -31,7 +31,13 @@ export default async function Page() {
   // Interné odkazy na stránky áut a kategórií (len tie, kde sú inzeráty)
   const byModel = new Map<number, number>(), byCat = new Map<string, number>();
   for (const c of counts) { byModel.set(c.modelId, (byModel.get(c.modelId) || 0) + c.n); byCat.set(c.categoryId, (byCat.get(c.categoryId) || 0) + c.n); }
-  const models = cat ? [...byModel].map(([id, n]) => ({ m: cat.models.find((x) => x.id === id), n })).filter((x) => x.m).sort((a, b) => b.n - a.n).slice(0, 24) : [];
+  const bname = (id: number) => cat?.brands.find((x) => x.id === id)?.name || "";
+  const models = cat ? [...byModel].map(([id, n]) => ({ m: cat.models.find((x) => x.id === id)!, n }))
+    .filter((x) => x.m && !isOtherModel(x.m.name) && bname(x.m.brandId) !== OTHER_BRAND).sort((a, b) => b.n - a.n).slice(0, 24) : [];
+  // Skupiny podľa druhu vozidla – diel na autobus nemá byť pod „Diely podľa auta“
+  const HEAD: Record<VehicleType, string> = { osobne: "Diely na osobné autá", dodavky: "Diely na dodávky", nakladne: "Diely na nákladné autá", autobusy: "Diely na autobusy", motorky: "Diely na motorky a štvorkolky" };
+  const groups = VEHICLE_TYPES.map((t) => ({ t: t.id, head: HEAD[t.id], items: models.filter((x) => (x.m.vehicleType || "osobne") === t.id)
+    .sort((a, b) => sk(bname(a.m.brandId) + " " + a.m.name, bname(b.m.brandId) + " " + b.m.name)) })).filter((g) => g.items.length);
   const cats = cat ? cat.categories.filter((c) => byCat.get(c.id)).sort((a, b) => a.sort - b.sort) : [];
   return (
     <>
@@ -39,11 +45,11 @@ export default async function Page() {
       <HomeIntro parts={ssr?.stats.parts} sellers={ssr?.stats.sellers} />
       <Home ssr={ssr} />
       {cat && (models.length > 0 || cats.length > 0) && (
-        <nav className="wrap seo-links" aria-label="Diely podľa auta a kategórie">
-          {models.length > 0 && <section><h2>Diely podľa auta</h2><ul>
-            {models.sort((a, b) => sk(cat.brands.find((x) => x.id === a.m!.brandId)!.name + a.m!.name, cat.brands.find((x) => x.id === b.m!.brandId)!.name + b.m!.name)).map(({ m, n }) => (
-              <li key={m!.id}><Link href={landingPath({ brandId: m!.brandId, modelId: m!.id, cat: "", sub: null }, cat)}>{cat.brands.find((x) => x.id === m!.brandId)?.name} {m!.name}</Link> <span className="mute">({n})</span></li>
-            ))}</ul></section>}
+        <nav className="wrap seo-links" aria-label="Diely podľa vozidla a kategórie">
+          {groups.map((g) => <section key={g.t}><h2>{g.head}</h2><ul>
+            {g.items.map(({ m, n }) => (
+              <li key={m.id}><Link href={landingPath({ brandId: m.brandId, modelId: m.id, cat: "", sub: null }, cat)}>{bname(m.brandId)} {m.name}</Link> <span className="mute">({n})</span></li>
+            ))}</ul></section>)}
           {cats.length > 0 && <section><h2>Diely podľa kategórie</h2><ul>
             {cats.map((c) => <li key={c.id}><Link href={landingPath({ brandId: null, modelId: null, cat: c.id, sub: null }, cat)}>{c.name}</Link> <span className="mute">({byCat.get(c.id)})</span></li>)}
           </ul></section>}

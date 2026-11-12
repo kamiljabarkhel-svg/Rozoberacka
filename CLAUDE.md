@@ -305,3 +305,8 @@ Overené na Slov-Lexe: Občiansky zákonník § 597, 599, 612, 618, 619 (znenie 
 - Skrytý inzerát: dôvod + „rozhodol človek“ + možnosti nápravy (DSA čl. 17). Koordinátor digitálnych služieb: Rada pre mediálne služby (podmienky časť 4 a 8, pätička).
 - Fotky z cudzích webov nenačítavať priamo v prehliadači (IP návštevníka = osobný údaj) – cez `/_next/image` (`images.remotePatterns` v `next.config.ts`). V CSP `img-src` preto nie je Unsplash.
 - Keď bude TOP platený: označiť ho ako platené zvýraznenie/reklamu (zákon 108/2024, príloha – nekalé praktiky) a upraviť `/ako-zoradujeme`.
+
+## Cookies pripravené na GA, vozidlá na úvode, mobil (12. 11. 2026, 20:40)
+- Lišta cookies je **vždy so súhlasom** (Prijať všetky / Odmietnuť / Nastavenia, `CONSENT_UI` v `lib/consent.ts`, `CONSENT_VERSION` 3) a menuje Google Analytics. Bez `NEXT_PUBLIC_GA_ID` sa súhlas len uloží, nič sa nenačíta; texty na /cookies a v zásadách dopĺňajú „zatiaľ nie je spustené“. Pri zapnutí GA netreba nič meniť; pri inom novom nástroji zvýšiť `CONSENT_VERSION`.
+- Úvod: odkazy na autá sú v skupinách podľa druhu vozidla („Diely na autobusy“…), „Iná značka/Iný model“ sa tam neukazuje. Nepísať „auto“ tam, kde môže byť autobus, nákladné auto alebo motorka – „vozidlo“.
+- Mobil (do 640 px): druhy vozidiel = 6 tlačidiel v mriežke 3 × 2 s nadpisom „Na aké vozidlo hľadáte diel?“, vybrané žlté.
