@@ -48,6 +48,7 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
     if (await p0.evaluate(() => !!document.querySelector("script[data-rz-ga]"))) throw new Error("GA sa nacital bez suhlasu"); await p0.waitForSelector(".ckdlg", { state: "detached" });
     await c0.close();
   });
+  await step("hlavicka: Prihlásenie predajcu s medzerou", async () => { const t = await pg.locator(".site-header #user .ubtn").innerText(); if (t.trim() !== "Prihlásenie predajcu") throw new Error("text: " + t); });
   await step("hlavicka -> registracia", async () => { await pg.click(".site-header .regbtn"); await pg.waitForURL("**/pre-predajcov?registracia=1"); await pg.waitForSelector("button:has-text('Vytvoriť účet')"); await pg.goBack(); });
   await step("hlavicka -> prihlasenie", async () => { await pg.click("text=Prihlásenie predajcu"); await pg.waitForURL("**/pre-predajcov"); });
   await step("registracia validacia", async () => {
@@ -187,7 +188,9 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
   });
   await step("zmazat dvojkrokovo", async () => {
     const n0 = await pg.locator(".pp-row").count();
-    await pg.click(".pp-row >> nth=0 >> button.del"); await pg.click("text=Naozaj zmazať?"); await pg.waitForFunction((n) => document.querySelectorAll(".pp-row").length === n - 1, n0);
+    await pg.click(".pp-row >> nth=0 >> button.del"); await pg.waitForSelector(".cdel:has-text('nedá sa obnoviť')");
+    await pg.click(".cdel-no"); await pg.waitForSelector(".cdel", { state: "detached" });
+    await pg.click(".pp-row >> nth=0 >> button.del"); await pg.click(".cdel-yes"); await pg.waitForFunction((n) => document.querySelectorAll(".pp-row").length === n - 1, n0);
   });
   await step("CSV import", async () => {
     await pg.click(".pp-nav button:has-text('Import z CSV')");

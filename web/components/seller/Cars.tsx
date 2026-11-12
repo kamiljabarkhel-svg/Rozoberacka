@@ -1,6 +1,7 @@
 "use client";
 // Havarované a nepojazdné vozidlá na predaj (celé vozidlá). Len havarované, nepojazdné a na diely – nie bežný autobazár.
 // Telefón a VIN sú v súkromnej tabuľke car_contacts; VIN sa nikdy nezobrazuje verejne.
+import ConfirmDelete from "./ConfirmDelete";
 import { useEffect, useMemo, useState } from "react";
 import type { Catalog, VehicleType } from "@/lib/types";
 import { CAR_BODIES, CAR_CONDITIONS, CAR_DAMAGE, CAR_DAMAGE_NOT_MOTO, CAR_DOCS, CAR_ORIGINS, FUELS, VEHICLE_TYPES } from "@/lib/types";
@@ -48,7 +49,7 @@ export default function Cars({ uid, cat, prof, fromDonor, onDone }: { uid: strin
             <button className="ubtn" onClick={() => setEdit(c)}>Upraviť</button>
             {c.status === "active" && <><button className="ubtn" onClick={() => act(() => setCarStatus(c.id, "sold"), "Označené ako predané")}>Predané</button><button className="ubtn" onClick={() => act(() => setCarStatus(c.id, "paused"), "Pozastavené")}>Pozastaviť</button></>}
             {(c.status === "paused" || c.status === "sold") && <button className="ubtn" onClick={() => act(() => setCarStatus(c.id, "active"), "Aktivované")}>Aktivovať</button>}
-            {confirm === c.id ? <><button className="del" onClick={() => { setConfirm(null); act(() => deleteCar(c), "Vozidlo zmazané"); }}>Naozaj zmazať?</button><button className="lnk" onClick={() => setConfirm(null)}>Nie</button></>
+            {confirm === c.id ? <ConfirmDelete title="Zmazať inzerát vozidla?" note="Zmaže sa aj s fotkami a správami a nedá sa obnoviť." onConfirm={() => { setConfirm(null); act(() => deleteCar(c), "Vozidlo zmazané"); }} onCancel={() => setConfirm(null)} />
               : <button className="del" onClick={() => setConfirm(c.id)}>Zmazať</button>}
           </div>
         </li>

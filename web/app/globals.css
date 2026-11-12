@@ -1639,3 +1639,17 @@ html[data-vt="motorky"] .seo-links [data-vt="motorky"],html[data-vt="motorky"] .
 html[data-vt="vsetky"] .seo-links section[data-vt],html[data-vt="vsetky"] .seo-links [data-cat="vsetky"]{display:block}
 html[data-vt="kol"] .seo-links{display:none}
 html[data-vt="dodavky"] .seo-links:not(:has([data-vt="dodavky"],[data-cat="dodavky"])),html[data-vt="nakladne"] .seo-links:not(:has([data-vt="nakladne"],[data-cat="nakladne"])),html[data-vt="autobusy"] .seo-links:not(:has([data-vt="autobusy"],[data-cat="autobusy"])),html[data-vt="motorky"] .seo-links:not(:has([data-vt="motorky"],[data-cat="motorky"])),html[data-vt="osobne"] .seo-links:not(:has([data-vt="osobne"],[data-cat="osobne"])){display:none}
+
+/* ===== Potvrdenie zmazania (12. 11. 2026) ===== */
+.cdel{flex:1 1 100%;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 16px;margin:6px 0 2px;padding:12px 14px;border:1px solid var(--bad);border-left-width:4px;border-radius:4px;background:color-mix(in srgb,var(--bad) 7%,var(--card))}
+.cdel-t{display:grid;gap:3px;min-width:220px;flex:1 1 280px}
+.cdel-t b{font-size:15px;color:var(--ink);overflow-wrap:anywhere}
+.cdel-t span{font-size:13.5px;color:var(--mute)}
+.cdel-b{display:flex;gap:8px;flex-wrap:wrap}
+.cdel-yes,.cdel-no{min-height:38px;padding:0 16px;border-radius:4px;font:inherit;font-size:14px;font-weight:700;cursor:pointer}
+.cdel-yes{background:var(--bad);border:1px solid var(--bad);color:#fff}
+.cdel-yes:hover{filter:brightness(.92)}
+.cdel-no{background:var(--card);border:1px solid var(--line);color:var(--ink)}
+.cdel-no:hover{border-color:var(--ink)}
+.cdel-yes:focus-visible,.cdel-no:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+@media(max-width:520px){.cdel-b{width:100%}.cdel-yes,.cdel-no{flex:1}}

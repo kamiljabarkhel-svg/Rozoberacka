@@ -1,4 +1,5 @@
 "use client";
+import ConfirmDelete from "./ConfirmDelete";
 import { OPERATOR } from "@/lib/operator";
 // Portál predajcu: Nástenka, Moje inzeráty, Pridať/Upraviť, Import CSV, Správy, Profil.
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -243,7 +244,7 @@ function MyList({ initial, items, cat, onEdit, onStatus, onTop, onDup, onDelete,
   const vtOf = (l: MyListing): VehicleType => cat?.models.find((x) => x.id === l.modelId)?.vehicleType || l.vtype || "osobne";
   const vtCounts = VEHICLE_TYPES.map((t) => [t, items.filter((i) => vtOf(i) === t.id).length] as const).filter(([, n]) => n > 0);
   const [sel, setSel] = useState<Set<number>>(new Set());
-  const [confirm, setConfirm] = useState<number[] | null>(null);
+  const [confirm, setConfirm] = useState<number[] | null>(null), [bulkDel, setBulkDel] = useState(false);
   const catName = (id: string) => cat?.categories.find((c) => c.id === id)?.name || id;
   const vehicle = (l: MyListing) => {
     if (!l.brandId) return "bez konkrétneho auta";
@@ -293,9 +294,9 @@ function MyList({ initial, items, cat, onEdit, onStatus, onTop, onDup, onDelete,
           <button className="ubtn" onClick={() => { onStatus(ids, "sold"); setSel(new Set()); }}>Predané</button>
           <button className="ubtn" title="Potvrdí, že diely stále máte (obnoví dátum aktualizácie)" onClick={() => { onFresh(ids); setSel(new Set()); }}>Stále aktuálne</button>
           <PriceBulk n={ids.length} onApply={(fn) => { onPrices(items.filter((i) => ids.includes(i.id)).map((i) => ({ id: i.id, price: fn(i.price) }))); setSel(new Set()); }} />
-          {confirm ? <><button className="del" onClick={() => { onDelete(items.filter((i) => confirm.includes(i.id))); setConfirm(null); setSel(new Set()); }}>Naozaj zmazať {confirm.length}?</button><button className="lnk" onClick={() => setConfirm(null)}>Nie</button></>
-            : <button className="del" onClick={() => setConfirm(ids)}>Zmazať</button>}
-          <button className="lnk" onClick={() => setSel(new Set())}>Zrušiť výber</button>
+          {bulkDel ? <ConfirmDelete title={ids.length === 1 ? "Zmazať 1 vybraný inzerát?" : `Zmazať ${ids.length} vybrané ${ids.length < 5 ? "inzeráty" : "inzerátov"}?`} note="Zmažú sa aj s fotkami a nedajú sa obnoviť. Ak ich chcete len dočasne skryť, zvoľte Pozastaviť." onConfirm={() => { onDelete(items.filter((i) => ids.includes(i.id))); setBulkDel(false); setSel(new Set()); }} onCancel={() => setBulkDel(false)} />
+            : <button className="del" onClick={() => { setConfirm(null); setBulkDel(true); }}>Zmazať</button>}
+          <button className="lnk" onClick={() => { setSel(new Set()); setBulkDel(false); }}>Zrušiť výber</button>
         </div>
       )}
       {!shown.length ? <div className="empty">Nič sa nenašlo.</div> : (
@@ -320,8 +321,8 @@ function MyList({ initial, items, cat, onEdit, onStatus, onTop, onDup, onDelete,
                 </>}
                 <button className="ubtn" onClick={() => onDup(l)}>Duplikovať</button>
                 {confirm?.length === 1 && confirm[0] === l.id
-                  ? <><button className="del" onClick={() => { onDelete([l]); setConfirm(null); }}>Naozaj zmazať?</button><button className="lnk" onClick={() => setConfirm(null)}>Nie</button></>
-                  : <button className="del" onClick={() => setConfirm([l.id])}>Zmazať</button>}
+                  ? <ConfirmDelete title={`Zmazať inzerát „${l.name}“?`} note="Zmaže sa aj s fotkami a nedá sa obnoviť. Ak ho chcete len dočasne skryť, zvoľte Pozastaviť." onConfirm={() => { onDelete([l]); setConfirm(null); }} onCancel={() => setConfirm(null)} />
+                  : <button className="del" onClick={() => { setBulkDel(false); setConfirm([l.id]); }}>Zmazať</button>}
               </div>
             </li>
           ))}

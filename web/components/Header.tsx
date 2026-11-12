@@ -57,7 +57,7 @@ export default function Header() {
           <HeaderSearch value={q} onChange={(v) => { setQ(v); if (onHome) send(v, false); }} onPick={pick} />
         </form>
         <div id="user">
-          {STATIC_PREVIEW ? <a className="ubtn" href={sellersHref}>Prihlásenie predajcu</a> : <Link className="ubtn" href={logged ? "/predajca" : sellersHref}>{logged ? "Portál predajcu" : <>Prihlásenie<span className="hide-s"> predajcu</span></>}</Link>}
+          {STATIC_PREVIEW ? <a className="ubtn" href={sellersHref}>Prihlásenie predajcu</a> : <Link className="ubtn" href={logged ? "/predajca" : sellersHref}><span>{logged ? "Portál predajcu" : <>Prihlásenie<span className="hide-s"> predajcu</span></>}</span></Link>}
           {/* obyčajný odkaz: formulár si „registracia=1“ prečíta pri načítaní */}
           {!logged && <a className="regbtn" href={STATIC_PREVIEW ? sellersHref : "/pre-predajcov?registracia=1"}>Registrácia</a>}
         </div>

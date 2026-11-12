@@ -1,6 +1,7 @@
 "use client";
 // Autá na diely (v databáze donor_cars): predajca zadá vozidlo, ktoré rozoberá, raz a z neho rýchlo pridá desiatky dielov.
 // Diely vzniknú pozastavené (bez fotiek); predajca doplní fotky a aktivuje ich v „Moje inzeráty“.
+import ConfirmDelete from "./ConfirmDelete";
 import { useEffect, useMemo, useState } from "react";
 import type { Catalog, Condition, VehicleType } from "@/lib/types";
 import { VEHICLE_TYPES } from "@/lib/types";
@@ -95,7 +96,7 @@ export default function Donors({ uid, cat, prof, items, onAddOne, onSellCar, onD
               <button className="ubtn" onClick={() => onAddOne(d)}>Pridať jeden diel</button>
               {onSellCar && <button className="ubtn" onClick={() => onSellCar(d)}>Predať celé vozidlo</button>}
               <button className="ubtn" onClick={() => setEdit({ id: d.id, v: { ...d } })}>Upraviť</button>
-              {confirm === d.id ? <><button className="del" onClick={async () => { setConfirm(null); try { await deleteDonor(d.id); await reload(); onDone("Vozidlo zmazané (diely ostali)"); } catch (e) { setErr(skError(e)); } }}>Naozaj zmazať?</button><button className="lnk" onClick={() => setConfirm(null)}>Nie</button></>
+              {confirm === d.id ? <ConfirmDelete title="Zmazať toto vozidlo z evidencie?" note="Diely z neho ostanú v ponuke, len už nebudú priradené k vozidlu." label="Zmazať vozidlo" onConfirm={async () => { setConfirm(null); try { await deleteDonor(d.id); await reload(); onDone("Vozidlo zmazané (diely ostali)"); } catch (e) { setErr(skError(e)); } }} onCancel={() => setConfirm(null)} />
                 : <button className="del" onClick={() => setConfirm(d.id)}>Zmazať</button>}
             </div>
           </li>);
