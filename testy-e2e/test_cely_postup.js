@@ -248,24 +248,51 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
     await b2.click(".msgbox >> text=Odoslať správu"); await b2.waitForSelector("text=Správa bola odoslaná");
     global.CUR = pg; await pg.goto(B + "/predajca#msg"); await pg.reload(); await pg.waitForSelector(".pp-msgs li:has-text('Celé vozidlo')");
   });
-  await step("pneumatiky a disky: parametre vo formulari a filtri", async () => {
-    await pg.click(".pp-nav button:has-text('Jeden inzerát')"); await pg.fill(".pp-form label:has-text('Názov dielu') input", "Disky 16 Škoda 5x112");
-    await pg.selectOption(".pp-form select:has(option:text-is('Pneumatiky a disky'))", { label: "Pneumatiky a disky" });
+  await step("pneumatiky, disky, puklice: vlastny formular a zverejnenie puklic", async () => {
+    await pg.click(".pp-nav button:has-text('Jeden inzerát')"); await pg.waitForSelector(".pp-wheels-cta");
+    if (await pg.locator(".pp-form select option:text-is('Pneumatiky a disky')").count()) throw new Error("pneumatiky su este v beznych kategoriach");
+    await pg.click(".pp-wheels-cta >> text=Pridať pneumatiky a disky"); await pg.waitForSelector("h1:has-text('Predať pneumatiky, disky alebo puklice')");
+    if (await pg.locator(".pp-vt-big").count()) throw new Error("pri pneumatikach sa pyta druh vozidla");
     await pg.click("text=Ďalej →"); await pg.waitForSelector(".pp-ferr:has-text('čo predávate')");
-    // pneumatiky: rozmer, sezóna zo zvolenej podkategórie, bez čísla dielu
-    await pg.selectOption(".pp-form label:has-text('Čo predávate') select", { label: "Pneumatiky zimné" }); await pg.waitForSelector(".pp-specg legend:text-is('Pneumatika')");
+    // pneumatiky: rozmer, sezóna zo zvolenej dlaždice, bez čísla dielu
+    await pg.click(".pp-wt-g button:text-is('Pneumatiky zimné')"); await pg.waitForSelector(".pp-specg legend:text-is('Pneumatika')");
     if (await pg.locator(".pp-form label:has-text('OEM')").count()) throw new Error("pri pneumatikách je pole OEM");
     if (await pg.inputValue(".pp-specg label:has-text('Sezóna') select") !== "zimné") throw new Error("sezóna sa nevyplnila");
+    await pg.fill(".pp-form label:has-text('Názov inzerátu') input", "Disky 16 Škoda 5x112");
     await pg.click("text=Ďalej →"); await pg.waitForSelector(".pp-ferr:has-text('šírka pneumatiky')");
     // disky
-    await pg.selectOption(".pp-form label:has-text('Čo predávate') select", { label: "Disky hliníkové" }); await pg.waitForSelector(".pp-specg legend:text-is('Disk')");
+    await pg.click(".pp-wt-g button:text-is('Disky hliníkové')"); await pg.waitForSelector(".pp-specg legend:text-is('Disk')");
     if (await pg.locator(".pp-specg legend:text-is('Pneumatika')").count()) throw new Error("pri diskoch sú polia pneumatiky");
     await pg.fill(".pp-specg label:has-text('Rozteč') input", "5x112"); await pg.selectOption(".pp-specg label:has-text('Priemer') select", "16");
-    await pg.fill(".pp-specg label:has-text('Zális') input", "abc"); await pg.fill(".pp-form label:has-text('OEM') input", "5E0601025");
+    await pg.fill(".pp-specg label:has-text('Zális') input", "abc");
     await pg.click("text=Ďalej →"); await pg.waitForSelector(".pp-ferr:has-text('Doplňte alebo opravte')");
     await pg.fill(".pp-specg label:has-text('Zális') input", "46"); await pg.fill(".pp-specg label:has-text('Šírka disku') input", "6.5"); await pg.fill(".pp-specg label:has-text('Počet kusov') input", "4");
     await pg.click("text=Ďalej →"); await pg.waitForSelector(".pp-form label:has-text('Značka auta')");
     if (await pg.locator(".pp-form label:has-text('Prevodovka auta')").count()) throw new Error("pri diskoch je prevodovka auta");
+    // puklice – celé zverejnenie
+    await pg.click(".pp-steps button[aria-label^='Krok 1']"); await pg.click(".pp-wt-g button:text-is('Puklice')"); await pg.waitForSelector(".pp-specg legend:text-is('Puklice')");
+    if (await pg.locator(".pp-specg legend:text-is('Disk')").count()) throw new Error("pri puklicich su polia disku");
+    await pg.fill(".pp-form label:has-text('Názov inzerátu') input", "Puklice 15 originál Škoda");
+    await pg.click("text=Ďalej →"); await pg.waitForSelector(".pp-ferr:has-text('Doplňte')");
+    await pg.selectOption(".pp-specg label:has-text('Priemer') select", "15");
+    await pg.click("text=Ďalej →"); await pg.waitForSelector(".pp-form label:has-text('Značka auta')");
+    await pg.click("text=Ďalej →");
+    await pg.selectOption("label:has-text('Stav') select", "Dobrý"); await pg.fill("label:has-text('Cena') input", "25");
+    await pg.click("text=Ďalej →");
+    await pg.setInputFiles(".pp-add input[type=file]", ["a.png"]); await pg.waitForSelector(".pp-phl figure");
+    await pg.fill("label:has-text('Popis') textarea", "Sada štyroch originálnych puklíc, bez prasklín.");
+    await pg.click("text=Ďalej →"); await pg.click("text=Zverejniť inzerát");
+    await pg.waitForSelector(".pp-toast:has-text('je zverejnený')", { timeout: 30000 });
+    await pg.waitForSelector(".pp-row:has-text('Puklice 15 originál Škoda')");
+    // kupujúci: sekcia Puklice bez druhov vozidiel, stav len nové/použité
+    const b = await ctx.newPage(); await b.goto(B + "/?kat=kol&typ=puklice#pneu"); await b.waitForSelector(".wb-type button[aria-checked=true]:has-text('Puklice')");
+    if (await b.locator(".panel.finder .vtabs").count()) throw new Error("v pneumatikach su druhy vozidiel");
+    await b.waitForSelector(".card:has-text('Puklice 15 originál Škoda')");
+    const conds = await b.locator(".adv label:has-text('Stav') option").allTextContents();
+    if (conds.join("|") !== "Nové aj použité|Nové|Použité") throw new Error("stav v pneumatikach: " + conds.join("|"));
+    await b.selectOption(".adv label:has-text('Stav') select", "pouzite"); await b.waitForSelector(".card:has-text('Puklice 15 originál Škoda')");
+    await b.selectOption(".adv label:has-text('Stav') select", "Nový"); await b.waitForSelector(".cnt:has-text('0 ponúk')");
+    await b.close();
   });
   await step("export CSV a hromadna cena", async () => {
     await pg.click(".pp-nav button:has-text('Moje inzeráty')"); await pg.waitForSelector(".pp-row");

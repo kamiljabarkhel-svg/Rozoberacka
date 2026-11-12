@@ -1442,7 +1442,7 @@ nav.snav{border-bottom:0}
 .panel.finder .vtabs button.on{color:var(--ink)!important;box-shadow:inset 0 3px 0 var(--acc)}
 .chip[aria-pressed="true"],.c-cats button[aria-pressed="true"]{background:var(--pet)!important;border-color:var(--pet)!important;color:#fff!important}
 .c-cats button[aria-pressed="true"]{box-shadow:inset 4px 0 0 var(--acc)}
-.is-top,.badge-top,.top-b{background:var(--acc)!important;color:var(--accink)!important}
+.toptag{background:var(--acc)!important;color:var(--accink)!important}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .finder .find-alt button:not(.scan-b):not(.lnk){color:var(--ink)!important;border-color:var(--field)!important}
   :root:not([data-theme="light"]) .panel.finder .vtabs button.on{color:var(--ink)!important}
   :root:not([data-theme="light"]) .site-header{border-bottom-color:var(--acc)!important}}
@@ -1522,3 +1522,39 @@ nav.snav{border-bottom:0}
 .pp-wt-g button.on{border-color:var(--pet);background:var(--pet);color:#fff}
 .pp-wtiles.bad .pp-wt-g button{border-color:var(--bad,#c0392b)}
 .pp-wt-other{max-width:340px}
+
+
+/* ================= Biela a korálová (12. 11. 2026, 19:00) – majiteľ vybral návrh F =================
+   Moderný čistý vzhľad: biela hlavička, takmer čierny text, jedna výrazná farba – korálová #ff4b3e
+   (tlačidlá, aktívna sekcia, logo). Odkazy tmavšia korálová #c9302a (čitateľná na bielej). */
+:root{--pet:#14161a;--pet2:#2a2e35;--link:#c9302a;--icoink:#14161a;--acc:#ff4b3e;--accink:#fff;--acc2:#e83a2e;--bg:#f5f6f8;--line:#e3e5e9}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--pet:#14161a;--pet2:#2a2e35;--link:#ff7a70;--icoink:#ff7a70;--acc:#ff4b3e;--accink:#fff;--acc2:#e83a2e}}
+:root[data-theme="dark"]{--pet:#14161a;--pet2:#2a2e35;--link:#ff7a70;--icoink:#ff7a70;--acc:#ff4b3e;--accink:#fff;--acc2:#e83a2e}
+/* hlavička svetlá (tmavý režim: tmavá karta) */
+.site-header{background:var(--card)!important;color:var(--ink);border-bottom:1px solid var(--line)!important}
+.site-header .wm{color:var(--ink)}.site-header .wm-eu{color:var(--acc)}
+.site-header .brand svg circle:first-of-type{fill:var(--acc)}.site-header .brand svg circle:not(:first-of-type){fill:var(--card)}
+.site-header .gs{background:var(--chip)!important;border:1px solid var(--line)!important}
+.site-header .gs input{background:var(--chip)!important;color:var(--ink)!important}
+.site-header .gs input::placeholder{color:var(--mute)}
+.site-header .gs button,.site-header .gs .gsb{background:var(--acc)!important;color:#fff!important}
+.site-header .ubtn,:root .site-header .ubtn{color:var(--ink)!important;border-color:var(--ink)!important;background:transparent!important}
+.site-header .ubtn:hover,:root .site-header .ubtn:hover{background:var(--ink)!important;color:var(--card)!important;border-color:var(--ink)!important}
+nav.snav{background:var(--card)!important;border-top:1px solid var(--line)!important;border-bottom:1px solid var(--line)!important}
+nav.snav a{color:var(--mute)!important}
+nav.snav a:hover{color:var(--ink)!important}
+nav.snav a[aria-current="page"]{color:var(--ink)!important;border-bottom-color:var(--acc)!important}
+/* akcie */
+.finder .pa .btn,.finder .btn,.intro-cta .btn{background:var(--acc)!important;color:#fff!important}
+.finder .pa .btn:hover,.finder .btn:hover,.intro-cta .btn:hover{background:var(--acc2)!important}
+.panel.finder .vtabs button.on{box-shadow:inset 0 3px 0 var(--acc)}
+.intro-pts li{border-left-color:var(--acc)}
+.intro-mark rect{fill:var(--ink)}.intro-mark circle:first-of-type{fill:var(--acc)}.intro-mark circle:not(:first-of-type){fill:var(--ink)}
+.price{background:none!important;color:var(--ink)}
+.toptag{background:var(--acc)!important;color:#fff!important}
+.c-cats button[aria-pressed="true"]{box-shadow:inset 4px 0 0 var(--acc)}
+.blog-tip{border-left-color:var(--acc)}
+.pp-wheels-cta{border-left-color:var(--acc)}
+.call{background:var(--ink);color:var(--card)}
+.call:hover{background:var(--acc);color:#fff}
+.grid.rows .card.is-top{border-color:var(--acc)}

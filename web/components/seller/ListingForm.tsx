@@ -202,7 +202,7 @@ export default function ListingForm({ uid, cat, prof, edit, donor, onSaved, whee
             <span className="mute">Polia s <em className="req">*</em> sú povinné – kupujúci podľa nich hľadajú.{(kind === "pneu" || kind === "kolesa") && " Rozmer nájdete na boku pneumatiky (napr. 205/55 R16 91V), rok výroby v kóde DOT (posledné 4 číslice, napr. 2321 = 2021)."}{(kind === "disk" || kind === "kolesa") && " Rozmer disku je vyrazený na jeho zadnej strane (napr. 7Jx16 ET49)."}{kind === "puklice" && " Priemer puklice = priemer disku (číslo za R na pneumatike, napr. R15 = 15\")."}{kind === "kolesa" && <> <b>Stačí rozmer pneumatiky alebo rozmer disku</b> – vyplňte, čo viete; čím viac údajov, tým ľahšie vás kupujúci nájde.</>}</span>
             <div className="pp-specg">
               {kind === "puklice" && <fieldset><legend>Puklice</legend>
-                {SI("rd", <select value={specs.rd || ""} onChange={(e) => setSpec("rd", e.target.value)}><option value="">–</option>{RIM_DIAMETERS.map((d) => <option key={d} value={d}>{d}"</option>)}</select>)}
+                {SI("rd", <select value={specs.rd || ""} onChange={(e) => setSpec("rd", e.target.value)}><option value="">–</option>{RIM_DIAMETERS.map((d) => <option key={d} value={d}>{d}{"\""}</option>)}</select>)}
               </fieldset>}
               {(kind === "pneu" || kind === "kolesa") && <fieldset><legend>Pneumatika</legend>
                 {SI("tw", <input inputMode="numeric" placeholder="205" value={specs.tw || ""} onChange={(e) => setSpec("tw", e.target.value)} />)}
