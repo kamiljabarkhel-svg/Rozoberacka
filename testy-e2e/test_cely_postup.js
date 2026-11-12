@@ -273,10 +273,11 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
     await pg.click(".pp-steps button[aria-label^='Krok 1']"); await pg.click(".pp-wt-g button:text-is('Puklice')"); await pg.waitForSelector(".pp-specg legend:text-is('Puklice')");
     if (await pg.locator(".pp-specg legend:text-is('Disk')").count()) throw new Error("pri puklicich su polia disku");
     await pg.fill(".pp-form label:has-text('Názov inzerátu') input", "Puklice 15 originál Škoda");
-    await pg.click("text=Ďalej →"); await pg.waitForSelector(".pp-ferr:has-text('Doplňte')");
+    await pg.selectOption(".pp-specg label:has-text('Priemer') select", "");
+    await pg.click("text=Ďalej →"); await pg.waitForSelector(".pp-specs.bad");
     await pg.selectOption(".pp-specg label:has-text('Priemer') select", "15");
     await pg.click("text=Ďalej →"); await pg.waitForSelector(".pp-form label:has-text('Značka auta')");
-    await pg.click("text=Ďalej →");
+    await pg.click("text=Ďalej →"); await pg.waitForSelector(".pp-form label:has-text('Cena')");
     await pg.selectOption("label:has-text('Stav') select", "Dobrý"); await pg.fill("label:has-text('Cena') input", "25");
     await pg.click("text=Ďalej →");
     await pg.setInputFiles(".pp-add input[type=file]", ["a.png"]); await pg.waitForSelector(".pp-phl figure");
