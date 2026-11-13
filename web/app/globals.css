@@ -1692,3 +1692,8 @@ html[data-vt="dodavky"] .seo-links:not(:has([data-vt="dodavky"],[data-cat="dodav
   .site-header #user .ubtn-i{width:14px;height:14px}
   .snav{gap:14px!important}
 }
+
+/* Povinné polia v registrácii a profile: hviezdička a chyba priamo pri poli (13. 11. 2026) */
+.pp-form .req{color:var(--bad,#c62828);font-style:normal;font-weight:700}
+.pp-form label.bad input{border-color:var(--bad,#c62828)!important;box-shadow:0 0 0 1px var(--bad,#c62828)}
+.pp-form .f-err{display:block;margin-top:4px;color:var(--bad,#c62828);font-size:13px;font-weight:600;line-height:1.35}

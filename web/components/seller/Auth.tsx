@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { IS_DEMO } from "@/lib/data";
 import { getSession, resetPassword, signIn, signUp } from "@/lib/seller";
 import { OPERATOR } from "@/lib/operator";
+import { icoError } from "@/lib/legal";
 
 type Mode = "in" | "up" | "reset";
 
@@ -15,7 +16,10 @@ export default function Auth() {
   const [type, setType] = useState<"Firma" | "Súkromná osoba" | "">(""), [ico, setIco] = useState(""), [addr, setAddr] = useState(""), [decl, setDecl] = useState(false);
   const firm = type === "Firma";
   const [agree, setAgree] = useState(false), [show, setShow] = useState(false);
-  const [busy, setBusy] = useState(false), [err, setErr] = useState(""), [ok, setOk] = useState("");
+  const [busy, setBusy] = useState(false), [err, setErrMsg] = useState(""), [ok, setOk] = useState("");
+  const [bad, setBad] = useState("");   // pole s chybou – zvýrazní sa a chyba sa ukáže priamo pod ním
+  const setErr = (m: string, field = "") => { setErrMsg(m); setBad(m ? field : ""); if (field) setTimeout(() => document.getElementById("au-" + field)?.focus(), 0); };
+  const fe = (k: string) => bad === k && err ? <small className="f-err" role="alert">{err}</small> : null;
 
   useEffect(() => {
     if (new URLSearchParams(window.location.search).get("registracia") === "1") setMode("up");
@@ -24,12 +28,12 @@ export default function Auth() {
 
   async function submit(e: React.FormEvent) {
     e.preventDefault(); setErr(""); setOk("");
-    if (!/^\S+@\S+\.\S+$/.test(email.trim())) return setErr("Zadajte platný e-mail.");
-    if (mode !== "reset" && pw.length < 8) return setErr("Heslo musí mať aspoň 8 znakov.");
+    if (!/^\S+@\S+\.\S+$/.test(email.trim())) return setErr("Zadajte platný e-mail.", "email");
+    if (mode !== "reset" && pw.length < 8) return setErr("Heslo musí mať aspoň 8 znakov.", "pw");
     if (mode === "up" && !type) return setErr("Vyberte, či predávate ako podnikateľ alebo ako súkromná osoba.");
-    if (mode === "up" && name.trim().length < 2) return setErr(firm ? "Zadajte obchodné meno." : "Zadajte svoje meno.");
-    if (mode === "up" && firm && !/^[0-9]{8}$/.test(ico.replace(/\s/g, ""))) return setErr("IČO musí mať 8 číslic.");
-    if (mode === "up" && firm && addr.trim().length < 5) return setErr("Zadajte sídlo alebo miesto podnikania.");
+    if (mode === "up" && name.trim().length < 2) return setErr(firm ? "Zadajte obchodné meno (presne ako v obchodnom alebo živnostenskom registri)." : "Zadajte svoje meno.", "name");
+    if (mode === "up" && firm && icoError(ico)) return setErr(icoError(ico)!, "ico");
+    if (mode === "up" && firm && addr.trim().length < 5) return setErr("Zadajte sídlo alebo miesto podnikania (ulica, číslo, PSČ, obec).", "addr");
     if (mode === "up" && !decl) return setErr("Potvrďte vyhlásenie o tom, ako predávate.");
     if (mode === "up" && !agree) return setErr("Na registráciu treba súhlasiť s obchodnými podmienkami.");
     setBusy(true);
@@ -66,18 +70,18 @@ export default function Auth() {
           <label className={"pp-typeo" + (type === "Súkromná osoba" ? " on" : "")}><input type="radio" name="typ" checked={type === "Súkromná osoba"} onChange={() => { setType("Súkromná osoba"); setDecl(false); }} />
             <span><b>Ako súkromná osoba</b><small>príležitostne predávam diely z vlastného auta, nie v rámci podnikania</small></span></label>
         </fieldset>}
-        {mode === "up" && type && <label>{firm ? "Obchodné meno" : "Meno (zobrazí sa kupujúcim)"}<input value={name} onChange={(e) => setName(e.target.value)} autoComplete={firm ? "organization" : "name"} maxLength={120} placeholder={firm ? "napr. Autovrakovisko Novák s.r.o." : "napr. Jozef K."} /></label>}
+        {mode === "up" && type && <label className={bad === "name" ? "bad" : ""}><span>{firm ? "Obchodné meno" : "Meno (zobrazí sa kupujúcim)"} <em className="req">*</em></span><input id="au-name" aria-invalid={bad === "name"} value={name} onChange={(e) => setName(e.target.value)} autoComplete={firm ? "organization" : "name"} maxLength={120} placeholder={firm ? "napr. Autovrakovisko Novák s.r.o." : "napr. Jozef K."} required />{fe("name")}</label>}
         {mode === "up" && firm && <div className="pp-row2">
-          <label>IČO<input value={ico} onChange={(e) => setIco(e.target.value)} inputMode="numeric" maxLength={11} placeholder="12345678" /></label>
-          <label>Sídlo / miesto podnikania<input value={addr} onChange={(e) => setAddr(e.target.value)} autoComplete="street-address" maxLength={200} placeholder="Ulica 1, 900 01 Mesto" /></label>
+          <label className={bad === "ico" ? "bad" : ""}><span>IČO <em className="req">*</em></span><input id="au-ico" aria-invalid={bad === "ico"} value={ico} onChange={(e) => setIco(e.target.value)} inputMode="numeric" maxLength={11} placeholder="12345678" required />{fe("ico")}</label>
+          <label className={bad === "addr" ? "bad" : ""}><span>Sídlo / miesto podnikania <em className="req">*</em></span><input id="au-addr" aria-invalid={bad === "addr"} value={addr} onChange={(e) => setAddr(e.target.value)} autoComplete="street-address" maxLength={200} placeholder="Ulica 1, 900 01 Mesto" required />{fe("addr")}</label>
         </div>}
-        <label>E-mail<input type="email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" /></label>
-        {mode !== "reset" && <label><span>Heslo{mode === "up" && <small className="mute"> (aspoň 8 znakov)</small>}</span><span className="pw"><input type={show ? "text" : "password"} value={pw} onChange={(e) => setPw(e.target.value)} autoComplete={mode === "up" ? "new-password" : "current-password"} /><button type="button" aria-pressed={show} onClick={() => setShow(!show)}>{show ? "Skryť" : "Zobraziť"}</button></span></label>}
+        <label className={bad === "email" ? "bad" : ""}><span>E-mail{mode === "up" && <> <em className="req">*</em></>}</span><input id="au-email" aria-invalid={bad === "email"} type="email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" />{fe("email")}</label>
+        {mode !== "reset" && <label className={bad === "pw" ? "bad" : ""}><span>Heslo{mode === "up" && <> <em className="req">*</em><small className="mute"> (aspoň 8 znakov)</small></>}</span><span className="pw"><input id="au-pw" aria-invalid={bad === "pw"} type={show ? "text" : "password"} value={pw} onChange={(e) => setPw(e.target.value)} autoComplete={mode === "up" ? "new-password" : "current-password"} /><button type="button" aria-pressed={show} onClick={() => setShow(!show)}>{show ? "Skryť" : "Zobraziť"}</button></span>{fe("pw")}</label>}
         {mode === "up" && type && <label className="pp-chk pp-legal"><input type="checkbox" checked={decl} onChange={(e) => setDecl(e.target.checked)} /> <span>{firm
           ? "Vyhlasujem, že diely predávam ako podnikateľ (obchodník) a uvedené údaje sú pravdivé. Kupujúcim – spotrebiteľom zodpovedám za vady a pri predaji na diaľku majú právo odstúpiť od zmluvy do 14 dní."
           : "Vyhlasujem, že diely nepredávam v rámci podnikania. Ak by som predával pravidelne za účelom zisku, zaregistrujem sa ako podnikateľ."}</span></label>}
         {mode === "up" && <label className="pp-chk pp-legal"><input type="checkbox" checked={agree} onChange={(e) => setAgree(e.target.checked)} /> <span>Mám aspoň 18 rokov a súhlasím s <a href="/obchodne-podmienky" target="_blank">obchodnými podmienkami</a>. Beriem na vedomie, že {OPERATOR.name} spracúva moje údaje podľa <a href="/ochrana-osobnych-udajov" target="_blank">zásad ochrany osobných údajov</a> a že moje meno alebo obchodné meno, typ predajcu, mesto a telefón z inzerátu (pri podnikateľovi aj IČO a sídlo) budú verejné a nájdu sa aj cez vyhľadávače. Telefón sa zobrazí až po kliknutí. E-mail verejný nebude. Beriem na vedomie, že autosuciastky.eu je inzertný portál: <b>za svoje inzeráty, tovar, jeho vady a reklamácie zodpovedám ja</b> ako predajca a {OPERATOR.name} nie je stranou mojich zmlúv s kupujúcimi.</span></label>}
-        {err && <p className="pp-err" role="alert">{err}</p>}
+        {err && !bad && <p className="pp-err" role="alert">{err}</p>}
         {ok && <p className="pp-ok" role="status">{ok}</p>}
         <button className="btn" disabled={busy}>{busy ? "Čakajte…" : mode === "up" ? "Vytvoriť účet" : mode === "reset" ? "Poslať odkaz" : "Prihlásiť sa"}</button>
         {mode === "in" && <button type="button" className="lnk" onClick={() => { setMode("reset"); setErr(""); setOk(""); }}>Zabudli ste heslo?</button>}

@@ -53,13 +53,18 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
   await step("hlavicka -> prihlasenie", async () => { await pg.click("text=Prihlásenie predajcu"); await pg.waitForURL("**/pre-predajcov"); });
   await step("registracia validacia", async () => {
     await pg.click("role=tab[name='Registrácia']"); await pg.click("button:has-text('Vytvoriť účet')");
-    await pg.waitForSelector(".pp-err");
+    await pg.waitForSelector("label.bad .f-err:has-text('e-mail')");   // chyba priamo pri poli
   });
   await step("registracia", async () => {
     await pg.click(".pp-typeo:has-text('Ako podnikateľ')");
     await pg.fill("input[autocomplete=organization]", "Vrakovisko Test"); await pg.fill("input[type=email]", "test@rz.sk"); await pg.fill("input[type=password]", "heslo1234");
-    await pg.fill("input[placeholder='12345678']", "12 345 678"); await pg.fill("input[autocomplete=street-address]", "Hlavná 1, 010 01 Žilina");
+    await pg.fill("input[autocomplete=street-address]", "Hlavná 1, 010 01 Žilina");
     for (const c of await pg.locator(".pp-chk input").all()) await c.check();
+    // firma bez IČO a s neplatným IČO (zlá kontrolná číslica) – chyba priamo pri poli IČO
+    await pg.click("button:has-text('Vytvoriť účet')"); await pg.waitForSelector("label.bad .f-err:has-text('Zadajte IČO')");
+    await pg.fill("input[placeholder='12345678']", "12 345 678");
+    await pg.click("button:has-text('Vytvoriť účet')"); await pg.waitForSelector("label.bad .f-err:has-text('nie je platné')");
+    await pg.fill("input[placeholder='12345678']", "12 345 679");
     await pg.click("button:has-text('Vytvoriť účet')"); await pg.waitForSelector(".pp-ok");
   });
   await step("prihlasenie bez potvrdenia", async () => {
@@ -141,7 +146,7 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
     await b2.goto(B + "/?q=" + encodeURIComponent("ľavé svetlo")); await b2.waitForSelector(".card:has-text('Predné ľavé svetlo LED')");
     await b2.click(".card:has-text('Predné ľavé svetlo LED') a >> nth=0"); await b2.waitForURL("**/diel/**"); await b2.waitForSelector("text=Pasuje na");
     await b2.waitForSelector(".mycar-fit.yes:has-text('Octavia III')");
-    await b2.waitForSelector(".snote.trader:has-text('IČO 12345678')"); await b2.waitForSelector(".seller:has-text('Podnikateľ')");
+    await b2.waitForSelector(".snote.trader:has-text('IČO 12345679')"); await b2.waitForSelector(".seller:has-text('Podnikateľ')");
     await b2.click("text=Zobraziť telefón"); await b2.waitForSelector("text=0905 111 222");
     await b2.click("text=Napísať predajcovi");
     const box = b2.locator(".msgbox"); await box.locator("input >> nth=0").fill("Jano Kupec"); await box.locator("input >> nth=1").fill("0911 222 333"); await box.locator("textarea").fill("Dobrý deň, je svetlo ešte dostupné?");

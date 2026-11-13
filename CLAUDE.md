@@ -338,3 +338,7 @@ Overené na Slov-Lexe: Občiansky zákonník § 597, 599, 612, 618, 619 (znenie 
 ## Mobil – bez posúvania do strán (13. 11. 2026, 22:40)
 - Žiadny prvok nesmie byť širší ako obrazovka: gridy s jedným stĺpcom písať `grid-template-columns:minmax(0,1fr)` (nie automatický stĺpec – `width:max-content` ho roztiahne). Kontrola: na 360 a 390 px `document.documentElement.scrollWidth` = šírka okna.
 - Hlavička na mobile: „Prihlásenie“ s ikonou a „Registrácia“ rovnako vysoké; pás sekcií na mobile „Autodiely / Pneumatiky / Dopyt / Blog“ (celé názvy cez `.hide-s` od 521 px).
+
+## Next.js 16 a registrácia firmy (13. 11. 2026, 23:59)
+- Web beží na **Next.js 16** (Turbopack). Kontrola kódu: `npm run lint` (ESLint flat config v `web/eslint.config.mjs`), `next lint` neexistuje. Pravidlá React Compilera (`react-hooks/set-state-in-effect` a i.) sú vypnuté – compiler nepoužívame.
+- Podnikateľ musí pri registrácii aj v profile vyplniť **obchodné meno, IČO a sídlo** (označené *, chyba pri poli). IČO = 8 číslic + kontrolná číslica (`icoError` v `lib/legal.ts`). Databáza (supabase/14) nedovolí podnikateľovi bez IČO a sídla zverejniť inzerát.

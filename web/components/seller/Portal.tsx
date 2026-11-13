@@ -1,6 +1,7 @@
 "use client";
 import ConfirmDelete from "./ConfirmDelete";
 import { OPERATOR } from "@/lib/operator";
+import { icoError } from "@/lib/legal";
 // Portál predajcu: Nástenka, Moje inzeráty, Pridať/Upraviť, Import CSV, Správy, Profil.
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -381,12 +382,15 @@ function ProfileTab({ prof, onSave, onPw }: { prof: Profile; onSave: (p: Profile
   const [p, setP] = useState(prof), [busy, setBusy] = useState(false), [err, setErr] = useState(""), [decl, setDecl] = useState(false);
   const firm = p.type === "Firma";
   const set = (k: keyof Profile) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => setP({ ...p, [k]: e.target.value });
+  const [bad, setBad] = useState("");
+  const fail = (m: string, k: string) => { setErr(m); setBad(k); setTimeout(() => document.getElementById("pf-" + k)?.focus(), 0); };
+  const fe = (k: string) => bad === k && err ? <small className="f-err" role="alert">{err}</small> : null;
   async function save(e: React.FormEvent) {
-    e.preventDefault(); setErr("");
-    if (p.name.trim().length < 2) return setErr("Zadajte názov alebo meno.");
-    if (p.phone && p.phone.replace(/\D/g, "").length < 9) return setErr("Telefón musí mať aspoň 9 číslic.");
-    if (firm && !/^[0-9]{8}$/.test(p.ico.replace(/\s/g, ""))) return setErr("Ako podnikateľ zadajte IČO (8 číslic).");
-    if (firm && p.address.trim().length < 5) return setErr("Ako podnikateľ zadajte sídlo alebo miesto podnikania.");
+    e.preventDefault(); setErr(""); setBad("");
+    if (p.name.trim().length < 2) return fail(firm ? "Zadajte obchodné meno (presne ako v obchodnom alebo živnostenskom registri)." : "Zadajte svoje meno.", "name");
+    if (p.phone && p.phone.replace(/\D/g, "").length < 9) return fail("Telefón musí mať aspoň 9 číslic.", "phone");
+    if (firm && icoError(p.ico)) return fail(icoError(p.ico)!, "ico");
+    if (firm && p.address.trim().length < 5) return fail("Zadajte sídlo alebo miesto podnikania (ulica, číslo, PSČ, obec).", "address");
     if (p.type !== prof.type && !decl) return setErr("Potvrďte vyhlásenie o zmene spôsobu predaja.");
     setBusy(true); try { await onSave(p); setDecl(false); } catch (x) { setErr(skError(x)); } finally { setBusy(false); }
   }
@@ -401,16 +405,16 @@ function ProfileTab({ prof, onSave, onPw }: { prof: Profile; onSave: (p: Profile
           <label className={"pp-typeo" + (!firm ? " on" : "")}><input type="radio" name="ptyp" checked={!firm} onChange={() => setP({ ...p, type: "Súkromná osoba" })} />
             <span><b>Ako súkromná osoba</b><small>Príležitostný predaj, nie v rámci podnikania. Kupujúci uvidí poučenie, že sa nepoužijú predpisy na ochranu spotrebiteľa. Zodpovedáte za vady, na ktoré kupujúceho neupozorníte.</small></span></label>
         </fieldset>
-        <label>{firm ? "Obchodné meno" : "Meno (zobrazí sa kupujúcim)"}<input value={p.name} onChange={set("name")} maxLength={120} /></label>
+        <label className={bad === "name" ? "bad" : ""}><span>{firm ? "Obchodné meno" : "Meno (zobrazí sa kupujúcim)"} <em className="req">*</em></span><input id="pf-name" aria-invalid={bad === "name"} value={p.name} onChange={set("name")} maxLength={120} required />{fe("name")}</label>
         <label>Mesto<input value={p.city} onChange={set("city")} maxLength={60} /></label>
-        {firm && <label>IČO<input value={p.ico} onChange={set("ico")} inputMode="numeric" maxLength={11} placeholder="12345678" /></label>}
-        {firm && <label>Sídlo / miesto podnikania<input value={p.address} onChange={set("address")} maxLength={200} placeholder="Ulica 1, 900 01 Mesto" /></label>}
-        <label>Telefón (predvyplní sa do inzerátov)<input value={p.phone} onChange={set("phone")} inputMode="tel" /></label>
+        {firm && <label className={bad === "ico" ? "bad" : ""}><span>IČO <em className="req">*</em></span><input id="pf-ico" aria-invalid={bad === "ico"} value={p.ico} onChange={set("ico")} inputMode="numeric" maxLength={11} placeholder="12345678" required />{fe("ico")}</label>}
+        {firm && <label className={bad === "address" ? "bad" : ""}><span>Sídlo / miesto podnikania <em className="req">*</em></span><input id="pf-address" aria-invalid={bad === "address"} value={p.address} onChange={set("address")} maxLength={200} placeholder="Ulica 1, 900 01 Mesto" required />{fe("address")}</label>}
+        <label className={bad === "phone" ? "bad" : ""}>Telefón (predvyplní sa do inzerátov)<input id="pf-phone" aria-invalid={bad === "phone"} value={p.phone} onChange={set("phone")} inputMode="tel" />{fe("phone")}</label>
         <label>E-mail<input value={p.email} disabled /></label>
         {p.type !== prof.type && <label className="pp-chk full"><input type="checkbox" checked={decl} onChange={(e) => setDecl(e.target.checked)} /><span>{firm
           ? "Vyhlasujem, že diely predávam ako podnikateľ (obchodník) a uvedené údaje sú pravdivé."
           : "Vyhlasujem, že diely nepredávam v rámci podnikania. Ak by som predával pravidelne za účelom zisku, zaregistrujem sa ako podnikateľ."}</span></label>}
-        {err && <p className="pp-err full">{err}</p>}
+        {err && !bad && <p className="pp-err full">{err}</p>}
         <div className="full pp-actions"><button className="btn" disabled={busy}>{busy ? "Ukladám…" : "Uložiť profil"}</button><button type="button" className="lnk" onClick={onPw}>Zmeniť heslo</button></div>
       </form>
       <p className="mute pp-note">{firm
