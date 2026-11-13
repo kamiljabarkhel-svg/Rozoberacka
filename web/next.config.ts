@@ -54,7 +54,13 @@ const nextConfig: NextConfig = {
   ...(preview ? {} : { images: { remotePatterns: [{ protocol: "https" as const, hostname: "images.unsplash.com", pathname: "/photo-*" }], deviceSizes: [400, 640, 960, 1200, 1600, 1920], imageSizes: [64, 128, 256], formats: ["image/avif" as const, "image/webp" as const], minimumCacheTTL: 2678400 } }),
   ...(preview ? {} : { async headers() { return [{ source: "/:path*", headers: securityHeaders() }]; } }),
   // nahradený článok (12. 11. 2026)
-  ...(preview ? {} : { async redirects() { return [{ source: "/blog/pouzite-diely-z-vrakoviska", destination: "/blog", permanent: true }]; } }),
+  ...(preview ? {} : { async redirects() {
+    // Po nastavení NEXT_PUBLIC_SITE_URL (vlastná doména) presmeruje starú adresu rozoberacka.vercel.app na doménu.
+    const site = (process.env.NEXT_PUBLIC_SITE_URL || "").replace(/\/$/, "");
+    const toDomain = /^https:\/\/(?!rozoberacka\.vercel\.app)[a-z0-9.-]+$/.test(site)
+      ? [{ source: "/:path*", has: [{ type: "host" as const, value: "rozoberacka.vercel.app" }], destination: site + "/:path*", permanent: true }] : [];
+    return [...toDomain, { source: "/blog/pouzite-diely-z-vrakoviska", destination: "/blog", permanent: true }];
+  } }),
 };
 
 export default nextConfig;
