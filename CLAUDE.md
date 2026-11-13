@@ -316,3 +316,8 @@ Overené na Slov-Lexe: Občiansky zákonník § 597, 599, 612, 618, 619 (znenie 
 - `supabase/28` (ostrá DB): `search_text` obsahuje číslo dielu aj bez medzier/pomlčiek (v triggri BEFORE sa počíta z `oem`, generovaný `oem_key` tam ešte nie je); v slovách s číslicami sa neskracujú koncovky ani netolerujú preklepy („5E1941016“ nenájde „5E1941015“). Test `supabase/testy/35_test_28.sql`.
 - Súhlasy pri registrácii: pôvodný text, menšie sivé písmo (`.pp-chk.pp-legal`). Bežné `.pp-chk` vo formulároch nemeniť.
 - GDPR hostingu: Supabase má DPA so SCC aj na bezplatnom pláne (platí prijatím podmienok). Vercel Hobby DPA nemá (len Pro/Enterprise), je len na nekomerčné použitie a obsah môže použiť na trénovanie AI → pred spustením naostro Vercel Pro alebo hosting v EÚ.
+
+## Doména autosuciastky.eu (13. 11. 2026, 19:45)
+- Ostrý web: **https://autosuciastky.eu** (doména u Websupportu, `www` presmeruje na hlavnú). Stará adresa rozoberacka.vercel.app presmeruje na doménu (`next.config.ts`, podľa `NEXT_PUBLIC_SITE_URL`).
+- DNS vo Websupporte: A `@` → 216.198.79.1, CNAME `www` → 328ef0a25df83cb1.vercel-dns-017.com (hodnoty z Vercelu → Settings → Domains). Pri zmene hostingu zmeniť len tieto dva záznamy. MX/TXT/mail záznamy sú pre e-maily Websupportu – nemazať.
+- Supabase Auth: Site URL https://autosuciastky.eu, Redirect URLs https://autosuciastky.eu/** (+ stará adresa).
