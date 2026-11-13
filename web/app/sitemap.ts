@@ -20,7 +20,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: SITE_URL + "/cookies", changeFrequency: "yearly", priority: 0.1 },
     { url: SITE_URL + "/navody", changeFrequency: "monthly", priority: 0.4 },
     { url: SITE_URL + "/blog", changeFrequency: "weekly", priority: 0.5 },
-    ...BLOG.map((b) => ({ url: SITE_URL + blogPath(b.slug), lastModified: new Date(b.date), changeFrequency: "monthly" as const, priority: 0.5 })),
+    ...BLOG.map((b) => ({ url: SITE_URL + blogPath(b.slug), lastModified: new Date(b.updated || b.date), changeFrequency: "monthly" as const, priority: 0.5 })),
     { url: SITE_URL + "/ako-zoradujeme", changeFrequency: "yearly", priority: 0.2 },
     ...NAVODY.map((n) => ({ url: SITE_URL + navodPath(n.slug), lastModified: new Date(n.updated), changeFrequency: "monthly" as const, priority: 0.5 })),
   ];

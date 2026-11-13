@@ -1509,6 +1509,7 @@ nav.snav{border-bottom:0}
 .bpost-body li{margin:6px 0}
 .bpost-body a{color:var(--link);font-weight:600}
 .blog-tip{margin:26px 0 14px;padding:14px 16px;border-left:4px solid var(--acc);background:var(--chip);border-radius:0 6px 6px 0}
+.bpost-faq{margin:34px 0 10px}.bpost-faq h2{font:750 1.3rem/1.3 var(--f-b);margin:0 0 10px}.bpost-faq details{border:1px solid var(--line);border-radius:6px;background:var(--card);margin:0 0 8px}.bpost-faq summary{cursor:pointer;padding:12px 14px;font-weight:650}.bpost-faq details p{margin:0;padding:0 14px 12px;line-height:1.6}
 .bpost-more{margin-top:44px;border-top:1px solid var(--line);padding-top:20px}
 .intro-in>*{min-width:0}
 @media (max-width:700px){.intro-brand{padding-right:0}.intro-t{min-width:0}}
