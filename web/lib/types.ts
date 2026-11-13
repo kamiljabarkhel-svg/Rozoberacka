@@ -1,9 +1,9 @@
 // Spoločné typy pre celý web. Názvy polí zodpovedajú tabuľkám v supabase/01_schema.sql.
 
 export type Brand = { id: number; name: string; popular: boolean };
-export type VehicleType = "osobne" | "dodavky" | "nakladne" | "autobusy" | "motorky";
+export type VehicleType = "osobne" | "veterany" | "dodavky" | "nakladne" | "autobusy" | "motorky";
 export const VEHICLE_TYPES: { id: VehicleType; name: string; short: string }[] = [
-  { id: "osobne", name: "Osobné autá", short: "Osobné" }, { id: "dodavky", name: "Dodávky", short: "Dodávky" },
+  { id: "osobne", name: "Osobné autá", short: "Osobné" }, { id: "veterany", name: "Veterány", short: "Veterány" }, { id: "dodavky", name: "Dodávky", short: "Dodávky" },
   { id: "nakladne", name: "Nákladné autá", short: "Nákladné" }, { id: "autobusy", name: "Autobusy", short: "Autobusy" },
   { id: "motorky", name: "Motorky a štvorkolky", short: "Motorky" },
 ];
@@ -11,8 +11,10 @@ export type Model = { id: number; brandId: number; name: string; yearFrom: numbe
 export type Engine = { id: number; modelId: number; name: string };
 export type Category = { id: string; name: string; sort: number; vtypes?: VehicleType[] | null };
 /** Univerzálne kategórie (rovnaké ako categories.universal v databáze, supabase/22): auto a číslo dielu sú nepovinné. */
-export const UNIVERSAL_CATS = ["kol", "mjz", "ine", "vyb", "obv", "mvy"];
+export const UNIVERSAL_CATS = ["kol", "mjz", "ine", "vyb", "obv", "mvy", "vet"];
 export const isUniversal = (cat: string | null | undefined) => !!cat && UNIVERSAL_CATS.includes(cat);
+/** Veterány (supabase/29): staré diely často nemajú číslo dielu, preto je pri nich nepovinné (v databáze bolo nepovinné vždy). */
+export const oemOptional = (cat: string | null | undefined, vt: VehicleType | string | null | undefined) => isUniversal(cat) || vt === "veterany";
 export type Subcategory = { id: number; categoryId: string; name: string; sort: number };
 
 export type Catalog = {
@@ -207,6 +209,7 @@ export const CAR_DAMAGE_NOT_MOTO = ["Strecha", "Interiér", "Airbagy", "Sklá", 
 /** Karoséria podľa druhu vozidla (rovnaký zoznam ako check v supabase/23). */
 export const CAR_BODIES: Record<VehicleType, string[]> = {
   osobne: ["Hatchback", "Sedan", "Kombi", "SUV", "MPV", "Kupé", "Kabriolet", "Pick-up"],
+  veterany: ["Sedan", "Kupé", "Kabriolet", "Kombi", "Hatchback", "SUV", "Pick-up"],
   dodavky: ["Skriňová dodávka", "Valník", "Sklápač", "Podvozok s kabínou", "Obytné vozidlo", "Minibus"],
   nakladne: ["Ťahač", "Skriňa", "Valník", "Sklápač", "Chladiarenské", "Cisterna", "Podvozok"],
   autobusy: ["Mestský", "Medzimestský", "Diaľkový", "Minibus"],

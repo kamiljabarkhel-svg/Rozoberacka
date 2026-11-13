@@ -16,7 +16,7 @@ export default function Page() {
 
       <h2>2. Čo portál robí a čo nie</h2>
       <ul>
-        <li>Portál zverejňuje inzeráty predajcov autodielov (vrátane pneumatík a diskov) na osobné autá, dodávky, nákladné autá, autobusy a motorky{CARS_ENABLED && <> a inzeráty celých <b>havarovaných, nepojazdných alebo na diely určených vozidiel</b></>}. Sprostredkúva len kontakt medzi predajcom a kupujúcim.</li>
+        <li>Portál zverejňuje inzeráty predajcov autodielov (vrátane pneumatík a diskov) na osobné autá, veterány, dodávky, nákladné autá, autobusy a motorky{CARS_ENABLED && <> a inzeráty celých <b>havarovaných, nepojazdných alebo na diely určených vozidiel</b></>}. Sprostredkúva len kontakt medzi predajcom a kupujúcim.</li>
         <li>Prevádzkovateľ <b>nie je predávajúcim ani účastníkom</b> kúpnej zmluvy. Zmluva vzniká priamo medzi predajcom a kupujúcim, ktorí sa dohodnú na cene, platbe, odovzdaní aj reklamácii.</li>
         <li>Portál neprijíma platby a neposiela tovar.</li>
         <li>Inzeráty zverejňujeme len na tomto portáli. Neposielame ich na iné weby ani do partnerských programov; vyhľadávače (napr. Google) však verejné stránky portálu indexujú.</li>

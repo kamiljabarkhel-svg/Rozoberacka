@@ -156,9 +156,10 @@ function QuickAdd({ uid, cat, prof, donor, onCancel, onDone }: { uid: string; ca
   const chosen = rows.filter((r) => r.on).length;
   const submit = async () => {
     const b = new Set<number>();
-    rows.forEach((r, i) => { if (r.on && (r.name.trim().length < 3 || r.oem.replace(/[^A-Za-z0-9]/g, "").length < 4 || !(Number(r.price.replace(",", ".")) > 0))) b.add(i); });
+    const oemOpt = typeOf(cat, donor.modelId) === "veterany";   // veterány: číslo dielu nepovinné
+    rows.forEach((r, i) => { if (r.on && (r.name.trim().length < 3 || (!oemOpt || r.oem.trim()) && r.oem.replace(/[^A-Za-z0-9]/g, "").length < 4 || !(Number(r.price.replace(",", ".")) > 0))) b.add(i); });
     setBad(b); setErr([]);
-    if (b.size) return setErr([`Doplňte názov, OEM číslo (aspoň 4 znaky) a cenu pri označených riadkoch (${b.size}).`]);
+    if (b.size) return setErr([oemOpt ? `Doplňte názov a cenu pri označených riadkoch (${b.size}); číslo dielu, ak ho zadáte, musí mať aspoň 4 znaky.` : `Doplňte názov, OEM číslo (aspoň 4 znaky) a cenu pri označených riadkoch (${b.size}).`]);
     if (!chosen) return setErr(["Označte aspoň jeden diel."]);
     const desc = `Diel z vozidla ${car}${donor.km != null ? `, ${donor.km.toLocaleString("sk-SK")} km` : ""}${donor.gearbox ? `, ${donor.gearbox.toLowerCase()} prevodovka` : ""}${donor.color ? `, farba ${donor.color}` : ""}.`;
     const input: { input: ListingInput; files: File[] }[] = rows.filter((r) => r.on).map((r) => ({ files: r.files || [], input: {

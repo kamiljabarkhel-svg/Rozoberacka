@@ -2,7 +2,7 @@
 \set ON_ERROR_STOP 1
 create or replace function pg_temp.ok(cond boolean, msg text) returns void language plpgsql as $$
 begin if not coalesce(cond, false) then raise exception 'ZLYHAL: %', msg; end if; raise notice 'OK  %', msg; end $$;
-select pg_temp.ok((select count(*) from public.models m join public.brands b on b.id = m.brand_id where b.name = 'Iná značka') = 5, '27: Iná značka má 5 modelov (všetky druhy vozidiel)');
+select pg_temp.ok((select count(*) from public.models m join public.brands b on b.id = m.brand_id where b.name = 'Iná značka') = 6, '27: Iná značka má 6 modelov (všetky druhy vozidiel vrátane veteránov)');
 select pg_temp.ok(not exists (select 1 from public.brands b where b.name <> 'Iná značka' and exists (select 1 from public.models m where m.brand_id = b.id and m.name not like 'Iný model%')
   and not exists (select 1 from public.models m where m.brand_id = b.id and m.name like 'Iný model%')), '27: každá značka má Iný model');
 select pg_temp.ok((select count(*) from public.models m where m.name like 'Iný model%' and m.vehicle_type = 'motorky' and m.name <> 'Iný model (motorka)') = 0, '27: druh vozidla sedí s názvom');

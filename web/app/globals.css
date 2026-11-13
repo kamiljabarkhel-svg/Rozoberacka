@@ -1661,3 +1661,12 @@ html[data-vt="dodavky"] .seo-links:not(:has([data-vt="dodavky"],[data-cat="dodav
 .pp-chk.pp-legal input{margin-top:1px;width:16px;height:16px;flex:none}
 .pp-info{margin:-2px 0 0 27px;font-size:12.5px;line-height:1.45;color:var(--mute)}
 .pp-info a{color:var(--link)}
+
+/* ===== Veterány (13. 11. 2026) ===== */
+.panel.finder .vet-wrap{background:var(--card);border:1px solid var(--line);border-top:0;border-bottom:0;padding:0 20px 12px}
+.panel.finder .vet-note{margin:0;padding:10px 12px;border-left:4px solid var(--acc);background:var(--chip);border-radius:0 4px 4px 0;font-size:14.5px;line-height:1.5;color:var(--ink)}
+@media (max-width:640px){
+  .panel.finder .vtabs button:last-child{grid-column:1/-1}
+  .panel.finder .vet-wrap{padding:0 14px 10px}
+  .panel.finder .vet-note{font-size:13.5px}
+}

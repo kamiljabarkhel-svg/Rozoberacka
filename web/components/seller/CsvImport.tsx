@@ -98,7 +98,7 @@ export default function CsvImport({ uid, cat, prof, onDone }: { uid: string; cat
       if (!c) errors.push(`kategória „${g("kategoria")}“ neexistuje`);
       const sub = c && g("podkategoria") ? cat.subcategories.find((s) => s.categoryId === c.id && norm(s.name) === norm(g("podkategoria"))) : undefined;
       if (c && g("podkategoria") && !sub) warns.push("podkategória nenájdená");
-      const oem = g("oem"); if ((!univ || oem) && oem.replace(/[^A-Za-z0-9]/g, "").length < 4) errors.push("číslo dielu (OEM) má menej ako 4 znaky");
+      const oem = g("oem"); if ((!(univ || model?.vehicleType === "veterany") || oem) && oem.replace(/[^A-Za-z0-9]/g, "").length < 4) errors.push("číslo dielu (OEM) má menej ako 4 znaky");
       const price = Number(g("cena").replace(/\s|€/g, "").replace(",", ".")); if (!(price > 0)) errors.push("cena musí byť väčšia ako 0");
       let year = parseInt(g("rocnik"), 10) || 0;
       if (!year && model) { year = model.yearFrom; warns.push(`ročník chýba – nastavený ${year}`); }
@@ -163,7 +163,7 @@ export default function CsvImport({ uid, cat, prof, onDone }: { uid: string; cat
     <div>
       <header className="pp-h"><h1>Import z CSV</h1><a className="ubtn" href={sampleHref} download="vzor-autosuciastky.csv">Stiahnuť vzorový súbor</a></header>
       <div className="pp-box">
-        <p>Povinné stĺpce: <b>{[...REQ, ...REQ_PART].join(", ")}</b> – pri pneumatikách, diskoch, výbave jazdca, príslušenstve a „Iné“ stačí <b>{REQ.join(", ")}</b> (stĺpec <b>druh</b>: osobné, dodávky, nákladné, autobusy alebo motorky). Voliteľné: {OPT.join(", ")}. Oddeľovač <b>;</b> alebo <b>,</b>, najviac {MAX} riadkov. Stav: Nový, Repasovaný, Veľmi dobrý, Dobrý alebo Na opravu. V stĺpci <b>pasuje</b> oddeľte autá znakom | (napr. „Škoda Octavia III | VW Golf VII“).</p>
+        <p>Povinné stĺpce: <b>{[...REQ, ...REQ_PART].join(", ")}</b> – pri pneumatikách, diskoch, výbave jazdca, príslušenstve a „Iné“ stačí <b>{REQ.join(", ")}</b> (stĺpec <b>druh</b>: osobné, veterány, dodávky, nákladné, autobusy alebo motorky). Pri veteránoch je číslo dielu (oem) nepovinné. Voliteľné: {OPT.join(", ")}. Oddeľovač <b>;</b> alebo <b>,</b>, najviac {MAX} riadkov. Stav: Nový, Repasovaný, Veľmi dobrý, Dobrý alebo Na opravu. V stĺpci <b>pasuje</b> oddeľte autá znakom | (napr. „Škoda Octavia III | VW Golf VII“).</p>
         <p className="mute">Pneumatiky a disky (kategória „Pneumatiky a disky“): stĺpce pneu_sirka (205), pneu_profil (55), priemer (16), sezona (letné/zimné/celoročné), dezen_mm, dot (rok), index_nosnosti, index_rychlosti, sirka_disku (7), roztec (5x112), et (49), stredovy_otvor (57.1), kusy, material (Hliník/Oceľ).</p>
         <p className="mute">Popis musí mať aspoň 20 znakov. Mesto a telefón sa doplnia z profilu, ak ich v súbore nemáte.</p>
         <ol className="pp-steps2">

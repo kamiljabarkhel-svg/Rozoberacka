@@ -35,7 +35,7 @@ export default async function Page() {
   const models = cat ? [...byModel].map(([id, n]) => ({ m: cat.models.find((x) => x.id === id)!, n }))
     .filter((x) => x.m && !isOtherModel(x.m.name) && bname(x.m.brandId) !== OTHER_BRAND).sort((a, b) => b.n - a.n).slice(0, 24) : [];
   // Skupiny podľa druhu vozidla – diel na autobus nemá byť pod „Diely podľa auta“
-  const HEAD: Record<VehicleType, string> = { osobne: "Diely na osobné autá", dodavky: "Diely na dodávky", nakladne: "Diely na nákladné autá", autobusy: "Diely na autobusy", motorky: "Diely na motorky a štvorkolky" };
+  const HEAD: Record<VehicleType, string> = { osobne: "Diely na osobné autá", veterany: "Diely na veterány", dodavky: "Diely na dodávky", nakladne: "Diely na nákladné autá", autobusy: "Diely na autobusy", motorky: "Diely na motorky a štvorkolky" };
   const groups = VEHICLE_TYPES.map((t) => ({ t: t.id, head: HEAD[t.id], items: models.filter((x) => (x.m.vehicleType || "osobne") === t.id)
     .sort((a, b) => sk(bname(a.m.brandId) + " " + a.m.name, bname(b.m.brandId) + " " + b.m.name)) })).filter((g) => g.items.length);
   // Kategórie s počtami zvlášť pre každý druh vozidla (+ „vsetky“ zo všetkých inzerátov)

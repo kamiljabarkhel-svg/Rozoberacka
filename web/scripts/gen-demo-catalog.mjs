@@ -7,7 +7,7 @@ import { dirname, join } from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const kat = ["02_kategorie.sql", "18_kategorie_druhy_vozidiel.sql", "21_kategorie_rozsirenie.sql"].map((f) => readFileSync(join(root, "supabase", f), "utf8")).join("\n");
-const cat = ["03_katalog.sql", "09_katalog_opravy.sql", "16_katalog_europa.sql", "17_katalog_opravy.sql", "20_katalog_vozidla.sql"].map((f) => readFileSync(join(root, "supabase", f), "utf8")).join("\n");
+const cat = ["03_katalog.sql", "09_katalog_opravy.sql", "16_katalog_europa.sql", "17_katalog_opravy.sql", "20_katalog_vozidla.sql", "30_katalog_veterany.sql"].map((f) => readFileSync(join(root, "supabase", f), "utf8")).join("\n");
 
 const categories = [];
 const subcategories = [];
@@ -21,6 +21,13 @@ for (const line of kat.split("\n")) {
   m = line.match(/insert into public\.subcategories \(category_id, name, sort\) values \('([^']+)', '([^']+)', (\d+)\)/);
   if (m && !subcategories.some((x) => x.categoryId === m[1] && x.name === m[2])) subcategories.push({ id: subcategories.length + 1, categoryId: m[1], name: m[2], sort: Number(m[3]) });
 }
+
+// 29_veterany.sql: kategórie osobných áut platia aj pre veterány, elektropohon nie; nová kategória „vet“ s podkategóriami
+for (const c of categories) if (c.vtypes?.includes("osobne") && !c.vtypes.includes("veterany")) c.vtypes.push("veterany");
+{ const ev = categories.find((x) => x.id === "ev"); if (ev) ev.vtypes = ["osobne", "dodavky", "nakladne", "autobusy", "motorky"]; }
+{ const v29 = readFileSync(join(root, "supabase", "29_veterany.sql"), "utf8");
+  const m = v29.match(/values \('vet', '([^']+)', (\d+)/); categories.push({ id: "vet", name: m[1], sort: Number(m[2]), vtypes: ["veterany"] });
+  for (const x of v29.matchAll(/\('vet', '([^']+)', (\d+)\)/g)) subcategories.push({ id: subcategories.length + 1, categoryId: "vet", name: x[1], sort: Number(x[2]) }); }
 
 const brands = [];
 const models = [];
@@ -63,6 +70,6 @@ for (const line of cat.split("\n")) {
   }
 }
 
-const out = { source: "supabase/02 + 18 (kategórie), 03 + 09 + 16 + 17 + 20 (katalóg)", categories, subcategories, brands, models, engines };
+const out = { source: "supabase/02 + 18 + 21 + 29 (kategórie), 03 + 09 + 16 + 17 + 20 + 30 (katalóg)", categories, subcategories, brands, models, engines };
 writeFileSync(join(root, "web", "lib", "demo", "catalog.json"), JSON.stringify(out, null, 1) + "\n");
 console.log(`kategórie ${categories.length}, podkategórie ${subcategories.length}, značky ${brands.length}, modely ${models.length}, motorizácie ${engines.length}`);

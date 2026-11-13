@@ -5,7 +5,7 @@
 // Súbory netreba premenovávať. Nič sa neuloží, kým predajca neklikne „Zverejniť“.
 import { useEffect, useMemo, useState } from "react";
 import type { Catalog, Condition, VehicleType } from "@/lib/types";
-import { CONDITIONS, condLabel, isUniversal, VEHICLE_TYPES } from "@/lib/types";
+import { CONDITIONS, condLabel, oemOptional, VEHICLE_TYPES } from "@/lib/types";
 import { carName } from "@/lib/seo";
 import { myDonors, saveListing, skError, type Donor, type ListingInput, type Profile } from "@/lib/seller";
 import { baseName, isPhoto, MAX_PHOTOS, sortPhotos } from "@/lib/bulkPhotos";
@@ -87,7 +87,7 @@ export default function FromPhotos({ uid, cat, prof, onDone }: { uid: string; ca
     const e: string[] = [];
     if (p.name.trim().length < 3) e.push("názov");
     if (!p.cat) e.push("kategória");
-    if (!isUniversal(p.cat) && oemLen(p.oem) < 4) e.push("číslo dielu");
+    if (!oemOptional(p.cat, vt) && oemLen(p.oem) < 4) e.push("číslo dielu");
     if (!(Number(p.price.replace(",", ".")) > 0)) e.push("cena");
     return e;
   };
@@ -199,7 +199,7 @@ export default function FromPhotos({ uid, cat, prof, onDone }: { uid: string; ca
                   <label className="fp-name">Názov dielu *<input list="fp-names" value={p.name} maxLength={120} onChange={(e) => setName(p.id, e.target.value)} placeholder="napr. Predné svetlo ľavé" /></label>
                   <label className="fp-cat">Kategória *<select value={p.cat} onChange={(e) => upd(p.id, { cat: e.target.value, sub: "" })}><option value="">Vyberte…</option>{cats.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}</select></label>
                   <label>Podkategória<select value={p.sub} disabled={!p.cat} onChange={(e) => upd(p.id, { sub: e.target.value })}><option value="">Nevyberať</option>{cat.subcategories.filter((x) => x.categoryId === p.cat).sort((a, c) => a.sort - c.sort).map((x) => <option key={x.id} value={x.name}>{x.name}</option>)}</select></label>
-                  <label className="fp-oem">Číslo dielu (OEM){isUniversal(p.cat) ? "" : " *"}<span className="oemin"><input value={p.oem} maxLength={40} onChange={(e) => upd(p.id, { oem: e.target.value })} placeholder="napr. 5E1941015" autoComplete="off" /><ScanText kind="oem" onResult={(x) => upd(p.id, { oem: x })} /></span></label>
+                  <label className="fp-oem">Číslo dielu (OEM){oemOptional(p.cat, vt) ? "" : " *"}<span className="oemin"><input value={p.oem} maxLength={40} onChange={(e) => upd(p.id, { oem: e.target.value })} placeholder="napr. 5E1941015" autoComplete="off" /><ScanText kind="oem" onResult={(x) => upd(p.id, { oem: x })} /></span></label>
                   <label>Cena € *<input value={p.price} inputMode="decimal" maxLength={10} onChange={(e) => upd(p.id, { price: e.target.value })} placeholder="€" /></label>
                   <label>Stav<select value={p.cond} onChange={(e) => upd(p.id, { cond: e.target.value as Condition | "" })}><option value="">{condLabel(b.cond)} (ako všetky)</option>{CONDITIONS.filter((c) => c !== b.cond).map((c) => <option key={c} value={c}>{condLabel(c)}</option>)}</select></label>
                   <label>Strana<select value={p.side} onChange={(e) => upd(p.id, { side: e.target.value })}><option value="">—</option><option>Ľavá</option><option>Pravá</option></select></label>

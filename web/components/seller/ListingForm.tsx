@@ -3,7 +3,7 @@
 // Povinné polia podľa CLAUDE.md; tie isté pravidlá stráži aj databáza (04_funkcie.sql).
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { Catalog, Condition, Specs, VehicleType } from "@/lib/types";
-import { CONDITIONS, condLabel, isUniversal, PCDS, RIM_DIAMETERS, SEASONS, SPEC_LABEL, specsErrors, VEHICLE_TYPES, WHEEL_CAT, WHEEL_SUBS, wheelDefaults, wheelKind, wheelMissing, type WheelKind } from "@/lib/types";
+import { CONDITIONS, condLabel, isUniversal, oemOptional, PCDS, RIM_DIAMETERS, SEASONS, SPEC_LABEL, specsErrors, VEHICLE_TYPES, WHEEL_CAT, WHEEL_SUBS, wheelDefaults, wheelKind, wheelMissing, type WheelKind } from "@/lib/types";
 import { carName } from "@/lib/seo";
 import { saveListing, skError, type Donor, type ListingInput, type MyListing, type PhotoItem, type Profile } from "@/lib/seller";
 import ScanText from "../ScanText";
@@ -88,7 +88,7 @@ export default function ListingForm({ uid, cat, prof, edit, donor, onSaved, whee
     if (v.name.trim().length < 3) b.add("name");
     if (!v.categoryId) b.add("cat");
     const univ = isUniversal(v.categoryId);   // pneumatiky, výbava jazdca, príslušenstvo, iné: auto a číslo dielu nepovinné
-    if ((!univ || v.oem.trim()) && v.oem.replace(/[^A-Za-z0-9]/g, "").length < 4) b.add("oem");
+    if ((!oemOptional(v.categoryId, vt) || v.oem.trim()) && v.oem.replace(/[^A-Za-z0-9]/g, "").length < 4) b.add("oem");
     if (wheel && !v.subcategoryId) b.add("sub");
     if (wheel && specBad.length) b.add("specs");
     if (!univ || v.brandId) {
@@ -191,7 +191,7 @@ export default function ListingForm({ uid, cat, prof, edit, donor, onSaved, whee
             const id = e.target.value ? Number(e.target.value) : null; set("subcategoryId", id); clear("sub");
             if (wheel) { const d = wheelDefaults(cat.subcategories.find((x) => x.id === id)?.name); if (Object.keys(d).length) { setSpecs((o) => ({ ...o, ...d })); clear("specs"); } }
           }}><option value="">{!v.categoryId ? "Najprv vyberte kategóriu" : wheel ? "Vyberte…" : "Nevybraná"}</option>{subs.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}</select> })}
-          {kind !== "pneu" && kind !== "puklice" && L({ k: "oem", t: isUniversal(v.categoryId) ? "Číslo dielu (OEM) – nepovinné" : "Kód súčiastky / OEM číslo", req: !isUniversal(v.categoryId), children: <span className="oemin"><input value={v.oem} maxLength={40} placeholder={wheel ? "napr. 5E0601025 (originálne disky)" : "napr. 5E1941015"} onChange={(e) => { set("oem", e.target.value); clear("oem"); }} />
+          {kind !== "pneu" && kind !== "puklice" && L({ k: "oem", t: oemOptional(v.categoryId, vt) ? "Číslo dielu (OEM) – nepovinné" : "Kód súčiastky / OEM číslo", req: !oemOptional(v.categoryId, vt), children: <span className="oemin"><input value={v.oem} maxLength={40} placeholder={wheel ? "napr. 5E0601025 (originálne disky)" : "napr. 5E1941015"} onChange={(e) => { set("oem", e.target.value); clear("oem"); }} />
             <ScanText kind="oem" onResult={(x) => { set("oem", x); clear("oem"); }} /></span> })}
           {L({ t: kind === "pneu" ? "Značka pneumatík" : kind === "disk" ? "Výrobca diskov" : kind === "kolesa" ? "Značka pneumatík / diskov" : "Výrobca dielu", req: false,
             children: <input value={v.partMaker} maxLength={60} placeholder={kind === "pneu" ? "Michelin, Continental, Nokian…" : kind === "disk" ? "originál Škoda, BBS, Borbet, OZ…" : kind === "kolesa" ? "Continental / originál VW" : "Bosch, Valeo, Hella…"} onChange={(e) => set("partMaker", e.target.value)} /> })}
