@@ -448,6 +448,7 @@ function MyData({ uid }: { uid: string }) {
         <div className="pp-actions" style={{ justifyContent: "flex-start" }}>
           <button className="del" disabled={word.trim().toUpperCase() !== "ZRUŠIŤ" || !!busy} onClick={async () => {
             setErr(""); setBusy("del");
+            // eslint-disable-next-line @next/next/no-location-assign-relative-destination -- po zrušení účtu úplné načítanie (zmaže stav prihlásenia)
             try { await deleteAccount(uid); window.location.href = "/?ucet=zruseny"; } catch (e) { setErr(skError(e)); setBusy(""); }
           }}>{busy === "del" ? "Mažem…" : "Natrvalo zrušiť účet"}</button>
           <button className="lnk" onClick={() => { setStep(0); setWord(""); }}>Nie, ponechať</button>
