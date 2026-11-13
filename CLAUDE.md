@@ -321,3 +321,4 @@ Overené na Slov-Lexe: Občiansky zákonník § 597, 599, 612, 618, 619 (znenie 
 - Ostrý web: **https://autosuciastky.eu** (doména u Websupportu, `www` presmeruje na hlavnú). Stará adresa rozoberacka.vercel.app presmeruje na doménu (`next.config.ts`, podľa `NEXT_PUBLIC_SITE_URL`).
 - DNS vo Websupporte: A `@` → 216.198.79.1, CNAME `www` → 328ef0a25df83cb1.vercel-dns-017.com (hodnoty z Vercelu → Settings → Domains). Pri zmene hostingu zmeniť len tieto dva záznamy. MX/TXT/mail záznamy sú pre e-maily Websupportu – nemazať.
 - Supabase Auth: Site URL https://autosuciastky.eu, Redirect URLs https://autosuciastky.eu/** (+ stará adresa).
+- Google Search Console: vlastníctvo `sc-domain:autosuciastky.eu`, účet autosuciastky.eu@gmail.com, overenie TXT záznamom vo Websupporte (nemazať), odoslaná `sitemap.xml`.
