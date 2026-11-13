@@ -311,3 +311,8 @@ Overené na Slov-Lexe: Občiansky zákonník § 597, 599, 612, 618, 619 (znenie 
 - Úvod: odkazy na autá sú v skupinách podľa druhu vozidla („Diely na autobusy“…) a ukáže sa **len skupina zvoleného druhu** (aj kategórie s počtami pre ten druh; „Všetky vozidlá“ = všetko). `Home.tsx` nastaví `<html data-vt>`, skrýva CSS vrstva „Odkazy podľa druhu vozidla“. „Iná značka/Iný model“ sa tam neukazuje. Nepísať „auto“ tam, kde môže byť autobus, nákladné auto alebo motorka – „vozidlo“.
 - Mobil (do 640 px): druhy vozidiel = 6 tlačidiel v mriežke 3 × 2 s nadpisom „Na aké vozidlo hľadáte diel?“, vybrané žlté.
 - Zmazanie v portáli: vždy `components/seller/ConfirmDelete.tsx` (otázka s názvom, čo sa stane, „Zmazať natrvalo“ + „Ponechať“), nie „Naozaj zmazať? / Nie“. Text v tlačidle s `display:flex` obaliť do jedného `<span>` (inak zmizne medzera medzi slovami).
+
+## Číslo dielu, registrácia, GDPR hostingu (13. 11. 2026, 11:05)
+- `supabase/28` (ostrá DB): `search_text` obsahuje číslo dielu aj bez medzier/pomlčiek (v triggri BEFORE sa počíta z `oem`, generovaný `oem_key` tam ešte nie je); v slovách s číslicami sa neskracujú koncovky ani netolerujú preklepy („5E1941016“ nenájde „5E1941015“). Test `supabase/testy/35_test_28.sql`.
+- Súhlasy pri registrácii: pôvodný text, menšie sivé písmo (`.pp-chk.pp-legal`). Bežné `.pp-chk` vo formulároch nemeniť.
+- GDPR hostingu: Supabase má DPA so SCC aj na bezplatnom pláne (platí prijatím podmienok). Vercel Hobby DPA nemá (len Pro/Enterprise), je len na nekomerčné použitie a obsah môže použiť na trénovanie AI → pred spustením naostro Vercel Pro alebo hosting v EÚ.

@@ -1655,7 +1655,8 @@ html[data-vt="dodavky"] .seo-links:not(:has([data-vt="dodavky"],[data-cat="dodav
 @media(max-width:520px){.cdel-b{width:100%}.cdel-yes,.cdel-no{flex:1}}
 
 /* ===== Kratšie súhlasy pri registrácii (13. 11. 2026) ===== */
-.pp-auth .pp-chk,.pp-chk{font-size:14px;line-height:1.4;font-weight:500!important}
-.pp-chk input{margin-top:1px}
+.pp-chk.pp-legal{font-size:12.5px;line-height:1.45;font-weight:500!important;color:var(--mute)!important}
+.pp-chk.pp-legal b{color:var(--ink)}
+.pp-chk.pp-legal input{margin-top:1px;width:16px;height:16px;flex:none}
 .pp-info{margin:-2px 0 0 27px;font-size:12.5px;line-height:1.45;color:var(--mute)}
 .pp-info a{color:var(--link)}
