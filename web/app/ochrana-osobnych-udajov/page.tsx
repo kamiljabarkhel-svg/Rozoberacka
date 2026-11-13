@@ -61,7 +61,7 @@ export default function Page() {
       <ul>
         <li>prístup k údajom a ich prenosnosť – predajca si všetky údaje stiahne v portáli (Profil → Moje údaje),</li>
         <li>oprava nesprávnych údajov – v portáli alebo e-mailom,</li>
-        <li>vymazanie – predajca zruší účet v portáli (Profil → Zrušiť účet); kupujúci nám napíše, ktorú správu alebo dopyt máme zmazať (dopyt môžete aj sami uzavrieť na jeho stránke),</li>
+        <li>vymazanie – predajca zruší účet v portáli (Profil → Zrušiť účet); účet, profil, inzeráty, fotky, autá na diely a ponuky sa zmažú hneď a natrvalo; zmazaný inzerát sa zmaže aj s fotkami; kupujúci nám napíše, ktorú správu alebo dopyt máme zmazať (dopyt môžete aj sami uzavrieť na jeho stránke),</li>
         <li>odvolanie súhlasu s dopytom – napíšte nám a dopyt zmažeme; upozornenie e-mailom zrušíte odkazom v každom e-maile; hodnotenie vám na požiadanie zmažeme; odvolanie nemá vplyv na zákonnosť predchádzajúceho spracúvania,</li>
         <li>obmedzenie spracúvania a námietka proti spracúvaniu na základe oprávneného záujmu,</li>
         <li>podanie návrhu na začatie konania na Úrade na ochranu osobných údajov Slovenskej republiky, Hraničná 12, 820 07 Bratislava, <a href="https://dataprotection.gov.sk" rel="noreferrer">dataprotection.gov.sk</a>.</li>
