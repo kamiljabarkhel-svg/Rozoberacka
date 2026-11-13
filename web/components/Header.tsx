@@ -57,7 +57,7 @@ export default function Header() {
           <HeaderSearch value={q} onChange={(v) => { setQ(v); if (onHome) send(v, false); }} onPick={pick} />
         </form>
         <div id="user">
-          {STATIC_PREVIEW ? <a className="ubtn" href={sellersHref}>Prihlásenie predajcu</a> : <Link className="ubtn" href={logged ? "/predajca" : sellersHref}><span>{logged ? "Portál predajcu" : <>Prihlásenie<span className="hide-s"> predajcu</span></>}</span></Link>}
+          {STATIC_PREVIEW ? <a className="ubtn" href={sellersHref}>Prihlásenie predajcu</a> : <Link className="ubtn" href={logged ? "/predajca" : sellersHref}><svg className="ubtn-i" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" strokeWidth="2" /><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" /></svg><span>{logged ? "Portál predajcu" : <>Prihlásenie<span className="hide-s"> predajcu</span></>}</span></Link>}
           {/* obyčajný odkaz: formulár si „registracia=1“ prečíta pri načítaní */}
           {!logged && <a className="regbtn" href={STATIC_PREVIEW ? sellersHref : "/pre-predajcov?registracia=1"}>Registrácia</a>}
         </div>
@@ -67,10 +67,10 @@ export default function Header() {
         {/* obyčajné odkazy: úvod si filtre prečíta z adresy pri načítaní */}
         {/* eslint-disable @next/next/no-html-link-for-pages */}
         <a href="/" aria-current={path === "/" && !wheels ? "page" : undefined}>Autodiely</a>
-        <a href="/?kat=kol#pneu" aria-current={path === "/" && wheels ? "page" : undefined}>Pneumatiky a disky</a>
+        <a href="/?kat=kol#pneu" aria-current={path === "/" && wheels ? "page" : undefined}>Pneumatiky<span className="hide-s"> a disky</span></a>
         {/* eslint-enable @next/next/no-html-link-for-pages */}
         {CARS_ENABLED && <Link href="/havarovane-vozidla" aria-current={path?.startsWith("/havarovane-vozidla") || path?.startsWith("/vozidlo/") ? "page" : undefined}>Havarované vozidlá</Link>}
-        <Link href="/dopyt" aria-current={path?.startsWith("/dopyt") ? "page" : undefined}>Dopyt na diel</Link>
+        <Link href="/dopyt" aria-current={path?.startsWith("/dopyt") ? "page" : undefined}>Dopyt<span className="hide-s"> na diel</span></Link>
         <Link href="/blog" aria-current={path?.startsWith("/blog") ? "page" : undefined}>Blog</Link>
       </nav>}
     </>

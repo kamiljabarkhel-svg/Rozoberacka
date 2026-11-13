@@ -334,3 +334,7 @@ Overené na Slov-Lexe: Občiansky zákonník § 597, 599, 612, 618, 619 (znenie 
 - Katalóg: `supabase/katalog/14_veterany.txt` (časti `!druh veterany` a `!druh osobne`) → `python3 generuj.py` → `supabase/30_katalog_veterany.sql`; demo `npm run gen:catalog`. Z pamäte – nahradiť TecDoc.
 - `supabase/29`: druh `veterany` v kontrolách, ročník od 1900, kategórie osobných áut aj pre veterány (okrem „Hybrid a elektropohon“), univerzálna kategória `vet` „Dobové doplnky, emblémy a literatúra“.
 - Pri veteránoch je číslo dielu nepovinné (`oemOptional` v `lib/types.ts`), VIN sa pri nich neponúka.
+
+## Mobil – bez posúvania do strán (13. 11. 2026, 22:40)
+- Žiadny prvok nesmie byť širší ako obrazovka: gridy s jedným stĺpcom písať `grid-template-columns:minmax(0,1fr)` (nie automatický stĺpec – `width:max-content` ho roztiahne). Kontrola: na 360 a 390 px `document.documentElement.scrollWidth` = šírka okna.
+- Hlavička na mobile: „Prihlásenie“ s ikonou a „Registrácia“ rovnako vysoké; pás sekcií na mobile „Autodiely / Pneumatiky / Dopyt / Blog“ (celé názvy cez `.hide-s` od 521 px).
