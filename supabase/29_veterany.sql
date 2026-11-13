@@ -1,4 +1,4 @@
--- 29: Veterány – nový druh vozidla „veterany“ (osobné autá, ktorých výroba sa začala najneskôr v roku 1995). 13. 11. 2026. Spúšťa sa po 28.
+-- 29: Veterány – nový druh vozidla „veterany“ (osobné autá, ktorých výroba sa začala najneskôr v roku 1989; Favorit ostáva v osobných autách). 13. 11. 2026. Spúšťa sa po 28.
 --  * Kontroly druhu vozidla v models, listings a car_listings pripúšťajú 'veterany'.
 --  * Ročník inzerátu môže byť od roku 1900 (predvojnové autá).
 --  * Kategórie pre osobné autá platia aj pre veterány; „Hybrid a elektropohon“ pre veterány nie.

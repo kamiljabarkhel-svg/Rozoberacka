@@ -9,7 +9,10 @@ create or replace function pg_temp.mid(b text, m text) returns int language sql 
 create or replace function pg_temp.has(vt text, nm text) returns boolean language sql as $$
   select exists (select 1 from jsonb_array_elements(public.search_listings(jsonb_build_object('vtype', vt, 'seller', 'a2911111-0000-0000-0000-0000000000a1')) -> 'items') i where i ->> 'name' = nm) $$;
 select pg_temp.ok((select vehicle_type from public.models where id = pg_temp.mid('Škoda', '1000 MB')) = 'veterany', '29: Škoda 1000 MB je veterán');
-select pg_temp.ok((select vehicle_type from public.models where id = pg_temp.mid('Škoda', 'Favorit')) = 'veterany', '29: Favorit presunutý medzi veterány');
+select pg_temp.ok((select vehicle_type from public.models where id = pg_temp.mid('Škoda', 'Favorit')) = 'osobne', '29: Favorit ostal v osobných autách');
+select pg_temp.ok((select vehicle_type from public.models where id = pg_temp.mid('Škoda', 'Forman')) = 'osobne', '29: Forman (od 1990) je osobné auto');
+select pg_temp.ok((select vehicle_type from public.models where id = pg_temp.mid('Škoda', '105 / 120 / 125 (742)')) = 'veterany', '29: Škoda 120 je veterán');
+select pg_temp.ok((select max(year_from) from public.models where vehicle_type = 'veterany') <= 1989, '29: žiadny veterán od roku 1990');
 select pg_temp.ok((select vehicle_type from public.models where id = pg_temp.mid('Škoda', 'Octavia I')) = 'osobne', '29: Octavia I ostala v osobných autách');
 select pg_temp.ok((select count(*) from public.models where vehicle_type = 'veterany') >= 300, '29: katalóg má aspoň 300 modelov veteránov');
 select pg_temp.ok(pg_temp.mid('Škoda', 'Iný model (veterán)') is not null and pg_temp.mid('Iná značka', 'Iný model (veterán)') is not null, '29: Iný model (veterán)');

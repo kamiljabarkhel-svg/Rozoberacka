@@ -1,7 +1,7 @@
-# Veterány a youngtimery – osobné autá vyrobené do roku 1995. Údaje z pamäte (13. 11. 2026), nie overený katalóg.
-# Formát: Model|rok od|rok do|motorizácie oddelené ; (každá s výkonom v kW). „Model|=“ = model už v katalógu je, len sa mu nastaví druh vozidla.
-# Patria sem staré generácie áut, ktorých výroba sa začala najneskôr v roku 1995. Generácie, ktoré už sú v osobných autách (napr. Golf III,
-# BMW E34, Peugeot 205), tu nie sú – predávajú sa ako bežné osobné autá. Rok do = posledný rok výroby.
+# Veterány – osobné autá, ktorých výroba sa začala najneskôr v roku 1989 (rozhodnutie majiteľa 13. 11. 2026; Favorit ostáva v osobných autách).
+# Údaje z pamäte (13. 11. 2026), nie overený katalóg. Formát: Model|rok od|rok do|motorizácie oddelené ; (každá s výkonom v kW).
+# Druhá časť (!druh osobne) sú staršie generácie od roku 1990, ktoré v osobných autách chýbali – patria medzi osobné autá.
+# Generácie, ktoré už sú v osobných autách (napr. Golf III, BMW E34, Peugeot 205), tu nie sú. Rok do = posledný rok výroby.
 !druh veterany
 
 @Škoda|1
@@ -22,9 +22,6 @@ Felicia (typ 994)|1959|1964|1.1 37 kW; 1.2 40 kW
 130 / 135 / 136 (742)|1984|1990|1.3 43 kW; 1.3 46 kW; 1.3 Rapid 46 kW
 Garde|1981|1984|1.2 43 kW
 Rapid 120 / 130 / 136|1984|1990|1.2 43 kW; 1.3 46 kW; 1.3 Rapid 46 kW
-Favorit|=
-Forman|1990|1995|1.3 safety 40 kW; 1.3 safety 43 kW; 1.3 MPI safety 50 kW
-Pick-up (Favorit)|1991|1995|1.3 safety 46 kW
 
 @Tatra|0
 T57|1932|1949|1.2 15 kW; 1.3 18 kW
@@ -46,7 +43,6 @@ Lady|1935|1947|1.1 21 kW
 P50|1957|1962|0.5 13 kW
 P60|1962|1965|0.6 17 kW
 601|1964|1990|0.6 17 kW; 0.6 19 kW
-1.1|1990|1991|1.1 VW 30 kW
 
 @Wartburg|1
 311 / 312|1956|1967|0.9 27 kW; 1.0 33 kW
@@ -64,7 +60,6 @@ P60|1962|1965|0.6 17 kW
 M21 Volga|1956|1970|2.4 51 kW; 2.4 55 kW
 M24 Volga|1970|1985|2.4 70 kW; 2.4 D 46 kW
 3102 Volga|1982|2008|2.4 74 kW
-31029 Volga|1992|1997|2.4 66 kW; 2.4 74 kW
 M20 Pobeda|1946|1958|2.1 37 kW
 M13 Čajka|1959|1981|5.5 V8 143 kW
 
@@ -110,7 +105,6 @@ Golf I Cabriolet|1979|1993|1.6 55 kW; 1.8 66 kW; 1.8 GLI 82 kW
 Golf II|1983|1992|1.3 40 kW; 1.6 55 kW; 1.8 66 kW; 1.8 GTI 82 kW; 1.8 GTI 16V 95 kW; 1.6 D 40 kW; 1.6 TD 51 kW
 Jetta I|1979|1984|1.3 44 kW; 1.6 55 kW; 1.6 D 40 kW
 Jetta II|1984|1992|1.3 40 kW; 1.6 55 kW; 1.8 66 kW; 1.6 D 40 kW; 1.6 TD 51 kW
-Vento|1991|1998|1.6 55 kW; 1.8 55 kW; 2.0 85 kW; 1.9 TD 55 kW; 1.9 TDI 66 kW
 Polo I / Derby|1975|1981|0.9 29 kW; 1.1 37 kW; 1.3 44 kW
 Polo II (86C)|1981|1994|1.0 33 kW; 1.3 40 kW; 1.3 G40 85 kW; 1.4 D 35 kW
 Passat B1|1973|1980|1.3 40 kW; 1.5 55 kW; 1.6 55 kW; 1.5 D 37 kW
@@ -128,11 +122,9 @@ K70|1970|1975|1.6 66 kW; 1.8 74 kW
 90|1984|1991|2.0 85 kW; 2.2 100 kW; 2.3 100 kW
 Coupé (B2/B3)|1980|1996|1.8 66 kW; 2.2 100 kW; 2.3 100 kW
 Quattro (Ur-quattro)|1980|1991|2.1 Turbo 147 kW; 2.2 Turbo 147 kW
-Cabriolet (B4)|1991|2000|2.0 85 kW; 2.6 V6 110 kW; 2.8 V6 128 kW
 100 C1|1968|1976|1.8 59 kW; 1.9 74 kW
 100 C2|1976|1982|1.6 63 kW; 2.0 85 kW; 2.1 100 kW; 2.0 D 51 kW
 100 C3 / 200|1982|1991|1.8 66 kW; 2.0 85 kW; 2.3 100 kW; 2.2 Turbo 121 kW; 2.0 D 51 kW; 2.4 D 60 kW
-100 C4|1990|1994|2.0 74 kW; 2.3 98 kW; 2.6 V6 110 kW; 2.8 V6 128 kW; 2.5 TDI 85 kW
 V8 (D11)|1988|1994|3.6 V8 184 kW; 4.2 V8 206 kW
 
 @Mercedes-Benz|1
@@ -190,7 +182,6 @@ GT (klasický)|1968|1973|1.1 44 kW; 1.9 66 kW
 Corsa A|1982|1993|1.0 33 kW; 1.2 40 kW; 1.4 44 kW; 1.6 GSi 74 kW; 1.5 D 37 kW; 1.5 TD 50 kW
 Omega A|1986|1994|1.8 66 kW; 2.0 85 kW; 2.6 110 kW; 3.0 130 kW; 3.6 Lotus Omega 280 kW; 2.3 D 54 kW; 2.3 TD 74 kW
 Vectra A|1988|1995|1.6 55 kW; 1.8 66 kW; 2.0 85 kW; 2.0 16V 110 kW; 2.5 V6 125 kW; 1.7 D 42 kW; 1.7 TD 60 kW
-Calibra|1990|1997|2.0 85 kW; 2.0 16V 110 kW; 2.0 Turbo 150 kW; 2.5 V6 125 kW
 
 @Ford|1
 Taunus 12M / 15M / 17M|1952|1972|1.2 28 kW; 1.5 40 kW; 1.7 47 kW
@@ -199,7 +190,6 @@ Escort Mk1|1968|1975|1.1 33 kW; 1.3 42 kW; 1.6 RS 74 kW
 Escort Mk2|1975|1980|1.1 35 kW; 1.3 44 kW; 1.6 62 kW; 2.0 RS 81 kW
 Escort Mk3|1980|1986|1.1 40 kW; 1.3 51 kW; 1.6 58 kW; 1.6 XR3i 77 kW; 1.6 D 40 kW
 Escort Mk4|1986|1990|1.1 37 kW; 1.3 44 kW; 1.4 55 kW; 1.6 58 kW; 1.6 RS Turbo 97 kW; 1.6 D 40 kW
-Escort Mk5 / Mk6|1990|1995|1.3 44 kW; 1.4 52 kW; 1.6 66 kW; 1.8 77 kW; 2.0 RS Cosworth 162 kW; 1.8 D 44 kW; 1.8 TD 66 kW
 Orion I / II|1983|1993|1.3 51 kW; 1.4 55 kW; 1.6 58 kW; 1.6 D 40 kW
 Capri I|1969|1974|1.3 40 kW; 1.7 55 kW; 2.0 V6 66 kW; 2.6 V6 92 kW
 Capri II / III|1974|1986|1.3 40 kW; 1.6 53 kW; 2.0 66 kW; 2.8 V6 118 kW
@@ -259,7 +249,6 @@ Visa|1978|1988|0.65 25 kW; 1.1 42 kW; 1.4 59 kW; 1.7 D 44 kW
 BX|1982|1994|1.1 40 kW; 1.4 53 kW; 1.6 66 kW; 1.9 GTi 92 kW; 1.9 16V 116 kW; 1.7 D 44 kW; 1.9 D 47 kW; 1.8 TD 66 kW
 AX|1986|1998|1.0 37 kW; 1.1 44 kW; 1.4 55 kW; 1.4 GTi 74 kW; 1.4 D 40 kW; 1.5 D 40 kW
 XM|1989|2000|2.0 85 kW; 2.0 Turbo 108 kW; 3.0 V6 125 kW; 2.1 TD 80 kW; 2.5 TD 95 kW
-ZX|1991|1998|1.1 44 kW; 1.4 55 kW; 1.6 65 kW; 1.9 16V 108 kW; 1.9 D 47 kW; 1.9 TD 66 kW
 
 @Fiat|1
 500 (klasický)|1957|1975|0.5 13 kW; 0.6 16 kW
@@ -280,7 +269,6 @@ Uno (146)|1983|1995|0.9 33 kW; 1.0 33 kW; 1.1 40 kW; 1.4 Turbo 85 kW; 1.7 D 44 k
 Regata|1983|1990|1.3 48 kW; 1.5 60 kW; 1.7 D 44 kW
 Croma (154)|1985|1996|1.6 61 kW; 2.0 88 kW; 2.0 Turbo 114 kW; 2.5 TD 85 kW
 Tipo (160)|1988|1995|1.1 41 kW; 1.4 52 kW; 1.6 55 kW; 2.0 16V 107 kW; 1.7 D 42 kW; 1.9 TD 66 kW
-Tempra|1990|1996|1.4 51 kW; 1.6 66 kW; 2.0 83 kW; 1.9 TD 66 kW
 
 @Alfa Romeo|0
 Giulietta (klasická)|1954|1965|1.3 39 kW; 1.3 Sprint 59 kW
@@ -291,7 +279,6 @@ Alfetta|1972|1984|1.6 80 kW; 1.8 90 kW; 2.0 96 kW
 33|1983|1994|1.3 58 kW; 1.5 77 kW; 1.7 16V 101 kW; 1.8 TD 54 kW
 75|1985|1992|1.6 81 kW; 2.0 108 kW; 1.8 Turbo 114 kW; 3.0 V6 138 kW; 2.0 TD 70 kW
 164|1987|1998|2.0 108 kW; 2.0 Turbo 129 kW; 3.0 V6 135 kW; 2.5 TD 85 kW
-155|1992|1998|1.8 93 kW; 2.0 105 kW; 2.0 Q4 140 kW; 2.5 V6 121 kW
 
 @Lancia|0
 Fulvia|1963|1976|1.2 59 kW; 1.3 66 kW; 1.6 HF 85 kW
@@ -312,7 +299,6 @@ P1800|1961|1973|1.8 74 kW; 2.0 87 kW
 240 / 260|1974|1993|2.0 66 kW; 2.1 79 kW; 2.3 85 kW; 2.7 V6 103 kW; 2.4 D 60 kW
 340 / 360|1976|1991|1.4 51 kW; 1.7 59 kW; 2.0 70 kW; 1.6 D 40 kW
 740 / 760|1982|1992|2.0 74 kW; 2.3 82 kW; 2.3 Turbo 115 kW; 2.8 V6 115 kW; 2.4 D 60 kW; 2.4 TD 80 kW
-940 / 960|1990|1998|2.0 82 kW; 2.3 99 kW; 2.3 Turbo 122 kW; 3.0 150 kW; 2.4 TD 90 kW
 
 @Saab|0
 92 / 93|1949|1960|0.75 18 kW; 0.75 28 kW
@@ -326,13 +312,11 @@ P1800|1961|1973|1.8 74 kW; 2.0 87 kW
 911 (F-model)|1964|1973|2.0 96 kW; 2.2 110 kW; 2.4 140 kW; 2.7 RS 154 kW
 911 (G-model)|1973|1989|2.7 110 kW; 3.0 132 kW; 3.2 170 kW; 3.0 Turbo 191 kW; 3.3 Turbo 221 kW
 911 (964)|1989|1994|3.6 184 kW; 3.3 Turbo 235 kW; 3.6 Turbo 265 kW
-911 (993)|1993|1998|3.6 200 kW; 3.6 Carrera 4S 210 kW; 3.6 Turbo 300 kW
 912|1965|1969|1.6 66 kW
 914|1969|1976|1.7 59 kW; 2.0 74 kW; 2.0 914/6 81 kW
 924|1976|1988|2.0 92 kW; 2.0 Turbo 125 kW; 2.5 S 110 kW
 928|1977|1995|4.5 V8 177 kW; 4.7 V8 221 kW; 5.0 V8 235 kW; 5.4 V8 257 kW
 944|1981|1991|2.5 120 kW; 2.7 121 kW; 3.0 S2 155 kW; 2.5 Turbo 162 kW
-968|1991|1995|3.0 176 kW; 3.0 Turbo S 224 kW
 
 @Mini|0
 Mini (klasický)|1959|2000|0.85 25 kW; 1.0 29 kW; 1.3 46 kW; 1.3 Cooper S 56 kW; 1.3i Cooper 46 kW
@@ -342,7 +326,6 @@ Clubman (klasický)|1969|1980|1.0 28 kW; 1.1 33 kW; 1.3 GT 44 kW
 MGA|1955|1962|1.5 51 kW; 1.6 59 kW
 MGB / MGB GT|1962|1980|1.8 70 kW; 3.5 V8 102 kW
 Midget|1961|1979|0.95 34 kW; 1.3 48 kW; 1.5 49 kW
-MG RV8|1992|1995|3.9 V8 140 kW
 
 @Triumph|0
 Spitfire|1962|1980|1.1 47 kW; 1.3 56 kW; 1.5 53 kW
@@ -388,7 +371,6 @@ Corolla E10–E30|1966|1979|1.1 44 kW; 1.2 51 kW; 1.3 44 kW; 1.6 63 kW
 Corolla E70|1979|1987|1.3 47 kW; 1.6 63 kW; 1.8 D 43 kW
 Corolla E80 / AE86|1983|1987|1.3 52 kW; 1.6 GT 84 kW; 1.8 D 43 kW
 Corolla E90|1987|1992|1.3 55 kW; 1.6 70 kW; 1.6 GTi 16V 92 kW; 1.8 D 47 kW
-Corolla E100|1991|1997|1.3 55 kW; 1.6 84 kW; 2.0 D 53 kW
 Carina|1970|1992|1.6 63 kW; 2.0 75 kW; 2.0 D 54 kW
 Celica (A20–T180)|1970|1993|1.6 63 kW; 2.0 103 kW; 2.0 Turbo GT-Four 153 kW
 Supra (A60 / A70)|1981|1993|2.8 125 kW; 3.0 150 kW; 3.0 Turbo 173 kW
@@ -420,7 +402,6 @@ Civic III–V|1983|1995|1.3 55 kW; 1.4 66 kW; 1.5 66 kW; 1.6 VTEC 118 kW
 CRX|1983|1991|1.5 63 kW; 1.6 92 kW; 1.6 VTEC 110 kW
 Accord I–IV|1976|1993|1.6 59 kW; 1.8 74 kW; 2.0 82 kW; 2.2 110 kW
 Prelude I–III|1978|1991|1.6 59 kW; 1.8 74 kW; 2.0 16V 110 kW
-NSX (NA1)|1990|1995|3.0 V6 201 kW
 
 @Mitsubishi|0
 Pajero I|1982|1991|2.6 75 kW; 3.0 V6 104 kW; 2.3 TD 62 kW; 2.5 TD 62 kW
@@ -428,7 +409,6 @@ Lancer (A70–C60)|1973|1991|1.2 40 kW; 1.4 51 kW; 1.5 55 kW; 1.8 D 44 kW
 Galant (A110–E30)|1976|1992|1.6 55 kW; 2.0 75 kW; 2.0 VR-4 141 kW; 1.8 TD 55 kW
 Colt (A150–C50)|1978|1992|1.2 40 kW; 1.3 50 kW; 1.5 55 kW; 1.6 Turbo 92 kW; 1.8 D 44 kW
 Sapporo / Starion|1978|1989|2.0 Turbo 130 kW; 2.6 Turbo 115 kW
-3000 GT|1990|1995|3.0 V6 Turbo 210 kW
 
 @Subaru|0
 Leone|1971|1994|1.6 54 kW; 1.8 60 kW; 1.8 Turbo 100 kW
@@ -473,3 +453,56 @@ Mondial|1980|1993|2.9 V8 157 kW; 3.2 V8 199 kW; 3.4 V8 221 kW
 
 @DeLorean|0
 DMC-12|1981|1983|2.8 V6 97 kW
+
+!druh osobne
+
+@Škoda|1
+Forman|1990|1995|1.3 safety 40 kW; 1.3 safety 43 kW; 1.3 MPI safety 50 kW
+Pick-up (Favorit)|1991|1995|1.3 safety 46 kW
+
+@Trabant|1
+1.1|1990|1991|1.1 VW 30 kW
+
+@GAZ (Volga)|0
+31029 Volga|1992|1997|2.4 66 kW; 2.4 74 kW
+
+@Volkswagen|1
+Vento|1991|1998|1.6 55 kW; 1.8 55 kW; 2.0 85 kW; 1.9 TD 55 kW; 1.9 TDI 66 kW
+
+@Audi|1
+Cabriolet (B4)|1991|2000|2.0 85 kW; 2.6 V6 110 kW; 2.8 V6 128 kW
+100 C4|1990|1994|2.0 74 kW; 2.3 98 kW; 2.6 V6 110 kW; 2.8 V6 128 kW; 2.5 TDI 85 kW
+
+@Opel|1
+Calibra|1990|1997|2.0 85 kW; 2.0 16V 110 kW; 2.0 Turbo 150 kW; 2.5 V6 125 kW
+
+@Ford|1
+Escort Mk5 / Mk6|1990|1995|1.3 44 kW; 1.4 52 kW; 1.6 66 kW; 1.8 77 kW; 2.0 RS Cosworth 162 kW; 1.8 D 44 kW; 1.8 TD 66 kW
+
+@Citroën|1
+ZX|1991|1998|1.1 44 kW; 1.4 55 kW; 1.6 65 kW; 1.9 16V 108 kW; 1.9 D 47 kW; 1.9 TD 66 kW
+
+@Fiat|1
+Tempra|1990|1996|1.4 51 kW; 1.6 66 kW; 2.0 83 kW; 1.9 TD 66 kW
+
+@Alfa Romeo|0
+155|1992|1998|1.8 93 kW; 2.0 105 kW; 2.0 Q4 140 kW; 2.5 V6 121 kW
+
+@Volvo|1
+940 / 960|1990|1998|2.0 82 kW; 2.3 99 kW; 2.3 Turbo 122 kW; 3.0 150 kW; 2.4 TD 90 kW
+
+@Porsche|1
+911 (993)|1993|1998|3.6 200 kW; 3.6 Carrera 4S 210 kW; 3.6 Turbo 300 kW
+968|1991|1995|3.0 176 kW; 3.0 Turbo S 224 kW
+
+@MG|0
+MG RV8|1992|1995|3.9 V8 140 kW
+
+@Toyota|1
+Corolla E100|1991|1997|1.3 55 kW; 1.6 84 kW; 2.0 D 53 kW
+
+@Honda|0
+NSX (NA1)|1990|1995|3.0 V6 201 kW
+
+@Mitsubishi|0
+3000 GT|1990|1995|3.0 V6 Turbo 210 kW

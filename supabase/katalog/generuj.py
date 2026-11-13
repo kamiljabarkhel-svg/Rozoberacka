@@ -133,7 +133,7 @@ def run_typed(ex_brands, ex_models):
             parts = [p.strip() for p in line.split("|")]
             if len(parts) == 2 and parts[1] == "=":
                 if (cur, parts[0]) not in ex_models: errors.append(f"{where}: model {cur} {parts[0]} v katalógu nie je – nedá sa mu nastaviť druh"); continue
-                brands[cur]["models"].append({"name": parts[0], "retype": True, "vtype": vtype}); continue
+                brands[cur]["models"].append({"name": parts[0], "retype": True, "vtype": vtype, "src": name}); continue
             if len(parts) != 4: errors.append(f"{where}: očakávam 4 časti oddelené | (alebo Model|=)"); continue
             mname, y1, y2, eng = parts
             if not mname or "'" in mname: errors.append(f"{where}: prázdny názov alebo apostrof"); continue
@@ -141,34 +141,35 @@ def run_typed(ex_brands, ex_models):
             if not re.fullmatch(yr, y1) or (y2 != "-" and not re.fullmatch(yr, y2)): errors.append(f"{where}: zlý rok"); continue
             if y2 != "-" and int(y2) < int(y1): errors.append(f"{where}: rok do je menší ako rok od"); continue
             if (cur, mname) in ex_models or any(m["name"] == mname for m in brands[cur]["models"]): errors.append(f"{where}: model {cur} {mname} už existuje"); continue
-            brands[cur]["models"].append({"name": mname, "from": int(y1), "to": None if y2 == "-" else int(y2), "engines": parse_engines(eng, where, errors), "vtype": vtype})
+            brands[cur]["models"].append({"name": mname, "from": int(y1), "to": None if y2 == "-" else int(y2), "engines": parse_engines(eng, where, errors), "vtype": vtype, "src": name})
     if errors:
         print("CHYBY V ÚDAJOCH (druhy vozidiel):\n" + "\n".join(errors), file=sys.stderr); sys.exit(1)
-    write_typed(OUT2, [v for v in VTYPES if v != "veterany"], order, brands, ex_brands,
+    vet = lambda m: m["src"].startswith("14_")   # súbor 14_veterany.txt ide do 30_katalog_veterany.sql
+    write_typed(OUT2, lambda m: not vet(m), order, brands, ex_brands,
                 ["-- 20_katalog_vozidla.sql – dodávky, nákladné autá, autobusy a motorky (druh vozidla v models.vehicle_type). Spúšťa sa po 18.",
                  "-- VYGENEROVANÉ skriptom supabase/katalog/generuj.py zo súborov supabase/katalog/1*.txt – needitujte ručne.",
                  "-- Údaje z pamäte (8. 11. 2026), nie overený katalóg; nahradiť licencovanými dátami (TecDoc). Idempotentné.",
                  "begin;"], [])
-    write_typed(OUT3, ["veterany"], order, brands, ex_brands,
-                ["-- 30_katalog_veterany.sql – veterány a youngtimery (osobné autá, ktorých výroba sa začala najneskôr 1995). Spúšťa sa po 29.",
+    write_typed(OUT3, vet, order, brands, ex_brands,
+                ["-- 30_katalog_veterany.sql – veterány (osobné autá, ktorých výroba sa začala najneskôr 1989) a chýbajúce staršie osobné autá od 1990. Spúšťa sa po 29.",
                  "-- VYGENEROVANÉ skriptom supabase/katalog/generuj.py zo súboru supabase/katalog/14_veterany.txt – needitujte ručne.",
                  "-- Údaje z pamäte (13. 11. 2026), nie overený katalóg. Idempotentné.",
                  "begin;"],
                 ["-- „Iný model (veterán)“ pri každej značke, ktorá má veterány, a pri „Iná značka“ (ako supabase/27)",
-                 "insert into public.models (brand_id, name, year_from, year_to, vehicle_type) select b.id, 'Iný model (veterán)', 1900, 1995, 'veterany' from public.brands b where b.name = 'Iná značka' on conflict (brand_id, name) do nothing;",
-                 "insert into public.models (brand_id, name, year_from, year_to, vehicle_type) select m.brand_id, 'Iný model (veterán)', min(m.year_from), 1995, 'veterany' from public.models m join public.brands b on b.id = m.brand_id and b.name <> 'Iná značka' where m.vehicle_type = 'veterany' and m.name not like 'Iný model%' group by m.brand_id on conflict (brand_id, name) do nothing;"])
+                 "insert into public.models (brand_id, name, year_from, year_to, vehicle_type) select b.id, 'Iný model (veterán)', 1900, 1989, 'veterany' from public.brands b where b.name = 'Iná značka' on conflict (brand_id, name) do nothing;",
+                 "insert into public.models (brand_id, name, year_from, year_to, vehicle_type) select m.brand_id, 'Iný model (veterán)', min(m.year_from), 1989, 'veterany' from public.models m join public.brands b on b.id = m.brand_id and b.name <> 'Iná značka' where m.vehicle_type = 'veterany' and m.name not like 'Iný model%' group by m.brand_id on conflict (brand_id, name) do nothing;"])
 
-def write_typed(path, vts, order, brands, ex_brands, out, tail):
-    cnt = {v: 0 for v in vts}; ne = nb = 0
+def write_typed(path, pick, order, brands, ex_brands, out, tail):
+    cnt = {}; ne = nb = 0
     for b in order:
         d = brands[b]
-        ms = [m for m in d["models"] if m["vtype"] in vts]
+        ms = [m for m in d["models"] if pick(m)]
         if not ms: continue
         if b not in ex_brands:
             nb += 1
             out.append(f"insert into public.brands (name, popular) values ({q(b)}, {'true' if d['popular'] else 'false'}) on conflict (name) do nothing;")
         for m in ms:
-            cnt[m["vtype"]] += 1
+            cnt[m["vtype"]] = cnt.get(m["vtype"], 0) + 1
             if m.get("retype"):
                 out.append(f"update public.models set vehicle_type = {q(m['vtype'])} where name = {q(m['name'])} and brand_id = (select id from public.brands where name = {q(b)});")
                 continue
