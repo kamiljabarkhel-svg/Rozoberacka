@@ -4,6 +4,7 @@ import { NAVODY, navodPath } from "@/lib/navody";
 import { BLOG, blogPath } from "@/lib/blog";
 import { SITE_URL, carName, landingPath, listingPath, sellerPath, vehiclePath, vehicleTitle, type Landing } from "@/lib/seo";
 import { CARS_ENABLED } from "@/lib/features";
+import { forumOverview, forumSitemap, sectionPath, threadPath } from "@/lib/forum";
 
 export const revalidate = 3600;
 
@@ -22,8 +23,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: SITE_URL + "/blog", changeFrequency: "weekly", priority: 0.5 },
     ...BLOG.map((b) => ({ url: SITE_URL + blogPath(b.slug), lastModified: new Date(b.updated || b.date), changeFrequency: "monthly" as const, priority: 0.5 })),
     { url: SITE_URL + "/ako-zoradujeme", changeFrequency: "yearly", priority: 0.2 },
+    { url: SITE_URL + "/forum", changeFrequency: "daily", priority: 0.6 },
+    { url: SITE_URL + "/forum/pravidla", changeFrequency: "yearly", priority: 0.2 },
     ...NAVODY.map((n) => ({ url: SITE_URL + navodPath(n.slug), lastModified: new Date(n.updated), changeFrequency: "monthly" as const, priority: 0.5 })),
   ];
+  try {   // fórum: sekcie s témami a všetky verejné témy
+    const [secs, threads] = await Promise.all([forumOverview(), forumSitemap()]);
+    for (const x of secs) if (x.parent && x.threads > 0) out.push({ url: SITE_URL + sectionPath(x.id), changeFrequency: "daily", priority: 0.5 });
+    for (const t of threads) out.push({ url: SITE_URL + threadPath(t.section, t.id, t.title), lastModified: new Date(t.last_post_at), changeFrequency: "weekly", priority: 0.5 });
+  } catch { /* fórum ešte nie je v databáze */ }
   try {
     const [cat, counts, listings, cities, sellers] = await Promise.all([getCatalog(), getSeoCounts(), getSitemapListings(), getCities().catch(() => [] as string[]), getActiveSellers().catch(() => [])]);
     const pages = new Set<string>();

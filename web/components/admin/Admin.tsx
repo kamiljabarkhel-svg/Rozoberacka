@@ -7,8 +7,8 @@ import { listingHref } from "@/lib/paths";
 import { price } from "@/lib/format";
 import * as A from "@/lib/admin";
 
-type Tab = "home" | "rep" | "sel" | "lst" | "req" | "rev" | "log";
-const TABS: [Tab, string][] = [["home", "Prehľad"], ["rep", "Nahlásenia"], ["sel", "Predajcovia"], ["lst", "Inzeráty"], ["req", "Dopyty"], ["rev", "Hodnotenia"], ["log", "Záznam akcií"]];
+type Tab = "home" | "rep" | "for" | "sel" | "lst" | "req" | "rev" | "log";
+const TABS: [Tab, string][] = [["home", "Prehľad"], ["rep", "Nahlásenia"], ["for", "Fórum"], ["sel", "Predajcovia"], ["lst", "Inzeráty"], ["req", "Dopyty"], ["rev", "Hodnotenia"], ["log", "Záznam akcií"]];
 const ST: Record<string, string> = { active: "Aktívny", paused: "Pozastavený", sold: "Predaný", blocked: "Skrytý", open: "Otvorené", resolved: "Vybavené", rejected: "Zamietnuté" };
 const d = (s: string) => new Date(s).toLocaleString("sk-SK", { day: "numeric", month: "numeric", year: "numeric", hour: "2-digit", minute: "2-digit" });
 
@@ -39,6 +39,7 @@ export default function Admin() {
         {err && <p className="pp-err">{err}</p>}
         {tab === "home" && <Home />}
         {tab === "rep" && <Reports run={run} />}
+        {tab === "for" && <Forum run={run} />}
         {tab === "sel" && <Sellers run={run} />}
         {tab === "lst" && <Listings run={run} />}
         {tab === "req" && <Reqs run={run} />}
@@ -58,9 +59,11 @@ function useLoad<T>(fn: () => Promise<T>, deps: unknown[]): [T | null, () => voi
 }
 
 function Home() {
-  const [s, , e] = useLoad(A.adminStats, []);
+  const [s0, , e] = useLoad(A.adminStats, []);
+  const [fq] = useLoad(() => A.forumQueue().catch(() => null), []);   // fórum (supabase/31) – ak ešte nie je v databáze, nič
+  const s: Record<string, number> | null = s0 && { ...s0, forum_pending: fq?.pending.length ?? 0, forum_reports: fq?.reports.length ?? 0 };
   const L: [string, string][] = [["sellers", "Predajcovia"], ["sellers_new_7d", "Noví predajcovia (7 dní)"], ["active", "Aktívne inzeráty"], ["blocked", "Skryté inzeráty"],
-    ["reports_open", "Otvorené nahlásenia"], ["requests_open", "Otvorené dopyty"], ["messages_7d", "Správy (7 dní)"], ["phones_7d", "Odkryté telefóny (7 dní)"], ["views_7d", "Zobrazenia (7 dní)"]];
+    ["reports_open", "Otvorené nahlásenia"], ["forum_pending", "Fórum: čaká na schválenie"], ["forum_reports", "Fórum: nahlásené príspevky"], ["requests_open", "Otvorené dopyty"], ["messages_7d", "Správy (7 dní)"], ["phones_7d", "Odkryté telefóny (7 dní)"], ["views_7d", "Zobrazenia (7 dní)"]];
   return <div><header className="pp-h"><h1>Prehľad portálu</h1></header>{e && <p className="pp-err">{e}</p>}
     <div className="pp-tiles">{L.map(([k, l]) => <div key={k} className="pp-tile"><b>{s ? Number(s[k] || 0).toLocaleString("sk-SK") : "…"}</b><span>{l}</span></div>)}</div></div>;
 }
@@ -146,6 +149,40 @@ function Revs({ run }: { run: Run }) {
       <div className="pp-ri"><b>{"★".repeat(r.stars)} {r.seller}{r.hidden ? " (skryté)" : ""}</b><span className="mute">{r.author} · {d(r.createdAt)}{r.body ? " · " + r.body : ""}</span></div>
       <div className="pp-ra"><button className={r.hidden ? "ubtn" : "del"} onClick={async () => { await run(() => A.hideReview(r.id, !r.hidden), r.hidden ? "Hodnotenie obnovené" : "Hodnotenie skryté"); reload(); }}>{r.hidden ? "Obnoviť" : "Skryť"}</button></div>
     </li>)}</ul></div>;
+}
+
+/** Fórum: prvé príspevky nováčikov na schválenie a nahlásené príspevky. O skrytí rozhoduje človek, autor uvidí dôvod. */
+function Forum({ run }: { run: Run }) {
+  const [q, reload, e] = useLoad(A.forumQueue, []);
+  const [why, setWhy] = useState<Record<number, string>>({});
+  const href = (section: string, thread: number, post: number) => `/forum/${section}/${thread}#p${post}`;
+  const hide = async (id: number, done = "Príspevok skrytý") => { await run(() => A.forumSetPost(id, "hidden", why[id] || ""), done); reload(); };
+  const reason = (id: number) => <input className="ad-why" placeholder="Dôvod skrytia (uvidí ho autor)" value={why[id] || ""} onChange={(x) => setWhy({ ...why, [id]: x.target.value })} />;
+  return <div><header className="pp-h"><h1>Fórum</h1></header>{e && <p className="pp-err">{e}</p>}
+    <p className="mute">Prvé 3 príspevky nového používateľa čakajú na schválenie, potom sa zobrazujú hneď. Predajcovia píšu bez schvaľovania. Pri skrytí napíšte dôvod – autor ho uvidí (DSA čl. 17).</p>
+    <h2>Čaká na schválenie ({q?.pending.length ?? "…"})</h2>
+    {q && !q.pending.length && <div className="empty">Nič nečaká.</div>}
+    <ul className="pp-msgs">{q?.pending.map((p) => <li key={p.id} className="unread">
+      <div className="pp-mh"><b>{p.first ? "Nová téma: " : "Odpoveď v téme: "}{p.title}</b><span className="mute">{p.nick} · {d(p.created_at)}</span></div>
+      <p className="fo-body">{p.body}</p>
+      <div className="pp-ra ad-a">
+        <button className="ubtn" onClick={async () => { await run(() => A.forumSetPost(p.id, "visible", ""), "Schválené"); reload(); }}>Schváliť</button>
+        {reason(p.id)}<button className="del" onClick={() => hide(p.id, "Zamietnuté")}>Zamietnuť</button>
+        <button className="lnk" onClick={async () => { await run(() => A.forumBan(p.user_id, true, why[p.id] || "Spam"), "Používateľ zablokovaný"); reload(); }}>Zablokovať používateľa</button>
+      </div></li>)}</ul>
+    <h2>Nahlásené príspevky ({q?.reports.length ?? "…"})</h2>
+    {q && !q.reports.length && <div className="empty">Žiadne otvorené nahlásenia.</div>}
+    <ul className="pp-msgs">{q?.reports.map((r) => <li key={r.id} className="unread">
+      <div className="pp-mh"><b>{r.reason}</b><span className="mute">{d(r.created_at)} · príspevok od {r.nick}{r.post_status === "hidden" ? " · už skrytý" : ""}</span></div>
+      <div><a href={href(r.section, r.thread_id, r.post_id)} target="_blank" rel="noreferrer">{r.title}</a></div>
+      <p className="fo-body">{r.body}</p>
+      {r.note && <p>Nahlasovateľ: {r.note}</p>}{r.contact && <div className="mute">Kontakt: {r.contact}</div>}
+      <div className="pp-ra ad-a">
+        {r.post_status !== "hidden" && <>{reason(r.post_id)}<button className="del" onClick={async () => { await hide(r.post_id); await run(() => A.forumResolveReport(r.id, "resolved"), "Skryté a vybavené"); reload(); }}>Skryť príspevok</button></>}
+        <button className="ubtn" onClick={async () => { await run(() => A.forumResolveReport(r.id, "rejected"), "Nahlásenie zamietnuté"); reload(); }}>Zamietnuť nahlásenie</button>
+        <button className="lnk" onClick={async () => { await run(() => A.forumLock(r.thread_id, true, null), "Téma uzamknutá"); }}>Uzamknúť tému</button>
+      </div></li>)}</ul>
+  </div>;
 }
 
 /** Dvojité overenie správcu: prvé nastavenie aplikácie v mobile (QR kód) alebo zadanie kódu pri každom prihlásení. */

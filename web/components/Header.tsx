@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import type { Session } from "@supabase/supabase-js";
 import { LogoMark, Wordmark } from "./Logo";
 import { STATIC_PREVIEW, homeHref, sellersHref } from "@/lib/paths";
 import { getSession, onAuthChange } from "@/lib/seller";
@@ -20,8 +21,11 @@ export default function Header() {
   const router = useRouter();
   const onHome = STATIC_PREVIEW || path === "/";
   const [q, setQ] = useState("");
-  const [logged, setLogged] = useState(false);
-  useEffect(() => { getSession().then((x) => setLogged(!!x)).catch(() => {}); return onAuthChange((x) => setLogged(!!x)); }, []);
+  const [logged, setLogged] = useState(false), [forumOnly, setForumOnly] = useState(false);   // účet len do fóra (supabase/31) – nie predajca
+  useEffect(() => {
+    const set = (x: Session | null) => { setLogged(!!x); setForumOnly(x?.user.user_metadata?.role === "forum"); };
+    getSession().then(set).catch(() => {}); return onAuthChange(set);
+  }, []);
 
   useEffect(() => {
     try { setQ(new URLSearchParams(window.location.search).get("q") || ""); } catch {}
@@ -57,7 +61,7 @@ export default function Header() {
           <HeaderSearch value={q} onChange={(v) => { setQ(v); if (onHome) send(v, false); }} onPick={pick} />
         </form>
         <div id="user">
-          {STATIC_PREVIEW ? <a className="ubtn" href={sellersHref}>Prihlásenie predajcu</a> : <Link className="ubtn" href={logged ? "/predajca" : sellersHref}><svg className="ubtn-i" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" strokeWidth="2" /><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" /></svg><span>{logged ? "Portál predajcu" : <>Prihlásenie<span className="hide-s"> predajcu</span></>}</span></Link>}
+          {STATIC_PREVIEW ? <a className="ubtn" href={sellersHref}>Prihlásenie predajcu</a> : <Link className="ubtn" href={logged ? (forumOnly ? "/forum/ucet" : "/predajca") : sellersHref}><svg className="ubtn-i" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" strokeWidth="2" /><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" /></svg><span>{logged ? (forumOnly ? "Môj účet" : "Portál predajcu") : <>Prihlásenie<span className="hide-s"> predajcu</span></>}</span></Link>}
           {/* obyčajný odkaz: formulár si „registracia=1“ prečíta pri načítaní */}
           {!logged && <a className="regbtn" href={STATIC_PREVIEW ? sellersHref : "/pre-predajcov?registracia=1"}>Registrácia</a>}
         </div>
@@ -71,6 +75,7 @@ export default function Header() {
         {/* eslint-enable @next/next/no-html-link-for-pages */}
         {CARS_ENABLED && <Link href="/havarovane-vozidla" aria-current={path?.startsWith("/havarovane-vozidla") || path?.startsWith("/vozidlo/") ? "page" : undefined}>Havarované vozidlá</Link>}
         <Link href="/dopyt" aria-current={path?.startsWith("/dopyt") ? "page" : undefined}>Dopyt<span className="hide-s"> na diel</span></Link>
+        <Link href="/forum" aria-current={path?.startsWith("/forum") ? "page" : undefined}>Fórum</Link>
         <Link href="/blog" aria-current={path?.startsWith("/blog") ? "page" : undefined}>Blog</Link>
       </nav>}
     </>

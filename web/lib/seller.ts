@@ -106,6 +106,7 @@ export async function ensureProfile(s: Session): Promise<Profile> {
   const cols = "id,name,seller_type,city,verified,rating_avg,rating_count,ico,address";
   let { data: sel } = await c.from("sellers").select(cols).eq("id", uid).maybeSingle();
   if (!sel) {
+    if (s.user.user_metadata?.role === "forum") throw new Error("Tento účet je len do fóra. Ak chcete predávať diely, vytvorte si účet predajcu s iným e-mailom (Registrácia v hlavičke) alebo nám napíšte.");
     const raw = String(s.user.user_metadata?.name || "").trim().slice(0, 120); // nikdy nie časť e-mailu – názov je verejný
     // upsert + ignoreDuplicates: dve otvorené karty naraz nespôsobia chybu „duplicate key“
     const md = s.user.user_metadata || {};

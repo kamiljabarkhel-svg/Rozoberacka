@@ -99,3 +99,15 @@ export async function reviews(): Promise<AdminReview[]> {
     body: String(r.body || ""), author: String(r.author), hidden: !!r.hidden, createdAt: String(r.created_at) }));
 }
 export async function hideReview(id: number, hide: boolean) { must(await c().rpc("admin_hide_review", { p_id: id, p_hide: hide })); }
+
+// ---------- FÓRUM (supabase/31) ----------
+export type ForumPending = { id: number; thread_id: number; title: string; section: string; body: string; nick: string; user_id: string; created_at: string; first: boolean };
+export type ForumReportRow = { id: number; post_id: number; reason: string; note: string | null; contact: string | null; created_at: string; status: string; body: string; post_status: string; nick: string; user_id: string; thread_id: number; title: string; section: string };
+export async function forumQueue(): Promise<{ pending: ForumPending[]; reports: ForumReportRow[] }> {
+  return must(await c().rpc("admin_forum_queue")) as { pending: ForumPending[]; reports: ForumReportRow[] };
+}
+const forumRefresh = () => fetch("/api/forum-obnovit", { method: "POST" }).catch(() => {});
+export async function forumSetPost(id: number, status: "visible" | "hidden", reason: string) { must(await c().rpc("admin_forum_set_post", { p_post: id, p_status: status, p_reason: reason })); forumRefresh(); }
+export async function forumResolveReport(id: number, status: "resolved" | "rejected") { must(await c().rpc("admin_forum_resolve_report", { p_id: id, p_status: status })); }
+export async function forumBan(user: string, ban: boolean, reason: string) { must(await c().rpc("admin_forum_ban", { p_user: user, p_ban: ban, p_reason: reason })); forumRefresh(); }
+export async function forumLock(thread: number, locked: boolean | null, pinned: boolean | null) { must(await c().rpc("admin_forum_lock", { p_thread: thread, p_locked: locked, p_pinned: pinned })); forumRefresh(); }

@@ -85,6 +85,16 @@ export default function Page() {
         <li>Hodnotenie, ktoré porušuje tieto pravidlá, môže správca skryť. Skryté hodnotenie sa nezapočíta do priemeru. Predajca nám môže nevhodné hodnotenie oznámiť e-mailom.</li>
       </ul>
 
+      <h2 id="forum">4b. Fórum</h2>
+      <ul>
+        <li>Fórum čítajú všetci bez účtu. Písať môže osoba staršia ako 18 rokov s účtom do fóra (prezývka, e-mail, heslo) alebo s účtom predajcu. Účet do fóra je zadarmo a vzniká potvrdením e-mailu; zmluva o používaní fóra platí na neurčito.</li>
+        <li>Príspevky musia dodržiavať <a href="/forum/pravidla">pravidlá fóra</a> – najmä žiadny nelegálny obsah (napr. kradnuté diely), urážky, osobné údaje iných ľudí, reklama ani cudzie diela bez súhlasu. Za obsah príspevku zodpovedá jeho autor. Prevádzkovateľ príspevky vopred nekontroluje; výnimkou sú prvé 3 príspevky nového používateľa, ktoré pred zverejnením skontroluje správca.</li>
+        <li>Autor udeľuje prevádzkovateľovi bezplatnú nevýhradnú licenciu príspevok zobrazovať na portáli, kým ho autor nezmaže alebo nezruší účet. Autor môže príspevok upraviť do 24 hodín a zmazať kedykoľvek.</li>
+        <li>Nahlásenie príspevku, skrytie a zablokovanie účtu sa riadi časťou 4 rovnako ako pri inzerátoch: rozhoduje človek, autor uvidí pri príspevku dôvod skrytia a môže sa bezplatne ohradiť e-mailom; môže sa obrátiť aj na súd alebo na orgán mimosúdneho riešenia sporov podľa čl. 21 nariadenia (EÚ) 2022/2065.</li>
+        <li>Automaticky obmedzujeme len počet príspevkov (20 za hodinu, 5 nových tém za deň) a nahlásení. Rady vo fóre nenahrádzajú odborný servis; prevádzkovateľ za ne nezodpovedá.</li>
+        <li>Používateľ fóra môže účet kedykoľvek zrušiť v „Môj účet vo fóre“ – zmažú sa aj jeho príspevky. Prevádzkovateľ môže účet zablokovať pri porušení pravidiel; dôvod oznámi.</li>
+      </ul>
+
       <h2>5. Poplatky</h2>
       <p>Registrácia, inzeráty aj zvýraznenie TOP (najviac 3 inzeráty naraz na 30 dní) sú počas skúšobnej prevádzky zadarmo. Ak zavedieme platené služby, oznámime to vopred a bez súhlasu predajcu nič nespoplatníme.</p>
 

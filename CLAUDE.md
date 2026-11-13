@@ -342,3 +342,11 @@ Overené na Slov-Lexe: Občiansky zákonník § 597, 599, 612, 618, 619 (znenie 
 ## Next.js 16 a registrácia firmy (13. 11. 2026, 23:59)
 - Web beží na **Next.js 16** (Turbopack). Kontrola kódu: `npm run lint` (ESLint flat config v `web/eslint.config.mjs`), `next lint` neexistuje. Pravidlá React Compilera (`react-hooks/set-state-in-effect` a i.) sú vypnuté – compiler nepoužívame.
 - Podnikateľ musí pri registrácii aj v profile vyplniť **obchodné meno, IČO a sídlo** (označené *, chyba pri poli). IČO = 8 číslic + kontrolná číslica (`icoError` v `lib/legal.ts`). Databáza (supabase/14) nedovolí podnikateľovi bez IČO a sídla zverejniť inzerát.
+
+## Fórum (14. 11. 2026)
+- Sekcia **Fórum** (`/forum`) – „Technické otázky a poruchy“ s podsekciami podľa značiek (+ Veterány, Dodávky/nákladné/autobusy, Motorky). Odkaz v páse sekcií a v pätičke. Databáza `supabase/31_forum.sql`, test `supabase/testy/37_test_31.sql`, e2e `testy-e2e/test_forum.js`.
+- **Čítať môže každý bez účtu. Písať** môže používateľ s účtom do fóra (prezývka + e-mail + heslo, potvrdenie e-mailu, `user_metadata.role = "forum"`) alebo predajca so svojím účtom (značka „Predajca“). Účet fóra sa nedostane do portálu predajcu (`ensureProfile`), hlavička mu ukáže „Môj účet“ (`/forum/ucet`).
+- Príspevky sa zobrazia hneď; **prvé 3 príspevky nováčika schvaľuje správca** (`/admin` → Fórum), potom je „dôveryhodný“. Predajcovia hneď. Limity: 20 príspevkov/hod, 5 tém/deň. Úprava do 24 h, zmazanie kedykoľvek (prvý príspevok = celá téma).
+- Nahlásenie príspevku (DSA čl. 16) aj bez účtu; skrytie len človekom s dôvodom, ktorý autor vidí (DSA čl. 17). Zablokovanie, uzamknutie témy v /admin.
+- Písanie len cez funkcie `forum_*` (security definer), priamy zápis do tabuliek zakázaný. Zrušenie účtu zmaže aj príspevky. Stránky sa obnovia cez `/api/forum-obnovit`.
+- Právne: obchodné podmienky časť 4b (`#forum`), pravidlá `/forum/pravidla`, zásady GDPR (riadky Používateľ fóra a nahlásenie príspevku, „Verejnosti“), `TERMS_VERSION` 2026-11-14.
