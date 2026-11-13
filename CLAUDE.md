@@ -322,3 +322,8 @@ Overené na Slov-Lexe: Občiansky zákonník § 597, 599, 612, 618, 619 (znenie 
 - DNS vo Websupporte: A `@` → 216.198.79.1, CNAME `www` → 328ef0a25df83cb1.vercel-dns-017.com (hodnoty z Vercelu → Settings → Domains). Pri zmene hostingu zmeniť len tieto dva záznamy. MX/TXT/mail záznamy sú pre e-maily Websupportu – nemazať.
 - Supabase Auth: Site URL https://autosuciastky.eu, Redirect URLs https://autosuciastky.eu/** (+ stará adresa).
 - Google Search Console: vlastníctvo `sc-domain:autosuciastky.eu`, účet autosuciastky.eu@gmail.com, overenie TXT záznamom vo Websupporte (nemazať), odoslaná `sitemap.xml`.
+
+## Blog a SEO článkov (13. 11. 2026, 21:00)
+- Článok v `lib/blog.tsx` má `title` (H1, môže byť dlhý), `seoTitle` (titulok pre Google, najviac ~40 znakov, doplní sa „ | autosuciastky.eu“), `description` 120 – 160 znakov, voliteľne `updated` (dátum úpravy – dateModified a mapa webu) a `faq` (3 – 4 otázky; zobrazia sa pod článkom ako „Časté otázky“ a ako FAQPage). Odpovede vo FAQ musia sedieť s textom článku.
+- Každý článok má 2+ vnútorné odkazy (na sekciu webu, návod alebo iný článok) a na konci výzvu (`blog-tip`). Pri právnych a technických veciach upozornenie (`mute small`).
+- Články: ojazdené auto, autobatéria, zimné pneumatiky, označenie pneumatík a diskov, originálny vs. neoriginálny diel, ako predať použité diely.
