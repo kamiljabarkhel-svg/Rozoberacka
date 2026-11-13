@@ -327,3 +327,10 @@ Overené na Slov-Lexe: Občiansky zákonník § 597, 599, 612, 618, 619 (znenie 
 - Článok v `lib/blog.tsx` má `title` (H1, môže byť dlhý), `seoTitle` (titulok pre Google, najviac ~40 znakov, doplní sa „ | autosuciastky.eu“), `description` 120 – 160 znakov, voliteľne `updated` (dátum úpravy – dateModified a mapa webu) a `faq` (3 – 4 otázky; zobrazia sa pod článkom ako „Časté otázky“ a ako FAQPage). Odpovede vo FAQ musia sedieť s textom článku.
 - Každý článok má 2+ vnútorné odkazy (na sekciu webu, návod alebo iný článok) a na konci výzvu (`blog-tip`). Pri právnych a technických veciach upozornenie (`mute small`).
 - Články: ojazdené auto, autobatéria, zimné pneumatiky, označenie pneumatík a diskov, originálny vs. neoriginálny diel, ako predať použité diely.
+
+## Veterány (13. 11. 2026, 22:15)
+- Druh vozidla `veterany` („Veterány“) – záložka pri hľadaní hneď vedľa Osobných áut, rovnaké funkcie ako osobné autá. **Nie je v hlavičke** (majiteľ nechce).
+- Patria sem osobné autá, ktorých **výroba sa začala najneskôr v roku 1989**; Favorit je osobné auto. Generácie od 1990 a tie, ktoré už sú v osobných autách (Golf III, E34, 205…), sú v osobných autách.
+- Katalóg: `supabase/katalog/14_veterany.txt` (časti `!druh veterany` a `!druh osobne`) → `python3 generuj.py` → `supabase/30_katalog_veterany.sql`; demo `npm run gen:catalog`. Z pamäte – nahradiť TecDoc.
+- `supabase/29`: druh `veterany` v kontrolách, ročník od 1900, kategórie osobných áut aj pre veterány (okrem „Hybrid a elektropohon“), univerzálna kategória `vet` „Dobové doplnky, emblémy a literatúra“.
+- Pri veteránoch je číslo dielu nepovinné (`oemOptional` v `lib/types.ts`), VIN sa pri nich neponúka.
