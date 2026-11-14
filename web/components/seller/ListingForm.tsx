@@ -30,6 +30,9 @@ const MSG: Record<Key, string> = {
   city: "Zadajte mesto.", phone: "Telefón musí mať aspoň 9 číslic.",
 };
 
+// Krátke vysvetlenie pri dlaždiciach „Čo predávate?“
+const VT_HINT: Record<string, string> = { osobne: "autá bežne na cestách", veterany: "výroba začala do roku 1989", dodavky: "do 3,5 t", nakladne: "kamióny, nákladné autá", autobusy: "autobusy a minibusy", motorky: "motorky, skútre, štvorkolky" };
+
 export default function ListingForm({ uid, cat, prof, edit, donor, onSaved, wheelOnly, onWheels }: { uid: string; cat: Catalog; prof: Profile | null; edit: MyListing | null; donor?: Donor | null; onSaved: (id: number) => void; wheelOnly?: boolean; onWheels?: () => void }) {
   // Režim „Pneumatiky, disky a puklice“: kategória je pevná, prvá otázka je „Čo predávate?“ (dlaždice), druh vozidla sa nepýta.
   const wheelMode = !!wheelOnly || edit?.categoryId === WHEEL_CAT;
@@ -178,12 +181,14 @@ export default function ListingForm({ uid, cat, prof, edit, donor, onSaved, whee
               <option value="">Vyberte…</option>{subs.filter((x) => !WHEEL_SUBS.includes(x.name as (typeof WHEEL_SUBS)[number])).map((x) => <option key={x.id} value={x.id}>{x.name}</option>)}</select></label>
             {bad.has("sub") && <small className="pp-ferr">{MSG.sub}</small>}
           </div>}
-          {!wheelMode && <div className="full pp-vt pp-vt-big" role="radiogroup" aria-label="Druh vozidla"><span className="lt">Na aké vozidlo je diel? <em>*</em><small className="mute">Podľa toho ho nájdu správni kupujúci – diel na motorku uvidia len tí, čo hľadajú diely na motorky.</small></span>
+          {!wheelMode && <div className="full pp-vt pp-vt-big pp-vt-tiles" role="radiogroup" aria-label="Čo predávate"><span className="lt">Čo predávate? <em>*</em><small className="mute">Vyberte druh vozidla – podľa toho diel nájdu správni kupujúci (diel na motorku uvidia len tí, čo hľadajú diely na motorky).</small></span>
             {VEHICLE_TYPES.map((t) => <button key={t.id} type="button" role="radio" aria-checked={vt === t.id} className={vt === t.id ? "on" : ""} onClick={() => {
               if (t.id === vt) return; setVt(t.id); try { localStorage.setItem("rozoberacka-druh", t.id); } catch {}
               set("brandId", 0); set("modelId", 0); set("engineId", null); set("year", 0);
               const c = cat.categories.find((x) => x.id === v.categoryId); if (c?.vtypes?.length && !c.vtypes.includes(t.id)) { set("categoryId", ""); set("subcategoryId", null); }
-            }}>{t.name}</button>)}
+            }}><b>{t.name}</b><small>{VT_HINT[t.id]}</small></button>)}
+            {onWheels && !edit && <button type="button" className="pp-vt-wheels" onClick={onWheels}><b>Pneumatiky, disky, puklice</b><small>samostatný formulár s rozmermi</small></button>}
+            <p className="pp-vt-now">Pridávate diel na: <b>{VEHICLE_TYPES.find((t) => t.id === vt)?.name}</b></p>
           </div>}
           <div className="full">{L({ k: "name", t: wheel ? "Názov inzerátu" : "Názov dielu", children: <input value={v.name} maxLength={120} placeholder={wheel ? "napr. Zimné pneumatiky Michelin Alpin 6 205/55 R16" : "napr. Predné ľavé svetlo LED"} onChange={(e) => { set("name", e.target.value); clear("name"); }} /> })}</div>
           {!wheelMode && L({ k: "cat", t: "Kategória", children: <select value={v.categoryId} onChange={(e) => { set("categoryId", e.target.value); set("subcategoryId", null); clear("cat"); clear("sub"); }}><option value="">Vyberte…</option>{vtCats.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}</select> })}

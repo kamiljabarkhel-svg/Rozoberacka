@@ -78,6 +78,7 @@ export function search(listings: Listing[], f: Filters, cat: Catalog, favs: numb
     if (f.specs && Object.entries(cleanSpecs(f.specs)).some(([k, v]) => v && (l.specs as Record<string, string | undefined>)?.[k] !== v)) return false;
     if (f.city && l.city !== f.city) return false;
     if (f.max != null && l.price > f.max) return false;
+    if (f.min != null && l.price < f.min) return false;
     if (f.fav && !favs.includes(l.id)) return false;
     if (f.side && l.side && l.side !== f.side) return false;
     if (f.tested && !l.tested) return false;

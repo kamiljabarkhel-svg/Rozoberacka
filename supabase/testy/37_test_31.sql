@@ -35,7 +35,7 @@ select pg_temp.ok((public.forum_me() ->> 'trusted')::boolean and (public.forum_m
 
 -- nováčik: téma čaká na schválenie
 select pg_temp.as_user('f3100000-0000-0000-0000-000000000001');
-select pg_temp.ok(pg_temp.fails($q$select public.forum_new_thread('technika', 'Klepe motor 1.9 TDI', 'Text otázky')$q$), '31: do nadradenej sekcie sa nedá písať');
+select pg_temp.ok(pg_temp.fails($q$select public.forum_new_thread('diskusia', 'Klepe motor 1.9 TDI', 'Text otázky')$q$), '31: do nadradenej sekcie sa nedá písať');
 select pg_temp.ok(pg_temp.fails($q$select public.forum_new_thread('skoda', 'Kr', 'Text otázky')$q$), '31: prekrátky nadpis');
 select public.forum_new_thread('skoda', 'Klepe motor 1.9 TDI pri studenom štarte', 'Octavia II, 2008, klepe pri studenom štarte. Čo skontrolovať?');
 select pg_temp.ok((select status from public.forum_threads where title like 'Klepe motor%') = 'pending', '31: téma nováčika čaká na schválenie');

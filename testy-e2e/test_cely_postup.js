@@ -16,12 +16,12 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
     const a = await pg.locator(".pa .btn").boundingBox(), o = await pg.locator(".oemrow").boundingBox();
     if (!(a.y < o.y)) throw new Error(`Hladat y=${a.y} oem y=${o.y}`);
   });
-  await step("najhladanejsie diely nastavia kategoriu", async () => {
-    await pg.click(".pop .chip:has-text('Prevodovka')"); await pg.waitForURL(/kat=pr/);
-    if (await pg.locator(".pop .chip:has-text('Prevodovka')").getAttribute("aria-pressed") !== "true") throw new Error("tlacidlo nie je zapnute");
-    await pg.click(".pop .chip:has-text('Zadné svetlo')"); await pg.waitForURL(/kat=sv&pod=\d+/);
-    if (/q=/.test(pg.url())) throw new Error("ostal skryty text");
-    await pg.click(".pop .chip:has-text('Zadné svetlo')"); await pg.waitForFunction(() => !location.search.includes("kat="));
+  await step("popularne znacky nastavia znacku, cena od-do", async () => {
+    await pg.click(".pop .chip:has-text('Škoda')"); await pg.waitForURL(/znacka=\d+/);
+    if (await pg.locator(".pop .chip:has-text('Škoda')").getAttribute("aria-pressed") !== "true") throw new Error("tlacidlo nie je zapnute");
+    await pg.fill(".price-range input[aria-label^='Cena od']", "60"); await pg.waitForURL(/cena_od=60/);
+    await pg.fill(".price-range input[aria-label^='Cena od']", ""); await pg.waitForFunction(() => !location.search.includes("cena_od"));
+    await pg.click(".pop .chip:has-text('Škoda')"); await pg.waitForFunction(() => !location.search.includes("znacka="));
     if ((await pg.locator(".pa .btn").innerText()) !== "Hľadať" || !(await pg.locator("#vin .btn2").innerText()).includes("Hľadať podľa VIN")) throw new Error("texty tlacidiel");
   });
   await step("VIN: auto, rok 1995/2025, nakladne auto prepne druh", async () => {

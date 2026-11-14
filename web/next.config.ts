@@ -33,6 +33,7 @@ function securityHeaders() {
     "object-src 'none'",
     "base-uri 'self'",
     "form-action 'self'",
+    "frame-src https://www.openstreetmap.org",
     "frame-ancestors 'none'",
   ].join("; ");
   return [

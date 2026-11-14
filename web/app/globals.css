@@ -1760,3 +1760,31 @@ html[data-vt="dodavky"] .seo-links:not(:has([data-vt="dodavky"],[data-cat="dodav
 .fo-s-num b{font-size:16px}
 @media(max-width:420px){.snav{gap:12px!important}.snav a{font-size:15px!important}}
 @media(max-width:374px){.snav{gap:10px!important;padding:0 12px!important}.snav a{font-size:14px!important}}
+
+/* Formulár predajcu: dlaždice „Čo predávate?“ (14. 11. 2026) */
+.pp-vt-tiles{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.pp-vt-tiles .lt,.pp-vt-tiles .pp-vt-now{grid-column:1/-1}
+.pp-vt-tiles button{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;padding:12px 14px!important;border:1px solid var(--line);border-radius:6px;background:var(--card);min-height:64px}
+.pp-vt-tiles button b{font-size:15px}
+.pp-vt-tiles button small{font-size:12.5px;color:var(--mute);font-weight:400}
+.pp-vt-tiles button.on{border:2px solid var(--ink);background:var(--acc);color:var(--accink)}
+.pp-vt-tiles button.on small{color:var(--accink)}
+.pp-vt-tiles .pp-vt-wheels{border-style:dashed}
+.pp-vt-now{margin:4px 0 0;font-size:14px}
+@media(max-width:640px){.pp-vt-tiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* 14. 11. 2026: žlté „Hľadať podľa čísla/VIN“, mierne zaoblené polia, menšie súhlasy, cena od–do */
+.finder .oemrow .btn2,.finder .plate .btn2,.finder .find-alt .btn2{background:var(--acc)!important;color:var(--accink)!important;border:1px solid var(--acc)!important;font-weight:700}
+.finder .oemrow .btn2:hover,.finder .plate .btn2:hover{filter:brightness(.95)}
+select,input:not([type=checkbox]):not([type=radio]):not([type=range]),textarea{border-radius:6px}
+.pp-chk.pp-legal{font-size:11px!important;line-height:1.35!important;gap:6px}
+.pp-chk.pp-legal input{width:14px;height:14px}
+.price-range{border:0;padding:0;margin:0;display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:6px}
+.price-range legend{padding:0;margin-bottom:4px;font-weight:600;font-size:inherit}
+.price-range input{width:100%;min-width:0}
+
+/* Mapa mesta v detaile dielu */
+.citymap-b{display:grid;gap:4px;margin-top:12px}
+.citymap-b .ubtn{justify-self:start}
+.citymap{display:grid;gap:4px;margin-top:12px}
+.citymap iframe{width:100%;height:240px;border:1px solid var(--line);border-radius:6px}

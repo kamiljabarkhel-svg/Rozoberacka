@@ -36,6 +36,7 @@ export function describe(f: Filters, cat: Catalog | null): string {
   const c = cat?.categories.find((x) => x.id === f.cat)?.name, s = cat?.subcategories.find((x) => x.id === f.sub)?.name;
   if (c) p.push(s ? `${c} – ${s}` : c);
   const sp = specsLine(f.specs); if (sp) p.push(sp);
+  if (f.min != null) p.push(`od ${f.min} €`);
   if (f.max != null) p.push(`do ${f.max} €`);
   if (f.cond) p.push(f.cond);
   if (f.city) p.push(f.city);

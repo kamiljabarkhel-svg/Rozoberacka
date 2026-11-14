@@ -24,7 +24,7 @@ export default function Page() {
       <table className="legal-t lt-ck">
         <thead><tr><th>Názov</th><th>Druh</th><th>Načo slúži</th><th>Kategória</th><th>Ako dlho</th></tr></thead>
         <tbody>
-          <tr><td>rozoberacka-auth*</td><td>localStorage</td><td>prihlásenie predajcu (len po prihlásení)</td><td>nevyhnutné</td><td>do odhlásenia</td></tr>
+          <tr><td>rozoberacka-auth*</td><td>localStorage</td><td>prihlásenie predajcu alebo používateľa fóra (len po prihlásení)</td><td>nevyhnutné</td><td>do odhlásenia</td></tr>
           <tr><td>rozoberacka-fav</td><td>localStorage</td><td>obľúbené inzeráty, ktoré ste si označili</td><td>nevyhnutné (vami zapnutá funkcia)</td><td>kým ich nezmažete</td></tr>
           <tr><td>rozoberacka-hladania</td><td>localStorage</td><td>hľadania, ktoré ste si uložili (strážca dielov)</td><td>nevyhnutné (vami zapnutá funkcia)</td><td>kým ich nezmažete</td></tr>
           <tr><td>rozoberacka-dopyty</td><td>localStorage</td><td>odkazy na vaše dopyty na diely, aby ste ich našli znova</td><td>nevyhnutné (vami zapnutá funkcia)</td><td>kým ich nezmažete</td></tr>

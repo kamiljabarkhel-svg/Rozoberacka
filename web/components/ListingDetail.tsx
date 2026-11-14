@@ -1,5 +1,6 @@
 "use client";
 // Detail inzerátu: galéria, cena, telefón, predajca, popis, parametre, „Pasuje na“, podobné inzeráty.
+import CityMap from "./CityMap";
 import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { loadDetail, logView, type DetailData } from "@/lib/data";
 import type { Catalog } from "@/lib/types";
@@ -169,6 +170,7 @@ export default function ListingDetail({ id, onClose, initial, catalog }: { id: n
             {l.sellerId && !STATIC_PREVIEW && <Link className="lnk seller-all" href={sellerPath(l.sellerId, l.seller.name)}>Všetky diely predajcu{more.total ? ` (${more.total + 1})` : ""}</Link>}
             <span className="mute">Inzerát pridaný {agoText(l.createdAt)}{l.updatedAt && Date.parse(l.updatedAt) - Date.parse(l.createdAt) > 3600000 ? ` · upravený ${agoText(l.updatedAt)}` : ""}</span>
           </div>
+          {!STATIC_PREVIEW && l.city && <CityMap city={l.city} />}
         </div>
       </div>
 

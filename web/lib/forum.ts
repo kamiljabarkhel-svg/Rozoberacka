@@ -30,7 +30,10 @@ const pc = () => (pub ||= createClient(URL_, KEY_, { auth: { persistSession: fal
 // ---------- Ukážkový režim ----------
 const D = (h: number) => new Date(Date.now() - h * 3600e3).toISOString();
 const DEMO_SECTIONS: ForumSection[] = [
-  { id: "technika", parent: null, name: "Technické otázky a poruchy", description: "Poradňa podľa značky vozidla – poruchy, opravy, výber a výmena dielov.", threads: 0, posts: 0, last: null },
+  { id: "diskusia", parent: null, name: "Diskusia", description: "Všeobecné témy, rady a nápady – nielen k jednej značke.", threads: 0, posts: 0, last: null },
+  { id: "vseobecna-diskusia", parent: "diskusia", name: "Všeobecná diskusia", description: "O autách, cestovaní, servisoch, STK a všetkom ostatnom okolo vozidiel.", threads: 0, posts: 0, last: null },
+  { id: "rady-suciastky", parent: "diskusia", name: "Rady a nápady k súčiastkam", description: "Kde zohnať diel, čím ho nahradiť, ako zistiť číslo dielu, skúsenosti s výrobcami dielov.", threads: 0, posts: 0, last: null },
+  { id: "technika", parent: null, name: "Technické otázky a poruchy podľa značky", description: "Poradňa podľa značky vozidla – poruchy, opravy, výber a výmena dielov.", threads: 0, posts: 0, last: null },
   ...([["skoda", "Škoda", "Octavia, Fabia, Superb, Rapid, Kodiaq, Karoq, Favorit, Felicia…"], ["volkswagen", "Volkswagen", "Golf, Passat, Polo, Touran, Tiguan, Transporter…"],
     ["audi", "Audi", "A3, A4, A6, Q5, Q7…"], ["bmw", "BMW a Mini", "Rad 1, 3, 5, X1, X3, X5, Mini…"], ["ford", "Ford", "Focus, Fiesta, Mondeo, Kuga, Transit…"],
     ["veterany-tech", "Veterány", "Staršie autá – Škoda 100/120, Tatra, Trabant, Lada, Wartburg…"]] as const).map(([id, name, description], i) => ({

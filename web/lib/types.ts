@@ -86,6 +86,7 @@ export type Filters = {
   year: number | null;
   cat: string;
   sub: number | null;
+  min: number | null;
   max: number | null;
   cond: string;
   city: string;
@@ -99,7 +100,7 @@ export type Filters = {
 export const emptyFilters: Filters = {
   vtype: "", wtype: "", specs: {},
   q: "", brand: null, model: null, engine: null, year: null, cat: "", sub: null,
-  max: null, cond: "", city: "", sort: "new", fav: false, side: "", tested: false, ret: false,
+  min: null, max: null, cond: "", city: "", sort: "new", fav: false, side: "", tested: false, ret: false,
 };
 
 // ---------- Pneumatiky a disky ----------

@@ -24,20 +24,18 @@ import SellersSoon from "./SellersSoon";
 import { CARS_ENABLED } from "@/lib/features";
 
 const PAGE = 12;
-// Najhľadanejšie diely: tlačidlo nastaví kategóriu (a podkategóriu podľa názvu v katalógu), nie skrytý text.
-// Predchádzajúci text a kategória sa zrušia, vybrané auto ostane. Bez podkategórie = celá kategória,
-// bez kategórie = hľadanie textom (riadiace jednotky sú v kategórii Motor aj Elektro).
-const POP: { label: string; cat?: string; sub?: string; q?: string }[] = [
-  { label: "Predné svetlo", cat: "sv", sub: "Predné svetlá" }, { label: "Zadné svetlo", cat: "sv", sub: "Zadné svetlá" },
-  { label: "Nárazník", cat: "kar", sub: "Nárazníky" }, { label: "Kapota", cat: "kar", sub: "Kapoty" },
-  { label: "Zrkadlo", cat: "kar", sub: "Spätné zrkadlá" }, { label: "Dvere", cat: "kar", sub: "Dvere" },
-  { label: "Riadiaca jednotka", q: "Riadiaca jednotka" }, { label: "Alternátor", cat: "el", sub: "Alternátory" },
-  { label: "Turbo", cat: "motor", sub: "Turbodúchadlá" }, { label: "Motor", cat: "motor", sub: "Motory kompletné" },
-  { label: "Prevodovka", cat: "pr" }, { label: "Volant", cat: "int", sub: "Volanty a airbagy" },
-];
+// Najpopulárnejšie značky (podľa druhu vozidla) – tlačidlo vyberie značku v hľadaní. Ukážu sa len tie, ktoré sú v katalógu.
+const POP_BRANDS: Record<string, string[]> = {
+  osobne: ["Škoda", "Volkswagen", "Audi", "BMW", "Mercedes-Benz", "Ford", "Opel", "Hyundai", "Kia", "Toyota", "Renault", "Peugeot", "Seat", "Citroën", "Dacia", "Fiat"],
+  veterany: ["Škoda", "Tatra", "Trabant", "Wartburg", "Lada", "Volkswagen", "Mercedes-Benz", "BMW", "Fiat", "Dacia", "Moskvič", "Zastava"],
+  dodavky: ["Volkswagen", "Mercedes-Benz", "Ford", "Renault", "Peugeot", "Citroën", "Fiat", "Iveco", "Opel", "Nissan"],
+  nakladne: ["MAN", "Scania", "DAF", "Volvo", "Mercedes-Benz", "Iveco", "Renault", "Tatra"],
+  autobusy: ["Iveco", "Mercedes-Benz", "MAN", "Setra", "Karosa", "Irisbus", "Solaris", "SOR", "Volvo", "Scania"],
+  motorky: ["Honda", "Yamaha", "Suzuki", "Kawasaki", "KTM", "BMW", "Ducati", "Jawa", "Harley-Davidson", "Piaggio"],
+};
 
 // Krátke názvy parametrov v adrese
-const P = { q: "q", brand: "znacka", model: "model", engine: "motor", year: "rok", cat: "kat", sub: "pod", max: "cena", cond: "stav", city: "mesto", sort: "zoradit", fav: "oblubene", side: "strana", tested: "odskusane", ret: "vratenie", vtype: "druh", wtype: "typ" } as const;
+const P = { q: "q", brand: "znacka", model: "model", engine: "motor", year: "rok", cat: "kat", sub: "pod", min: "cena_od", max: "cena", cond: "stav", city: "mesto", sort: "zoradit", fav: "oblubene", side: "strana", tested: "odskusane", ret: "vratenie", vtype: "druh", wtype: "typ" } as const;
 // Parametre kolies v adrese (len pri kategórii Pneumatiky a disky)
 const SP: [keyof Specs, string][] = [["pcd", "roztec"], ["rd", "priemer"], ["tw", "sirka"], ["tp", "profil"], ["season", "sezona"], ["rw", "disk"], ["et", "et"], ["mat", "material"]];
 
@@ -46,14 +44,6 @@ function pick(o: Specs, keys: (keyof Specs)[]): Specs { const r: Specs = {}; for
 
 const HOME_DEFAULT: Filters = { ...emptyFilters, vtype: "osobne" };
 
-// Najhľadanejšie diely na motorky (iné kategórie ako pri autách)
-const POP_MOTO: typeof POP = [
-  { label: "Predné svetlo", cat: "sv", sub: "Predné svetlá" }, { label: "Zadné svetlo", cat: "sv", sub: "Zadné svetlá" },
-  { label: "Kapotáž", cat: "mrm", sub: "Kapotáže a plasty" }, { label: "Nádrž", cat: "mrm", sub: "Nádrže" }, { label: "Sedlo", cat: "mrm", sub: "Sedlá" },
-  { label: "Predná vidlica", cat: "mvi", sub: "Predné vidlice" }, { label: "Riadidlá", cat: "mri", sub: "Riadidlá" }, { label: "Zrkadlo", cat: "mri", sub: "Zrkadlá" },
-  { label: "Výfuk", cat: "pal", sub: "Výfuky" }, { label: "Reťazová sada", cat: "mpo", sub: "Reťazové sady" }, { label: "Motor", cat: "motor" },
-];
-
 function readUrl(): Filters {
   const f = { ...HOME_DEFAULT };
   let s: URLSearchParams;
@@ -61,7 +51,7 @@ function readUrl(): Filters {
   const num = (k: string) => { const v = s.get(k); const n = v ? Number(v) : NaN; return Number.isFinite(n) ? n : null; };
   f.q = s.get(P.q) || "";
   f.brand = num(P.brand); f.model = num(P.model); f.engine = num(P.engine); f.year = num(P.year);
-  f.cat = s.get(P.cat) || ""; f.sub = num(P.sub); f.max = num(P.max);
+  f.cat = s.get(P.cat) || ""; f.sub = num(P.sub); f.max = num(P.max); f.min = num(P.min);
   f.cond = s.get(P.cond) || ""; f.city = s.get(P.city) || "";
   const so = s.get(P.sort); f.sort = so === "asc" || so === "desc" ? so : "new";
   f.fav = s.get(P.fav) === "1";
@@ -78,7 +68,7 @@ function writeUrl(f: Filters) {
   const s = new URLSearchParams();
   const put = (k: string, v: string | number | null | boolean) => { if (v !== null && v !== "" && v !== false) s.set(k, v === true ? "1" : String(v)); };
   put(P.q, f.q.trim()); put(P.brand, f.brand); put(P.model, f.model); put(P.engine, f.engine); put(P.year, f.year);
-  put(P.cat, f.cat); put(P.sub, f.sub); put(P.max, f.max); put(P.cond, f.cond); put(P.city, f.city);
+  put(P.cat, f.cat); put(P.sub, f.sub); put(P.min, f.min); put(P.max, f.max); put(P.cond, f.cond); put(P.city, f.city);
   if (f.sort !== "new") put(P.sort, f.sort);
   put(P.fav, f.fav); put(P.side, f.side); put(P.tested, f.tested); put(P.ret, f.ret); if (f.vtype !== "osobne") put(P.vtype, f.vtype || "vsetky");
   if (f.cat === WHEEL_CAT) { put(P.wtype, f.wtype || "vsetko"); for (const [k, n] of SP) put(n, f.specs?.[k] || ""); }
@@ -259,8 +249,8 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
     : wheels ? (f.wtype === "disk" ? "Disky" : f.wtype === "kolesa" ? "Kolesá s pneumatikami" : f.wtype === "pneu" ? "Pneumatiky" : f.wtype === "puklice" ? "Puklice" : "Pneumatiky a disky")
     : catName || carLabel ? `${subName || catName || "Diely"}${carLabel ? " na " + carLabel : ""}`
     : "Použité autodiely";
-  const pops = (f.vtype === "motorky" ? POP_MOTO : POP).filter((p) => cats.some((c) => c.id === p.cat));
-  const filtersOn = f.year != null || f.max != null || !!f.cond || !!f.city || !!f.side || f.tested || f.ret;
+  const popBrands = (POP_BRANDS[f.vtype || "osobne"] || POP_BRANDS.osobne).map((n) => brands.find((b) => b.name === n)).filter((b): b is (typeof brands)[number] => !!b);
+  const filtersOn = f.year != null || f.min != null || f.max != null || !!f.cond || !!f.city || !!f.side || f.tested || f.ret;
   const searched = went || wheels || f.brand != null || !!f.cat || !!f.q || f.fav || filtersOn;
 
   return (
@@ -290,13 +280,13 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
                   const keepYear = f.year != null && m && f.year >= m.yearFrom && f.year <= (m.yearTo || 9999);
                   set({ model: id, engine: null, year: keepYear || !m ? f.year : null });
                 }}>
-                  {opt("", f.brand == null ? "Najprv vyberte značku" : "Všetky modely")}
+                  {opt("", f.brand == null ? "Najprv značku" : "Všetky modely")}
                   {models.map((m) => opt(m.id, `${m.name} (${m.yearFrom}–${m.yearTo || "dnes"})`))}
                 </select>
               </label>
               <label>Motorizácia
                 <select value={f.engine ?? ""} disabled={!model} onChange={(e) => set({ engine: numOrNull(e.target.value) })}>
-                  {opt("", model ? "Všetky motorizácie" : "Najprv vyberte model")}{engines.map((x) => opt(x.id, x.name))}
+                  {opt("", model ? "Všetky motorizácie" : "Najprv model")}{engines.map((x) => opt(x.id, x.name))}
                 </select>
               </label>
               <label>Časť auta
@@ -309,7 +299,7 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
           </div>}
           {wheels && <div className="wheelbox" id="pneu">
             <div className="wb-type" role="radiogroup" aria-label="Čo hľadáte">
-              {([["pneu", "Pneumatiky"], ["disk", "Disky"], ["kolesa", "Kolesá (disk s pneumatikou)"], ["puklice", "Puklice"], ["", "Všetko"]] as const).map(([id, label]) =>
+              {([["pneu", "Pneumatiky"], ["disk", "Disky"], ["kolesa", "Kolesá (disk s pneumatikou)"], ["puklice", "Puklice"], ["", "Všetky typy"]] as const).map(([id, label]) =>
                 <button key={id} type="button" role="radio" aria-checked={f.wtype === id} className={f.wtype === id ? "on" : ""}
                   onClick={() => set({ wtype: id, sub: null, brand: null, model: null, specs: id === "pneu" ? pick(f.specs, ["tw", "tp", "rd", "season"]) : id === "disk" || id === "kolesa" ? pick(f.specs, ["rd", "pcd", "rw", "et", "mat"]) : id === "puklice" ? pick(f.specs, ["rd"]) : {} })}>{label}</button>)}
             </div>
@@ -352,7 +342,7 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
             <p className="wb-hint">{f.wtype === "puklice" ? <>Priemer puklice je rovnaký ako priemer disku – nájdete ho na boku pneumatiky za písmenom R, napr. 195/65 <b>R15</b> = 15{"\""}.</> : f.wtype === "disk" || f.wtype === "kolesa" ? <>Rozmer disku je vyrazený na jeho vnútornej strane, napr. <b>7J×16 ET45 5x112</b>: šírka 7, priemer 16, zális 45, rozteč 5x112.</> : <>Rozmer nájdete na boku pneumatiky, napr. <b>205/55 R16 91V</b>: šírka 205, profil 55, priemer 16.</>}</p>
             <div className="pa"><button type="button" className="lnk" onClick={() => set({ wtype: f.wtype, specs: {}, brand: null, model: null })}>Zrušiť rozmery</button><button className="btn" onClick={toRes}>Zobraziť {f.wtype === "disk" ? "disky" : f.wtype === "kolesa" ? "kolesá" : f.wtype === "pneu" ? "pneumatiky" : f.wtype === "puklice" ? "puklice" : "ponuky"}</button></div>
           </div>}
-          {!wheels && f.vtype === "veterany" && <div className="vet-wrap"><p className="vet-note"><b>Diely na veterány</b> – osobné autá, ktorých výroba sa začala najneskôr v roku 1989 (Škoda 1000 MB a 120, Tatra 603, Trabant, Lada, VW Chrobák, Mercedes W123…). Pri starých dieloch číslo dielu často nie je – hľadajte podľa vozidla a časti auta.</p></div>}
+          {!wheels && f.vtype === "veterany" && <div className="vet-wrap"><p className="vet-note"><b>Diely na veterány</b> – osobné autá, ktorých výroba sa začala najneskôr v roku 1989.</p></div>}
           {!wheels && <button type="button" className="find-alt-t" aria-expanded={altOpen} onClick={() => setAltOpen(!altOpen)}>{altOpen ? "Skryť hľadanie podľa čísla dielu a VIN" : "Mám číslo dielu alebo VIN"}</button>}
           {!wheels && <div className={"find-alt" + (altOpen ? " open" : "")}>
             <form id="hladat" className="oemrow" onSubmit={(e) => { e.preventDefault(); if (!oemQ.trim()) return; set({ q: oemQ.trim() }); window.dispatchEvent(new CustomEvent("rz-q-set", { detail: oemQ.trim() })); setTimeout(toRes, 30); }}>
@@ -402,9 +392,11 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
                 {opt("", "Každý ročník")}{years.map((y) => opt(y, String(y)))}
               </select>
             </label>}
-            <label>Cena do
-              <input type="number" min={0} inputMode="numeric" placeholder="€" value={f.max ?? ""} onChange={(e) => set({ max: e.target.value === "" ? null : Math.max(0, Number(e.target.value)) })} />
-            </label>
+            <fieldset className="price-range"><legend>Cena (€)</legend>
+              <input type="number" min={0} inputMode="numeric" placeholder="od" aria-label="Cena od (€)" value={f.min ?? ""} onChange={(e) => set({ min: e.target.value === "" ? null : Math.max(0, Number(e.target.value)) })} />
+              <span aria-hidden="true">–</span>
+              <input type="number" min={0} inputMode="numeric" placeholder="do" aria-label="Cena do (€)" value={f.max ?? ""} onChange={(e) => set({ max: e.target.value === "" ? null : Math.max(0, Number(e.target.value)) })} />
+            </fieldset>
             <label>Stav
               <select value={f.cond} onChange={(e) => set({ cond: e.target.value })}>
                 {wheels ? WHEEL_CONDS.map(([id, l]) => opt(id, l)) : <>{opt("", "Každý stav")}{CONDITIONS.map((c) => opt(c, condLabel(c)))}</>}
@@ -422,7 +414,7 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
             </label>}
             {!wheels && <label className="chk"><input type="checkbox" checked={f.tested} onChange={(e) => set({ tested: e.target.checked })} /> Len odskúšané diely</label>}
             <label className="chk"><input type="checkbox" checked={f.ret} onChange={(e) => set({ ret: e.target.checked })} /> Len s možnosťou vrátenia</label>
-            {filtersOn && <button className="lnk" onClick={() => set({ year: null, max: null, cond: "", city: "", side: "", tested: false, ret: false })}>Zrušiť filtre</button>}
+            {filtersOn && <button className="lnk" onClick={() => set({ year: null, min: null, max: null, cond: "", city: "", side: "", tested: false, ret: false })}>Zrušiť filtre</button>}
           </div>
         </aside>}
 
@@ -450,16 +442,13 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
           <SavedSearches list={saved.list} cat={catalog} onRemove={saved.remove}
             onOpen={(x) => { setF({ ...x.f, fav: false }); saved.seen(x.id); window.dispatchEvent(new CustomEvent("rz-q-set", { detail: x.f.q })); setTimeout(toRes, 30); }} />
 
-          {!wheels && !f.fav && <div className="pop"><h2 className="sh">Najhľadanejšie diely</h2><div className="chips">
-            {pops.map((p) => {
-              const sub = p.sub && catalog ? catalog.subcategories.find((s) => s.categoryId === p.cat && s.name === p.sub)?.id ?? null : null;
-              const on = p.q ? f.q === p.q && !f.cat : !f.q && f.cat === p.cat && f.sub === sub;
-              return <button key={p.label} className="chip" aria-pressed={on} onClick={() => {
-                const q = on ? "" : p.q || "";
-                set(on ? { q: "", cat: "", sub: null } : { q, cat: p.cat || "", sub });
-                window.dispatchEvent(new CustomEvent("rz-q-set", { detail: q })); setOemQ("");
+          {!wheels && !f.fav && popBrands.length > 0 && <div className="pop"><h2 className="sh">Najpopulárnejšie značky</h2><div className="chips">
+            {popBrands.map((b) => {
+              const on = f.brand === b.id;
+              return <button key={b.id} className="chip" aria-pressed={on} onClick={() => {
+                set(on ? { brand: null, model: null, engine: null } : { brand: b.id, model: null, engine: null });
                 if (!on) setTimeout(toRes, 30);
-              }}>{p.label}</button>;
+              }}>{b.name}</button>;
             })}
           </div></div>}
 
