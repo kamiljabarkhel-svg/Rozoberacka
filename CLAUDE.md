@@ -358,3 +358,7 @@ Overené na Slov-Lexe: Občiansky zákonník § 597, 599, 612, 618, 619 (znenie 
 - Formulár predajcu začína dlaždicami „Čo predávate?“ (druh vozidla s vysvetlením + odkaz na formulár pneumatík).
 - Mapa v detaile dielu (`components/CityMap.tsx`): približne podľa mesta, OpenStreetMap sa načíta až po kliknutí; mesto hľadá server (`/api/mesto`, tabuľka väčších miest SR, inak Nominatim). CSP `frame-src https://www.openstreetmap.org`, uvedené v zásadách GDPR.
 - IČO: verejné a povinné len pri podnikateľovi (identifikačné povinnosti obchodníka voči spotrebiteľovi); súkromná osoba bez IČO. Overiť s právnikom.
+
+## CAPTCHA a mapa predajcu (14. 11. 2026, 13:40)
+- Ochrana proti robotom: **Cloudflare Turnstile** (Supabase nepodporuje Google reCAPTCHA). `components/Captcha.tsx` (`useCaptcha`) pri registrácii, prihlásení a obnove hesla predajcu aj fóra. Zapína `NEXT_PUBLIC_TURNSTILE_SITE_KEY` vo Verceli; tajný kľúč len v Supabase → Authentication → Attack Protection. Poradie: najprv Vercel (a nasadenie), potom Supabase – inak nepôjde prihlásenie. CSP aj zásady sa prispôsobia podľa premennej.
+- Stránka predajcu `/predajci/<id>` má mapu (mesto z profilu, inak najčastejšie mesto z inzerátov).
