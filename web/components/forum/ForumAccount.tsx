@@ -1,6 +1,7 @@
 "use client";
 // Účet vo fóre: prihlásenie, registrácia (prezývka + e-mail + heslo), zabudnuté heslo, prezývka, moje príspevky,
 // stiahnutie údajov a zrušenie účtu. Predajca sa prihlási svojím účtom predajcu.
+import { useCaptcha } from "@/components/Captcha";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -50,18 +51,20 @@ function AuthForm({ onIn }: { onIn: () => Promise<void> }) {
   const [err, setErr] = useState(""), [bad, setBad] = useState(""), [ok, setOk] = useState(""), [busy, setBusy] = useState(false);
   const fail = (m: string, k = "") => { setErr(m); setBad(k); };
   const fe = (k: string) => (bad === k && err ? <small className="f-err" role="alert">{err}</small> : null);
+  const cap = useCaptcha();
   const submit = async (e: React.FormEvent) => {
     e.preventDefault(); setErr(""); setBad(""); setOk("");
     if (mode === "up" && !NICK_RE.test(nick.trim())) return fail("Prezývka musí mať 3 až 30 znakov (písmená, číslice, medzera, bodka, pomlčka alebo _).", "nick");
     if (!/^\S+@\S+\.\S+$/.test(email.trim())) return fail("Zadajte platný e-mail.", "email");
     if (mode !== "reset" && pw.length < 8) return fail("Heslo musí mať aspoň 8 znakov.", "pw");
     if (mode === "up" && !agree) return fail("Na registráciu treba súhlasiť s podmienkami a pravidlami fóra.");
+    if (cap.needed && !cap.token) return fail("Potvrďte overenie „Nie som robot“ nad tlačidlom.");
     setBusy(true);
     try {
-      if (mode === "in") { await forumSignIn(email, pw); await onIn(); }
-      else if (mode === "up") { const confirm = await forumSignUp(email, pw, nick); if (confirm) setOk("Hotovo. Poslali sme vám e-mail – kliknite na odkaz v ňom a potom sa prihláste."); else await onIn(); }
-      else { await forumResetPassword(email); setOk("Ak účet existuje, poslali sme e-mail s odkazom na nové heslo."); }
-    } catch (x) { fail(String((x as Error).message || x)); } finally { setBusy(false); }
+      if (mode === "in") { await forumSignIn(email, pw, cap.token); await onIn(); }
+      else if (mode === "up") { const confirm = await forumSignUp(email, pw, nick, cap.token); if (confirm) setOk("Hotovo. Poslali sme vám e-mail – kliknite na odkaz v ňom a potom sa prihláste."); else await onIn(); }
+      else { await forumResetPassword(email, cap.token); setOk("Ak účet existuje, poslali sme e-mail s odkazom na nové heslo."); }
+    } catch (x) { fail(String((x as Error).message || x)); } finally { setBusy(false); cap.reset(); }
   };
   const tab = (m: Mode, l: string) => <button type="button" role="tab" aria-selected={mode === m} onClick={() => { setMode(m); setErr(""); setBad(""); setOk(""); }}>{l}</button>;
   return (
@@ -80,6 +83,7 @@ function AuthForm({ onIn }: { onIn: () => Promise<void> }) {
         {mode === "up" && <label className="pp-chk pp-legal"><input type="checkbox" checked={agree} onChange={(e) => setAgree(e.target.checked)} /> <span>Mám aspoň 18 rokov a súhlasím s <a href="/obchodne-podmienky#forum" target="_blank">obchodnými podmienkami</a> a <a href="/forum/pravidla" target="_blank">pravidlami fóra</a>. Beriem na vedomie <a href="/ochrana-osobnych-udajov" target="_blank">spracúvanie osobných údajov</a>.</span></label>}
         {err && !bad && <p className="pp-err" role="alert">{err}</p>}
         {ok && <p className="pp-ok" role="status">{ok}</p>}
+        {cap.el}
         <button className="btn" disabled={busy}>{busy ? "Čakajte…" : mode === "up" ? "Vytvoriť účet" : mode === "reset" ? "Poslať odkaz" : "Prihlásiť sa"}</button>
         {mode === "in" && <button type="button" className="lnk" onClick={() => { setMode("reset"); setErr(""); setOk(""); }}>Zabudli ste heslo?</button>}
         {mode === "reset" && <button type="button" className="lnk" onClick={() => setMode("in")}>Späť na prihlásenie</button>}

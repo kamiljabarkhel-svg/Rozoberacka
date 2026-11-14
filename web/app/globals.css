@@ -1788,3 +1788,6 @@ select,input:not([type=checkbox]):not([type=radio]):not([type=range]),textarea{b
 .citymap-b .ubtn{justify-self:start}
 .citymap{display:grid;gap:4px;margin-top:12px}
 .citymap iframe{width:100%;height:240px;border:1px solid var(--line);border-radius:6px}
+
+/* Turnstile */
+.captcha{min-height:65px;display:grid;gap:4px}

@@ -14,16 +14,16 @@ export async function forumSession(): Promise<Session | null> {
   if (FORUM_DEMO) return null;
   return (await c().auth.getSession()).data.session;
 }
-export async function forumSignUp(email: string, password: string, nick: string): Promise<boolean> {
+export async function forumSignUp(email: string, password: string, nick: string, captchaToken?: string): Promise<boolean> {
   const { data, error } = await c().auth.signUp({
     email: email.trim(), password,
-    options: { data: { role: "forum", nick: nick.trim(), terms_version: FORUM_TERMS, terms_accepted_at: new Date().toISOString() }, emailRedirectTo: window.location.origin + "/forum/ucet" },
+    options: { data: { role: "forum", nick: nick.trim(), terms_version: FORUM_TERMS, terms_accepted_at: new Date().toISOString() }, emailRedirectTo: window.location.origin + "/forum/ucet", captchaToken: captchaToken || undefined },
   });
   if (error) throw new Error(skError(error));
   return !data.session;   // true = treba potvrdiť e-mail
 }
-export async function forumSignIn(email: string, password: string) {
-  const { error } = await c().auth.signInWithPassword({ email: email.trim(), password });
+export async function forumSignIn(email: string, password: string, captchaToken?: string) {
+  const { error } = await c().auth.signInWithPassword({ email: email.trim(), password, options: { captchaToken: captchaToken || undefined } });
   if (error) throw new Error(skError(error));
 }
 export async function forumSignOut() { await c().auth.signOut(); }
@@ -51,8 +51,8 @@ export async function forumThreadMine(id: number): Promise<ForumThread | null> {
 export async function forumMyPosts(): Promise<MyForumPost[]> { return (must(await c().rpc("forum_my_posts")) as MyForumPost[]) || []; }
 export async function forumExport(): Promise<unknown> { return must(await c().rpc("forum_export_my_data")); }
 export async function forumDeleteAccount() { must(await c().rpc("forum_delete_account")); await c().auth.signOut(); }
-export async function forumResetPassword(email: string) {
-  const { error } = await c().auth.resetPasswordForEmail(email.trim(), { redirectTo: window.location.origin + "/forum/ucet?heslo=1" });
+export async function forumResetPassword(email: string, captchaToken?: string) {
+  const { error } = await c().auth.resetPasswordForEmail(email.trim(), { redirectTo: window.location.origin + "/forum/ucet?heslo=1", captchaToken: captchaToken || undefined });
   if (error) throw new Error(skError(error));
 }
 /** Obnoví verejné stránky fóra po zmene (Next.js si ich inak pamätá minútu). */

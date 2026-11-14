@@ -19,21 +19,23 @@ function securityHeaders() {
   const gaScript = ga ? " https://www.googletagmanager.com" : "";
   const gaConnect = ga ? " https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com" : "";
   const gaImg = ga ? " https://*.google-analytics.com https://www.googletagmanager.com" : "";
+  // Cloudflare Turnstile (ochrana proti robotom) – len ak je zapnutý
+  const ts = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ? " https://challenges.cloudflare.com" : "";
   const csp = [
     "default-src 'self'",
     // 'unsafe-inline' potrebuje Next.js pre vložené skripty stránky; 'wasm-unsafe-eval' a blob: čítanie čísla z fotky (tesseract.js)
-    `script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' blob:${dev ? " 'unsafe-eval'" : ""}${an ? " " + an : ""}${gaScript}`,
+    `script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' blob:${dev ? " 'unsafe-eval'" : ""}${an ? " " + an : ""}${gaScript}${ts}`,
     "worker-src 'self' blob:",
     "style-src 'self' 'unsafe-inline'",
     `img-src 'self' data: blob: ${supa}${gaImg}`.trim(),
     "font-src 'self' data:",
-    `connect-src 'self' ${supa} ${ws} ${an}${gaConnect}`.trim(),
+    `connect-src 'self' ${supa} ${ws} ${an}${gaConnect}${ts}`.trim(),
     "manifest-src 'self'",
     "media-src 'self' blob:",
     "object-src 'none'",
     "base-uri 'self'",
     "form-action 'self'",
-    "frame-src https://www.openstreetmap.org",
+    `frame-src https://www.openstreetmap.org${ts}`,
     "frame-ancestors 'none'",
   ].join("; ");
   return [

@@ -36,6 +36,7 @@ export type Message = { id: number; listingId: number; carId?: number | null; li
   buyerEmail: string | null; lastAt: string; replies: Reply[] };
 
 const SKMSG: [RegExp, string][] = [
+  [/captcha/i, "Overenie proti robotom zlyhalo alebo vypršalo. Potvrďte „Nie som robot“ znova a skúste to ešte raz."],
   [/Invalid login credentials/i, "Nesprávny e-mail alebo heslo."],
   [/Email not confirmed/i, "E-mail ešte nie je potvrdený. Kliknite na odkaz v e-maile od nás."],
   [/User already registered/i, "Tento e-mail je už zaregistrovaný. Prihláste sa."],
@@ -68,24 +69,24 @@ export function onAuthChange(cb: (s: Session | null) => void): () => void {
   const { data } = sellerClient().auth.onAuthStateChange((_e, s) => cb(s));
   return () => data.subscription.unsubscribe();
 }
-export async function signIn(email: string, password: string) {
-  const { error } = await sellerClient().auth.signInWithPassword({ email: email.trim(), password });
+export async function signIn(email: string, password: string, captchaToken?: string) {
+  const { error } = await sellerClient().auth.signInWithPassword({ email: email.trim(), password, options: { captchaToken: captchaToken || undefined } });
   if (error) throw new Error(skError(error));
 }
 /** Vráti true, ak je treba potvrdiť e-mail. */
 export type SignUpInfo = { name: string; type: "Firma" | "Súkromná osoba"; ico: string; address: string };
-export async function signUp(email: string, password: string, info: SignUpInfo): Promise<boolean> {
+export async function signUp(email: string, password: string, info: SignUpInfo, captchaToken?: string): Promise<boolean> {
   const firm = info.type === "Firma";
   const { data, error } = await sellerClient().auth.signUp({
     email: email.trim(), password,
     options: { data: { name: info.name.trim(), seller_type: info.type, ico: firm ? info.ico.replace(/\s/g, "") : null, address: firm ? info.address.trim() : null,
-      terms_version: TERMS_VERSION, terms_accepted_at: new Date().toISOString() }, emailRedirectTo: window.location.origin + "/predajca" },
+      terms_version: TERMS_VERSION, terms_accepted_at: new Date().toISOString() }, emailRedirectTo: window.location.origin + "/predajca", captchaToken: captchaToken || undefined },
   });
   if (error) throw new Error(skError(error));
   return !data.session;
 }
-export async function resetPassword(email: string) {
-  const { error } = await sellerClient().auth.resetPasswordForEmail(email.trim(), { redirectTo: window.location.origin + "/predajca?heslo=1" });
+export async function resetPassword(email: string, captchaToken?: string) {
+  const { error } = await sellerClient().auth.resetPasswordForEmail(email.trim(), { redirectTo: window.location.origin + "/predajca?heslo=1", captchaToken: captchaToken || undefined });
   if (error) throw new Error(skError(error));
 }
 export async function changePassword(pw: string) {

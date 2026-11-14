@@ -5,6 +5,7 @@ import { CARS_ENABLED } from "@/lib/features";
 
 // Texty o Google Analytics sú pripravené vždy (lišta sa naň pýta); GA_ON = meranie naozaj beží (NEXT_PUBLIC_GA_ID).
 const GA = true;
+const TS = !!process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 const GA_ON = /^G-[A-Z0-9]+$/.test((process.env.NEXT_PUBLIC_GA_ID || "").trim());
 const NOT_YET = GA_ON ? "" : " Meranie zatiaľ nie je spustené – ak súhlasíte, začne sa až po jeho spustení; dovtedy sa kód Google nenačíta vôbec.";
 
@@ -55,11 +56,11 @@ export default function Page() {
         <li><b>Predajcovi</b>: meno, kontakt a text vašej správy dostane len predajca, ktorému píšete.</li>
         <li><b>Registrovaným predajcom</b>: dopyt na diel vrátane mena a kontaktu vidia prihlásení predajcovia na portáli (nie verejnosť), aby vám mohli poslať ponuku.</li>
         <li><b>Kupujúcemu, ktorý zadal dopyt</b>: ponuku predajcu (názov predajcu, typ, mesto, cenu, telefón a poznámku) vidí len tento kupujúci na svojej neverejnej adrese dopytu.</li>
-        <li><b>Sprostredkovateľom</b>, ktorí pre nás zabezpečujú techniku: Supabase Inc. (databáza, prihlásenie, fotky a zatiaľ aj odosielanie potvrdzovacích e-mailov; údaje sú uložené v dátovom centre vo Frankfurte, Nemecko; zmluva o spracúvaní údajov je súčasťou zmluvy so Supabase), poskytovateľ hostingu Vercel Inc. (zobrazovanie webu; stránky sa pripravujú na serveroch vo Frankfurte) a po zapojení aj Brevo (Sendinblue SAS, Francúzsko – odosielanie e-mailov – odpovedí v konverzáciách a upozornení strážcu).{GA && " So súhlasom návštevníka aj Google Ireland Ltd. (Google Analytics – meranie návštevnosti, časť 6)."}</li>
+        <li><b>Sprostredkovateľom</b>, ktorí pre nás zabezpečujú techniku: Supabase Inc. (databáza, prihlásenie, fotky a zatiaľ aj odosielanie potvrdzovacích e-mailov; údaje sú uložené v dátovom centre vo Frankfurte, Nemecko; zmluva o spracúvaní údajov je súčasťou zmluvy so Supabase), poskytovateľ hostingu Vercel Inc. (zobrazovanie webu; stránky sa pripravujú na serveroch vo Frankfurte) a po zapojení aj Brevo (Sendinblue SAS, Francúzsko – odosielanie e-mailov – odpovedí v konverzáciách a upozornení strážcu).{GA && " So súhlasom návštevníka aj Google Ireland Ltd. (Google Analytics – meranie návštevnosti, časť 6)."}{TS && " Cloudflare, Inc. (Turnstile – ochrana registrácie, prihlásenia a obnovy hesla proti robotom; pri týchto formulároch spracúva IP adresu a technické údaje o prehliadači a zariadení, bez reklamných účelov; náš oprávnený záujem na bezpečnosti, čl. 6 ods. 1 písm. f)."}</li>
         <li><b>Verejnosti</b>: prezývka a príspevky vo fóre sú verejné (e-mail používateľa fóra nie).</li>
         <li><b>Orgánom verejnej moci</b>, ak nám to ukladá zákon.</li>
       </ul>
-      <p>Supabase a Vercel sú spoločnosti so sídlom v USA. Ak by pri ich službách došlo k prenosu údajov mimo EÚ, deje sa na základe štandardných zmluvných doložiek Európskej komisie, prípadne rámca EÚ – USA na ochranu údajov. Údaje nepredávame a nepoužívame na reklamu.</p>
+      <p>{TS ? "Supabase, Vercel a Cloudflare" : "Supabase a Vercel"} sú spoločnosti so sídlom v USA. Ak by pri ich službách došlo k prenosu údajov mimo EÚ, deje sa na základe štandardných zmluvných doložiek Európskej komisie, prípadne rámca EÚ – USA na ochranu údajov. Údaje nepredávame a nepoužívame na reklamu.</p>
 
       <h2>4. Vaše práva</h2>
       <ul>
