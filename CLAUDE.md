@@ -350,3 +350,11 @@ Overené na Slov-Lexe: Občiansky zákonník § 597, 599, 612, 618, 619 (znenie 
 - Nahlásenie príspevku (DSA čl. 16) aj bez účtu; skrytie len človekom s dôvodom, ktorý autor vidí (DSA čl. 17). Zablokovanie, uzamknutie témy v /admin.
 - Písanie len cez funkcie `forum_*` (security definer), priamy zápis do tabuliek zakázaný. Zrušenie účtu zmaže aj príspevky. Stránky sa obnovia cez `/api/forum-obnovit`.
 - Právne: obchodné podmienky časť 4b (`#forum`), pravidlá `/forum/pravidla`, zásady GDPR (riadky Používateľ fóra a nahlásenie príspevku, „Verejnosti“), `TERMS_VERSION` 2026-11-14.
+
+## Úpravy 14. 11. 2026 (12:55)
+- Fórum: hore skupina „Diskusia“ (Všeobecná diskusia, Rady a nápady k súčiastkam), pod ňou „Technické otázky a poruchy podľa značky“ (`supabase/32`).
+- Filter ceny **od – do** (`Filters.min`, adresa `cena_od`, `supabase/33`). Na úvode „Najpopulárnejšie značky“ podľa druhu vozidla (`POP_BRANDS` v `Home.tsx`) namiesto najhľadanejších dielov.
+- „Hľadať podľa čísla/VIN“ žlté. Polia (select, input, textarea) zaoblené 6 px. Súhlasy pri registrácii 11 px (`.pp-legal`).
+- Formulár predajcu začína dlaždicami „Čo predávate?“ (druh vozidla s vysvetlením + odkaz na formulár pneumatík).
+- Mapa v detaile dielu (`components/CityMap.tsx`): približne podľa mesta, OpenStreetMap sa načíta až po kliknutí; mesto hľadá server (`/api/mesto`, tabuľka väčších miest SR, inak Nominatim). CSP `frame-src https://www.openstreetmap.org`, uvedené v zásadách GDPR.
+- IČO: verejné a povinné len pri podnikateľovi (identifikačné povinnosti obchodníka voči spotrebiteľovi); súkromná osoba bez IČO. Overiť s právnikom.

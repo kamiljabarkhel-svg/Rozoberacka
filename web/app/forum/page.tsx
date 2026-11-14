@@ -8,7 +8,7 @@ import { plural } from "@/lib/format";
 export const revalidate = 60;
 
 export const metadata: Metadata = {
-  title: "Fórum – technické otázky a poruchy áut",
+  title: "Fórum – diskusia, rady k súčiastkam a poruchy áut",
   description: "Poradňa pre vodičov a mechanikov: poruchy, opravy a výber dielov podľa značky – Škoda, Volkswagen, Audi, BMW, Ford a ďalšie. Čítať môže každý.",
   alternates: { canonical: "/forum" },
   openGraph: { title: `Fórum | ${SITE_NAME}`, url: "/forum", siteName: SITE_NAME, locale: "sk_SK", type: "website" },
