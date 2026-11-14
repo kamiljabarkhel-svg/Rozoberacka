@@ -373,3 +373,6 @@ Overené na Slov-Lexe: Občiansky zákonník § 597, 599, 612, 618, 619 (znenie 
 - Edge Functions `odpovede` (každú minútu), `dopyty` (každých 5 min), `strazca` (každých 10 min) – plánovač `supabase/35` (pg_cron + pg_net). Kód sa nasadzuje cez editor Supabase ako jeden súbor (handler.ts + index.ts bez riadku `import { run }`). „Verify JWT“ pri nich vypnuté; CRON_SECRET nepovinný (funkcie len spracujú frontu).
 - Secrets: BREVO_API_KEY (vkladá majiteľ), SITE_URL, MAIL_FROM, OPERATOR.
 - E-mail o dopytoch (`supabase/34`): predajca s aktívnym dielom danej značky, najviac 20 denne, bez kontaktu kupujúceho; vypnutie v profile (`seller_private.notify_requests`).
+
+## Google Analytics zapnuté (14. 11. 2026, 21:00)
+- GA4: účet „KJ trade s. r. o.“ (autosuciastky.eu@gmail.com), vlastníctvo autosuciastky.eu, ID **G-DV4930RWJ2** v `NEXT_PUBLIC_GA_ID` (Vercel). Uchovávanie 14 mesiacov, Google signals vypnuté, zdieľanie údajov vypnuté (okrem technickej podpory), dodatok o spracúvaní údajov prijatý. Načíta sa len po súhlase.
