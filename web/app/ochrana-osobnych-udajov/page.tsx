@@ -50,7 +50,7 @@ export default function Page() {
       <p>Kupujúci sa neregistruje. Obľúbené inzeráty, uložené hľadania a „Moje auto“ sa ukladajú len vo vašom prehliadači a my ich nevidíme.</p>
       <p>Pri odfotení OEM čísla alebo VIN sa text z fotky číta priamo vo vašom zariadení. Fotka sa nikam neposiela ani neukladá.</p>
       <p>Fotky v blogu pochádzajú z Unsplash, ale podávame ich z nášho servera – váš prehliadač sa pri ich zobrazení na Unsplash ani na iné cudzie servery nepripája. Písma tiež podávame sami.</p>
-      <p><b>Mapa v detaile dielu.</b> Mapa s približnou polohou (mesto z inzerátu) sa načíta z OpenStreetMap (OpenStreetMap Foundation, Spojené kráľovstvo – krajina s rozhodnutím EÚ o primeranosti) <b>až keď kliknete na „Zobraziť na mape“</b>. Vtedy sa váš prehliadač pripojí na www.openstreetmap.org, ktorá uvidí vašu IP adresu a údaje o prehliadači. Mesto na mape vyhľadáva náš server, nie váš prehliadač. Bez kliknutia sa nič neposiela.</p>
+      <p><b>Mapa na stránke predajcu.</b> Mapa s približnou polohou (mesto predajcu) sa načíta z OpenStreetMap (OpenStreetMap Foundation, Spojené kráľovstvo – krajina s rozhodnutím EÚ o primeranosti) <b>až keď kliknete na „Zobraziť na mape“</b>. Vtedy sa váš prehliadač pripojí na www.openstreetmap.org, ktorá uvidí vašu IP adresu a údaje o prehliadači. Mesto na mape vyhľadáva náš server, nie váš prehliadač. Bez kliknutia sa nič neposiela.</p>
 
       <h2>3. Komu údaje poskytujeme</h2>
       <ul>
