@@ -368,3 +368,8 @@ Overené na Slov-Lexe: Občiansky zákonník § 597, 599, 612, 618, 619 (znenie 
 - Doména overená v Brevo: vo Websupporte TXT `brevo-code:…` na @, CNAME `brevo1._domainkey` → b1.autosuciastky-eu.dkim.brevo.com, `brevo2._domainkey` → b2.autosuciastky-eu.dkim.brevo.com (nemazať). SPF ostáva Websupport (Brevo ho nevyžaduje), DMARC `p=quarantine` už bol.
 - Šablóny zo `supabase/emaily/` sú nahraté v Supabase (Authentication → Emails → Templates). Bezpečnostné upozornenia (zmena hesla/e-mailu, 2FA) majú slovenský text, ale sú vypnuté.
 - Ďalej: e-maily odpovedí (`NEXT_PUBLIC_EMAIL_REPLIES=1`, funkcia `odpovede`) a strážca (`NEXT_PUBLIC_EMAIL_ALERTS`, funkcia `strazca`) – návod `supabase/README.md`, potrebujú API kľúč Brevo v tajomstvách Edge Functions.
+
+## E-maily z funkcií (14. 11. 2026, 20:45)
+- Edge Functions `odpovede` (každú minútu), `dopyty` (každých 5 min), `strazca` (každých 10 min) – plánovač `supabase/35` (pg_cron + pg_net). Kód sa nasadzuje cez editor Supabase ako jeden súbor (handler.ts + index.ts bez riadku `import { run }`). „Verify JWT“ pri nich vypnuté; CRON_SECRET nepovinný (funkcie len spracujú frontu).
+- Secrets: BREVO_API_KEY (vkladá majiteľ), SITE_URL, MAIL_FROM, OPERATOR.
+- E-mail o dopytoch (`supabase/34`): predajca s aktívnym dielom danej značky, najviac 20 denne, bez kontaktu kupujúceho; vypnutie v profile (`seller_private.notify_requests`).
