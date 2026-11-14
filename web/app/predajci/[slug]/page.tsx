@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import CityMap from "@/components/CityMap";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Crumbs from "@/components/Crumbs";
@@ -44,6 +45,9 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
   const path = sellerPath(s.id, s.name);
   const since = new Date(s.since).toLocaleDateString("sk-SK", { month: "long", year: "numeric" });
   const crumbs = [{ name: "Úvod", href: "/" }];
+  // Mapa: mesto z profilu, inak najčastejšie mesto v jeho inzerátoch
+  const cityCount = new Map<string, number>(); for (const it of res.items) if (it.city) cityCount.set(it.city, (cityCount.get(it.city) || 0) + 1);
+  const mapCity = s.city || [...cityCount].sort((x, y) => y[1] - x[1])[0]?.[0] || "";
   return (
     <main id="main" className="main landing seller-page">
       <JsonLd data={[breadcrumbLd([...crumbs, { name: s.name, href: path }]),
@@ -58,6 +62,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
         </p>
         {s.ratingCount > 0 ? <p><Stars value={s.ratingAvg} count={s.ratingCount} /> <a href="#hodnotenia" className="lnk">Hodnotenia kupujúcich</a></p>
           : <p className="mute">Zatiaľ bez hodnotení.</p>}
+        {mapCity && <CityMap city={mapCity} note={s.city ? "mesto z profilu predajcu, nie presná adresa" : "mesto z inzerátov predajcu, nie presná adresa"} />}
         <SellerNotice type={s.type} name={s.name} ico={s.ico} address={s.address} />
         <Disclaimer kind="short" />
       </div>
