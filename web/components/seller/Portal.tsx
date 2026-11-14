@@ -411,6 +411,7 @@ function ProfileTab({ prof, onSave, onPw }: { prof: Profile; onSave: (p: Profile
         {firm && <label className={bad === "address" ? "bad" : ""}><span>Sídlo / miesto podnikania <em className="req">*</em></span><input id="pf-address" aria-invalid={bad === "address"} value={p.address} onChange={set("address")} maxLength={200} placeholder="Ulica 1, 900 01 Mesto" required />{fe("address")}</label>}
         <label className={bad === "phone" ? "bad" : ""}>Telefón (predvyplní sa do inzerátov)<input id="pf-phone" aria-invalid={bad === "phone"} value={p.phone} onChange={set("phone")} inputMode="tel" />{fe("phone")}</label>
         <label>E-mail<input value={p.email} disabled /></label>
+        <label className="pp-chk full"><input type="checkbox" checked={p.notifyRequests !== false} onChange={(e) => setP({ ...p, notifyRequests: e.target.checked })} /><span>Posielať e-mail o nových dopytoch kupujúcich na značky, ktoré predávam (najviac 20 denne)</span></label>
         {p.type !== prof.type && <label className="pp-chk full"><input type="checkbox" checked={decl} onChange={(e) => setDecl(e.target.checked)} /><span>{firm
           ? "Vyhlasujem, že diely predávam ako podnikateľ (obchodník) a uvedené údaje sú pravdivé."
           : "Vyhlasujem, že diely nepredávam v rámci podnikania. Ak by som predával pravidelne za účelom zisku, zaregistrujem sa ako podnikateľ."}</span></label>}

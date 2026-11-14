@@ -39,10 +39,10 @@ export async function run(env: Env, f: typeof fetch = fetch): Promise<{ sent: nu
     });
     if (!r.ok) throw new Error(`Brevo ${r.status}: ${await r.text()}`);
   };
-  const btn = (href: string, text: string) => `<p><a href="${href}" style="display:inline-block;background:#0f3d47;color:#fff;padding:10px 18px;border-radius:3px;font-weight:700;text-decoration:none">${text}</a></p>`;
-  const quote = (s: string) => `<div style="border-left:3px solid #f2b300;background:#f5f7f8;padding:10px 14px;margin:12px 0">${para(s)}</div>`;
+  const btn = (href: string, text: string) => `<p><a href="${href}" style="display:inline-block;background:#ffc61a;color:#1d2127;padding:10px 18px;border-radius:3px;font-weight:700;text-decoration:none">${text}</a></p>`;
+  const quote = (s: string) => `<div style="border-left:3px solid #ffc61a;background:#f5f7f8;padding:10px 14px;margin:12px 0">${para(s)}</div>`;
   const wrap = (body: string, why: string) => `<!doctype html><html lang="sk"><body style="font-family:system-ui,Segoe UI,sans-serif;color:#121d24;max-width:560px;margin:0 auto;padding:16px">
-    <p style="font-weight:700;color:#0f3d47;margin:0 0 16px">${esc(brand)}</p>${body}
+    <p style="font-weight:700;color:#2b2f36;margin:0 0 16px">${esc(brand)}</p>${body}
     <hr style="border:0;border-top:1px solid #d3dce0;margin:24px 0 12px">
     <p style="font-size:12px;color:#56656d">${why} Na tento e-mail neodpovedajte – odpoveď napíšte cez odkaz vyššie. Portál je len inzertný: tovar nepredáva a nie je stranou kúpnej zmluvy. Neposielajte zálohy vopred neznámym predajcom.${env.OPERATOR ? "<br>" + esc(env.OPERATOR) : ""}</p></body></html>`;
 

@@ -5,8 +5,9 @@
 import { run } from "./handler.ts";
 
 Deno.serve(async (req) => {
+  // CRON_SECRET je nepovinný: funkcia len spracuje frontu (každá položka sa pošle raz), opakované spustenie nič nepokazí.
   const secret = Deno.env.get("CRON_SECRET");
-  if (!secret || req.headers.get("x-cron-secret") !== secret) return new Response("Forbidden", { status: 403 });
+  if (secret && req.headers.get("x-cron-secret") !== secret) return new Response("Forbidden", { status: 403 });
   const need = ["SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY", "BREVO_API_KEY", "SITE_URL", "MAIL_FROM"];
   const miss = need.filter((k) => !Deno.env.get(k));
   if (miss.length) return new Response("Chýba nastavenie: " + miss.join(", "), { status: 500 });

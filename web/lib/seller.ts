@@ -17,7 +17,7 @@ export function sellerClient(): SupabaseClient {
   return sb;
 }
 
-export type Profile = { id: string; email: string; name: string; type: string; city: string; phone: string; ico: string; address: string; verified: boolean; ratingAvg?: number | null; ratingCount?: number };
+export type Profile = { id: string; email: string; name: string; type: string; city: string; phone: string; ico: string; address: string; verified: boolean; ratingAvg?: number | null; ratingCount?: number; notifyRequests?: boolean };
 export type Status = "active" | "paused" | "sold" | "blocked";
 export type MyListing = {
   id: number; name: string; brandId: number; modelId: number; engineId: number | null; year: number; // 0 = bez auta (univerzálny diel)
@@ -122,9 +122,12 @@ export async function ensureProfile(s: Session): Promise<Profile> {
     if (again.error) throw new Error(skError(again.error));
     sel = again.data;
   }
-  const { data: pr } = await c.from("seller_private").select("phone").eq("seller_id", uid).maybeSingle();
+  // notify_requests pribudol v supabase/34 – ak by ešte nebol, načíta sa aspoň telefón
+  let pr: { phone?: string | null; notify_requests?: boolean } | null = null;
+  const pr1 = await c.from("seller_private").select("phone,notify_requests").eq("seller_id", uid).maybeSingle();
+  if (pr1.error) pr = (await c.from("seller_private").select("phone").eq("seller_id", uid).maybeSingle()).data; else pr = pr1.data;
   return { id: uid, email: s.user.email || "", name: sel.name, type: sel.seller_type, city: sel.city || "", phone: pr?.phone || "", ico: sel.ico || "", address: sel.address || "", verified: !!sel.verified,
-    ratingAvg: sel.rating_avg != null ? Number(sel.rating_avg) : null, ratingCount: Number(sel.rating_count || 0) };
+    ratingAvg: sel.rating_avg != null ? Number(sel.rating_avg) : null, ratingCount: Number(sel.rating_count || 0), notifyRequests: pr?.notify_requests !== false };
 }
 export async function saveProfile(p: Profile) {
   const c = sellerClient();
@@ -132,7 +135,7 @@ export async function saveProfile(p: Profile) {
   const a = await c.from("sellers").update({ name: p.name.trim(), seller_type: p.type, city: p.city.trim() || null,
     ico: firm ? p.ico.replace(/\s/g, "") || null : null, address: firm ? p.address.trim() || null : null }).eq("id", p.id);
   if (a.error) throw new Error(skError(a.error));
-  const b = await c.from("seller_private").upsert({ seller_id: p.id, phone: p.phone.trim() || null, updated_at: new Date().toISOString() });
+  const b = await c.from("seller_private").upsert({ seller_id: p.id, phone: p.phone.trim() || null, notify_requests: p.notifyRequests !== false, updated_at: new Date().toISOString() });
   if (b.error) throw new Error(skError(b.error));
 }
 

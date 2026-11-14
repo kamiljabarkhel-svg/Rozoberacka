@@ -37,7 +37,7 @@ try {
   ok(toBuyer && toBuyer.body.htmlContent.includes(`https://autosuciastky.test/sprava/${token}`), "kupujúcemu odpoveď s odkazom na konverzáciu");
   ok(toBuyer && toBuyer.body.htmlContent.includes("&lt;b&gt;Cena&lt;/b&gt;") && !toBuyer.body.htmlContent.includes("<b>Cena</b>"), "text odpovede je bezpečne escapovaný");
   ok(toBuyer && !toBuyer.body.htmlContent.includes("predajca.odp@t.sk"), "kupujúci nevidí e-mail predajcu");
-  ok(toSeller && toSeller.body.htmlContent.includes("/predajca#msg") && !toSeller.body.htmlContent.includes("kupec.odp@t.sk"), "predajcovi upozornenie bez e-mailu kupujúceho");
+  ok(!toSeller, "odpoveď kupujúceho sa predajcovi e-mailom neposiela (od supabase/27 ju vidí v portáli)");
   ok(sent.every((m) => m.key === "test-kluc" && m.body.sender.email === "spravy@autosuciastky.test"), "kľúč Brevo a odosielateľ portálu");
   sent.length = 0;
   const r2 = await run(env, f);

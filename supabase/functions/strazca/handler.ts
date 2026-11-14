@@ -36,7 +36,7 @@ export async function run(env: Env, f: typeof fetch = fetch): Promise<{ confirma
       method: "POST",
       headers: { "api-key": env.BREVO_API_KEY, "Content-Type": "application/json", accept: "application/json" },
       body: JSON.stringify({
-        sender: { email: env.MAIL_FROM, name: env.MAIL_FROM_NAME || "Rozoberačka" }, to: [{ email: to }], subject, htmlContent: html,
+        sender: { email: env.MAIL_FROM, name: env.MAIL_FROM_NAME || "autosuciastky.eu" }, to: [{ email: to }], subject, htmlContent: html,
         headers: { "List-Unsubscribe": `<${cancelUrl}>` },
       }),
     });
