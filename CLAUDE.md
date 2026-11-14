@@ -366,7 +366,7 @@ Overené na Slov-Lexe: Občiansky zákonník § 597, 599, 612, 618, 619 (znenie 
 ## E-maily cez Brevo (14. 11. 2026, 20:10)
 - Supabase Auth posiela e-maily cez **Brevo SMTP** (smtp-relay.brevo.com:587, odosielateľ noreply@autosuciastky.eu, meno autosuciastky.eu). SMTP kľúč len v Supabase (vložil majiteľ).
 - Doména overená v Brevo: vo Websupporte TXT `brevo-code:…` na @, CNAME `brevo1._domainkey` → b1.autosuciastky-eu.dkim.brevo.com, `brevo2._domainkey` → b2.autosuciastky-eu.dkim.brevo.com (nemazať). SPF ostáva Websupport (Brevo ho nevyžaduje), DMARC `p=quarantine` už bol.
-- Šablóny zo `supabase/emaily/` sú nahraté v Supabase (Authentication → Emails → Templates). Bezpečnostné upozornenia (zmena hesla/e-mailu, 2FA) majú slovenský text, ale sú vypnuté.
+- Šablóny zo `supabase/emaily/` sú nahraté v Supabase (Authentication → Emails → Templates). Bezpečnostné upozornenia (zmena hesla/e-mailu, 2FA) majú slovenský text a sú zapnuté (14. 11. 20:45).
 - Ďalej: e-maily odpovedí (`NEXT_PUBLIC_EMAIL_REPLIES=1`, funkcia `odpovede`) a strážca (`NEXT_PUBLIC_EMAIL_ALERTS`, funkcia `strazca`) – návod `supabase/README.md`, potrebujú API kľúč Brevo v tajomstvách Edge Functions.
 
 ## E-maily z funkcií (14. 11. 2026, 20:45)
