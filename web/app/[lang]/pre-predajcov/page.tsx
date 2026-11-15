@@ -3,7 +3,7 @@ import Auth from "@/components/seller/Auth";
 
 export const metadata: Metadata = {
   title: "Pre predajcov – predávajte použité autodiely zadarmo",
-  description: "Vrakoviská a predajcovia autodielov: registrácia zadarmo, inzeráty s fotkami, import z CSV, štatistiky zobrazení a telefónov, správy od kupujúcich.",
+  description: "Vrakoviská a predajcovia autodielov: registrácia zadarmo, inzeráty s fotkami, import z CSV alebo XML, štatistiky zobrazení a telefónov, správy od kupujúcich.",
   alternates: { canonical: "/pre-predajcov" },
 };
 

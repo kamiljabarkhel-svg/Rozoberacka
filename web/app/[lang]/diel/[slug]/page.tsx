@@ -6,7 +6,7 @@ import { IS_DEMO, demoListingIds, getCatalog, getGone, getListingTr, loadDetail 
 import { langOf, lhref, tr } from "@/lib/i18n";
 import { altLangs } from "@/lib/hreflang";
 import { price } from "@/lib/format";
-import { JsonLd, SITE_NAME, breadcrumbLd, carName, cut, landingCrumbs, listingPath, productLd } from "@/lib/seo";
+import { JsonLd, SITE_NAME, breadcrumbLd, carKeywords, carName, cut, landingCrumbs, listingPath, productLd } from "@/lib/seo";
 
 // Stránka sa pripraví na serveri a 5 minút sa podáva z vyrovnávacej pamäte (rýchle a viditeľné pre Google).
 export const revalidate = 300;
@@ -38,12 +38,17 @@ export async function generateMetadata({ params }: P): Promise<Metadata> {
   const t = lang === "pl" ? (await getListingTr([l.id], "pl")).get(l.id) : undefined;
   const name = t?.name || l.name, text = (t ? t.description : l.description) || "";
   const car = tr(lang, carName(l, cat));
-  const title = `${name}${car ? " – " + car : ""}${l.year ? " " + l.year : ""}`;
-  const desc = cut(`${price(l.price)} · ${tr(lang, l.condition)}${l.oem ? " · OEM " + l.oem : ""}${l.city ? " · " + l.city : ""}. ${text}`);
+  const base = `${name}${car ? " – " + car : ""}${l.year ? " " + l.year : ""}`;
+  const used = l.condition !== "Nový";
+  // „použitý diel“ do titulku, len ak sa zmestí (Google ukáže ~60 znakov vrátane „ | autosuciastky.eu“)
+  const title = lang === "sk" && used && !/použit/i.test(base) && base.length <= 30 ? `${base} – použitý diel` : base;
+  const kind = lang === "sk" ? (used ? "Použitý diel" : "Nový diel") + " · " : "";
+  const desc = cut(`${kind}${price(l.price)} · ${tr(lang, l.condition)}${l.oem ? " · OEM " + l.oem : ""}${l.city ? " · " + l.city : ""}. ${text}`);
   const skPath = listingPath(l.id, l.name, carName(l, cat));
   const path = lhref(lang, skPath);
   return {
     title, description: desc, alternates: { canonical: path, languages: altLangs(skPath) },
+    ...(lang === "sk" ? { keywords: [name, ...(l.oem ? [l.oem] : []), ...carKeywords(car).slice(0, 6)] } : {}),
     openGraph: { title: `${title} | ${price(l.price)}`, description: desc, url: path, siteName: SITE_NAME, locale: lang === "pl" ? "pl_PL" : "sk_SK", type: "website",
       ...(l.photos.length ? { images: [{ url: l.photos[0], alt: name }] } : {}) },
     twitter: { card: l.photos.length ? "summary_large_image" : "summary" },

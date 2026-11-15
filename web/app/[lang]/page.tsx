@@ -6,7 +6,7 @@ import { IS_DEMO, getCatalog, getCities, getSeoCounts, getStats, searchListings 
 import { OTHER_BRAND, isOtherModel, packCatalog, unpackCatalog } from "@/lib/catalogSort";
 import { VEHICLE_TYPES, emptyFilters, type VehicleType } from "@/lib/types";
 import { sk } from "@/lib/format";
-import { JsonLd, landingPath, siteLd } from "@/lib/seo";
+import { JsonLd, SEO_KEYWORDS, landingPath, siteLd } from "@/lib/seo";
 import { langOf, lhref, tr, type Lang } from "@/lib/i18n";
 import { altLangs } from "@/lib/hreflang";
 
@@ -22,8 +22,9 @@ export async function generateMetadata({ params }: P): Promise<Metadata> {
     alternates: { canonical: "/pl", languages: altLangs("/") },
   };
   return {
-    title: { absolute: "autosuciastky.eu – použité autodiely na vaše auto" },
-    description: "Použité autodiely od predajcov z celého Slovenska. Hľadajte podľa značky, modelu, motorizácie, VIN alebo OEM čísla. Predajcovi zavoláte bez registrácie.",
+    title: { absolute: "Použité autodiely a náhradné diely na auto | autosuciastky.eu" },
+    description: "Použité autodiely a náhradné diely od predajcov a vrakovísk z celého Slovenska. Hľadajte podľa auta, VIN alebo čísla dielu (OEM), volajte bez registrácie.",
+    keywords: SEO_KEYWORDS,
     alternates: { canonical: "/", languages: altLangs("/") },
   };
 }
@@ -75,6 +76,14 @@ export default async function Page({ params }: P) {
             {g.items.map(({ c, n }) => <li key={c.id}><Link href={L(landingPath({ brandId: null, modelId: null, cat: c.id, sub: null }, cat))}>{t(c.name)}</Link> <span className="mute">({n})</span></li>)}
           </ul></section>)}
         </nav>
+      )}
+      {lang === "sk" && (
+        // Krátky text pre vyhľadávače aj ľudí – slová, ktorými ľudia diely hľadajú
+        <section className="wrap seo-about">
+          <h2>Použité autodiely a náhradné diely na jednom mieste</h2>
+          <p>Na autosuciastky.eu nájdete <b>použité autodiely</b>, <b>náhradné diely</b> a autosúčiastky na osobné autá, dodávky, nákladné autá, autobusy, motorky aj veterány. Ponúkajú ich vrakoviská, autoservisy, predajcovia dielov aj ľudia, ktorí rozpredávajú auto na diely. Pri dieloch je číslo dielu (OEM), fotky, stav, cena a mesto.</p>
+          <p>Hľadajte podľa značky a modelu, podľa VIN alebo priamo podľa čísla dielu – uvidíte len <b>použité diely</b>, ktoré pasujú na vaše vozidlo. Predajcovi zavoláte alebo napíšete bez registrácie. Nenašli ste diel? <Link href="/dopyt">Zadajte dopyt</Link> a predajcovia sa vám ozvú. Predávate diely? <Link href="/pre-predajcov">Inzerát je zadarmo</Link>, aj hromadne cez CSV alebo XML.</p>
+        </section>
       )}
     </>
   );

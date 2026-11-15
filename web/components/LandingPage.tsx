@@ -8,7 +8,7 @@ import { emptyFilters, isUniversal, type Catalog } from "@/lib/types";
 import { jeSu, pieces, sk } from "@/lib/format";
 import { lhref, tr, type Lang } from "@/lib/i18n";
 import { altLangs } from "@/lib/hreflang";
-import { JsonLd, SITE_NAME, SITE_URL, breadcrumbLd, carName, landingCrumbs, landingPath, landingTitle, listingPath, type Landing } from "@/lib/seo";
+import { JsonLd, SITE_NAME, SITE_URL, breadcrumbLd, carKeywords, carName, landingCrumbs, landingPath, landingTitle, listingPath, type Landing } from "@/lib/seo";
 import Crumbs from "./Crumbs";
 import LandingGrid from "./LandingGrid";
 
@@ -33,10 +33,13 @@ export async function landingMetadata(x: Landing | null, lang: Lang = "sk"): Pro
     : res.total && x.city
     ? `${title}: ${pieces(res.total, lang)} od predajcov z mesta ${x.city}${minP ? `, ceny od ${minP.toLocaleString("sk-SK")} €` : ""}. Osobný odber, predajcovi zavoláte bez registrácie.`
     : res.total
-    ? `${title} od predajcov z celého Slovenska: ${pieces(res.total, lang)}${minP ? `, ceny od ${minP.toLocaleString("sk-SK")} €` : ""}. Predajcovi zavoláte bez registrácie${x.cat && isUniversal(x.cat) ? "" : ", pred kúpou porovnajte OEM číslo"}.`
+    ? `${title} – náhradné diely od predajcov a vrakovísk z celého Slovenska: ${pieces(res.total, lang)}${minP ? `, ceny od ${minP.toLocaleString("sk-SK")} €` : ""}. Predajcovi zavoláte bez registrácie${x.cat && isUniversal(x.cat) ? "" : ", pred kúpou porovnajte OEM číslo"}.`
     : `${title}: zatiaľ tu nie sú ponuky. Uložte si hľadanie a pozrite sa neskôr.`;
+  const car = [cat.brands.find((v) => v.id === x.brandId)?.name, cat.models.find((v) => v.id === x.modelId)?.name].filter(Boolean).join(" ");
+  const what = (cat.subcategories.find((v) => v.id === x.sub)?.name || cat.categories.find((v) => v.id === x.cat)?.name || "diely").toLowerCase();
   return {
     title, description, alternates: { canonical: lhref(lang, path), languages: altLangs(path) },
+    ...(lang === "sk" ? { keywords: x.city ? [`použité autodiely ${x.city}`, `autodiely ${x.city}`, `náhradné diely ${x.city}`, `vrakovisko ${x.city}`, ...(x.cat ? [`${what} ${x.city}`] : [])] : carKeywords(car, what === "diely" ? "diely" : what) } : {}),
     robots: res.total ? undefined : { index: false, follow: true }, // prázdna stránka nemá byť v Google
     openGraph: { title: `${title} | ${SITE_NAME}`, description, url: lhref(lang, path), siteName: SITE_NAME, locale: lang === "pl" ? "pl_PL" : "sk_SK", type: "website" },
   };
@@ -109,6 +112,13 @@ export default async function LandingPage({ x, lang = "sk" }: { x: Landing; lang
       {res.total > res.items.length && <p className="landing-more"><Link className="btn2" href={L(`/?${qs.toString()}#vysledky`)}><T>{"Zobraziť všetkých"}</T> {res.total}</Link></p>}
       <div className="rq-cta"><p><b><T>{"Nenašli ste diel"}</T>{car ? (lang === "pl" ? ` do ${car}` : ` na auto ${car}`) : ""}?</b> <T>{"Zadajte dopyt – predajcovia vám pošlú ponuku. Bez registrácie."}</T></p>
         <Link className="btn2" href={L(`/dopyt?${new URLSearchParams({ ...(x.brandId != null ? { znacka: String(x.brandId) } : {}), ...(x.modelId != null ? { model: String(x.modelId) } : {}) }).toString()}`)}><T>{"Zadať dopyt na diel"}</T></Link></div>
+      {lang === "sk" && <p className="seo-text mute">{x.city
+        ? `Použité autodiely a náhradné diely v meste ${x.city}: diely z rozobratých áut od miestnych predajcov a vrakovísk. Diel si môžete pozrieť a prevziať osobne.`
+        : car && x.modelId == null
+        ? `Hľadáte použité diely na vozidlá značky ${car}? Na autosuciastky.eu nájdete náhradné diely a autosúčiastky z rozobratých vozidiel ${car} od predajcov a vrakovísk z celého Slovenska. Vyberte model a uvidíte len diely, ktoré naň pasujú – pri každom je číslo dielu (OEM), fotky a cena.`
+        : car
+        ? `Hľadáte použité diely na ${car}? Na autosuciastky.eu nájdete náhradné diely a autosúčiastky z rozobratých vozidiel ${car} – karosériu, svetlá, motor, prevodovku, elektroniku aj interiér. Predajcovia a vrakoviská z celého Slovenska, ktorí rozpredávajú ${car} na diely, uvádzajú číslo dielu (OEM), aby ste si overili, či diel pasuje.`
+        : `${title} od predajcov a vrakovísk z celého Slovenska – použité aj nové náhradné diely s číslom dielu (OEM), fotkami a cenou. Vyberte značku a model vozidla a uvidíte len diely, ktoré naň pasujú.`}</p>}
       {groups.map((g) => (
         <section key={g.title} className="landing-links"><h2>{g.title}</h2>
           <ul>{g.links.map((l) => <li key={l.href}><Link href={l.href}>{l.name}</Link>{l.n > 0 && <> <span className="mute">({l.n})</span></>}</li>)}</ul>

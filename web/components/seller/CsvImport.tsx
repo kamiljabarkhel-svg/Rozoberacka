@@ -1,5 +1,5 @@
 "use client";
-// Import inzerátov z CSV (Excel → Uložiť ako CSV). Najprv náhľad s chybami, potom import.
+// Import inzerátov z CSV (Excel → Uložiť ako CSV) alebo XML (export zo skladu/e-shopu). Najprv náhľad s chybami, potom import.
 import { useEffect, useMemo, useState } from "react";
 import type { Catalog, Condition } from "@/lib/types";
 import { CONDITIONS, condLabel, cleanSpecs, isUniversal, specsErrors, SPEC_LABEL, VEHICLE_TYPES, WHEEL_CAT, wheelDefaults, wheelKind, wheelMissing, type Specs } from "@/lib/types";
@@ -28,6 +28,50 @@ function parse(text: string): string[][] {
   }
   if (cell || row.length) { row.push(cell); rows.push(row); }
   return rows.filter((r) => r.some((x) => x.trim()));
+}
+
+/** Iné názvy stĺpcov/značiek (anglické, Heureka, Excel) → naše stĺpce */
+const ALIAS: Record<string, string> = {
+  name: "nazov", title: "nazov", productname: "nazov", product: "nazov", nazov_dielu: "nazov",
+  brand: "znacka", make: "znacka", znacka_auta: "znacka", car_brand: "znacka",
+  car_model: "model", engine: "motorizacia", year: "rocnik", rok: "rocnik",
+  oem_number: "oem", oem_cislo: "oem", cislo_dielu: "oem", part_number: "oem", partnumber: "oem",
+  price: "cena", price_vat: "cena", cena_s_dph: "cena",
+  category: "kategoria", categorytext: "kategoria", subcategory: "podkategoria",
+  condition: "stav", warranty: "zaruka", description: "popis", city: "mesto", phone: "telefon",
+  fits: "pasuje", side: "strana", manufacturer: "vyrobca", vyrobca_dielu: "vyrobca",
+  photos: "fotky", images: "fotky", fotka: "fotky", photo: "fotky", image: "fotky", imgurl: "fotky", vehicle_type: "druh",
+};
+const colName = (s: string) => { const k = norm(s).replace(/[\s-]+/g, "_"); return ALIAS[k] || k; };
+
+/**
+ * XML → riadky ako z CSV. Každý potomok koreňového prvku (napr. <diel>, <item>, <SHOPITEM>) je jeden inzerát,
+ * jeho podprvky (alebo atribúty) sú stĺpce. Opakované alebo vnorené prvky (<fotky><fotka>…</fotka></fotky>,
+ * <pasuje><auto>…</auto></pasuje>) sa spoja znakom |.
+ */
+function parseXml(text: string): string[][] | string {
+  const doc = new DOMParser().parseFromString(text, "application/xml");
+  if (doc.getElementsByTagName("parsererror").length) return "Súbor nie je platné XML. Skontrolujte, či sú všetky značky správne uzavreté a znaky & zapísané ako &amp;.";
+  const root = doc.documentElement;
+  let items = [...root.children];
+  // obal navyše (<export><diely><diel>…) – zostúp, kým má prvok len jedného potomka typu „zoznam“
+  while (items.length === 1 && [...items[0].children].some((c) => c.children.length > 0)) items = [...items[0].children];
+  const recs: Map<string, string[]>[] = [];
+  for (const it of items) {
+    const m = new Map<string, string[]>();
+    const put = (k: string, v: string) => { v = v.trim(); if (!v) return; const key = colName(k);
+      if (key === "fotky") v = decodeURIComponent(v.split(/[?#]/)[0].split("/").pop() || v);   // z adresy fotky stačí názov súboru
+      m.set(key, [...(m.get(key) || []), v]); };
+    for (const a of [...it.attributes]) put(a.name, a.value);
+    for (const f of [...it.children]) {
+      if (f.children.length) for (const sub of [...f.children]) put(f.localName, sub.textContent || "");
+      else put(f.localName, f.textContent || "");
+    }
+    if (m.size) recs.push(m);
+  }
+  if (!recs.length) return "V XML sa nenašli žiadne inzeráty.";
+  const cols = [...new Set(recs.flatMap((r) => [...r.keys()]))];
+  return [cols, ...recs.map((r) => cols.map((c) => (r.get(c) || []).join(c === "popis" ? "\n" : "|")))];
 }
 
 type Pre = { row: number; name: string; ok: boolean; errors: string[]; warns: string[]; data?: ListingInput; photoNames: string[]; oemKey: string };
@@ -69,11 +113,13 @@ export default function CsvImport({ uid, cat, prof, onDone }: { uid: string; cat
   const used = new Set([...matches.values()].flatMap((x) => x.files));
   const unused = files.filter((f) => !used.has(f));
 
-  function load(text: string) {
+  function load(text: string, xml = false) {
     setRes([]);
-    const rows = parse(text.replace(/^﻿/, ""));
+    text = text.replace(/^\uFEFF/, "");
+    const rows = xml || /^\s*<(\?xml|[A-Za-z])/.test(text) ? parseXml(text) : parse(text);
+    if (typeof rows === "string") { setHead(rows); setPre(null); return; }
     if (rows.length < 2) { setHead("Súbor je prázdny alebo nemá riadok s hlavičkou."); setPre(null); return; }
-    const h = rows[0].map(norm);
+    const h = rows[0].map(colName);
     const col = (n: string) => h.indexOf(n);
     const miss = REQ.filter((r) => col(r) < 0);
     if (miss.length) { setHead("Chýbajú povinné stĺpce: " + miss.join(", ") + "."); setPre(null); return; }
@@ -157,18 +203,41 @@ export default function CsvImport({ uid, cat, prof, onDone }: { uid: string; cat
   }
   const sample = "nazov;znacka;model;motorizacia;rocnik;oem;cena;kategoria;podkategoria;stav;zaruka;popis;mesto;telefon;pasuje;fotky\n" +
     "Predné ľavé svetlo;Škoda;Octavia III;;2015;5E1941015;120;Svetlá;Predné svetlá;Dobrý;12 mesiacov;Funkčné, bez prasklín, úchyty celé.;Žilina;0900123456;Škoda Octavia III Combi;svetlo1.jpg|svetlo2.jpg\n";
-  const sampleHref = "data:text/csv;charset=utf-8," + encodeURIComponent("﻿" + sample);
+  const sampleHref = "data:text/csv;charset=utf-8," + encodeURIComponent("\uFEFF" + sample);
+  const sampleXml = `<?xml version="1.0" encoding="UTF-8"?>
+<diely>
+  <diel>
+    <nazov>Predné ľavé svetlo</nazov>
+    <znacka>Škoda</znacka>
+    <model>Octavia III</model>
+    <rocnik>2015</rocnik>
+    <oem>5E1941015</oem>
+    <cena>120</cena>
+    <kategoria>Svetlá</kategoria>
+    <podkategoria>Predné svetlá</podkategoria>
+    <stav>Dobrý</stav>
+    <zaruka>12 mesiacov</zaruka>
+    <popis>Funkčné, bez prasklín, úchyty celé.</popis>
+    <mesto>Žilina</mesto>
+    <telefon>0900123456</telefon>
+    <pasuje><auto>Škoda Octavia III Combi</auto></pasuje>
+    <fotky><fotka>svetlo1.jpg</fotka><fotka>svetlo2.jpg</fotka></fotky>
+  </diel>
+</diely>
+`;
+  const sampleXmlHref = "data:application/xml;charset=utf-8," + encodeURIComponent(sampleXml);
 
   return (
     <div>
-      <header className="pp-h"><h1>Import z CSV</h1><a className="ubtn" href={sampleHref} download="vzor-autosuciastky.csv">Stiahnuť vzorový súbor</a></header>
+      <header className="pp-h"><h1>Import z CSV alebo XML</h1><span className="pp-bulkbtns"><a className="ubtn" href={sampleHref} download="vzor-autosuciastky.csv">Vzor CSV</a><a className="ubtn" href={sampleXmlHref} download="vzor-autosuciastky.xml">Vzor XML</a></span></header>
       <div className="pp-box">
         <p>Povinné stĺpce: <b>{[...REQ, ...REQ_PART].join(", ")}</b> – pri pneumatikách, diskoch, výbave jazdca, príslušenstve a „Iné“ stačí <b>{REQ.join(", ")}</b> (stĺpec <b>druh</b>: osobné, veterány, dodávky, nákladné, autobusy alebo motorky). Pri veteránoch je číslo dielu (oem) nepovinné. Voliteľné: {OPT.join(", ")}. Oddeľovač <b>;</b> alebo <b>,</b>, najviac {MAX} riadkov. Stav: Nový, Repasovaný, Veľmi dobrý, Dobrý alebo Na opravu. V stĺpci <b>pasuje</b> oddeľte autá znakom | (napr. „Škoda Octavia III | VW Golf VII“).</p>
         <p className="mute">Pneumatiky a disky (kategória „Pneumatiky a disky“): stĺpce pneu_sirka (205), pneu_profil (55), priemer (16), sezona (letné/zimné/celoročné), dezen_mm, dot (rok), index_nosnosti, index_rychlosti, sirka_disku (7), roztec (5x112), et (49), stredovy_otvor (57.1), kusy, material (Hliník/Oceľ).</p>
+        <p className="mute"><b>XML</b> (napr. export zo skladového programu alebo e-shopu): každý diel je jeden prvok (&lt;diel&gt;, &lt;item&gt;, &lt;SHOPITEM&gt;…), v ňom prvky s rovnakými názvami ako stĺpce CSV (&lt;nazov&gt;, &lt;znacka&gt;, &lt;oem&gt;, &lt;cena&gt;…). Viac fotiek alebo áut zapíšte ako &lt;fotky&gt;&lt;fotka&gt;a.jpg&lt;/fotka&gt;&lt;/fotky&gt;. Rozumieme aj anglickým názvom (name, brand, price, description, category…). Pozrite si vzor XML.</p>
         <p className="mute">Popis musí mať aspoň 20 znakov. Mesto a telefón sa doplnia z profilu, ak ich v súbore nemáte.</p>
         <ol className="pp-steps2">
-          <li><b>Vyberte CSV súbor.</b>
-            <label className="pp-add pp-file"><input type="file" accept=".csv,text/csv" onChange={async (e) => { const f = e.target.files?.[0]; if (f) load(await f.text()); e.target.value = ""; }} /><span>Vybrať CSV súbor</span></label></li>
+          <li><b>Vyberte súbor CSV alebo XML.</b>
+            <label className="pp-add pp-file"><input type="file" accept=".csv,text/csv,.xml,application/xml,text/xml" onChange={async (e) => { const f = e.target.files?.[0]; if (f) load(await f.text(), /\.xml$/i.test(f.name)); e.target.value = ""; }} /><span>Vybrať súbor</span></label></li>
           <li><b>Pridajte fotky</b> (nepovinné, ale bez fotky inzerát ostane pozastavený a kupujúci ho neuvidí).
             <span className="pp-bulkbtns">
               <label className="pp-add pp-bulkph"><input type="file" accept="image/*" multiple onChange={(e) => { addFiles(e.target.files); e.target.value = ""; }} /><span>Vybrať fotky</span></label>

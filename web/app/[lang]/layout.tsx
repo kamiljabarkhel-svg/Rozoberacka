@@ -12,7 +12,7 @@ import { notFound } from "next/navigation";
 import { IconSprite } from "@/components/Icons";
 import { IS_DEMO } from "@/lib/data";
 import { OPERATOR } from "@/lib/operator";
-import { SITE_URL } from "@/lib/seo";
+import { SITE_URL, SEO_KEYWORDS } from "@/lib/seo";
 import { CARS_ENABLED } from "@/lib/features";
 import { LANGS, lhref, tr, type Lang } from "@/lib/i18n";
 
@@ -24,9 +24,10 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   return {
     metadataBase: new URL(SITE_URL),
     title: pl ? { default: "autosuciastky.eu – używane części samochodowe ze Słowacji", template: "%s | autosuciastky.eu" }
-      : { default: "autosuciastky.eu – použité autodiely", template: "%s | autosuciastky.eu" },
+      : { default: "Použité autodiely a náhradné diely – autosuciastky.eu", template: "%s | autosuciastky.eu" },
     description: pl ? "Używane części samochodowe dokładnie do Twojego auta – od sprzedawców ze Słowacji. Szukaj według marki, modelu, silnika i numeru części (OEM), dzwoń bez rejestracji."
-      : "Použité autodiely presne na vaše auto. Hľadajte podľa značky, modelu a motorizácie, predajcovi zavoláte bez registrácie.",
+      : "Použité autodiely a náhradné diely presne na vaše auto. Hľadajte podľa značky, modelu, motorizácie alebo čísla dielu, predajcovi zavoláte bez registrácie.",
+    ...(pl ? {} : { keywords: SEO_KEYWORDS }),
     applicationName: "autosuciastky.eu",
     openGraph: { siteName: "autosuciastky.eu", locale: pl ? "pl_PL" : "sk_SK", type: "website" },
     formatDetection: { telephone: false },

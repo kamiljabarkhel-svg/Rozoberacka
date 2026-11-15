@@ -207,6 +207,20 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
     await pg.waitForSelector(".pp-pre li.ok:has-text('nenájdené fotky: chyba.png')"); await pg.waitForSelector(".pp-photosum:has-text('1 z 1 inzerátov má fotky')");
     await pg.click("text=Importovať 1"); await pg.waitForSelector(".pp-toast:has-text('Importované: 1')", { timeout: 15000 });
   });
+  await step("XML import (nahlad)", async () => {
+    await pg.click(".pp-nav button:has-text('Import z CSV')");
+    const xml = `<?xml version="1.0" encoding="UTF-8"?><export><items>
+      <item><name>Štartér 1.6 TDI</name><brand>Volkswagen</brand><model>Golf VII</model><year>2014</year><part_number>02Z 911-024</part_number>
+        <price>65,50</price><category>Elektro</category><condition>Dobrý</condition><description>Odskúšaný štartér, točí bez problémov &amp; čistý.</description>
+        <fotky><fotka>https://sklad.example.sk/img/alt1.png?v=2</fotka></fotky><pasuje><auto>Škoda Octavia III</auto></pasuje></item>
+      <item><name>Zlé</name><brand>Tesla</brand><price>0</price><category>Nič</category></item>
+    </items></export>`;
+    require("fs").writeFileSync("i.xml", xml); await pg.setInputFiles(".pp-file input", "i.xml");
+    await pg.waitForSelector(".pp-pre li.err"); const okc = await pg.locator(".pp-pre li.ok").count(); if (okc !== 1) throw new Error("xml ok rows " + okc + " :: " + (await pg.locator(".pp-pre").innerText()));
+    await pg.setInputFiles(".pp-bulkph input", ["alt1.png"]); await pg.waitForSelector(".pp-pre li.ok:has-text('Štartér 1.6 TDI') .pp-prephotos img");
+    await pg.setInputFiles(".pp-file input", { name: "zle.xml", mimeType: "application/xml", buffer: Buffer.from("<diely><diel>") });
+    await pg.waitForSelector(".pp-err:has-text('nie je platné XML')");
+  });
   await step("auto na diely + rychle pridanie dielov", async () => {
     await pg.click(".pp-nav button:has-text('Z auta na diely')"); await pg.click("text=+ Pridať vozidlo");
     await pg.selectOption("label:has-text('Značka') select", { label: "Škoda" });

@@ -29,7 +29,7 @@ import FromPhotos from "./FromPhotos";
 import { CARS_ENABLED, EMAIL_REPLIES } from "@/lib/features";
 
 type Tab = "home" | "list" | "donor" | "cars" | "form" | "csv" | "photos" | "addph" | "wheels" | "req" | "msg" | "prof";
-const TABS: [Tab, string][] = [["home", "Nástenka"], ["list", "Moje inzeráty"], ["donor", "Z auta na diely"], ["form", "Jeden inzerát"], ["wheels", "Pneumatiky, disky, puklice"], ["csv", "Import z CSV"], ["photos", "Hromadne z fotiek"], ["req", "Dopyty na diely"], ["msg", "Správy od kupujúcich"], ["prof", "Profil a nastavenia"]];
+const TABS: [Tab, string][] = [["home", "Nástenka"], ["list", "Moje inzeráty"], ["donor", "Z auta na diely"], ["form", "Jeden inzerát"], ["wheels", "Pneumatiky, disky, puklice"], ["csv", "Import z CSV / XML"], ["photos", "Hromadne z fotiek"], ["req", "Dopyty na diely"], ["msg", "Správy od kupujúcich"], ["prof", "Profil a nastavenia"]];
 const TAB_LABEL = Object.fromEntries(TABS) as Record<Tab, string>;
 /** Menu v skupinách s nadpismi, aby predajca hneď videl, kde čo je. */
 const NAV_GROUPS: [string, Tab[]][] = [
@@ -197,7 +197,7 @@ function Dashboard({ cat, prof, items, msgs, go }: { cat: Catalog | null; prof: 
       <header className="pp-h"><div><h1>Dobrý deň{prof?.name ? ", " + prof.name : ""}</h1><p className="mute">{d}
           {prof && <> · <a className="lnk" href={sellerPath(prof.id, prof.name)} target="_blank" rel="noopener">Moja verejná stránka</a></>}
           {prof?.ratingCount ? <> · <Stars value={prof.ratingAvg ?? null} count={prof.ratingCount} small /></> : null}</p></div>
-        <div className="pp-quick"><button className="btn" onClick={() => go("form")}>+ Pridať inzerát</button><button className="ubtn" onClick={() => go("wheels")}>Pneumatiky a disky</button><button className="ubtn" onClick={() => go("csv")}>Import CSV</button><button className="ubtn" onClick={() => go("photos")}>Hromadne z fotiek</button><button className="ubtn" onClick={() => go("list")}>Všetky inzeráty</button></div></header>
+        <div className="pp-quick"><button className="btn" onClick={() => go("form")}>+ Pridať inzerát</button><button className="ubtn" onClick={() => go("wheels")}>Pneumatiky a disky</button><button className="ubtn" onClick={() => go("csv")}>Import CSV / XML</button><button className="ubtn" onClick={() => go("photos")}>Hromadne z fotiek</button><button className="ubtn" onClick={() => go("list")}>Všetky inzeráty</button></div></header>
       <div className="pp-tiles">
         <Tile n={a.length} l="Aktívne inzeráty" s={fmtPrice(a.reduce((x, i) => x + i.price, 0)) + " hodnota"} />
         <Tile n={views} l="Zobrazenia" s="spolu za všetky inzeráty" />

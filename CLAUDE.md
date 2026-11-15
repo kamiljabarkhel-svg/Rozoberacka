@@ -395,3 +395,8 @@ Overené na Slov-Lexe: Občiansky zákonník § 597, 599, 612, 618, 619 (znenie 
 - SEO: hreflang sk-SK / pl-PL / x-default (`lib/hreflang.ts`), canonical na vlastný jazyk, mapa webu s poľskými adresami. `revalidatePath` používa vzory s `[lang]`.
 - `TERMS_VERSION` 2026-11-15 (licencia na strojový preklad, poľská verzia, DeepL v zásadách).
 - Česká verzia: neskôr rovnakým spôsobom (`cs`).
+
+## XML import a SEO „použité diely“ (15. 11. 2026, 11:55)
+- Import v portáli (`components/seller/CsvImport.tsx`, záložka „Import z CSV / XML“) prijme aj **XML**: každý potomok koreňa (napr. `<diel>`, `<item>`, `<SHOPITEM>`) je jeden inzerát, podprvky/atribúty sú stĺpce ako v CSV; vnorené alebo opakované prvky (`<fotky><fotka>…`, `<pasuje><auto>…`) sa spoja „|“. Iné názvy stĺpcov (name, brand, price, description, PRODUCTNAME, IMGURL…) prekladá `ALIAS` – platí aj pre CSV. Z adresy fotky sa berie len názov súboru (fotky sa aj tak nahrávajú zo súborov). Rovnaké kontroly, limity (500) a náhľad ako CSV.
+- Zatiaľ len nahratie súboru; automatický XML feed z adresy by potreboval serverovú funkciu (prehliadač cudzie adresy nesmie čítať kvôli CSP).
+- SEO: `SEO_KEYWORDS` a `carKeywords()` v `lib/seo.tsx` (meta keywords len pre slovenčinu). Úvod „Použité autodiely a náhradné diely na auto“, viditeľný text `.seo-about` pod odkazmi na úvode a `.seo-text` na vstupných stránkach (auto, značka, mesto, kategória). Detail dielu: „– použitý diel“ v titulku, ak sa zmestí, a „Použitý/Nový diel“ na začiatku popisu. Nepísať „autodiely z vrakovísk“ – vrakoviská len ako predajcovia.

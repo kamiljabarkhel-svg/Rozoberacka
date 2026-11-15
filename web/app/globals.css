@@ -1806,3 +1806,9 @@ select,input:not([type=checkbox]):not([type=radio]):not([type=range]),textarea{b
 .langhint{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;background:var(--acc);color:var(--accink);padding:8px 12px;font-size:14px;font-weight:600}
 .langhint a{color:var(--accink);text-decoration:underline}
 .langhint button{background:none;border:0;color:var(--accink);font-size:20px;line-height:1;cursor:pointer;padding:0 4px}
+
+/* SEO text na úvode a vstupných stránkach (13. 11. → 15. 11. 2026) */
+.seo-about{margin:28px auto 8px;color:var(--mute,#565e69);font-size:14px;line-height:1.6}
+.seo-about h2{font-size:17px;margin:0 0 8px;color:var(--ink,#1d2127)}
+.seo-about p{margin:0 0 8px;max-width:80ch}
+.seo-text{max-width:80ch;font-size:14px;line-height:1.6;margin:20px 0}

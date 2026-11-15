@@ -879,7 +879,7 @@ export const PL: Record<string, string> = {
  "dnes": "dziś",
  "do": "do",
  "farba, strana, stav, termín…": "kolor, strona, stan, termin…",
- "hromadne nahrať diely zo súboru CSV,": "hurtowo wgrywać części z pliku CSV,",
+ "hromadne nahrať diely zo súboru CSV alebo XML,": "hurtowo wgrywać części z pliku CSV lub XML,",
  "hľadáme diely na všetky vozidlá": "szukamy części do wszystkich pojazdów",
  "inzerujte diely bez poplatkov": "ogłaszaj części bez opłat",
  "inzerát už nie je zverejnený": "ogłoszenie nie jest już opublikowane",

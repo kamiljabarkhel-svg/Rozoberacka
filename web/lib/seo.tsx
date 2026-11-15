@@ -7,6 +7,14 @@ import { lhref, tr, type Lang } from "./i18n";
 export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL
   || (process.env.VERCEL_PROJECT_PRODUCTION_URL ? "https://" + process.env.VERCEL_PROJECT_PRODUCTION_URL : "http://localhost:3000")).replace(/\/$/, "");
 export const SITE_NAME = "autosuciastky.eu";
+/** Kľúčové slová, ktoré ľudia hľadajú (Google meta keywords ignoruje, Seznam a Bing ich čiastočne berú; dôležitý je viditeľný text). */
+export const SEO_KEYWORDS = ["použité autodiely", "použité diely", "náhradné diely", "autodiely", "autosúčiastky", "diely na auto", "použité náhradné diely", "diely z rozobratých áut", "vrakovisko", "rozpredám auto na diely", "OEM číslo dielu"];
+/** Kľúčové slová pre konkrétne auto/diel: „použité diely Škoda Octavia III“, „Octavia III diely“, „rozpredám Octavia III“… */
+export function carKeywords(car: string, what = "diely"): string[] {
+  if (!car) return SEO_KEYWORDS;
+  const model = car.split(" ").slice(1).join(" ");
+  return [...new Set([`použité ${what} ${car}`, `${what} ${car}`, `náhradné diely ${car}`, `autodiely ${car}`, `${car} diely`, ...(model ? [`${model} diely`] : []), `rozpredám ${car}`, `vrakovisko ${car}`, "použité autodiely", "náhradné diely"])];
+}
 
 /** „Predné ľavé svetlo LED“ → „predne-lave-svetlo-led“. */
 export function slugify(s: string): string {
