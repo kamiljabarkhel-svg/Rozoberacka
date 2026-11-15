@@ -5,6 +5,7 @@ import { BLOG, blogPath } from "@/lib/blog";
 import { SITE_URL, carName, landingPath, listingPath, sellerPath, vehiclePath, vehicleTitle, type Landing } from "@/lib/seo";
 import { CARS_ENABLED } from "@/lib/features";
 import { lhref } from "@/lib/i18n";
+import { PL_ENABLED } from "@/lib/features";
 import { forumOverview, forumSitemap, sectionPath, threadPath } from "@/lib/forum";
 
 export const revalidate = 3600;
@@ -51,6 +52,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     for (const l of listings) out.push({ url: SITE_URL + listingPath(l.id, l.name, carName(l, cat)), lastModified: new Date(l.updatedAt), changeFrequency: "weekly", priority: 0.6 });
   } catch { /* pri výpadku databázy aspoň základné stránky */ }
   // Poľská verzia: rovnaké stránky s predponou /pl a hreflang medzi nimi (portál predajcu, fórum a blog sú len po slovensky).
+  if (!PL_ENABLED) return out;
   const all: MetadataRoute.Sitemap = [];
   for (const e of out) {
     const path = e.url.slice(SITE_URL.length) || "/";

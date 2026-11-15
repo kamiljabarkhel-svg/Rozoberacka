@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { LegalPage, OperatorBox } from "@/components/Legal";
 import { OPERATOR, fill } from "@/lib/operator";
-import { CARS_ENABLED } from "@/lib/features";
+import { CARS_ENABLED, PL_ENABLED } from "@/lib/features";
 import { langOf } from "@/lib/i18n";
 import { altLangs } from "@/lib/hreflang";
 import TermsPl from "./TermsPl";
@@ -32,7 +32,7 @@ export default async function Page({ params }: P) {
         <li>So všetkými predajcami zaobchádzame rovnako. Prevádzkovateľ sám na portáli nepredáva a vlastné ponuky neuprednostňuje.</li>
         <li>Zoznam „Pasuje na“ skladáme z údajov predajcov (vlastné auto, „pasuje aj na“ a inzeráty s rovnakým OEM číslom). Nie je to overený katalóg. Aj pri rovnakom modeli auta sa diely líšia podľa motora, výbavy či roku – pred kúpou preto porovnajte <b>číslo dielu (OEM)</b> s pôvodným dielom.</li>
         <li>Katalóg značiek, modelov a motorizácií je pomôcka na hľadanie, zostavená bez licencovaných dát, a môže obsahovať chyby.</li>
-        <li>Portál má aj poľskú verziu (<a href="/pl" hrefLang="pl">autosuciastky.eu/pl</a>). Názvy a popisy inzerátov sa v nej zobrazujú <b>strojovo preložené</b> (DeepL); záväzný je pôvodný text predajcu. Ceny v zlotých sú orientačné (kurz Európskej centrálnej banky).</li>
+        {PL_ENABLED && <li>Portál má aj poľskú verziu (<a href="/pl" hrefLang="pl">autosuciastky.eu/pl</a>). Názvy a popisy inzerátov sa v nej zobrazujú <b>strojovo preložené</b> (DeepL); záväzný je pôvodný text predajcu. Ceny v zlotých sú orientačné (kurz Európskej centrálnej banky).</li>}
       </ul>
 
       <h2>3. Podnikateľ alebo súkromná osoba – vyhlásenie predajcu</h2>
@@ -47,16 +47,16 @@ export default async function Page({ params }: P) {
       <h2>3a. Povinnosti predajcu</h2>
       <ul>
         <li>Predajca uvádza pravdivé údaje o sebe aj o diele vrátane známych vád a poškodení.</li>
-        <li>Do názvu a popisu inzerátu nepíše osobné údaje (meno, adresu, telefón, e-mail) – kontakt sa zadáva v samostatných poliach. Názov a popis sú verejné a na poľskej verzii portálu sa strojovo prekladajú.</li>
+        <li>Do názvu a popisu inzerátu nepíše osobné údaje (meno, adresu, telefón, e-mail) – kontakt sa zadáva v samostatných poliach. Názov a popis sú verejné{PL_ENABLED ? " a na poľskej verzii portálu sa strojovo prekladajú" : ""}.</li>
         <li>Predáva len diely, ktoré vlastní alebo s ktorými smie nakladať. Zakázané sú kradnuté diely, diely s pozmeneným identifikačným číslom a veci, ktorých predaj zakazuje zákon.</li>
         <li><b>Podnikateľ predávajúci spotrebiteľovi</b> dodržiava predpisy na ochranu spotrebiteľa: zodpovedá za vady, ktoré sa prejavia do 24 mesiacov od prevzatia; pri použitom (aj repasovanom) diele sa so spotrebiteľom môže dohodnúť na kratšej dobe, najmenej 12 mesiacov (§ 619 Občianskeho zákonníka) – dohodnutú dobu uvedie v inzeráte aj na doklade. Pri predaji na diaľku má spotrebiteľ právo odstúpiť od zmluvy do 14 dní (§ 20 zákona č. 108/2024 Z. z.). Pri predaji inému podnikateľovi sa zodpovednosť za vady riadi Obchodným zákonníkom a dohodou strán.</li>
         <li><b>Súkromná osoba</b> zodpovedá za vady, na ktoré kupujúceho neupozornila (§ 597 a 599 Občianskeho zákonníka). Predpisy na ochranu spotrebiteľa sa na súkromný predaj nevzťahujú.</li>
         <li>Predajca zodpovedá za obsah inzerátu, fotky (musia byť jeho alebo ich smie použiť) a za vybavenie reklamácie.</li>
-        <li>Autorské práva k fotkám a textom ostávajú predajcovi. Zverejnením inzerátu udeľuje prevádzkovateľovi bezplatný, nevýhradný súhlas ich zobrazovať na portáli, zmenšovať a upravovať ich formát (napr. náhľady) a texty strojovo prekladať do ďalších jazykov portálu, aj prostredníctvom prekladateľskej služby tretej strany (DeepL), ktorá ich môže uchovať a použiť na zlepšenie svojich služieb, po dobu, kým je inzerát na portáli. Zmazaním inzerátu alebo účtu súhlas zaniká.</li>
+        <li>Autorské práva k fotkám a textom ostávajú predajcovi. Zverejnením inzerátu udeľuje prevádzkovateľovi bezplatný, nevýhradný súhlas ich zobrazovať na portáli, zmenšovať a upravovať ich formát (napr. náhľady) {PL_ENABLED ? "a texty strojovo prekladať do ďalších jazykov portálu, aj prostredníctvom prekladateľskej služby tretej strany (DeepL), ktorá ich môže uchovať a použiť na zlepšenie svojich služieb, " : ""}po dobu, kým je inzerát na portáli. Zmazaním inzerátu alebo účtu súhlas zaniká.</li>
         <li>Predajca neposiela kupujúcim nevyžiadanú reklamu a kontakty kupujúcich (zo správ aj z dopytov na diely) používa len na ponuku a dohodu o danom diele.</li>
         <li>VIN vozidla na diely{CARS_ENABLED ? " alebo havarovaného vozidla" : ""}, ktorý predajca zadá v portáli, je neverejný; portál ho kupujúcim nezobrazuje a predajca ho zadáva len pre svoju evidenciu.</li>
         <li>Pri pneumatikách a diskoch predajca uvádza rozmery a parametre (napr. šírka, profil, priemer, rozteč, ET) podľa skutočnosti a pri pneumatikách aj hĺbku dezénu a rok výroby (DOT), ak ich pozná.</li>
-        <li>Inzeráty sa zobrazujú aj na poľskej verzii portálu, takže predajcu môžu kontaktovať aj kupujúci z Poľska. Predajca nie je povinný predať ani zaslať diel do zahraničia. Ak predáva do Poľska, zodpovedá za dodržanie predpisov, ktoré sa na taký predaj vzťahujú – najmä pri predaji spotrebiteľovi, ak svoju ponuku zameriava aj na Poľsko, nesmie ho pripraviť o ochranu podľa kogentných poľských predpisov, a za daňové povinnosti (napríklad DPH pri predaji na diaľku do iného štátu EÚ).</li>
+        {PL_ENABLED && <li>Inzeráty sa zobrazujú aj na poľskej verzii portálu, takže predajcu môžu kontaktovať aj kupujúci z Poľska. Predajca nie je povinný predať ani zaslať diel do zahraničia. Ak predáva do Poľska, zodpovedá za dodržanie predpisov, ktoré sa na taký predaj vzťahujú – najmä pri predaji spotrebiteľovi, ak svoju ponuku zameriava aj na Poľsko, nesmie ho pripraviť o ochranu podľa kogentných poľských predpisov, a za daňové povinnosti (napríklad DPH pri predaji na diaľku do iného štátu EÚ).</li>}
         <li>Prístup k účtu chráni heslom a nezdieľa ho.</li>
       </ul>
 

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { LegalPage, OperatorBox } from "@/components/Legal";
 import { OPERATOR, fill } from "@/lib/operator";
-import { CARS_ENABLED } from "@/lib/features";
+import { CARS_ENABLED, PL_ENABLED } from "@/lib/features";
 import { langOf } from "@/lib/i18n";
 import { altLangs } from "@/lib/hreflang";
 import PrivacyPl from "./PrivacyPl";
@@ -10,7 +10,7 @@ import PrivacyPl from "./PrivacyPl";
 const GA = true;
 const TS = !!process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 // Strojové preklady inzerátov (supabase/36, funkcia „preklady“, DeepL API Free) – texty sú pripravené vždy, preklad sa zapne kľúčom v Supabase.
-const DL = true;
+const DL = PL_ENABLED;
 const GA_ON = /^G-[A-Z0-9]+$/.test((process.env.NEXT_PUBLIC_GA_ID || "").trim());
 const NOT_YET = GA_ON ? "" : " Meranie zatiaľ nie je spustené – ak súhlasíte, začne sa až po jeho spustení; dovtedy sa kód Google nenačíta vôbec.";
 
@@ -37,7 +37,7 @@ export default async function Page({ params }: P) {
           <tr><td>Predajca</td><td>e-mail, heslo (uložené len ako nečitateľný odtlačok), názov alebo meno, vyhlásenie o type predajcu (podnikateľ / súkromná osoba) a jeho čas, mesto, telefón, čas súhlasu s podmienkami</td><td>účet predajcu a zverejňovanie inzerátov</td><td>zmluva (čl. 6 ods. 1 písm. b GDPR)</td><td>kým účet nezrušíte</td></tr>
           <tr><td>Predajca – podnikateľ</td><td>obchodné meno, IČO, sídlo alebo miesto podnikania</td><td>zverejnenie totožnosti obchodníka kupujúcim a informácia, či predáva obchodník</td><td>zákonná povinnosť (čl. 6 ods. 1 písm. c GDPR; § 5 a § 16 zákona č. 108/2024 Z. z.)</td><td>kým účet nezrušíte; súkromná osoba tieto údaje nezadáva</td></tr>
           <tr><td>Predajca</td><td>inzeráty, fotky, telefón v inzeráte, počty zobrazení a odkrytí telefónu</td><td>zverejnenie inzerátu a štatistiky pre predajcu</td><td>zmluva</td><td>kým inzerát alebo účet nezmažete</td></tr>
-          <tr id="preklady"><td>Predajca</td><td>názov a popis inzerátu (bez telefónov a e-mailov)</td><td>strojový preklad do poľštiny, aby inzerát pochopili aj kupujúci z Poľska</td><td>zmluva – súčasť zverejnenia inzerátu (čl. 6 ods. 1 písm. b)</td><td>preklad sa zmaže spolu s inzerátom; pri zmene textu sa preloží znova</td></tr>
+          {DL && <tr id="preklady"><td>Predajca</td><td>názov a popis inzerátu (bez telefónov a e-mailov)</td><td>strojový preklad do poľštiny, aby inzerát pochopili aj kupujúci z Poľska</td><td>zmluva – súčasť zverejnenia inzerátu (čl. 6 ods. 1 písm. b)</td><td>preklad sa zmaže spolu s inzerátom; pri zmene textu sa preloží znova</td></tr>}
           <tr><td>Kupujúci, ktorý píše predajcovi</td><td>meno, telefón alebo e-mail, text správy, odpovede v konverzácii s predajcom, odtlačok IP pri odpovedi</td><td>doručenie správy predajcovi; ak zadáte e-mail, doručenie odpovede predajcu e-mailom z adresy portálu s odkazom na konverzáciu (predajca váš e-mail v konverzácii nepotrebuje a vy nevidíte jeho); ochrana pred zneužitím</td><td>vaša žiadosť o kontakt (čl. 6 ods. 1 písm. b) a náš oprávnený záujem na ochrane pred zneužitím (písm. f)</td><td>12 mesiacov od poslednej správy v konverzácii; odtlačok IP 3 dni</td></tr>
           <tr><td>Kupujúci, ktorý zadá dopyt na diel</td><td>meno, telefón alebo e-mail, auto (značka, model, ročník, nepovinne VIN), hľadaný diel, poznámka, mesto, odtlačok IP</td><td>zobrazenie dopytu registrovaným predajcom, aby vám poslali ponuku; ochrana pred spamom</td><td>váš súhlas (čl. 6 ods. 1 písm. a GDPR), ktorý môžete kedykoľvek odvolať; ochrana pred zneužitím – oprávnený záujem (písm. f)</td><td>dopyt platí 30 dní, zmaže sa po 60 dňoch spolu s ponukami</td></tr>
           <tr id="dopyty-emaily"><td>Predajca</td><td>e-mail, značky, ktoré predáva, záznam o odoslaných upozorneniach</td><td>e-mail o novom dopyte kupujúceho na značku, ktorú predáva (najviac 20 denne; kontakt kupujúceho v e-maile nie je)</td><td>zmluva – súčasť služby pre predajcov; vypnúť si to môžete v profile</td><td>záznam o upozornení sa maže spolu s dopytom (60 dní)</td></tr>

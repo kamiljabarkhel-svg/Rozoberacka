@@ -1,4 +1,5 @@
 // Poľská verzia: preklad rozhrania, ceny v zł, strojový preklad inzerátu, hreflang a prepínač jazyka.
+// POZOR: poľská verzia je skrytá (NEXT_PUBLIC_PL). Test spúšťať na zostavení s NEXT_PUBLIC_PL=1.
 // Spustenie: web na :3000 s lokálnou Supabase (pozri README), potom: NODE_PATH=$(npm root -g) node testy-e2e/test_pl.js
 const { chromium } = require("playwright");
 const { execSync } = require("child_process");

@@ -1,6 +1,7 @@
 "use client";
 // Formulár inzerátu v 5 krokoch: Diel → Auto → Stav, cena a podmienky → Fotky a popis → Kontakt.
 // Povinné polia podľa CLAUDE.md; tie isté pravidlá stráži aj databáza (04_funkcie.sql).
+import { PL_ENABLED } from "@/lib/features";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { Catalog, Condition, Specs, VehicleType } from "@/lib/types";
 import { CONDITIONS, condLabel, isUniversal, oemOptional, PCDS, RIM_DIAMETERS, SEASONS, SPEC_LABEL, specsErrors, VEHICLE_TYPES, WHEEL_CAT, WHEEL_SUBS, wheelDefaults, wheelKind, wheelMissing, type WheelKind } from "@/lib/types";
@@ -286,7 +287,7 @@ export default function ListingForm({ uid, cat, prof, edit, donor, onSaved, whee
             {bad.has("photos") && <small className="pp-ferr">{MSG.photos}</small>}
             <small className="mute">Fotky sa pred nahraním zmenšia, aby sa stránka načítala rýchlo.</small>
           </div>
-          <div className="full">{L({ k: "desc", t: "Popis", children: <><textarea value={v.description} maxLength={1000} rows={6} placeholder="Stav, poškodenia, čo je súčasťou, z akého auta…" onChange={(e) => { set("description", e.target.value); clear("desc"); }} /><small className="mute">{v.description.length} / 1000 · Popis je verejný a strojovo sa prekladá do poľštiny – nepíšte doň meno, adresu, telefón ani e-mail (telefón zadáte v kroku Kontakt).</small></> })}</div>
+          <div className="full">{L({ k: "desc", t: "Popis", children: <><textarea value={v.description} maxLength={1000} rows={6} placeholder="Stav, poškodenia, čo je súčasťou, z akého auta…" onChange={(e) => { set("description", e.target.value); clear("desc"); }} /><small className="mute">{v.description.length} / 1000{" · Popis je verejný" + (PL_ENABLED ? " a strojovo sa prekladá do poľštiny" : "") + " – nepíšte doň meno, adresu, telefón ani e-mail (telefón zadáte v kroku Kontakt)."}</small></> })}</div>
         </>}
         {step === 4 && <>
           {L({ k: "city", t: "Mesto", children: <input value={v.city} maxLength={60} onChange={(e) => { set("city", e.target.value); clear("city"); }} /> })}

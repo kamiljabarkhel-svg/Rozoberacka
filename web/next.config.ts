@@ -65,6 +65,8 @@ const nextConfig: NextConfig = {
     return [...toDomain, { source: "/blog/pouzite-diely-z-vrakoviska", destination: "/blog", permanent: true },
       // slovenčina je bez predpony – /sk/... presmeruje na čistú adresu
       { source: "/sk", destination: "/", permanent: true }, { source: "/sk/:path*", destination: "/:path*", permanent: true },
+      // poľská verzia je skrytá (NEXT_PUBLIC_PL) – /pl/... presmeruje na slovenskú stránku
+      ...(process.env.NEXT_PUBLIC_PL === "1" ? [] : [{ source: "/pl", destination: "/", permanent: false }, { source: "/pl/:path*", destination: "/:path*", permanent: false }]),
       // časti bez poľskej verzie (portál predajcu, fórum, blog…) – z /pl/... na slovenskú stránku
       { source: "/pl/:part(admin|blog|forum|havarovane-vozidla|vozidlo|pre-predajcov|predajca|inzerat)/:rest*", destination: "/:part/:rest*", permanent: false },
       { source: "/pl/:part(admin|blog|forum|havarovane-vozidla|vozidlo|pre-predajcov|predajca|inzerat)", destination: "/:part", permanent: false }];

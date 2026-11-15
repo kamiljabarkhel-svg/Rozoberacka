@@ -1,4 +1,5 @@
 import CookieBar, { CookieSettingsLink } from "@/components/CookieBar";
+import { PL_ENABLED } from "@/lib/features";
 import type { Metadata, Viewport } from "next";
 // Písmo Inter (balík @fontsource-variable, web ho podáva sám – návštevník nevolá Google, lepšie pre GDPR; má ľ, ť, ď).
 // Jedno písmo na všetko (vzhľad C „Bez rečí“, 11. 11. 2026); čísla dielov tučne s rovnakou šírkou číslic.
@@ -38,6 +39,7 @@ export const viewport: Viewport = { width: "device-width", initialScale: 1, view
 export default async function RootLayout({ children, params }: Readonly<{ children: React.ReactNode; params: Promise<{ lang: string }> }>) {
   const { lang: raw } = await params;
   if (raw !== "sk" && raw !== "pl") notFound();
+  if (raw === "pl" && !PL_ENABLED) notFound();   // poľská verzia je zatiaľ skrytá
   const lang = raw as Lang, t = (s: string) => tr(lang, s), h = (x: string) => lhref(lang, x);
   return (
     <html lang={lang}>
