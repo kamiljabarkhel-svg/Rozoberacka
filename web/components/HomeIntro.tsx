@@ -8,6 +8,7 @@ import { LogoMark } from "./Logo";
 import { NAVODY_PL } from "@/lib/navody.pl";
 import { navodPath } from "@/lib/navody";
 import type { Lang } from "@/lib/i18n";
+import { VIN_ENABLED } from "@/lib/features";
 
 export default function HomeIntro({ parts, sellers, lang = "sk" }: { parts?: number; sellers?: number; lang?: Lang }) {
   const pl = lang === "pl";
@@ -18,7 +19,7 @@ export default function HomeIntro({ parts, sellers, lang = "sk" }: { parts?: num
           <LogoMark size={52} className="intro-mark" />
           <p className="intro-t"><T>{"Použité autodiely z celého Slovenska"}</T></p>
           <ul className="intro-pts">
-            <li><b><T>{"Podľa auta, čísla dielu alebo VIN"}</T></b><span><T>{"nájdete diel, ktorý naozaj pasuje"}</T></span></li>
+            <li><b>{VIN_ENABLED ? <T>{"Podľa auta, čísla dielu alebo VIN"}</T> : <T>{"Podľa auta alebo čísla dielu"}</T>}</b><span><T>{"nájdete diel, ktorý naozaj pasuje"}</T></span></li>
             <li><b><T>{"Priamo s predajcom"}</T></b><span><T>{"zavoláte alebo napíšete, bez registrácie"}</T></span></li>
             <li>{parts ? <><b>{pl ? pieces(parts, "pl") : <>{parts.toLocaleString("sk-SK")} {parts === 1 ? "diel" : parts <= 4 ? "diely" : "dielov"}</>}</b><span>{pl ? <>od {sellers} {sellers === 1 ? "sprzedawcy" : "sprzedawców"} ze Słowacji</> : <><T>{"od"}</T> {sellers} {sellers === 1 ? "predajcu" : "predajcov"}</>}</span></> : <><b><T>{"Pre predajcov zadarmo"}</T></b><span><T>{"inzerujte diely bez poplatkov"}</T></span></>}</li>
           </ul>

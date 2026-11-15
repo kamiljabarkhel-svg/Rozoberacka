@@ -25,6 +25,7 @@ import Disclaimer from "./Disclaimer";
 import ListingDetail from "./ListingDetail";
 import SellersSoon from "./SellersSoon";
 import { CARS_ENABLED } from "@/lib/features";
+import { VIN_ENABLED } from "@/lib/features";
 
 const PAGE = 12;
 // Najpopulárnejšie značky (podľa druhu vozidla) – tlačidlo vyberie značku v hľadaní. Ukážu sa len tie, ktoré sú v katalógu.
@@ -241,7 +242,7 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
   const wheels = f.cat === WHEEL_CAT;
   // odkazy pod výsledkami (app/page.tsx) ukazujú len zvolený druh vozidla – CSS číta <html data-vt>
   useEffect(() => { document.documentElement.dataset.vt = wheels ? "kol" : f.vtype || "vsetky"; return () => { delete document.documentElement.dataset.vt; }; }, [wheels, f.vtype]);
-  const vinShown = !f.vtype || f.vtype === "osobne" || f.vtype === "dodavky";
+  const vinShown = VIN_ENABLED && (!f.vtype || f.vtype === "osobne" || f.vtype === "dodavky");
   const numOrNull = (v: string) => (v === "" ? null : Number(v));
 
   const detailId = STATIC_PREVIEW && hash.startsWith("#inzerat-") ? Number(hash.slice(9)) : null;
@@ -350,7 +351,7 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
             <div className="pa"><button type="button" className="lnk" onClick={() => set({ wtype: f.wtype, specs: {}, brand: null, model: null })}>{tl("Zrušiť rozmery")}</button><button className="btn" onClick={toRes}>{tl("Zobraziť")} {f.wtype === "disk" ? "disky" : f.wtype === "kolesa" ? tl("kolesá") : f.wtype === "pneu" ? "pneumatiky" : f.wtype === "puklice" ? "puklice" : "ponuky"}</button></div>
           </div>}
           {!wheels && f.vtype === "veterany" && <div className="vet-wrap"><p className="vet-note"><b>{tl("Diely na veterány")}</b> {tl("– osobné autá, ktorých výroba sa začala najneskôr v roku 1989.")}</p></div>}
-          {!wheels && <button type="button" className="find-alt-t" aria-expanded={altOpen} onClick={() => setAltOpen(!altOpen)}>{altOpen ? tl("Skryť hľadanie podľa čísla dielu a VIN") : tl("Mám číslo dielu alebo VIN")}</button>}
+          {!wheels && <button type="button" className="find-alt-t" aria-expanded={altOpen} onClick={() => setAltOpen(!altOpen)}>{VIN_ENABLED ? (altOpen ? tl("Skryť hľadanie podľa čísla dielu a VIN") : tl("Mám číslo dielu alebo VIN")) : (altOpen ? tl("Skryť hľadanie podľa čísla dielu") : tl("Mám číslo dielu"))}</button>}
           {!wheels && <div className={"find-alt" + (altOpen ? " open" : "")}>
             <form id="hladat" className="oemrow" onSubmit={(e) => { e.preventDefault(); if (!oemQ.trim()) return; set({ q: oemQ.trim() }); window.dispatchEvent(new CustomEvent("rz-q-set", { detail: oemQ.trim() })); setTimeout(toRes, 30); }}>
               <label>{tl("Mám číslo dielu")} <span className="oem-scope">{f.vtype ? (lang === "pl" ? `szukamy tylko części do: ${tl(VEHICLE_TYPES.find((t) => t.id === f.vtype)?.name || "").toLowerCase()}` : `hľadáme len diely na ${VEHICLE_TYPES.find((t) => t.id === f.vtype)?.name.toLowerCase()}`) : tl("hľadáme diely na všetky vozidlá")}</span><span className="oemin"><input value={oemQ} onChange={(e) => setOemQ(e.target.value)} placeholder={tl("napr. 03G903023 alebo 5E0 807 221")} autoComplete="off" />

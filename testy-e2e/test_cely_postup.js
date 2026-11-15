@@ -22,9 +22,18 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
     await pg.fill(".price-range input[aria-label^='Cena od']", "60"); await pg.waitForURL(/cena_od=60/);
     await pg.fill(".price-range input[aria-label^='Cena od']", ""); await pg.waitForFunction(() => !location.search.includes("cena_od"));
     await pg.click(".pop .chip:has-text('Škoda')"); await pg.waitForFunction(() => !location.search.includes("znacka="));
-    if ((await pg.locator(".pa .btn").innerText()) !== "Hľadať" || !(await pg.locator("#vin .btn2").innerText()).includes("Hľadať podľa VIN")) throw new Error("texty tlacidiel");
+    if ((await pg.locator(".pa .btn").innerText()) !== "Hľadať") throw new Error("texty tlacidiel");
   });
-  await step("VIN: auto, rok 1995/2025, nakladne auto prepne druh", async () => {
+  // Hľadanie podľa VIN je od 15. 11. 2026 skryté (NEXT_PUBLIC_VIN=1 ho zapne – vtedy spustiť test s RZ_VIN=1)
+  if (process.env.RZ_VIN !== "1") await step("VIN je skrytý (úvod aj dopyt)", async () => {
+    await pg.goto(B + "/"); await pg.waitForSelector(".panel");
+    if (await pg.locator("#vin").count()) throw new Error("na úvode je VIN");
+    if (/VIN/.test(await pg.locator(".find-alt-t, .oemrow").first().innerText().catch(() => ""))) throw new Error("text o VIN pri čísle dielu");
+    await pg.goto(B + "/dopyt"); await pg.waitForSelector("label:has-text('Značka')");
+    if (await pg.locator("label:has-text('VIN')").count()) throw new Error("v dopyte je VIN");
+    await pg.goto(B + "/");
+  });
+  if (process.env.RZ_VIN === "1") await step("VIN: auto, rok 1995/2025, nakladne auto prepne druh", async () => {
     await pg.goto(B + "/"); await pg.waitForSelector("#vin input");
     await pg.fill("#vin input:not([type=file])", "WVWZZZ1HZSW123456"); await pg.click("#vin .btn2");
     await pg.waitForSelector("#vin .vmsg:has-text('Volkswagen')"); await pg.waitForSelector("#vin .vmsg:has-text('2025 alebo 1995')");

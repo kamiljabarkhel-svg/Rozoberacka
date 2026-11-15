@@ -1,6 +1,7 @@
 // Návody pre kupujúcich – stále stránky (nie blog). Pomáhajú ľuďom aj vyhľadávačom.
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { VIN_ENABLED } from "./features";
 
 export type Navod = { slug: string; title: string; short: string; description: string; updated: string; body: ReactNode };
 
@@ -50,8 +51,8 @@ export const NAVODY: Navod[] = [
         <li>Prvé 3 znaky prezradia aj <b>druh vozidla</b> – napríklad <code>JH2</code> je motorka Honda, <code>JHM</code> auto Honda, <code>YS2</code> nákladné auto Scania, <code>WKK</code> autobus Setra.</li>
         <li><b>10. znak</b> je modelový rok – ale len u niektorých výrobcov (napr. Škoda, Volkswagen, Audi, Seat, Hyundai, Kia, Toyota, Volvo, japonské motorky): … <code>G</code> 2016, <code>H</code> 2017, <code>J</code> 2018, <code>K</code> 2019, <code>L</code> 2020, <code>M</code> 2021, <code>N</code> 2022, <code>P</code> 2023, <code>R</code> 2024, <code>S</code> 2025, <code>T</code> 2026. Kód sa opakuje každých 30 rokov (<code>S</code> je aj 1995). Mercedes-Benz, BMW, Renault, Peugeot, Citroën, Fiat, Opel, Ford (Európa) a väčšina nákladných áut a autobusov rok do 10. znaku nezapisujú – ročník nájdete v technickom preukaze. Modelový rok sa môže líšiť od roku výroby.</li>
       </ul>
-      <p>Na úvodnej stránke zadajte VIN do poľa <Link href="/#vin">VIN</Link> a autosuciastky.eu podľa neho vyberie výrobcu a druh vozidla a ukáže približný ročník, ak ho výrobca do VIN zapisuje. Presný model, motorizáciu a ročník vyberte sami. VIN môžete aj odfotiť – číta sa priamo v telefóne.</p>
-      <p>VIN pomôže aj predajcovi pri dopyte: <Link href="/dopyt">zadajte dopyt na diel</Link> a VIN pripíšte – predajca ho uvidí, verejne sa nezobrazuje.</p>
+      {VIN_ENABLED ? <><p>Na úvodnej stránke zadajte VIN do poľa <Link href="/#vin">VIN</Link> a autosuciastky.eu podľa neho vyberie výrobcu a druh vozidla a ukáže približný ročník, ak ho výrobca do VIN zapisuje. Presný model, motorizáciu a ročník vyberte sami. VIN môžete aj odfotiť – číta sa priamo v telefóne.</p>
+      <p>VIN pomôže aj predajcovi pri dopyte: <Link href="/dopyt">zadajte dopyt na diel</Link> a VIN pripíšte – predajca ho uvidí, verejne sa nezobrazuje.</p></> : <p>Pri kúpe dielu vám VIN pomôže hlavne v servise alebo u predajcu značky – podľa neho vyhľadajú presné číslo dielu v katalógu výrobcu. Na autosuciastky.eu potom hľadajte podľa tohto čísla v poli „Mám číslo dielu“.</p>}
     </>,
   },
   {

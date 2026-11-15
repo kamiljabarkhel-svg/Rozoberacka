@@ -6,4 +6,7 @@ export const CARS_ENABLED = process.env.NEXT_PUBLIC_CARS === "1";
 export const EMAIL_REPLIES = process.env.NEXT_PUBLIC_EMAIL_REPLIES === "1";
 /** Poľská verzia pre kupujúcich (/pl). Skrytá na želanie majiteľa 15. 11. 2026 – kód, preklady a tabuľky ostávajú.
  *  Zapnutie: NEXT_PUBLIC_PL=1 vo Verceli + v Supabase znova zapnúť plánovač prekladov (supabase/37_preklady_plan.sql). */
+/** Hľadanie podľa VIN (úvod, dopyt). Skryté na želanie majiteľa 15. 11. 2026 – dekódovanie (lib/vin.ts) ostáva v kóde.
+ *  Zapnutie: NEXT_PUBLIC_VIN=1 vo Verceli. */
+export const VIN_ENABLED = process.env.NEXT_PUBLIC_VIN === "1";
 export const PL_ENABLED = process.env.NEXT_PUBLIC_PL === "1";

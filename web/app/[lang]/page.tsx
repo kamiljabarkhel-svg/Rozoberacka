@@ -9,6 +9,7 @@ import { sk } from "@/lib/format";
 import { JsonLd, SEO_KEYWORDS, landingPath, siteLd } from "@/lib/seo";
 import { langOf, lhref, tr, type Lang } from "@/lib/i18n";
 import { altLangs } from "@/lib/hreflang";
+import { VIN_ENABLED } from "@/lib/features";
 
 // Úvod sa pripraví na serveri (Google uvidí najnovšie diely) a obnovuje sa každých 5 minút.
 export const revalidate = 300;
@@ -23,7 +24,7 @@ export async function generateMetadata({ params }: P): Promise<Metadata> {
   };
   return {
     title: { absolute: "Použité autodiely a náhradné diely na auto | autosuciastky.eu" },
-    description: "Použité autodiely a náhradné diely od predajcov a vrakovísk z celého Slovenska. Hľadajte podľa auta, VIN alebo čísla dielu (OEM), volajte bez registrácie.",
+    description: "Použité autodiely a náhradné diely od predajcov a vrakovísk z celého Slovenska. Hľadajte podľa auta alebo čísla dielu (OEM), predajcovi zavoláte bez registrácie.",
     keywords: SEO_KEYWORDS,
     alternates: { canonical: "/", languages: altLangs("/") },
   };
@@ -82,7 +83,7 @@ export default async function Page({ params }: P) {
         <section className="wrap seo-about">
           <h2>Použité autodiely a náhradné diely na jednom mieste</h2>
           <p>Na autosuciastky.eu nájdete <b>použité autodiely</b>, <b>náhradné diely</b> a autosúčiastky na osobné autá, dodávky, nákladné autá, autobusy, motorky aj veterány. Ponúkajú ich vrakoviská, autoservisy, predajcovia dielov aj ľudia, ktorí rozpredávajú auto na diely. Pri dieloch je číslo dielu (OEM), fotky, stav, cena a mesto.</p>
-          <p>Hľadajte podľa značky a modelu, podľa VIN alebo priamo podľa čísla dielu – uvidíte len <b>použité diely</b>, ktoré pasujú na vaše vozidlo. Predajcovi zavoláte alebo napíšete bez registrácie. Nenašli ste diel? <Link href="/dopyt">Zadajte dopyt</Link> a predajcovia sa vám ozvú. Predávate diely? <Link href="/pre-predajcov">Inzerát je zadarmo</Link>, aj hromadne cez CSV alebo XML.</p>
+          <p>Hľadajte podľa značky a modelu{VIN_ENABLED ? ", podľa VIN" : ""} alebo priamo podľa čísla dielu – uvidíte len <b>použité diely</b>, ktoré pasujú na vaše vozidlo. Predajcovi zavoláte alebo napíšete bez registrácie. Nenašli ste diel? <Link href="/dopyt">Zadajte dopyt</Link> a predajcovia sa vám ozvú. Predávate diely? <Link href="/pre-predajcov">Inzerát je zadarmo</Link>, aj hromadne cez CSV alebo XML.</p>
         </section>
       )}
     </>

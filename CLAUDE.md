@@ -411,3 +411,8 @@ Overené na Slov-Lexe: Občiansky zákonník § 597, 599, 612, 618, 619 (znenie 
 - Web: `oemAlt` v `Listing`/`MyListing`, `cleanOemAlt()` v `lib/seller.ts` (bez duplicít a bez hlavného čísla), pole „Náhradné čísla dielu“ vo formulári, CSV/XML stĺpec `nahradne_cisla` (oddeľovač |), export. `OemBox` ukáže náhradné čísla a odkaz „Podobné čísla“; `components/SimilarOems.tsx` pod počtom výsledkov pri hľadaní čísla (`looksLikeOem`: slovo s ≥ 3 číslicami, ≥ 5 znakov). Stránka `/cislo-dielu/…` zahŕňa diely s náhradným číslom, sekcia `#podobne`; bez ponuky, ale s podobnými číslami = stránka s noindex, inak 404.
 - Podobné číslo NIE JE zhoda – vždy s upozornením „overte u predajcu“.
 - Web má záložné načítanie bez `oem_alt`. Ostrá DB: `supabase/39` spustený 15. 11. 2026, 16:50.
+
+## VIN skryté (15. 11. 2026, 17:05)
+- Hľadanie podľa VIN je **skryté** na želanie majiteľa: `VIN_ENABLED` (`NEXT_PUBLIC_VIN=1`) v `lib/features.ts`. Bez neho nie je VIN na úvode, v dopyte ani v textoch o hľadaní; `lib/vin.ts` a VIN pri autách na diely (portál predajcu, neverejný) ostávajú. Návod `/navody/vin` ostáva, text o poli VIN sa ukáže len so zapnutým VIN.
+- E2E: bez `RZ_VIN=1` test overí, že VIN je skrytý; s `RZ_VIN=1` (a buildom s `NEXT_PUBLIC_VIN=1`) pôvodný test dekódovania.
+- Možné ďalšie kroky (rozhodne majiteľ): bezplatné dekódovanie modelu pre koncern VW (7. a 8. znak), platené Vincario s predplatenými kreditmi a pamäťou výsledkov, pole „VIN vášho auta“ v správe predajcovi (doplniť do zásad GDPR).
