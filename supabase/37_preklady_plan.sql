@@ -1,6 +1,6 @@
 -- 37: Plánovač prekladov (15. 11. 2026): každých 5 minút funkcia „preklady“ preloží nové a zmenené inzeráty do poľštiny.
 -- Funkcia len spracuje frontu (každý text sa prekladá raz), preto v Supabase má vypnuté „Verify JWT“.
--- Spustiť až keď je funkcia nasadená a v Secrets je AZURE_TRANSLATOR_KEY a AZURE_TRANSLATOR_REGION.
+-- Spustiť až keď je funkcia nasadená a v Secrets je GOOGLE_TRANSLATE_KEY.
 do $$ begin
   if exists (select 1 from cron.job where jobname = 'autosuciastky-preklady') then perform cron.unschedule('autosuciastky-preklady'); end if;
 end $$;

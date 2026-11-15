@@ -23,7 +23,7 @@ ok(saved?.p_name === "Reflektor przedni", "názov preložený: " + saved?.p_name
 ok(saved?.p_desc.includes("5E1 941 015") && saved?.p_desc.includes("0905 123 456") && saved?.p_desc.includes("<LED> & xenón"), "číslo dielu, telefón a znaky ostali: " + saved?.p_desc);
 // Microsoft Translator (Azure): HTML so <span class="notranslate">
 const ph = protectHtml(src);
-ok(!ph.xml.includes("0905") && ph.xml.includes('<span class="notranslate">0</span>'), "Azure: chránené časti v notranslate");
+ok(!ph.xml.includes("0905") && ph.xml.includes('<span class="notranslate" translate="no">0</span>'), "Azure: chránené časti v notranslate");
 ok(restoreHtml(ph.xml, ph.keep) === src, "Azure: obnova bez prekladu vráti pôvodný text");
 const calls2 = [];
 const fakeAz = async (u, i) => {
@@ -38,4 +38,18 @@ const s2 = calls2.find((c) => c.p_id === 8), req = calls2.find((c) => c.u);
 ok(r2.translated === 1 && r2.errors.length === 0, "Azure: 1 preložený " + JSON.stringify(r2));
 ok(/from=sk&to=pl&textType=html/.test(req.u) && req.h["Ocp-Apim-Subscription-Region"] === "westeurope", "Azure: SK → PL, región v hlavičke");
 ok(s2?.p_name === "Reflektor przedni" && s2?.p_desc.includes("5E1 941 015") && s2?.p_desc.includes("0905 123 456"), "Azure: preklad uložený, čísla ostali: " + s2?.p_desc);
+// Google Cloud Translation (v2, HTML) – znaky v odpovedi sú ako HTML entity
+const calls3 = [];
+const fakeG = async (u, i) => {
+  const b = JSON.parse(i.body);
+  if (String(u).includes("google")) { calls3.push({ u: String(u), b }); return new Response(JSON.stringify({ data: { translations: b.q.map((t) => ({ translatedText: t.replace("Predné svetlo", "Reflektor przedni").replace("Pasuje na", "Pasuje do") })) } })); }
+  if (String(u).endsWith("/translate_outbox")) return new Response(JSON.stringify([{ id: 9, name: "Predné svetlo", description: src, src_hash: "h" }]));
+  if (String(u).endsWith("/translate_save")) { calls3.push(b); return new Response("true"); }
+  return new Response("?", { status: 404 });
+};
+const r3 = await run({ SUPABASE_URL: "http://db", SUPABASE_SERVICE_ROLE_KEY: "k", GOOGLE_TRANSLATE_KEY: "gk", GOOGLE_URL: "http://google/translate" }, fakeG);
+const g3 = calls3.find((c) => c.u), s3 = calls3.find((c) => c.p_id === 9);
+ok(r3.translated === 1 && r3.errors.length === 0, "Google: 1 preložený " + JSON.stringify(r3));
+ok(/key=gk/.test(g3.u) && g3.b.source === "sk" && g3.b.target === "pl" && g3.b.format === "html" && !JSON.stringify(g3.b).includes("0905"), "Google: SK → PL v HTML, telefón sa neposiela");
+ok(s3?.p_name === "Reflektor przedni" && s3?.p_desc.includes("0905 123 456") && s3?.p_desc.includes("<LED> & xenón") && s3?.p_desc.includes("Pasuje do"), "Google: uložené s číslami a znakmi: " + s3?.p_desc);
 process.exit(fail ? 1 : 0);
