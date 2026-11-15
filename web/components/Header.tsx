@@ -1,4 +1,5 @@
 "use client";
+import LangHint from "./LangHint";
 import { useHref, useLang, useT } from "@/lib/i18n/client";
 import { switchPath } from "@/lib/i18n";
 import Link from "next/link";
@@ -60,6 +61,7 @@ export default function Header() {
   const Brand = STATIC_PREVIEW ? "a" : Link;
   return (
     <>
+    {!STATIC_PREVIEW && <LangHint />}
     <header className="site-header">
       <div className="tb">
         <Brand className="brand" href={hl(homeHref)} aria-label={tl("autosuciastky.eu – úvod")}><LogoMark size={34} /><Wordmark /></Brand>
@@ -70,8 +72,8 @@ export default function Header() {
           {STATIC_PREVIEW ? <a className="ubtn" href={hl(sellersHref)}>{tl("Prihlásenie predajcu")}</a> : <Link className="ubtn" href={hl(logged ? (forumOnly ? "/forum/ucet" : "/predajca") : sellersHref)}><svg className="ubtn-i" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" strokeWidth="2" /><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" /></svg><span>{logged ? (forumOnly ? tl("Môj účet") : tl("Portál predajcu")) : <>{tl("Prihlásenie")}<span className="hide-s"> {tl("predajcu")}</span></>}</span></Link>}
           {/* obyčajný odkaz: formulár si „registracia=1“ prečíta pri načítaní */}
           {!STATIC_PREVIEW && <span className="langsw" role="group" aria-label={tl("Jazyk")}>
-            <a href={switchPath(fullPath, "sk")} hrefLang="sk" lang="sk" aria-current={lang === "sk" ? "true" : undefined}>SK</a>
-            <a href={switchPath(fullPath, "pl")} hrefLang="pl" lang="pl" aria-current={lang === "pl" ? "true" : undefined}>PL</a>
+            <a href={switchPath(fullPath, "sk")} hrefLang="sk" lang="sk" title="Slovenčina" aria-current={lang === "sk" ? "true" : undefined}>SK</a>
+            <a href={switchPath(fullPath, "pl")} hrefLang="pl" lang="pl" title="Polski" aria-current={lang === "pl" ? "true" : undefined}>PL</a>
           </span>}
           {!logged && <a className="regbtn" href={hl(STATIC_PREVIEW ? sellersHref : "/pre-predajcov?registracia=1")}>{tl("Registrácia")}</a>}
         </div>

@@ -22,7 +22,7 @@ export default function TermsPl() {
         <li>Wszystkich sprzedawców traktujemy jednakowo. Operator sam nie sprzedaje na portalu i nie faworyzuje własnych ofert.</li>
         <li>Listę „Pasuje do” tworzymy z danych sprzedawców (własny samochód, „pasuje także do” i ogłoszenia z tym samym numerem OEM). Nie jest to zweryfikowany katalog. Nawet przy tym samym modelu samochodu części różnią się w zależności od silnika, wyposażenia czy roku – przed zakupem porównaj <b>numer części (OEM)</b> z oryginalną częścią.</li>
         <li>Katalog marek, modeli i silników jest pomocą w wyszukiwaniu, przygotowaną bez licencjonowanych danych, i może zawierać błędy.</li>
-        <li>Polska wersja portalu wyświetla ogłoszenia sprzedawców ze Słowacji. Nazwy i opisy ogłoszeń mogą być <b>przetłumaczone automatycznie</b> (DeepL); tłumaczenie może być niedokładne – wiążący jest oryginalny tekst sprzedawcy, który możesz wyświetlić przyciskiem „Pokaż oryginał”. Ceny w zł są orientacyjne (kurs Europejskiego Banku Centralnego); sprzedawca podaje cenę w euro.</li>
+        <li>Polska wersja portalu wyświetla ogłoszenia sprzedawców ze Słowacji. Nazwy i opisy ogłoszeń mogą być <b>przetłumaczone automatycznie</b> (Microsoft Translator); tłumaczenie może być niedokładne – wiążący jest oryginalny tekst sprzedawcy, który możesz wyświetlić przyciskiem „Pokaż oryginał”. Ceny w zł są orientacyjne (kurs Europejskiego Banku Centralnego); sprzedawca podaje cenę w euro.</li>
       </ul>
 
       <h2>3. Przedsiębiorca czy osoba prywatna – oświadczenie sprzedawcy</h2>

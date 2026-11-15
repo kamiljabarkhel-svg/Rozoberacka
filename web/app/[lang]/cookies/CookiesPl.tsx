@@ -23,6 +23,7 @@ export default function CookiesPl({ gaOn }: { gaOn: boolean }) {
           <tr><td>rozoberacka-moje-auto</td><td>localStorage</td><td>samochód zapisany jako „Mój samochód”, by pokazać do niego części</td><td>niezbędne (funkcja włączona przez Ciebie)</td><td>dopóki go nie usuniesz</td></tr>
           <tr><td>rozoberacka-suhlas</td><td>localStorage</td><td>Twój wybór w ustawieniach cookies i jego data</td><td>niezbędne</td><td>dopóki go nie zmienisz lub nie usuniesz</td></tr>
           <tr><td>rozoberacka-druh</td><td>localStorage</td><td>ostatnio wybrany rodzaj pojazdu przy dodawaniu części – tylko w portalu sprzedawcy</td><td>niezbędne (ustawienie wybrane przez Ciebie)</td><td>dopóki go nie zmienisz lub nie usuniesz</td></tr>
+          <tr><td>rz-lang-hint</td><td>sessionStorage</td><td>że zamknąłeś propozycję wersji polskiej (pokazuje się tylko przy polskiej przeglądarce)</td><td>niezbędne</td><td>do zamknięcia przeglądarki</td></tr>
           <tr><td>rz-tel-*, rz-view-*, rz-carview-*</td><td>sessionStorage</td><td>aby odkryty telefon i wyświetlenie części lub pojazdu nie były liczone ponownie</td><td>niezbędne</td><td>do zamknięcia przeglądarki</td></tr>
           <tr><td>_ga</td><td>cookie (Google Analytics)</td><td>rozróżnianie odwiedzających dla statystyk ruchu</td><td>pomiar – tylko za Twoją zgodą</td><td>2 lata</td></tr>
           <tr><td>_ga_*</td><td>cookie (Google Analytics)</td><td>utrzymanie sesji odwiedzin dla statystyk</td><td>pomiar – tylko za Twoją zgodą</td><td>2 lata</td></tr>

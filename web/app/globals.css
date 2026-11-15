@@ -1803,3 +1803,6 @@ select,input:not([type=checkbox]):not([type=radio]):not([type=range]),textarea{b
 .linkbtn{background:none;border:0;padding:0;color:var(--link);text-decoration:underline;cursor:pointer;font:inherit}
 .tr-note{margin-top:6px}
 .legal-tr{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--acc);padding:10px 12px;border-radius:4px}
+.langhint{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;background:var(--acc);color:var(--accink);padding:8px 12px;font-size:14px;font-weight:600}
+.langhint a{color:var(--accink);text-decoration:underline}
+.langhint button{background:none;border:0;color:var(--accink);font-size:20px;line-height:1;cursor:pointer;padding:0 4px}

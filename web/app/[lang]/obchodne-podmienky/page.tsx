@@ -32,7 +32,7 @@ export default async function Page({ params }: P) {
         <li>So všetkými predajcami zaobchádzame rovnako. Prevádzkovateľ sám na portáli nepredáva a vlastné ponuky neuprednostňuje.</li>
         <li>Zoznam „Pasuje na“ skladáme z údajov predajcov (vlastné auto, „pasuje aj na“ a inzeráty s rovnakým OEM číslom). Nie je to overený katalóg. Aj pri rovnakom modeli auta sa diely líšia podľa motora, výbavy či roku – pred kúpou preto porovnajte <b>číslo dielu (OEM)</b> s pôvodným dielom.</li>
         <li>Katalóg značiek, modelov a motorizácií je pomôcka na hľadanie, zostavená bez licencovaných dát, a môže obsahovať chyby.</li>
-        <li>Portál má aj poľskú verziu (<a href="/pl" hrefLang="pl">autosuciastky.eu/pl</a>). Názvy a popisy inzerátov sa v nej zobrazujú <b>strojovo preložené</b> (DeepL); záväzný je pôvodný text predajcu. Ceny v zlotých sú orientačné (kurz Európskej centrálnej banky).</li>
+        <li>Portál má aj poľskú verziu (<a href="/pl" hrefLang="pl">autosuciastky.eu/pl</a>). Názvy a popisy inzerátov sa v nej zobrazujú <b>strojovo preložené</b> (Microsoft Translator); záväzný je pôvodný text predajcu. Ceny v zlotých sú orientačné (kurz Európskej centrálnej banky).</li>
       </ul>
 
       <h2>3. Podnikateľ alebo súkromná osoba – vyhlásenie predajcu</h2>

@@ -39,6 +39,7 @@ export default async function Page({ params }: P) {
           <tr><td>rozoberacka-moje-auto</td><td>localStorage</td><td>auto, ktoré ste si uložili ako „Moje auto“, aby sme vám ukázali diely naň</td><td>nevyhnutné (vami zapnutá funkcia)</td><td>kým ho nezmažete („Zabudnúť auto“)</td></tr>
           <tr><td>rozoberacka-suhlas</td><td>localStorage</td><td>vaša voľba v nastaveniach cookies a jej dátum</td><td>nevyhnutné</td><td>kým ju nezmeníte alebo nezmažete</td></tr>
           <tr><td>rozoberacka-druh</td><td>localStorage</td><td>druh vozidla (osobné, motorky…), ktorý ste naposledy zvolili pri pridávaní dielu – len v portáli predajcu</td><td>nevyhnutné (vami zvolené nastavenie)</td><td>kým ho nezmeníte alebo nezmažete</td></tr>
+          <tr><td>rz-lang-hint</td><td>sessionStorage</td><td>že ste zavreli ponuku poľskej verzie (zobrazí sa len pri poľskom prehliadači)</td><td>nevyhnutné</td><td>do zatvorenia prehliadača</td></tr>
           <tr><td>rz-tel-*, rz-view-*, rz-carview-*</td><td>sessionStorage</td><td>aby sa odkrytý telefón a zobrazenie dielu alebo vozidla nepočítali znova</td><td>nevyhnutné</td><td>do zatvorenia prehliadača</td></tr>
           {GA && <>
           <tr><td>_ga</td><td>cookie (Google Analytics)</td><td>rozlíšenie návštevníkov pre štatistiku návštevnosti</td><td>meranie – len s vaším súhlasom</td><td>2 roky</td></tr>

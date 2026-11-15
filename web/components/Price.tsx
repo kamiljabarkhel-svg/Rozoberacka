@@ -15,5 +15,5 @@ export default function Price({ v, className }: { v: number; className?: string 
   useEffect(() => { if (lang === "pl" && !rate) loadRate().then(setRate); }, [lang, rate]);
   if (lang !== "pl") return <span className={className}>{price(v)}</span>;
   const zl = rate ? Math.round(v * rate) : null;
-  return <span className={className}>{price(v)}{zl != null && <small className="pln"> ≈ {zl.toLocaleString("pl-PL")} zł</small>}</span>;
+  return <span className={className}>{price(v)}{zl != null && <small className="pln" title="Orientacyjnie, według kursu Europejskiego Banku Centralnego. Sprzedawca podaje cenę w euro."> ≈ {zl.toLocaleString("pl-PL")} zł</small>}</span>;
 }

@@ -1,12 +1,17 @@
 // Logika funkcie „preklady“ (bez závislosti na Deno, aby sa dala otestovať aj lokálne).
-// Z fronty translate_outbox() preloží názov a popis inzerátov zo slovenčiny do poľštiny cez DeepL API a uloží translate_save().
-// Telefónne čísla, e-maily a čísla dielov (OEM) sa do DeepL neposielajú – nahradia sa značkou a po preklade sa vrátia.
+// Z fronty translate_outbox() preloží názov a popis inzerátov zo slovenčiny do poľštiny a uloží translate_save().
+// Prekladač: Microsoft Translator (Azure, bezplatný plán F0 – 2 mil. znakov mesačne, európsky server), ak je nastavený
+// AZURE_TRANSLATOR_KEY; inak DeepL (DEEPL_API_KEY).
+// Telefónne čísla, e-maily a čísla dielov (OEM) sa prekladaču neposielajú – nahradia sa značkou a po preklade sa vrátia.
 
 export type Env = {
   SUPABASE_URL: string;
   SUPABASE_SERVICE_ROLE_KEY: string;
-  DEEPL_API_KEY: string;
+  DEEPL_API_KEY?: string;
   DEEPL_URL?: string;      // len pre testy
+  AZURE_TRANSLATOR_KEY?: string;
+  AZURE_TRANSLATOR_REGION?: string;   // napr. westeurope (podľa zdroja v Azure)
+  AZURE_URL?: string;      // len pre testy
   LIMIT?: number;
 };
 type Row = { id: number; name: string; description: string | null; src_hash: string };
@@ -22,6 +27,14 @@ export function protect(s: string): { xml: string; keep: string[] } {
   for (const m of s.matchAll(KEEP)) { xml += escX(s.slice(last, m.index)) + `<k i="${keep.length}"/>`; keep.push(m[0]); last = m.index! + m[0].length; }
   return { xml: xml + escX(s.slice(last)), keep };
 }
+/** Pre Microsoft Translator: chránené časti ako <span class="notranslate">n</span>. */
+export function protectHtml(s: string): { xml: string; keep: string[] } {
+  const p = protect(s);
+  return { xml: p.xml.replace(/<k i="(\d+)"\/>/g, '<span class="notranslate">$1</span>'), keep: p.keep };
+}
+export function restoreHtml(html: string, keep: string[]): string {
+  return restore(html.replace(/<span class="notranslate">\s*(\d+)\s*<\/span>/g, '<k i="$1"/>'), keep);
+}
 export function restore(xml: string, keep: string[]): string {
   return unX(xml.replace(/<k i="(\d+)"\s*\/>/g, (_, i) => escX(keep[Number(i)] ?? ""))).trim();
 }
@@ -34,24 +47,37 @@ export async function run(env: Env, f: typeof fetch = fetch): Promise<{ translat
     if (!r.ok) throw new Error(`${fn}: ${r.status} ${await r.text()}`);
     const t = await r.text(); return t ? JSON.parse(t) : null;
   };
-  // Kľúč z bezplatného plánu končí na „:fx“ a má inú adresu.
-  const url = env.DEEPL_URL || (env.DEEPL_API_KEY.endsWith(":fx") ? "https://api-free.deepl.com/v2/translate" : "https://api.deepl.com/v2/translate");
+  const azure = !!env.AZURE_TRANSLATOR_KEY;
+  if (!azure && !env.DEEPL_API_KEY) throw new Error("Chýba AZURE_TRANSLATOR_KEY alebo DEEPL_API_KEY");
+  // DeepL: kľúč z bezplatného plánu končí na „:fx“ a má inú adresu. Azure: európsky server (údaje sa spracúvajú v EÚ).
+  const deeplUrl = env.DEEPL_URL || (env.DEEPL_API_KEY?.endsWith(":fx") ? "https://api-free.deepl.com/v2/translate" : "https://api.deepl.com/v2/translate");
+  const azureUrl = (env.AZURE_URL || "https://api-eur.cognitive.microsofttranslator.com/translate") + "?api-version=3.0&from=sk&to=pl&textType=html";
   const rows: Row[] = (await rpc("translate_outbox", { p_lang: "pl", p_limit: env.LIMIT || 40 })) || [];
   let translated = 0; const errors: string[] = [];
   for (let i = 0; i < rows.length; i += 20) {
     const batch = rows.slice(i, i + 20);
-    const parts = batch.flatMap((x) => [protect(x.name), protect(x.description || "")]);
+    const parts = batch.flatMap((x) => azure ? [protectHtml(x.name), protectHtml(x.description || "")] : [protect(x.name), protect(x.description || "")]);
     try {
-      const r = await f(url, {
-        method: "POST", headers: { Authorization: "DeepL-Auth-Key " + env.DEEPL_API_KEY, "Content-Type": "application/json" },
-        body: JSON.stringify({ text: parts.map((p) => p.xml || " "), source_lang: "SK", target_lang: "PL", tag_handling: "xml", ignore_tags: ["k"], preserve_formatting: true }),
-      });
-      if (!r.ok) throw new Error(`DeepL ${r.status} ${(await r.text()).slice(0, 200)}`);
-      const out = ((await r.json()).translations || []) as { text: string }[];
+      let texts: string[];
+      if (azure) {
+        const h: Record<string, string> = { "Ocp-Apim-Subscription-Key": env.AZURE_TRANSLATOR_KEY!, "Content-Type": "application/json" };
+        if (env.AZURE_TRANSLATOR_REGION) h["Ocp-Apim-Subscription-Region"] = env.AZURE_TRANSLATOR_REGION;
+        const r = await f(azureUrl, { method: "POST", headers: h, body: JSON.stringify(parts.map((p) => ({ Text: p.xml || " " }))) });
+        if (!r.ok) throw new Error(`Microsoft Translator ${r.status} ${(await r.text()).slice(0, 200)}`);
+        texts = ((await r.json()) as { translations: { text: string }[] }[]).map((x) => x.translations?.[0]?.text || "");
+      } else {
+        const r = await f(deeplUrl, {
+          method: "POST", headers: { Authorization: "DeepL-Auth-Key " + env.DEEPL_API_KEY, "Content-Type": "application/json" },
+          body: JSON.stringify({ text: parts.map((p) => p.xml || " "), source_lang: "SK", target_lang: "PL", tag_handling: "xml", ignore_tags: ["k"], preserve_formatting: true }),
+        });
+        if (!r.ok) throw new Error(`DeepL ${r.status} ${(await r.text()).slice(0, 200)}`);
+        texts = (((await r.json()).translations || []) as { text: string }[]).map((x) => x.text);
+      }
+      const back = (k: number) => azure ? restoreHtml(texts[k] || "", parts[k].keep) : restore(texts[k] || "", parts[k].keep);
       for (let k = 0; k < batch.length; k++) {
         const x = batch[k];
-        const name = restore(out[2 * k]?.text || "", parts[2 * k].keep) || x.name;
-        const desc = x.description ? restore(out[2 * k + 1]?.text || "", parts[2 * k + 1].keep) : null;
+        const name = back(2 * k) || x.name;
+        const desc = x.description ? back(2 * k + 1) : null;
         if (await rpc("translate_save", { p_lang: "pl", p_id: x.id, p_name: name, p_desc: desc, p_hash: x.src_hash })) translated++;
       }
     } catch (e) { errors.push(String((e as Error).message || e)); break; }   // pri chybe (limit, zlý kľúč) skúsi znova pri ďalšom spustení
