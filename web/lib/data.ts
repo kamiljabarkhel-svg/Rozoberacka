@@ -420,10 +420,10 @@ export async function getSeoCounts(): Promise<SeoCount[]> {
 }
 
 /** Aktívne inzeráty pre sitemap (id, názov, auto, posledná zmena). */
-export async function getSitemapListings(): Promise<{ id: number; name: string; brandId: number | null; modelId: number | null; engineId: number | null; updatedAt: string }[]> {
-  if (IS_DEMO) return (await demoData()).listings.map((l) => ({ id: l.id, name: l.name, brandId: l.brandId, modelId: l.modelId, engineId: l.engineId, updatedAt: l.updatedAt }));
-  const rows = await selectAllWhere<Row>("listings", "id,name,brand_id,model_id,updated_at", "id", { status: "active" });
-  return rows.map((r) => ({ id: Number(r.id), name: String(r.name), brandId: (r.brand_id as number) ?? null, modelId: (r.model_id as number) ?? null, engineId: null, updatedAt: String(r.updated_at) }));
+export async function getSitemapListings(): Promise<{ id: number; name: string; oem: string | null; brandId: number | null; modelId: number | null; engineId: number | null; updatedAt: string }[]> {
+  if (IS_DEMO) return (await demoData()).listings.map((l) => ({ id: l.id, name: l.name, oem: l.oem, brandId: l.brandId, modelId: l.modelId, engineId: l.engineId, updatedAt: l.updatedAt }));
+  const rows = await selectAllWhere<Row>("listings", "id,name,oem,brand_id,model_id,updated_at", "id", { status: "active" });
+  return rows.map((r) => ({ id: Number(r.id), name: String(r.name), oem: (r.oem as string) ?? null, brandId: (r.brand_id as number) ?? null, modelId: (r.model_id as number) ?? null, engineId: null, updatedAt: String(r.updated_at) }));
 }
 
 // ---------- DOPYT NA DIEL (kupujúci bez účtu) ----------

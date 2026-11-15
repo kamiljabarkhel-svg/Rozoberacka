@@ -16,7 +16,7 @@ export async function generateStaticParams() {
   const cat = await getCatalog();
   const ids = await demoListingIds();
   const out: { slug: string }[] = [];
-  for (const id of ids) { const d = await loadDetail(id); if (d) out.push({ slug: listingPath(id, d.l.name, carName(d.l, cat)).slice(6) }); }
+  for (const id of ids) { const d = await loadDetail(id); if (d) out.push({ slug: listingPath(id, d.l.name, carName(d.l, cat), d.l.oem).slice(6) }); }
   return out;
 }
 
@@ -44,7 +44,7 @@ export async function generateMetadata({ params }: P): Promise<Metadata> {
   const title = lang === "sk" && used && !/použit/i.test(base) && base.length <= 30 ? `${base} – použitý diel` : base;
   const kind = lang === "sk" ? (used ? "Použitý diel" : "Nový diel") + " · " : "";
   const desc = cut(`${kind}${price(l.price)} · ${tr(lang, l.condition)}${l.oem ? " · OEM " + l.oem : ""}${l.city ? " · " + l.city : ""}. ${text}`);
-  const skPath = listingPath(l.id, l.name, carName(l, cat));
+  const skPath = listingPath(l.id, l.name, carName(l, cat), l.oem);
   const path = lhref(lang, skPath);
   return {
     title, description: desc, alternates: { canonical: path, languages: altLangs(skPath) },
@@ -67,7 +67,7 @@ export default async function Page({ params }: P) {
     return <GonePage g={g} lang={lang} />;
   }
   const t = lang === "pl" ? (await getListingTr([d.l.id], "pl")).get(d.l.id) || null : null;
-  const path = lhref(lang, listingPath(d.l.id, d.l.name, carName(d.l, d.cat)));
+  const path = lhref(lang, listingPath(d.l.id, d.l.name, carName(d.l, d.cat), d.l.oem));
   // Stará alebo skrátená adresa (/diel/123) sa zobrazí tiež; Google dostane hlavnú adresu cez <link rel="canonical">.
   // (Presmerovanie zo stránky s ISR posiela v Next.js 15 pri prvom zobrazení hlavičku Location dvakrát.)
   const crumbs = landingCrumbs({ brandId: d.l.brandId, modelId: d.l.modelId, cat: d.l.categoryId, sub: null }, d.cat, lang);

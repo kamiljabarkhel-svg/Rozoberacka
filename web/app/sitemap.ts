@@ -1,8 +1,8 @@
 import type { MetadataRoute } from "next";
-import { getActiveSellers, getCatalog, getCities, getSeoCounts, getSitemapListings, sitemapCars } from "@/lib/data";
+import { getActiveSellers, getCatalog, getCities, getSeoCounts, sitemapCars } from "@/lib/data";
 import { NAVODY, navodPath } from "@/lib/navody";
 import { BLOG, blogPath } from "@/lib/blog";
-import { SITE_URL, carName, landingPath, listingPath, sellerPath, vehiclePath, vehicleTitle, type Landing } from "@/lib/seo";
+import { SITE_URL, landingPath, sellerPath, vehiclePath, vehicleTitle, type Landing } from "@/lib/seo";
 import { CARS_ENABLED } from "@/lib/features";
 import { lhref } from "@/lib/i18n";
 import { PL_ENABLED } from "@/lib/features";
@@ -35,7 +35,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     for (const t of threads) out.push({ url: SITE_URL + threadPath(t.section, t.id, t.title), lastModified: new Date(t.last_post_at), changeFrequency: "weekly", priority: 0.5 });
   } catch { /* fórum ešte nie je v databáze */ }
   try {
-    const [cat, counts, listings, cities, sellers] = await Promise.all([getCatalog(), getSeoCounts(), getSitemapListings(), getCities().catch(() => [] as string[]), getActiveSellers().catch(() => [])]);
+    const [cat, counts, cities, sellers] = await Promise.all([getCatalog(), getSeoCounts(), getCities().catch(() => [] as string[]), getActiveSellers().catch(() => [])]);
     const pages = new Set<string>();
     const add = (x: Landing) => pages.add(landingPath(x, cat));
     for (const c of counts) {
@@ -49,7 +49,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     for (const p of pages) out.push({ url: SITE_URL + p, changeFrequency: "daily", priority: 0.7 });
     for (const v of sellers) out.push({ url: SITE_URL + sellerPath(v.id, v.name), changeFrequency: "daily", priority: 0.5 });
     if (CARS_ENABLED) for (const c of await sitemapCars().catch(() => [])) out.push({ url: SITE_URL + vehiclePath(c.id, vehicleTitle(c, cat), c.condition), lastModified: new Date(c.updatedAt), changeFrequency: "weekly", priority: 0.5 });
-    for (const l of listings) out.push({ url: SITE_URL + listingPath(l.id, l.name, carName(l, cat)), lastModified: new Date(l.updatedAt), changeFrequency: "weekly", priority: 0.6 });
+    // diely a čísla dielov sú v samostatných mapách /mapa-dielov/sitemap/<n>.xml (Google: najviac 50 000 adries v jednej)
   } catch { /* pri výpadku databázy aspoň základné stránky */ }
   // Poľská verzia: rovnaké stránky s predponou /pl a hreflang medzi nimi (portál predajcu, fórum a blog sú len po slovensky).
   if (!PL_ENABLED) return out;

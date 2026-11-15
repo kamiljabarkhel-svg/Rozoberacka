@@ -4,9 +4,9 @@ import type { ReactNode } from "react";
 import { STATIC_PREVIEW, listingHref } from "@/lib/paths";
 import { useHref } from "@/lib/i18n/client";
 
-export default function ListingLink({ id, name = "", car = "", className, children }: { id: number; name?: string; car?: string; className?: string; children: ReactNode }) {
+export default function ListingLink({ id, name = "", car = "", oem = null, className, children }: { id: number; name?: string; car?: string; oem?: string | null; className?: string; children: ReactNode }) {
   const hl = useHref();
-  const href = listingHref(id, name, car);
+  const href = listingHref(id, name, car, oem);
   if (STATIC_PREVIEW) return <a className={className} href={href}>{children}</a>;
   return <Link className={className} href={hl(href)}>{children}</Link>;
 }

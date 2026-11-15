@@ -152,6 +152,18 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
     const box = b2.locator(".msgbox"); await box.locator("input >> nth=0").fill("Jano Kupec"); await box.locator("input >> nth=1").fill("0911 222 333"); await box.locator("textarea").fill("Dobrý deň, je svetlo ešte dostupné?");
     await box.locator("text=Odoslať správu").click(); await b2.waitForSelector("text=Správa bola odoslaná");
   });
+  await step("SEO: číslo dielu v adrese a stránka čísla dielu", async () => {
+    if (!/\/diel\/\d+-5e1941015-/.test(b2.url())) throw new Error("adresa bez čísla dielu: " + b2.url());
+    const h = await (await fetch(b2.url())).text();
+    if (!/<link rel="canonical" href="[^"]*\/diel\/\d+-5e1941015-predne-lave-svetlo/.test(h)) throw new Error("canonical bez čísla dielu");
+    await b2.click(".oembox a:has-text('Rovnaké číslo u iných predajcov')"); await b2.waitForURL("**/cislo-dielu/5e1941015");
+    await b2.waitForSelector("h1:has-text('Číslo dielu')"); await b2.waitForSelector(".card:has-text('Predné ľavé svetlo LED')");
+    await b2.waitForSelector("text=Na aké vozidlá diel 5E1941015 pasuje");
+    const o = await (await fetch(B + "/cislo-dielu/5E1941015")).text();
+    if (!/<meta name="robots" content="noindex, follow"/.test(o)) throw new Error("1 ponuka má byť noindex");
+    if (!/<title>5E1941015 – /.test(o)) throw new Error("titulok stránky čísla dielu");
+    const r = await fetch(B + "/cislo-dielu/XXXX0000"); if (r.status !== 404) throw new Error("neexistujúce číslo: " + r.status);
+  });
   global.CUR = pg;
   await step("portal: statistiky a sprava", async () => {
     await pg.goto(B + "/predajca#home"); await pg.reload(); await pg.waitForSelector(".pp-tile");

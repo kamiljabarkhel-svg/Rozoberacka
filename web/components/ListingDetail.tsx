@@ -172,7 +172,7 @@ export default function ListingDetail({ id, onClose, initial, catalog, trInitial
           <section className="ddesc" aria-labelledby="ddesc-h"><h2 id="ddesc-h">{tl("Popis")}</h2><p className="desc">{(tx && !orig ? tx.description : l.description) || tl("Predajca nepridal popis.")}</p>
             {tx && <p className="mute small tr-note">{orig ? "Oryginalny tekst sprzedawcy (po słowacku)." : "Tłumaczenie automatyczne z języka słowackiego."} <button type="button" className="linkbtn" onClick={() => setOrig(!orig)}>{orig ? "Pokaż tłumaczenie" : "Pokaż oryginał"}</button></p>}
             {lang === "pl" && !tx && l.description && <p className="mute small tr-note">Opis sprzedawcy jest po słowacku – tłumaczenie pojawi się wkrótce.</p>}</section>
-          <ContactBox id={l.id} name={l.name} seller={l.seller.name} path={listingPath(l.id, l.name, carName(l, cat))} cat={cat} />
+          <ContactBox id={l.id} name={l.name} seller={l.seller.name} path={listingPath(l.id, l.name, carName(l, cat), l.oem)} cat={cat} />
           <Tags l={l} />
           {!univ && <MyCarFit vehicles={vehicles} cat={cat} />}
           <div className="seller">
@@ -210,7 +210,7 @@ export default function ListingDetail({ id, onClose, initial, catalog, trInitial
         <p className="mute">{tl("Rovnaké auto (")}{[carName(l, cat, true), l.year].filter(Boolean).join(", ")}{l.km ? `, ${l.km.toLocaleString("sk-SK")} km` : ""}{tl(") rozoberá predajca")} {l.seller.name}.</p>
         <div className="sim">
           {sameCar.slice(0, 6).map((x) => (
-            <ListingLink key={x.id} id={x.id} name={x.name} car={carName(x, cat)} className="simc">
+            <ListingLink key={x.id} id={x.id} name={x.name} car={carName(x, cat)} oem={x.oem} className="simc">
               <Mini x={x} cat={cat} />
             </ListingLink>
           ))}
@@ -222,7 +222,7 @@ export default function ListingDetail({ id, onClose, initial, catalog, trInitial
           {l.sellerId && !STATIC_PREVIEW && <> <Link className="lnk sh-more" href={hl(sellerPath(l.sellerId, l.seller.name))}>{tl("Všetky diely predajcu")}</Link></>}</h2>
         <div className="sim">
           {more.items.slice(0, 3).map((x) => (
-            <ListingLink key={x.id} id={x.id} name={x.name} car={carName(x, cat)} className="simc">
+            <ListingLink key={x.id} id={x.id} name={x.name} car={carName(x, cat)} oem={x.oem} className="simc">
               <Mini x={x} cat={cat} />
             </ListingLink>
           ))}
@@ -233,7 +233,7 @@ export default function ListingDetail({ id, onClose, initial, catalog, trInitial
         <h2 className="sh">{tl("Podobné inzeráty")}</h2>
         <div className="sim">
           {similar.map((x) => (
-            <ListingLink key={x.id} id={x.id} name={x.name} car={carName(x, cat)} className="simc">
+            <ListingLink key={x.id} id={x.id} name={x.name} car={carName(x, cat)} oem={x.oem} className="simc">
               <Mini x={x} cat={cat} />
             </ListingLink>
           ))}

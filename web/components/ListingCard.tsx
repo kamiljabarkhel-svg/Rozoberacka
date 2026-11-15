@@ -27,7 +27,7 @@ export default function ListingCard({ l, cat, fav, onFav }: { l: Listing; cat: C
   const n = l.photos.length;
   const tx = useListingTr(l.id);
   const hl = useHref();
-  const href = hl(listingHref(l.id, l.name, carName(l, cat)));
+  const href = hl(listingHref(l.id, l.name, carName(l, cat), l.oem));
   return (
     <article className={"card" + (l.top ? " is-top" : "")} onClick={(e) => {
       if ((e.target as HTMLElement).closest("button,a")) return;
@@ -41,7 +41,7 @@ export default function ListingCard({ l, cat, fav, onFav }: { l: Listing; cat: C
         <button className="fav" aria-label={fav ? tl("Odobrať z obľúbených") : tl("Pridať do obľúbených")} aria-pressed={fav} onClick={() => onFav(l.id)}>{fav ? "♥" : "♡"}</button>
       </div>
       <div className="cb">
-        <h2><ListingLink id={l.id} name={l.name} car={carName(l, cat)}>{tx?.name || l.name}</ListingLink></h2>
+        <h2><ListingLink id={l.id} name={l.name} car={carName(l, cat)} oem={l.oem}>{tx?.name || l.name}</ListingLink></h2>
         <p className="car">{tl(carText(l, cat))}</p>
         {specsLine(l.specs) && <p className="specs-line">{specsLine(l.specs).split(" · ").map((x) => tl(x).replace(/ ks$/, lang === "pl" ? " szt." : " ks")).join(" · ")}</p>}
         {(l.oem || !isUniversal(l.categoryId)) && <p className="cardoem">{l.oem ? <>{tl("Číslo dielu:")} <b>{l.oem}</b></> : <span className="mute">{tl("Číslo dielu neuvedené")}</span>}</p>}

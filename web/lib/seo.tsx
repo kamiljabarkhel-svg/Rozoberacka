@@ -1,3 +1,4 @@
+import { oemKey } from "./search";
 // Pomôcky pre vyhľadávače: adresa webu, „slug“ adries, názvy stránok a štruktúrované údaje.
 import type { CarListing, Catalog, Listing } from "./types";
 import { OPERATOR } from "./operator";
@@ -17,8 +18,8 @@ export function carKeywords(car: string, what = "diely"): string[] {
 }
 
 /** „Predné ľavé svetlo LED“ → „predne-lave-svetlo-led“. */
-export function slugify(s: string): string {
-  return s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 70).replace(/-+$/, "");
+export function slugify(s: string, max = 70): string {
+  return s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, max).replace(/-+$/, "");
 }
 
 export function carName(l: Pick<Listing, "brandId" | "modelId" | "engineId">, cat: Catalog | null, withEngine = false): string {
@@ -31,9 +32,17 @@ export function carName(l: Pick<Listing, "brandId" | "modelId" | "engineId">, ca
 }
 
 /** Kanonická adresa detailu: /diel/12-predne-lave-svetlo-led-skoda-octavia-iii */
-export function listingPath(id: number, name: string, car = ""): string {
-  const s = slugify(`${name} ${car}`);
+/** /diel/123-03l130277q-vstrekovac-skoda-octavia-iii – číslo inzerátu (rovnaké OEM predáva viac predajcov), číslo dielu, názov a auto. */
+export function listingPath(id: number, name: string, car = "", oem: string | null = null): string {
+  const k = oemKey(oem);
+  const withOem = k.length >= 4 && !oemKey(name).includes(k);
+  const s = slugify(`${withOem ? k : ""} ${name} ${car}`, withOem ? 90 : 70);
   return `/diel/${id}${s ? "-" + s : ""}`;
+}
+
+/** Stránka čísla dielu: /cislo-dielu/03l130277q – všetky ponuky s rovnakým OEM. */
+export function oemPath(oem: string): string {
+  return "/cislo-dielu/" + oemKey(oem).toLowerCase();
 }
 
 // ---------- stránky podľa auta a kategórie ----------

@@ -308,7 +308,7 @@ function MyList({ initial, items, cat, onEdit, onStatus, onTop, onDup, onDelete,
               <label className="pp-cb"><input type="checkbox" checked={sel.has(l.id)} onChange={() => toggle(l.id)} aria-label={"Vybrať " + l.name} /></label>
               <div className="pp-th">{l.photos[0] ? <img src={l.photos[0].url} alt="" loading="lazy" /> : <span>bez fotky</span>}</div>
               <div className="pp-ri">
-                {l.status === "active" ? <a href={listingHref(l.id, l.name, carName(l, cat))} target="_blank" rel="noreferrer" title="Otvoriť, ako ho vidia kupujúci"><b>{l.name}</b></a> : <b>{l.name}</b>}
+                {l.status === "active" ? <a href={listingHref(l.id, l.name, carName(l, cat), l.oem)} target="_blank" rel="noreferrer" title="Otvoriť, ako ho vidia kupujúci"><b>{l.name}</b></a> : <b>{l.name}</b>}
                 <span className="mute"><span className="tg">{VEHICLE_TYPES.find((t) => t.id === vtOf(l))?.short}</span> <span className="pp-id" title="Číslo inzerátu – použite ho v názve fotky, napr. ID{l.id}_1.jpg">ID{l.id}</span> · {vehicle(l)} · {catName(l.categoryId)}{l.oem || !isUniversal(l.categoryId) ? <> · číslo dielu {l.oem || "—"}</> : null}</span>
                 <span className="pp-meta"><span className={"pp-st " + l.status}>{ST[l.status]}</span>{l.top && <span className="toptag">TOP</span>}<b>{fmtPrice(l.price)}</b><span className="mute">{plural(l.views, "zobrazenie", "zobrazenia", "zobrazení")} · {plural(l.calls, "telefón", "telefóny", "telefónov")}</span>{isStale(l) && <span className="pp-stale">neaktualizované {Math.floor((Date.now() - Date.parse(l.updatedAt)) / 86400000)} dní · <button className="lnk" onClick={() => onFresh([l.id])}>Stále aktuálne</button></span>}</span>
               </div>

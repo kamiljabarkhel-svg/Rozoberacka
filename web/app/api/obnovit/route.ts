@@ -16,6 +16,7 @@ export async function POST(req: Request) {
   // Bez toho by kupujúci ešte pár minút videl zmazaný alebo predaný diel a po kliknutí dostal „Stránka neexistuje“.
   revalidatePath("/[lang]/diel/[slug]", "page");
   revalidatePath("/[lang]/predajci/[slug]", "page");
+  revalidatePath("/[lang]/cislo-dielu/[oem]", "page");
   revalidatePath("/[lang]", "page");
   revalidatePath("/[lang]/diely/[...path]", "page");
   revalidatePath("/[lang]/kategoria/[...path]", "page");

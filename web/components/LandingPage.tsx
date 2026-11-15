@@ -96,7 +96,7 @@ export default async function LandingPage({ x, lang = "sk" }: { x: Landing; lang
     <main id="main" className="main landing">
       <JsonLd data={[breadcrumbLd(crumbs.slice(0, -1).concat([{ name: title, href: path }])),
         { "@context": "https://schema.org", "@type": "ItemList", name: title, numberOfItems: res.total,
-          itemListElement: res.items.map((l, i) => ({ "@type": "ListItem", position: i + 1, url: SITE_URL + L(listingPath(l.id, l.name, carName(l, cat))) })) }]} />
+          itemListElement: res.items.map((l, i) => ({ "@type": "ListItem", position: i + 1, url: SITE_URL + L(listingPath(l.id, l.name, carName(l, cat), l.oem)) })) }]} />
       <Crumbs items={crumbs.slice(0, -1)} last={crumbs[crumbs.length - 1]?.name} />
       <h1>{title}</h1>
       <p className="landing-lead">
