@@ -1818,3 +1818,9 @@ select,input:not([type=checkbox]):not([type=radio]):not([type=range]),textarea{b
 .oem-alt{margin:8px 0 0;font-size:14px}
 .oem-alt .oeml{display:inline;margin-right:4px}
 .oem-line .lnk + .lnk{margin-left:12px}
+.pp-alt{display:grid;gap:6px;font-size:.88rem;color:var(--mute);font-weight:700;align-content:start}
+.pp-alt-row{display:flex;gap:8px;align-items:center}
+.pp-alt-row input{flex:1;min-width:0}
+.pp-alt .lnk{font-weight:600;white-space:nowrap}
+.pp-alt-add{justify-self:start}
+.pp-alt small{font-weight:400}

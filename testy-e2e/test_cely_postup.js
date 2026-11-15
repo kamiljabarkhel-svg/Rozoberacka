@@ -388,7 +388,7 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
   });
   await step("náhradné a podobné čísla dielov", async () => {
     // náhradné číslo z CSV: diel sa nájde podľa neho, detail ho ukáže (hlavné číslo sa medzi náhradné neuloží)
-    await b2.goto(B + "/?q=" + encodeURIComponent("03L903024")); await b2.waitForSelector(".card:has-text('Alternátor 140A')");
+    await b2.goto(B + "/?q=" + encodeURIComponent("03L903024")); await b2.waitForSelector(".cnt:text-is('1 diel')"); await b2.waitForSelector(".card:has-text('Alternátor 140A')");
     await b2.click(".card:has-text('Alternátor 140A') h2 a"); await b2.waitForURL("**/diel/**");
     await b2.waitForSelector(".oem-alt:has-text('03L 903 024')"); if (await b2.locator(".oem-alt a", { hasText: /^03L903023$/ }).count()) throw new Error("hlavné číslo medzi náhradnými");
     const o = await (await fetch(B + "/cislo-dielu/03l903024")).text(); if (!o.includes("Alternátor 140A") || !o.includes("ako náhradné číslo")) throw new Error("stránka náhradného čísla");
@@ -398,8 +398,17 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
     const n = await (await fetch(B + "/cislo-dielu/5E1941015X")).text(); if (!n.includes("teraz nikto neponúka") || !n.includes('content="noindex, follow"')) throw new Error("číslo bez ponuky s podobnými");
     // predajca zapíše náhradné číslo vo formulári
     await pg.click(".pp-nav button:has-text('Moje inzeráty')"); await pg.click(".pp-row:has-text('Volant kožený') >> text=Upraviť");
-    await pg.locator("label:has-text('Náhradné čísla dielu') input").fill("5E0419091A, 5e0419091, 12"); await pg.click("text=Uložiť zmeny"); await pg.waitForSelector(".pp-toast:has-text('Zmeny uložené')");
-    await b2.goto(B + "/?q=5E0419091A"); await b2.waitForSelector(".card:has-text('Volant kožený')");
+    const alt = pg.locator(".pp-alt"); await alt.locator("input").nth(0).fill("5E0419091A");
+    await alt.locator("text=+ Pridať ďalšie číslo").click(); await alt.locator("input").nth(1).fill("5e0419091");   // = hlavné číslo, neuloží sa
+    await alt.locator("text=+ Pridať ďalšie číslo").click(); await alt.locator("input").nth(2).fill("5E0419091C");
+    await alt.locator("text=+ Pridať ďalšie číslo").click(); await alt.locator("input").nth(3).fill("12");          // prikrátke, neuloží sa
+    await alt.locator("button:has-text('Odstrániť')").nth(3).click(); if (await alt.locator("input").count() !== 3) throw new Error("odstránenie čísla");
+    await pg.click("text=Uložiť zmeny"); await pg.waitForSelector(".pp-toast:has-text('Zmeny uložené')");
+    await b2.goto(B + "/?q=5E0419091A"); await b2.waitForSelector(".cnt:text-is('1 diel')"); await b2.waitForSelector(".card:has-text('Volant kožený')");
+    await b2.goto(B + "/?q=5E0419091C"); await b2.waitForSelector(".cnt:text-is('1 diel')"); await b2.waitForSelector(".card:has-text('Volant kožený')");
+    await pg.click(".pp-row:has-text('Volant kožený') >> text=Upraviť"); await pg.waitForSelector(".pp-alt");
+    const vals = await pg.locator(".pp-alt input").evaluateAll((e) => e.map((x) => x.value)); if (vals.join("|") !== "5E0419091A|5E0419091C") throw new Error("uložené náhradné čísla: " + vals.join("|"));
+    await pg.click(".pp-nav button:has-text('Moje inzeráty')");
   });
   let reqUrl = "";
   await step("dopyt: kupujuci zada", async () => {

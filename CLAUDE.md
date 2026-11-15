@@ -355,7 +355,7 @@ Overené na Slov-Lexe: Občiansky zákonník § 597, 599, 612, 618, 619 (znenie 
 - Fórum: hore skupina „Diskusia“ (Všeobecná diskusia, Rady a nápady k súčiastkam), pod ňou „Technické otázky a poruchy podľa značky“ (`supabase/32`).
 - Filter ceny **od – do** (`Filters.min`, adresa `cena_od`, `supabase/33`). Na úvode „Najpopulárnejšie značky“ podľa druhu vozidla (`POP_BRANDS` v `Home.tsx`) namiesto najhľadanejších dielov.
 - „Hľadať podľa čísla/VIN“ žlté. Polia (select, input, textarea) zaoblené 6 px. Súhlasy pri registrácii 11 px (`.pp-legal`).
-- Formulár predajcu začína dlaždicami „Čo predávate?“ (druh vozidla s vysvetlením + odkaz na formulár pneumatík).
+- Formulár predajcu začína dlaždicami „Aké diely predávate?“ (druh vozidla s vysvetlením + odkaz na formulár pneumatík; pri pneumatikách „Čo predávate?“).
 - Mapa v detaile dielu (`components/CityMap.tsx`): približne podľa mesta, OpenStreetMap sa načíta až po kliknutí; mesto hľadá server (`/api/mesto`, tabuľka väčších miest SR, inak Nominatim). CSP `frame-src https://www.openstreetmap.org`, uvedené v zásadách GDPR.
 - IČO: verejné a povinné len pri podnikateľovi (identifikačné povinnosti obchodníka voči spotrebiteľovi); súkromná osoba bez IČO. Overiť s právnikom.
 
@@ -408,7 +408,7 @@ Overené na Slov-Lexe: Občiansky zákonník § 597, 599, 612, 618, 619 (znenie 
 
 ## Náhradné a podobné čísla dielov (15. 11. 2026, 16:40)
 - `supabase/39`: `listings.oem_alt text[]` (najviac 10, každé ≥ 4 písmená/číslice, kontrola `oem_alt_ok`, zápis povolený stĺpcovým grantom), `oem_norm()`, náhradné čísla v `search_text` a v hľadaní čísla v `search_listings` (kópia z 38 + `oem_alt`; pri ďalšej zmene vychádzať z 39), `similar_oems(kľúč)` = rovnaký základ (bez písmen na konci, ak ostane ≥ 6 znakov), najviac o 3 znaky dlhšie, len aktívne.
-- Web: `oemAlt` v `Listing`/`MyListing`, `cleanOemAlt()` v `lib/seller.ts` (bez duplicít a bez hlavného čísla), pole „Náhradné čísla dielu“ vo formulári, CSV/XML stĺpec `nahradne_cisla` (oddeľovač |), export. `OemBox` ukáže náhradné čísla a odkaz „Podobné čísla“; `components/SimilarOems.tsx` pod počtom výsledkov pri hľadaní čísla (`looksLikeOem`: slovo s ≥ 3 číslicami, ≥ 5 znakov). Stránka `/cislo-dielu/…` zahŕňa diely s náhradným číslom, sekcia `#podobne`; bez ponuky, ale s podobnými číslami = stránka s noindex, inak 404.
+- Web: `oemAlt` v `Listing`/`MyListing`, `cleanOemAlt()` v `lib/seller.ts` (bez duplicít a bez hlavného čísla), pole „Náhradné čísla dielu“ vo formulári (samostatné políčka, „+ Pridať ďalšie číslo“, `.pp-alt`), CSV/XML stĺpec `nahradne_cisla` (oddeľovač |), export. `OemBox` ukáže náhradné čísla a odkaz „Podobné čísla“; `components/SimilarOems.tsx` pod počtom výsledkov pri hľadaní čísla (`looksLikeOem`: slovo s ≥ 3 číslicami, ≥ 5 znakov). Stránka `/cislo-dielu/…` zahŕňa diely s náhradným číslom, sekcia `#podobne`; bez ponuky, ale s podobnými číslami = stránka s noindex, inak 404.
 - Podobné číslo NIE JE zhoda – vždy s upozornením „overte u predajcu“.
 - Web má záložné načítanie bez `oem_alt`. Ostrá DB: `supabase/39` spustený 15. 11. 2026, 16:50.
 
