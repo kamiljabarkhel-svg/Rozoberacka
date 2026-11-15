@@ -17,6 +17,8 @@ export async function partUrls(): Promise<MetadataRoute.Sitemap> {
     if (k.length >= 4) { const o = oems.get(k) || { n: 0, last: l.updatedAt }; o.n++; if (l.updatedAt > o.last) o.last = l.updatedAt; oems.set(k, o); }
   }
   for (const [k, o] of oems) if (o.n >= 2) out.push({ url: SITE_URL + oemPath(k), lastModified: new Date(o.last), changeFrequency: "daily", priority: 0.6 });
+  // Prázdnu mapu Search Console hlási ako chybu („Missing XML tag“) – kým nie sú diely, obsahuje aspoň úvod.
+  if (!out.length) out.push({ url: SITE_URL + "/", changeFrequency: "hourly", priority: 1 });
   return out;
 }
 

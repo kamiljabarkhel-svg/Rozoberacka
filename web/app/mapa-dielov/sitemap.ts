@@ -3,6 +3,7 @@
 // Zoznam máp je v robots.txt. Hlavná /sitemap.xml obsahuje ostatné stránky (autá, kategórie, mestá, predajcovia, blog, fórum).
 import type { MetadataRoute } from "next";
 import { PER_MAP, partMapCount, partUrls } from "@/lib/partSitemap";
+import { SITE_URL } from "@/lib/seo";
 
 export const revalidate = 3600;
 
@@ -12,5 +13,5 @@ export async function generateSitemaps() {
 
 export default async function sitemap(props: { id: Promise<string> }): Promise<MetadataRoute.Sitemap> {
   const id = Number(await props.id) || 0;
-  try { return (await partUrls()).slice(id * PER_MAP, (id + 1) * PER_MAP); } catch { return []; }
+  try { return (await partUrls()).slice(id * PER_MAP, (id + 1) * PER_MAP); } catch { return [{ url: SITE_URL + "/" }]; }
 }
