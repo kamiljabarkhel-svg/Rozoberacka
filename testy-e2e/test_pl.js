@@ -27,6 +27,7 @@ let fail = 0; const ok = (c, m) => { console.log((c ? "OK  " : "FAIL") + " " + m
   await p.waitForSelector("h1:has-text('Kierownica skórzana PL test')");
   ok(await p.locator("text=Skórzana kierownica bez uszkodzeń").count() === 1, "popis preložený");
   ok(await p.locator("dt:has-text('Stan') + dd:has-text('Dobry')").count() === 1, "parametre po poľsky (Stan: Dobry)");
+  ok(await p.locator("text=wysyłkę do Polski i jej koszt uzgodnij").count() === 1, "poznámka o zásielke do Poľska");
   await p.click("text=Pokaż oryginał"); await p.waitForSelector("h1:has-text('Volant kožený PL test')");
   ok(true, "Pokaż oryginał ukáže slovenský text");
   await p.screenshot({ path: "/tmp/pl_detail.png", fullPage: true });
@@ -38,6 +39,8 @@ let fail = 0; const ok = (c, m) => { console.log((c ? "OK  " : "FAIL") + " " + m
   ok(/<h1>Volant kožený PL test/.test(sk) && /<html lang="sk"/.test(sk), "slovenská stránka ostala po slovensky");
   await p.click(".langsw >> text=SK"); await p.waitForURL((u) => !u.pathname.startsWith("/pl"));
   ok(await p.locator("h1:has-text('Volant kožený PL test')").count() === 1, "prepínač jazyka vedie na slovenskú verziu toho istého dielu");
+  await p.goto(B + "/pl?q=" + encodeURIComponent("kierownica skórzana PL"));
+  ok(await p.locator(".card:has-text('Kierownica skórzana PL test')").first().waitFor({ timeout: 15000 }).then(() => true, () => false), "hľadanie poľským slovom nájde slovenský inzerát");
   for (const u of ["/pl/navody/vin", "/pl/dopyt", "/pl/obchodne-podmienky", "/pl/ochrana-osobnych-udajov", "/pl/cookies", "/pl/ako-zoradujeme"]) {
     const r = await fetch(B + u); const t = await r.text(); ok(r.status === 200 && /<html lang="pl"/.test(t), u + " " + r.status);
   }

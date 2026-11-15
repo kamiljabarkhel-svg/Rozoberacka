@@ -56,6 +56,7 @@ export default async function Page({ params }: P) {
         <li>Predajca neposiela kupujúcim nevyžiadanú reklamu a kontakty kupujúcich (zo správ aj z dopytov na diely) používa len na ponuku a dohodu o danom diele.</li>
         <li>VIN vozidla na diely{CARS_ENABLED ? " alebo havarovaného vozidla" : ""}, ktorý predajca zadá v portáli, je neverejný; portál ho kupujúcim nezobrazuje a predajca ho zadáva len pre svoju evidenciu.</li>
         <li>Pri pneumatikách a diskoch predajca uvádza rozmery a parametre (napr. šírka, profil, priemer, rozteč, ET) podľa skutočnosti a pri pneumatikách aj hĺbku dezénu a rok výroby (DOT), ak ich pozná.</li>
+        <li>Inzeráty sa zobrazujú aj na poľskej verzii portálu, takže predajcu môžu kontaktovať aj kupujúci z Poľska. Predajca nie je povinný predať ani zaslať diel do zahraničia. Ak predáva do Poľska, zodpovedá za dodržanie predpisov, ktoré sa na taký predaj vzťahujú – najmä pri predaji spotrebiteľovi, ak svoju ponuku zameriava aj na Poľsko, nesmie ho pripraviť o ochranu podľa kogentných poľských predpisov, a za daňové povinnosti (napríklad DPH pri predaji na diaľku do iného štátu EÚ).</li>
         <li>Prístup k účtu chráni heslom a nezdieľa ho.</li>
       </ul>
 

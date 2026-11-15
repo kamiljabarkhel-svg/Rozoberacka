@@ -46,6 +46,7 @@ export default function TermsPl() {
         <li>Sprzedawca nie wysyła kupującym niezamówionej reklamy, a kontaktów kupujących (z wiadomości i zapytań o części) używa tylko do oferty i uzgodnień dotyczących danej części.</li>
         <li>VIN pojazdu na części{CARS_ENABLED ? " lub pojazdu uszkodzonego" : ""}, który sprzedawca wpisuje w portalu, nie jest publiczny; portal nie pokazuje go kupującym.</li>
         <li>Przy oponach i felgach sprzedawca podaje wymiary i parametry (np. szerokość, profil, średnica, rozstaw śrub, ET) zgodnie z rzeczywistością, a przy oponach także głębokość bieżnika i rok produkcji (DOT), jeśli je zna.</li>
+        <li>Ogłoszenia wyświetlają się także w polskiej wersji portalu, więc ze sprzedawcą mogą kontaktować się również kupujący z Polski. Sprzedawca nie ma obowiązku sprzedawać ani wysyłać części za granicę. Jeśli sprzedaje do Polski, odpowiada za przestrzeganie mających zastosowanie przepisów – w szczególności przy sprzedaży konsumentowi, jeśli kieruje swoją ofertę także do Polski, nie może pozbawić go ochrony wynikającej z bezwzględnie obowiązujących przepisów polskich – oraz za obowiązki podatkowe (np. VAT przy sprzedaży na odległość do innego państwa UE).</li>
         <li>Dostęp do konta chroni hasłem i nikomu go nie udostępnia.</li>
       </ul>
 

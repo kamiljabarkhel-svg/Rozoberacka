@@ -119,7 +119,7 @@ export default function ListingDetail({ id, onClose, initial, catalog, trInitial
     ["Ročník", l.year ? String(l.year) : "neuvedené"]] as [string, string][]),
     ...((l.oem || !isUniversal(l.categoryId)) ? [["Číslo dielu (OEM)", l.oem || "neuvedené"] as [string, string]] : []),
     ["Kategória", cName + (sName ? " · " + sName : "")],
-    ["Stav", condLabel(l.condition)], ["Zodpovednosť za vady", liabilityText(l)], ["Odovzdanie", l.shipping || "Len osobný odber"], ["Mesto", l.city || "neuvedené"],
+    ["Stav", condLabel(l.condition)], ["Zodpovednosť za vady", liabilityText(l)], ["Odovzdanie", (l.shipping || "Len osobný odber") + (lang === "pl" ? "|PLSHIP" : "")], ["Mesto", l.city || "neuvedené"],
   ];
   if (l.side) rows.splice(5, 0, ["Strana auta", l.side]);
   if (l.partMaker) rows.splice(5, 0, ["Výrobca dielu", l.partMaker]);
@@ -187,7 +187,7 @@ export default function ListingDetail({ id, onClose, initial, catalog, trInitial
       </div>
 
       <h2 className="sh">{tl("Parametre")}</h2>
-      <dl className="dl">{rows.map(([k, v]) => <Fragment key={k}><dt>{tl(k)}</dt><dd>{tl(v)}</dd></Fragment>)}</dl>
+      <dl className="dl">{rows.map(([k, v]) => <Fragment key={k}><dt>{tl(k)}</dt><dd>{v.endsWith("|PLSHIP") ? <>{tl(v.slice(0, -7))}<br /><small className="mute">Sprzedawca jest ze Słowacji – wysyłkę do Polski i jej koszt uzgodnij przed zakupem.</small></> : tl(v)}</dd></Fragment>)}</dl>
 
       {groups.length > 0 && <>
         <h2 className="sh">{tl("Pasuje na")}</h2>
