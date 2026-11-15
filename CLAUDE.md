@@ -416,3 +416,6 @@ Overené na Slov-Lexe: Občiansky zákonník § 597, 599, 612, 618, 619 (znenie 
 - Hľadanie podľa VIN je **skryté** na želanie majiteľa: `VIN_ENABLED` (`NEXT_PUBLIC_VIN=1`) v `lib/features.ts`. Bez neho nie je VIN na úvode, v dopyte ani v textoch o hľadaní; `lib/vin.ts` a VIN pri autách na diely (portál predajcu, neverejný) ostávajú. Návod `/navody/vin` ostáva, text o poli VIN sa ukáže len so zapnutým VIN.
 - E2E: bez `RZ_VIN=1` test overí, že VIN je skrytý; s `RZ_VIN=1` (a buildom s `NEXT_PUBLIC_VIN=1`) pôvodný test dekódovania.
 - Možné ďalšie kroky (rozhodne majiteľ): bezplatné dekódovanie modelu pre koncern VW (7. a 8. znak), platené Vincario s predplatenými kreditmi a pamäťou výsledkov, pole „VIN vášho auta“ v správe predajcovi (doplniť do zásad GDPR).
+
+## Návod k importu (15. 11. 2026, 17:45)
+- Portál (Import z CSV / XML) má len krátke zhrnutie a odkaz na `/pre-predajcov/import` (nové okno) – podrobný návod so stĺpcami, pneumatikami, fotkami, XML a častými problémami. Pri novom stĺpci importu ho doplniť aj do tabuliek v `app/[lang]/pre-predajcov/import/page.tsx`. Vzory CSV/XML: `lib/importSamples.ts`.

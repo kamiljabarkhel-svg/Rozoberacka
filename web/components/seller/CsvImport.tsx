@@ -4,14 +4,13 @@ import { useEffect, useMemo, useState } from "react";
 import type { Catalog, Condition } from "@/lib/types";
 import { CONDITIONS, condLabel, cleanSpecs, isUniversal, specsErrors, SPEC_LABEL, VEHICLE_TYPES, WHEEL_CAT, wheelDefaults, wheelKind, wheelMissing, type Specs } from "@/lib/types";
 import { SPEC_COLS } from "@/lib/csvExport";
+import { sampleCsvHref, sampleXmlHref } from "@/lib/importSamples";
 import { importMany, type ListingInput, type Profile, cleanOemAlt } from "@/lib/seller";
 import { baseName, byExactName, groupByKey, isPhoto, keyOf, MAX_PHOTOS, sortPhotos, splitNames } from "@/lib/bulkPhotos";
 
 const MAX = 500;
 const REQ = ["nazov", "cena", "kategoria"];
 /** povinné pri bežných dieloch, pri univerzálnych (pneumatiky, výbava jazdca, iné…) nie */
-const REQ_PART = ["znacka", "model", "oem"];
-const OPT = ["druh", "motorizacia", "rocnik", "podkategoria", "stav", "zaruka", "popis", "mesto", "telefon", "pasuje", "strana", "odskusany", "vratenie", "km", "vyrobca", "nahradne_cisla", "fotky", ...SPEC_COLS.map(([c]) => c)];
 const norm = (s: string) => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/\s+/g, " ").trim();
 
 function parse(text: string): string[][] {
@@ -202,41 +201,16 @@ export default function CsvImport({ uid, cat, prof, onDone }: { uid: string; cat
     setBusy(false); setRes(r.errors);
     if (r.ok) onDone(r.ok);
   }
-  const sample = "nazov;znacka;model;motorizacia;rocnik;oem;cena;kategoria;podkategoria;stav;zaruka;popis;mesto;telefon;pasuje;fotky\n" +
-    "Predné ľavé svetlo;Škoda;Octavia III;;2015;5E1941015;120;Svetlá;Predné svetlá;Dobrý;12 mesiacov;Funkčné, bez prasklín, úchyty celé.;Žilina;0900123456;Škoda Octavia III Combi;svetlo1.jpg|svetlo2.jpg\n";
-  const sampleHref = "data:text/csv;charset=utf-8," + encodeURIComponent("\uFEFF" + sample);
-  const sampleXml = `<?xml version="1.0" encoding="UTF-8"?>
-<diely>
-  <diel>
-    <nazov>Predné ľavé svetlo</nazov>
-    <znacka>Škoda</znacka>
-    <model>Octavia III</model>
-    <rocnik>2015</rocnik>
-    <oem>5E1941015</oem>
-    <nahradne_cisla><cislo>5E1941015A</cislo></nahradne_cisla>
-    <cena>120</cena>
-    <kategoria>Svetlá</kategoria>
-    <podkategoria>Predné svetlá</podkategoria>
-    <stav>Dobrý</stav>
-    <zaruka>12 mesiacov</zaruka>
-    <popis>Funkčné, bez prasklín, úchyty celé.</popis>
-    <mesto>Žilina</mesto>
-    <telefon>0900123456</telefon>
-    <pasuje><auto>Škoda Octavia III Combi</auto></pasuje>
-    <fotky><fotka>svetlo1.jpg</fotka><fotka>svetlo2.jpg</fotka></fotky>
-  </diel>
-</diely>
-`;
-  const sampleXmlHref = "data:application/xml;charset=utf-8," + encodeURIComponent(sampleXml);
+  const sampleHref = sampleCsvHref;
+
 
   return (
     <div>
       <header className="pp-h"><h1>Import z CSV alebo XML</h1><span className="pp-bulkbtns"><a className="ubtn" href={sampleHref} download="vzor-autosuciastky.csv">Vzor CSV</a><a className="ubtn" href={sampleXmlHref} download="vzor-autosuciastky.xml">Vzor XML</a></span></header>
       <div className="pp-box">
-        <p>Povinné stĺpce: <b>{[...REQ, ...REQ_PART].join(", ")}</b> – pri pneumatikách, diskoch, výbave jazdca, príslušenstve a „Iné“ stačí <b>{REQ.join(", ")}</b> (stĺpec <b>druh</b>: osobné, veterány, dodávky, nákladné, autobusy alebo motorky). Pri veteránoch je číslo dielu (oem) nepovinné. Voliteľné: {OPT.join(", ")}. Oddeľovač <b>;</b> alebo <b>,</b>, najviac {MAX} riadkov. Stav: Nový, Repasovaný, Veľmi dobrý, Dobrý alebo Na opravu. V stĺpci <b>pasuje</b> oddeľte autá znakom | (napr. „Škoda Octavia III | VW Golf VII“). V stĺpci <b>nahradne_cisla</b> môžete zapísať iné čísla toho istého dielu (staršie, novšie, iného výrobcu), oddelené znakom | – najviac 10.</p>
-        <p className="mute">Pneumatiky a disky (kategória „Pneumatiky a disky“): stĺpce pneu_sirka (205), pneu_profil (55), priemer (16), sezona (letné/zimné/celoročné), dezen_mm, dot (rok), index_nosnosti, index_rychlosti, sirka_disku (7), roztec (5x112), et (49), stredovy_otvor (57.1), kusy, material (Hliník/Oceľ).</p>
-        <p className="mute"><b>XML</b> (napr. export zo skladového programu alebo e-shopu): každý diel je jeden prvok (&lt;diel&gt;, &lt;item&gt;, &lt;SHOPITEM&gt;…), v ňom prvky s rovnakými názvami ako stĺpce CSV (&lt;nazov&gt;, &lt;znacka&gt;, &lt;oem&gt;, &lt;cena&gt;…). Viac fotiek alebo áut zapíšte ako &lt;fotky&gt;&lt;fotka&gt;a.jpg&lt;/fotka&gt;&lt;/fotky&gt;. Rozumieme aj anglickým názvom (name, brand, price, description, category…). Pozrite si vzor XML.</p>
-        <p className="mute">Popis musí mať aspoň 20 znakov. Mesto a telefón sa doplnia z profilu, ak ich v súbore nemáte.</p>
+        <p><b>Najjednoduchšie:</b> stiahnite si <b>Vzor CSV</b>, otvorte ho v Exceli, prepíšte riadky svojimi dielmi a uložte ako „CSV (oddelený bodkočiarkou)“. Firmy môžu nahrať aj export zo skladového programu alebo e-shopu (<b>XML</b>).</p>
+        <p className="mute">Povinné stĺpce: <b>nazov, cena, kategoria</b> a pri dieloch na konkrétne auto aj <b>znacka, model, oem</b>. Mesto a telefón sa doplnia z profilu. Pred importom uvidíte náhľad s chybami – nič sa nezverejní bez vášho potvrdenia.</p>
+        <p><a href="/pre-predajcov/import" target="_blank" rel="noopener">Podrobný návod: všetky stĺpce, pneumatiky a disky, XML, fotky</a></p>
         <ol className="pp-steps2">
           <li><b>Vyberte súbor CSV alebo XML.</b>
             <label className="pp-add pp-file"><input type="file" accept=".csv,text/csv,.xml,application/xml,text/xml" onChange={async (e) => { const f = e.target.files?.[0]; if (f) load(await f.text(), /\.xml$/i.test(f.name)); e.target.value = ""; }} /><span>Vybrať súbor</span></label></li>

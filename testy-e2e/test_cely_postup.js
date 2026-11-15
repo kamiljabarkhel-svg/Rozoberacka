@@ -219,7 +219,7 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
     await pg.click(".pp-row >> nth=0 >> button.del"); await pg.click(".cdel-yes"); await pg.waitForFunction((n) => document.querySelectorAll(".pp-row").length === n - 1, n0);
   });
   await step("CSV import", async () => {
-    await pg.click(".pp-nav button:has-text('Import z CSV')");
+    await pg.click(".pp-nav button:has-text('Import z CSV')"); if (await pg.locator(".pp-box a[href='/pre-predajcov/import']").count() !== 1) throw new Error("odkaz na návod k importu");
     const csv = "nazov;znacka;model;rocnik;oem;cena;kategoria;stav;popis;pasuje;nahradne_cisla;fotky\nAlternátor 140A;Volkswagen;Golf VII;2015;03L903023;85;Elektro;Dobrý;Odskúšaný alternátor, nabíja správne.;Škoda Octavia III;03L 903 024 | 03L903023;alt1.png|chyba.png\nZlý riadok;Tesla;X;;12;0;Nič;;krátky;;;\n";
     require("fs").writeFileSync("i.csv", csv); require("fs").copyFileSync("a.png", "alt1.png"); await pg.setInputFiles(".pp-file input", "i.csv");
     await pg.waitForSelector(".pp-pre li.err"); const okc = await pg.locator(".pp-pre li.ok").count(); if (okc !== 1) throw new Error("ok rows " + okc + " :: " + (await pg.locator(".pp-pre").innerText()));
@@ -461,6 +461,7 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
     const t = async (u, re) => { const r = await fetch(B + u); const h = await r.text(); if (r.status !== 200 || !re.test(h)) throw new Error(u + " " + r.status); return h; };
     await t("/mesto/zilina", /Použité autodiely Žilina/);
     await t("/navody/vin", /Kde nájdem VIN číslo auta/);
+    await t("/pre-predajcov/import", /Import dielov z CSV a XML/);
     await t("/navody/oem-cislo", /"@type":"Article"/);
     // produkčný web obnovuje mapu webu raz za hodinu – mestá a predajcov kontrolujeme len vo vývojovom režime
     const sm = await t("/sitemap.xml", /\/navody\/vin/); if (process.env.RZ_PROD !== "1" && (!/\/predajci\//.test(sm) || !/\/mesto\/zilina/.test(sm))) throw new Error("sitemap");
