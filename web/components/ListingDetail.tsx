@@ -1,4 +1,8 @@
 "use client";
+import Price from "@/components/Price";
+import { useListingTr } from "@/lib/i18n/listingTr";
+import type { ListingTr } from "@/lib/data";
+import { useHref, useLang, useT } from "@/lib/i18n/client";
 // Detail inzerátu: galéria, cena, telefón, predajca, popis, parametre, „Pasuje na“, podobné inzeráty.
 import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { loadDetail, logView, type DetailData } from "@/lib/data";
@@ -34,11 +38,19 @@ type MiniItem = DetailData["similar"][number];
 function Mini({ x, cat }: { x: MiniItem; cat: DetailData["cat"] }) {
   return <>
     <div className="ph">{x.photos.length ? <img alt="" loading="lazy" src={x.thumbs[0]} onError={(e) => { e.currentTarget.src = x.photos[0]; }} /> : <div className="nop"><Icon id={catIcon(x.categoryId)} /></div>}</div>
-    <span>{x.name}</span><small className="mute">{[carName(x, cat), x.year].filter(Boolean).join(", ")}</small><b>{price(x.price)}</b>
+    <span><TrName id={x.id} name={x.name} /></span><small className="mute">{[carName(x, cat), x.year].filter(Boolean).join(", ")}</small><b>{price(x.price)}</b>
   </>;
 }
 
-export default function ListingDetail({ id, onClose, initial, catalog }: { id: number; onClose?: () => void; initial?: DetailData | null; catalog?: Catalog | null }) {
+function TrName({ id, name }: { id: number; name: string }) { const t = useListingTr(id); return <>{t?.name || name}</>; }
+
+export default function ListingDetail({ id, onClose, initial, catalog, trInitial }: { id: number; onClose?: () => void; initial?: DetailData | null; catalog?: Catalog | null; trInitial?: ListingTr | null }) {
+  const hl = useHref();
+  const trLoaded = useListingTr(id);
+  const tx = trLoaded || trInitial || null;
+  const [orig, setOrig] = useState(false);
+  const tl = useT();
+  const lang = useLang();
   const [s, setS] = useState<State>(initial ? { st: "ok", ...initial } : { st: "loading" });
   const [gi, setGi] = useState(0);
   const { favs, toggle } = useFavs();
@@ -85,20 +97,20 @@ export default function ListingDetail({ id, onClose, initial, catalog }: { id: n
   }, [gi, n, go, onClose]);
 
   const back = onClose
-    ? <button className="close" style={{ justifySelf: "start" }} onClick={onClose}>← Späť na výsledky</button>
-    : STATIC_PREVIEW ? <a className="back" href={homeHref}>← Späť na výsledky</a> : <Link className="back" href="/#vysledky" onClick={(e) => { if (window.history.length > 1) { e.preventDefault(); window.history.back(); } }}>← Späť na výsledky</Link>;
+    ? <button className="close" style={{ justifySelf: "start" }} onClick={onClose}>{tl("← Späť na výsledky")}</button>
+    : STATIC_PREVIEW ? <a className="back" href={hl(homeHref)}>{tl("← Späť na výsledky")}</a> : <Link className="back" href={hl("/#vysledky")} onClick={(e) => { if (window.history.length > 1) { e.preventDefault(); window.history.back(); } }}>{tl("← Späť na výsledky")}</Link>;
 
-  if (s.st === "loading") return <div className="dbox">{back}<p className="mute">Načítavam inzerát…</p></div>;
-  if (s.st === "missing") return <div className="dbox">{back}<h2 className="sh">Inzerát sa nenašiel</h2><p className="mute">Diel bol pravdepodobne predaný, pozastavený alebo zmazaný.</p><p><a className="btn2" href={homeHref}>Hľadať podobné diely</a></p></div>;
-  if (s.st === "error") return <div className="dbox">{back}<div className="err" role="alert">Inzerát sa nepodarilo načítať: {s.msg}</div></div>;
+  if (s.st === "loading") return <div className="dbox">{back}<p className="mute">{tl("Načítavam inzerát…")}</p></div>;
+  if (s.st === "missing") return <div className="dbox">{back}<h2 className="sh">{tl("Inzerát sa nenašiel")}</h2><p className="mute">{tl("Diel bol pravdepodobne predaný, pozastavený alebo zmazaný.")}</p><p><a className="btn2" href={hl(homeHref)}>{tl("Hľadať podobné diely")}</a></p></div>;
+  if (s.st === "error") return <div className="dbox">{back}<div className="err" role="alert">{tl("Inzerát sa nepodarilo načítať:")} {s.msg}</div></div>;
 
   const { l, cat, vehicles, similar, more, sameCar } = s;
   const rawB = cat.brands.find((x) => x.id === l.brandId)?.name || "", rawM = cat.models.find((x) => x.id === l.modelId)?.name || "";
   const bName = rawB === "Iná značka" ? "Iné vozidlo (uvedené v popise)" : rawB;
   const mName = rawB === "Iná značka" ? "" : rawM.startsWith("Iný model") ? "iný model (uvedený v popise)" : rawM;
   const eName = cat.engines.find((x) => x.id === l.engineId)?.name || "";
-  const cName = cat.categories.find((x) => x.id === l.categoryId)?.name || "";
-  const sName = cat.subcategories.find((x) => x.id === l.subcategoryId)?.name || "";
+  const cName = tl(cat.categories.find((x) => x.id === l.categoryId)?.name || "");
+  const sName = tl(cat.subcategories.find((x) => x.id === l.subcategoryId)?.name || "");
   const fav = favs.includes(l.id);
   const univ = !l.brandId;   // univerzálny diel (pneumatiky, výbava jazdca…) bez konkrétneho auta
   const rows: [string, string][] = [
@@ -112,7 +124,7 @@ export default function ListingDetail({ id, onClose, initial, catalog }: { id: n
   if (l.side) rows.splice(5, 0, ["Strana auta", l.side]);
   if (l.partMaker) rows.splice(5, 0, ["Výrobca dielu", l.partMaker]);
   if (l.gearbox) rows.push(["Prevodovka auta", l.gearbox]);
-  if (l.km) rows.push(["Najazdené km auta", l.km.toLocaleString("sk-SK") + " km"]);
+  if (l.km) rows.push(["Najazdené km auta", l.km.toLocaleString(lang === "pl" ? "pl-PL" : "sk-SK") + " km"]);
   rows.push(["Odskúšaný", l.tested ? "Áno, podľa predajcu" : "Neuvedené"]);
   rows.push(["Odstúpenie a vrátenie", withdrawalText(l)]);
   const groups = groupVehicles(vehicles, cat);
@@ -120,7 +132,7 @@ export default function ListingDetail({ id, onClose, initial, catalog }: { id: n
   return (
     <article className="dbox">
       {back}
-      {!STATIC_PREVIEW && <Crumbs items={landingCrumbs({ brandId: l.brandId, modelId: l.modelId, cat: l.categoryId, sub: null }, cat)} />}
+      {!STATIC_PREVIEW && <Crumbs items={landingCrumbs({ brandId: l.brandId, modelId: l.modelId, cat: l.categoryId, sub: null }, cat, lang)} />}
       <div className="dg">
         <div>
           {n ? (
@@ -131,69 +143,71 @@ export default function ListingDetail({ id, onClose, initial, catalog }: { id: n
                   ref={(im) => { if (im && im.complete && im.naturalWidth === 0 && im.getAttribute("srcset")) { im.removeAttribute("srcset"); im.src = l.photos[gi]; } }}
                   onError={(e) => { const im = e.currentTarget; if (im.getAttribute("srcset")) { im.removeAttribute("srcset"); im.src = l.photos[gi]; } }} />
                 {n > 1 && <>
-                  <button className="gn l" aria-label="Predchádzajúca fotka" onClick={() => go(gi - 1)}>‹</button>
-                  <button className="gn r" aria-label="Ďalšia fotka" onClick={() => go(gi + 1)}>›</button>
+                  <button className="gn l" aria-label={tl("Predchádzajúca fotka")} onClick={() => go(gi - 1)}>‹</button>
+                  <button className="gn r" aria-label={tl("Ďalšia fotka")} onClick={() => go(gi + 1)}>›</button>
                 </>}
                 <span className="gc">{gi + 1} / {n}</span>
               </div>
               {n > 1 && <div className="th">
                 {l.photos.map((p, k) => (
-                  <button key={k} aria-label={"Fotka " + (k + 1)} aria-current={k === gi} onClick={() => go(k)}><img alt="" loading="lazy" src={l.thumbs[k] || p} onError={(e) => { if (e.currentTarget.src !== p) e.currentTarget.src = p; }} /></button>
+                  <button key={k} aria-label={tl("Fotka ") + (k + 1)} aria-current={k === gi} onClick={() => go(k)}><img alt="" loading="lazy" src={l.thumbs[k] || p} onError={(e) => { if (e.currentTarget.src !== p) e.currentTarget.src = p; }} /></button>
                 ))}
               </div>}
             </div>
           ) : (
-            <div className="gal"><div className="main"><div className="nop"><Icon id={catIcon(l.categoryId)} /><span>Predajca nepridal fotky</span></div></div></div>
+            <div className="gal"><div className="main"><div className="nop"><Icon id={catIcon(l.categoryId)} /><span>{tl("Predajca nepridal fotky")}</span></div></div></div>
           )}
         </div>
         <div className="di">
-          <h1>{l.name}</h1>
-          <div className="dpr"><span className="price">{price(l.price)}</span><span className="cond"><i className={"dot " + condDot(l.condition)} />{condLabel(l.condition)}</span></div>
-          {isTrader(l.seller.type) && <p className="mute pnote">Konečná cena vrátane DPH. Cenu dopravy si dohodnite s predajcom pred kúpou.</p>}
+          <h1>{tx && !orig ? tx.name : l.name}</h1>
+          <div className="dpr"><Price className="price" v={l.price} /><span className="cond"><i className={"dot " + condDot(l.condition)} />{tl(condLabel(l.condition))}</span></div>
+          {isTrader(l.seller.type) && <p className="mute pnote">{tl("Konečná cena vrátane DPH. Cenu dopravy si dohodnite s predajcom pred kúpou.")}</p>}
           <p className="car">{univ ? universalLabel(l.vtype) : <>{[bName, mName, eName].filter(Boolean).join(" ")}{l.year ? ", " + l.year : ""}</>}</p>
-          {specsLine(l.specs) && <p className="specs-box"><span>{l.categoryId === "kol" ? "Rozmer a parametre" : "Parametre"}</span><b>{specsLine(l.specs)}</b></p>}
+          {specsLine(l.specs) && <p className="specs-box"><span>{l.categoryId === "kol" ? tl("Rozmer a parametre") : tl("Parametre")}</span><b>{specsLine(l.specs)}</b></p>}
           {(l.oem || !isUniversal(l.categoryId)) && <OemBox oem={l.oem} vtype={cat.models.find((x) => x.id === l.modelId)?.vehicleType || l.vtype || "osobne"} />}
           <div className="dacts" ref={actsRef}>
             <PhoneButton id={l.id} />
-            <button className="fav" aria-pressed={fav} onClick={() => toggle(l.id)}>{fav ? "♥" : "♡"} Obľúbené</button>
+            <button className="fav" aria-pressed={fav} onClick={() => toggle(l.id)}>{fav ? "♥" : "♡"} {tl("Obľúbené")}</button>
           </div>
-          <section className="ddesc" aria-labelledby="ddesc-h"><h2 id="ddesc-h">Popis</h2><p className="desc">{l.description || "Predajca nepridal popis."}</p></section>
+          <section className="ddesc" aria-labelledby="ddesc-h"><h2 id="ddesc-h">{tl("Popis")}</h2><p className="desc">{(tx && !orig ? tx.description : l.description) || tl("Predajca nepridal popis.")}</p>
+            {tx && <p className="mute small tr-note">{orig ? "Oryginalny tekst sprzedawcy (po słowacku)." : "Tłumaczenie automatyczne z języka słowackiego."} <button type="button" className="linkbtn" onClick={() => setOrig(!orig)}>{orig ? "Pokaż tłumaczenie" : "Pokaż oryginał"}</button></p>}
+            {lang === "pl" && !tx && l.description && <p className="mute small tr-note">Opis sprzedawcy jest po słowacku – tłumaczenie pojawi się wkrótce.</p>}</section>
           <ContactBox id={l.id} name={l.name} seller={l.seller.name} path={listingPath(l.id, l.name, carName(l, cat))} cat={cat} />
           <Tags l={l} />
           {!univ && <MyCarFit vehicles={vehicles} cat={cat} />}
           <div className="seller">
-            <b>{l.sellerId && !STATIC_PREVIEW ? <Link href={sellerPath(l.sellerId, l.seller.name)}>{l.seller.name}</Link> : l.seller.name}{l.seller.verified && <span className="bdg">Overený predajca</span>}</b>
+            <b>{l.sellerId && !STATIC_PREVIEW ? <Link href={hl(sellerPath(l.sellerId, l.seller.name))}>{l.seller.name}</Link> : l.seller.name}{l.seller.verified && <span className="bdg">{tl("Overený predajca")}</span>}</b>
             <span className="mute">{sellerKind(l.seller.type)} · {l.seller.city || l.city}</span>
-            {isTrader(l.seller.type) && (l.seller.ico || l.seller.address) && <span className="mute">{[l.seller.ico && `IČO ${l.seller.ico}`, l.seller.address].filter(Boolean).join(" · ")}</span>}
+            {isTrader(l.seller.type) && (l.seller.ico || l.seller.address) && <span className="mute">{[l.seller.ico && `${lang === "pl" ? "Nr firmy (IČO)" : "IČO"} ${l.seller.ico}`, l.seller.address].filter(Boolean).join(" · ")}</span>}
             {s.seller && s.seller.ratingCount > 0 && <span><Stars value={s.seller.ratingAvg} count={s.seller.ratingCount} small /></span>}
-            {l.sellerId && !STATIC_PREVIEW && <Link className="lnk seller-all" href={sellerPath(l.sellerId, l.seller.name)}>Všetky diely predajcu{more.total ? ` (${more.total + 1})` : ""}</Link>}
-            <span className="mute">Inzerát pridaný {agoText(l.createdAt)}{l.updatedAt && Date.parse(l.updatedAt) - Date.parse(l.createdAt) > 3600000 ? ` · upravený ${agoText(l.updatedAt)}` : ""}</span>
+            {l.sellerId && !STATIC_PREVIEW && <Link className="lnk seller-all" href={hl(sellerPath(l.sellerId, l.seller.name))}>{tl("Všetky diely predajcu")}{more.total ? ` (${more.total + 1})` : ""}</Link>}
+            <span className="mute">{tl("Inzerát pridaný")} {agoText(l.createdAt, Date.now(), lang)}{l.updatedAt && Date.parse(l.updatedAt) - Date.parse(l.createdAt) > 3600000 ? ` · upravený ${agoText(l.updatedAt)}` : ""}</span>
           </div>
         </div>
       </div>
 
-      <h2 className="sh">Parametre</h2>
-      <dl className="dl">{rows.map(([k, v]) => <Fragment key={k}><dt>{k}</dt><dd>{v}</dd></Fragment>)}</dl>
+      <h2 className="sh">{tl("Parametre")}</h2>
+      <dl className="dl">{rows.map(([k, v]) => <Fragment key={k}><dt>{tl(k)}</dt><dd>{tl(v)}</dd></Fragment>)}</dl>
 
       {groups.length > 0 && <>
-        <h2 className="sh">Pasuje na</h2>
+        <h2 className="sh">{tl("Pasuje na")}</h2>
         <ul className="fits">
-          {groups.map((g) => <li key={g.label}><b>{g.label}</b><br /><span className="mute">{g.engines ? g.engines.join(", ") : "všetky motorizácie"}</span></li>)}
+          {groups.map((g) => <li key={g.label}><b>{g.label.replace("(viac modelov)", tl("(viac modelov)"))}</b><br /><span className="mute">{g.engines ? g.engines.join(", ") : tl("všetky motorizácie")}</span></li>)}
         </ul>
-        <p className="mute fits-note">Zoznam skladáme z údajov predajcov (vlastné auto, „pasuje aj na“ a inzeráty s rovnakým OEM číslom). Nie je to overený katalóg.</p>
+        <p className="mute fits-note">{tl("Zoznam skladáme z údajov predajcov (vlastné auto, „pasuje aj na“ a inzeráty s rovnakým OEM číslom). Nie je to overený katalóg.")}</p>
       </>}
 
       <SellerNotice type={l.seller.type} name={l.seller.name} ico={l.seller.ico} address={l.seller.address} />
       <div className="warn">{l.categoryId === "kol"
-        ? "Pred nákupom porovnajte rozmer (pri pneumatikách aj rok výroby DOT a hĺbku dezénu, pri diskoch rozteč, ET a stredový otvor) s údajmi pre vaše auto a vyžiadajte si ďalšie fotky. Neposielajte zálohy vopred neznámym predajcom."
-        : univ && !l.oem ? "Pred nákupom si od predajcu vyžiadajte ďalšie fotky a overte veľkosť a stav. Neposielajte zálohy vopred neznámym predajcom."
-        : "Pred nákupom porovnajte číslo dielu (OEM) so starým dielom a vyžiadajte si od predajcu ďalšie fotky. Neposielajte zálohy vopred neznámym predajcom."}</div>
+        ? tl("Pred nákupom porovnajte rozmer (pri pneumatikách aj rok výroby DOT a hĺbku dezénu, pri diskoch rozteč, ET a stredový otvor) s údajmi pre vaše auto a vyžiadajte si ďalšie fotky. Neposielajte zálohy vopred neznámym predajcom.")
+        : univ && !l.oem ? tl("Pred nákupom si od predajcu vyžiadajte ďalšie fotky a overte veľkosť a stav. Neposielajte zálohy vopred neznámym predajcom.")
+        : tl("Pred nákupom porovnajte číslo dielu (OEM) so starým dielom a vyžiadajte si od predajcu ďalšie fotky. Neposielajte zálohy vopred neznámym predajcom.")}</div>
       <Disclaimer kind="part" />
       <ReportBox id={l.id} />
 
       {sameCar.length > 0 && <>
-        <h2 className="sh">Ďalšie diely z toho istého vozidla</h2>
-        <p className="mute">Rovnaké auto ({[carName(l, cat, true), l.year].filter(Boolean).join(", ")}{l.km ? `, ${l.km.toLocaleString("sk-SK")} km` : ""}) rozoberá predajca {l.seller.name}.</p>
+        <h2 className="sh">{tl("Ďalšie diely z toho istého vozidla")}</h2>
+        <p className="mute">{tl("Rovnaké auto (")}{[carName(l, cat, true), l.year].filter(Boolean).join(", ")}{l.km ? `, ${l.km.toLocaleString("sk-SK")} km` : ""}{tl(") rozoberá predajca")} {l.seller.name}.</p>
         <div className="sim">
           {sameCar.slice(0, 6).map((x) => (
             <ListingLink key={x.id} id={x.id} name={x.name} car={carName(x, cat)} className="simc">
@@ -204,8 +218,8 @@ export default function ListingDetail({ id, onClose, initial, catalog }: { id: n
       </>}
 
       {more.items.length > 0 && <>
-        <h2 className="sh">Ďalšie diely od predajcu {l.seller.name}{more.total > more.items.length ? ` (${more.total})` : ""}
-          {l.sellerId && !STATIC_PREVIEW && <> <Link className="lnk sh-more" href={sellerPath(l.sellerId, l.seller.name)}>Všetky diely predajcu</Link></>}</h2>
+        <h2 className="sh">{tl("Ďalšie diely od predajcu")} {l.seller.name}{more.total > more.items.length ? ` (${more.total})` : ""}
+          {l.sellerId && !STATIC_PREVIEW && <> <Link className="lnk sh-more" href={hl(sellerPath(l.sellerId, l.seller.name))}>{tl("Všetky diely predajcu")}</Link></>}</h2>
         <div className="sim">
           {more.items.slice(0, 3).map((x) => (
             <ListingLink key={x.id} id={x.id} name={x.name} car={carName(x, cat)} className="simc">
@@ -216,7 +230,7 @@ export default function ListingDetail({ id, onClose, initial, catalog }: { id: n
       </>}
 
       {similar.length > 0 && <>
-        <h2 className="sh">Podobné inzeráty</h2>
+        <h2 className="sh">{tl("Podobné inzeráty")}</h2>
         <div className="sim">
           {similar.map((x) => (
             <ListingLink key={x.id} id={x.id} name={x.name} car={carName(x, cat)} className="simc">
@@ -226,7 +240,7 @@ export default function ListingDetail({ id, onClose, initial, catalog }: { id: n
         </div>
       </>}
       {!onClose && <div className={"dbar" + (bar ? " on" : "")}>
-        <span><b>{price(l.price)}</b><small>{l.name}</small></span>
+        <span><b><Price v={l.price} /></b><small>{tx && !orig ? tx.name : l.name}</small></span>
         <PhoneButton id={l.id} />
       </div>}
     </article>

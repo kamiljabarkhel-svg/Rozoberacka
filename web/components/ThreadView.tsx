@@ -1,4 +1,5 @@
 "use client";
+import { useHref, useT } from "@/lib/i18n/client";
 // Konverzácia kupujúceho s predajcom cez tajný odkaz: história správ a odpoveď. E-maily strán sa nezobrazujú.
 import { useEffect, useState } from "react";
 import Link from "next/link";
@@ -8,13 +9,15 @@ import { listingPath } from "@/lib/seo";
 const when = (d: string) => new Date(d).toLocaleString("sk-SK", { dateStyle: "medium", timeStyle: "short" });
 
 export default function ThreadView({ token }: { token: string }) {
+  const hl = useHref();
+  const tl = useT();
   const [t, setT] = useState<Thread | null | undefined>(undefined);
   const [err, setErr] = useState(""), [text, setText] = useState(""), [busy, setBusy] = useState(false), [sent, setSent] = useState(false);
   const load = () => getThread(token).then(setT).catch((e) => { setErr(String(e?.message || e)); setT(null); });
   useEffect(() => { load(); }, [token]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  if (t === undefined) return <p className="mute">Načítavam konverzáciu…</p>;
-  if (!t) return <div className="empty"><h1>Konverzácia sa nenašla</h1><p>Odkaz je neplatný alebo konverzácia už bola zmazaná (uchovávame ju 12 mesiacov od poslednej správy).</p>{err && <p className="pp-err">{err}</p>}<p><Link href="/">Hľadať diely</Link></p></div>;
+  if (t === undefined) return <p className="mute">{tl("Načítavam konverzáciu…")}</p>;
+  if (!t) return <div className="empty"><h1>{tl("Konverzácia sa nenašla")}</h1><p>{tl("Odkaz je neplatný alebo konverzácia už bola zmazaná (uchovávame ju 12 mesiacov od poslednej správy).")}</p>{err && <p className="pp-err">{err}</p>}<p><Link href={hl("/")}>{tl("Hľadať diely")}</Link></p></div>;
 
   const sellerAnswered = t.replies.some((r) => r.author === "seller");
   async function send() {
@@ -26,19 +29,19 @@ export default function ThreadView({ token }: { token: string }) {
   }
   return (
     <div className="thr">
-      <h1>Konverzácia s predajcom {t.sellerName}</h1>
-      <p className="mute">K inzerátu: {t.listingId && t.listingActive ? <Link href={listingPath(t.listingId, t.listingName)}>{t.listingName}</Link> : <>{t.listingName || "inzerát už nie je zverejnený"}</>}{t.sellerCity ? ` · ${t.sellerCity}` : ""}</p>
+      <h1>{tl("Konverzácia s predajcom")} {t.sellerName}</h1>
+      <p className="mute">{tl("K inzerátu:")} {t.listingId && t.listingActive ? <Link href={hl(listingPath(t.listingId, t.listingName))}>{t.listingName}</Link> : <>{t.listingName || tl("inzerát už nie je zverejnený")}</>}{t.sellerCity ? ` · ${t.sellerCity}` : ""}</p>
       <ol className="thr-list">
-        <li className="me"><span className="mute">Vy ({t.buyerName}) · {when(t.createdAt)}</span><p>{t.body}</p></li>
-        {t.replies.map((r, i) => <li key={i} className={r.author === "buyer" ? "me" : "them"}><span className="mute">{r.author === "buyer" ? "Vy" : t.sellerName} · {when(r.createdAt)}</span><p>{r.body}</p></li>)}
+        <li className="me"><span className="mute">{tl("Vy (")}{t.buyerName}) · {when(t.createdAt)}</span><p>{t.body}</p></li>
+        {t.replies.map((r, i) => <li key={i} className={r.author === "buyer" ? "me" : "them"}><span className="mute">{r.author === "buyer" ? tl("Vy") : t.sellerName} · {when(r.createdAt)}</span><p>{r.body}</p></li>)}
       </ol>
       {sellerAnswered ? <div className="msgbox thr-reply">
-        <label>Vaša odpoveď<textarea rows={4} maxLength={2000} value={text} onChange={(e) => { setText(e.target.value); setSent(false); }} placeholder="Napíšte predajcovi…" /></label>
-        <button className="call" disabled={busy || text.trim().length < 2} onClick={send}>{busy ? "Odosielam…" : "Odoslať"}</button>
-        {sent && <p className="mute" role="status">Odoslané. Predajca dostane upozornenie a odpovie vám e-mailom.</p>}
+        <label>{tl("Vaša odpoveď")}<textarea rows={4} maxLength={2000} value={text} onChange={(e) => { setText(e.target.value); setSent(false); }} placeholder={tl("Napíšte predajcovi…")} /></label>
+        <button className="call" disabled={busy || text.trim().length < 2} onClick={send}>{busy ? tl("Odosielam…") : tl("Odoslať")}</button>
+        {sent && <p className="mute" role="status">{tl("Odoslané. Predajca dostane upozornenie a odpovie vám e-mailom.")}</p>}
         {err && <p className="ferr2" role="alert">{err}</p>}
-      </div> : <p className="warn">Predajca vám zatiaľ neodpovedal. Keď odpíše, príde vám e-mail.</p>}
-      <p className="mute thr-note">Tento odkaz je len váš – neposielajte ho ďalej. Predajca nevidí váš e-mail a vy nevidíte jeho. Portál je len inzertný: neposielajte zálohy vopred neznámym predajcom a dohodnite si osobné odovzdanie alebo platbu na dobierku. Konverzáciu uchovávame 12 mesiacov od poslednej správy. <Link href="/ochrana-osobnych-udajov">Ochrana osobných údajov</Link></p>
+      </div> : <p className="warn">{tl("Predajca vám zatiaľ neodpovedal. Keď odpíše, príde vám e-mail.")}</p>}
+      <p className="mute thr-note">{tl("Tento odkaz je len váš – neposielajte ho ďalej. Predajca nevidí váš e-mail a vy nevidíte jeho. Portál je len inzertný: neposielajte zálohy vopred neznámym predajcom a dohodnite si osobné odovzdanie alebo platbu na dobierku. Konverzáciu uchovávame 12 mesiacov od poslednej správy.")} <Link href={hl("/ochrana-osobnych-udajov")}>{tl("Ochrana osobných údajov")}</Link></p>
     </div>
   );
 }

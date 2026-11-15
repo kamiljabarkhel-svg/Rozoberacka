@@ -1,4 +1,5 @@
 "use client";
+import { useHref, useT } from "@/lib/i18n/client";
 // Lišta a nastavenia cookies. Bez voliteľných nástrojov len krátko informuje, že nič nesledujeme (bez súhlasu netreba nič
 // zapínať). Keď sa pridá meranie návštevnosti, ponúkne tri rovnocenné tlačidlá: Prijať všetky / Odmietnuť / Nastavenia.
 import { useEffect, useRef, useState } from "react";
@@ -6,6 +7,8 @@ import Link from "next/link";
 import { ANALYTICS_SRC, CONSENT_UI, GA_ID, HAS_OPTIONAL, saveConsent, useConsent } from "@/lib/consent";
 
 export default function CookieBar() {
+  const hl = useHref();
+  const tl = useT();
   const { consent, ready, open, close } = useConsent();
   const [settings, setSettings] = useState(false), [an, setAn] = useState(false);
   const dlg = useRef<HTMLDivElement>(null);
@@ -18,37 +21,37 @@ export default function CookieBar() {
   return <>
     {HAS_OPTIONAL && consent?.analytics && <AnalyticsScript />}
     {showBar && (CONSENT_UI ? (
-      <div className="ckbar" role="region" aria-label="Súhlas s cookies">
-        <p><b>Cookies</b> – nevyhnutné úložisko používame vždy (prihlásenie, obľúbené, uložené hľadania). So súhlasom meriame aj návštevnosť cez Google Analytics (Google), aby sme vedeli, čo na webe funguje a čo zlepšiť. Bez súhlasu sa Google Analytics vôbec nenačíta.{HAS_OPTIONAL ? "" : " (Meranie zatiaľ nie je spustené.)"} Súhlas môžete kedykoľvek zmeniť v pätičke. <Link href="/cookies">Podrobnosti</Link></p>
-        <div className="ckb"><button className="ckbtn" onClick={() => done(true)}>Prijať všetky</button><button className="ckbtn" onClick={() => done(false)}>Odmietnuť</button><button className="ckbtn ghost" onClick={() => { setAn(false); setSettings(true); }}>Nastavenia</button></div>
+      <div className="ckbar" role="region" aria-label={tl("Súhlas s cookies")}>
+        <p><b>{tl("Cookies")}</b> {tl("– nevyhnutné úložisko používame vždy (prihlásenie, obľúbené, uložené hľadania). So súhlasom meriame aj návštevnosť cez Google Analytics (Google), aby sme vedeli, čo na webe funguje a čo zlepšiť. Bez súhlasu sa Google Analytics vôbec nenačíta.")}{HAS_OPTIONAL ? "" : tl(" (Meranie zatiaľ nie je spustené.)")} {tl("Súhlas môžete kedykoľvek zmeniť v pätičke.")} <Link href={hl("/cookies")}>{tl("Podrobnosti")}</Link></p>
+        <div className="ckb"><button className="ckbtn" onClick={() => done(true)}>{tl("Prijať všetky")}</button><button className="ckbtn" onClick={() => done(false)}>{tl("Odmietnuť")}</button><button className="ckbtn ghost" onClick={() => { setAn(false); setSettings(true); }}>{tl("Nastavenia")}</button></div>
       </div>
     ) : (
-      <div className="ckbar" role="region" aria-label="Informácia o cookies">
-        <p><b>Nesledujeme vás.</b> autosuciastky.eu nepoužíva reklamné ani analytické cookies. V prehliadači ukladáme len to, čo potrebujete na fungovanie (prihlásenie predajcu, obľúbené diely, uložené hľadania, Moje auto). <Link href="/cookies">Podrobnosti</Link></p>
-        <div className="ckb"><button className="ckbtn" onClick={() => done(false)}>Rozumiem</button></div>
+      <div className="ckbar" role="region" aria-label={tl("Informácia o cookies")}>
+        <p><b>{tl("Nesledujeme vás.")}</b> {tl("autosuciastky.eu nepoužíva reklamné ani analytické cookies. V prehliadači ukladáme len to, čo potrebujete na fungovanie (prihlásenie predajcu, obľúbené diely, uložené hľadania, Moje auto).")} <Link href={hl("/cookies")}>{tl("Podrobnosti")}</Link></p>
+        <div className="ckb"><button className="ckbtn" onClick={() => done(false)}>{tl("Rozumiem")}</button></div>
       </div>
     ))}
     {settings && (
       <div className="overlay ckov" onClick={(e) => { if (e.target === e.currentTarget) { setSettings(false); close(); } }}>
         <div className="ckdlg" role="dialog" aria-modal="true" aria-labelledby="ck-h" tabIndex={-1} ref={dlg} onKeyDown={(e) => { if (e.key === "Escape") { setSettings(false); close(); } }}>
-          <h2 id="ck-h">Nastavenia cookies</h2>
+          <h2 id="ck-h">{tl("Nastavenia cookies")}</h2>
           <div className="ckcat">
-            <div><b>Nevyhnutné</b><span className="mute">Prihlásenie predajcu, obľúbené diely, uložené hľadania, Moje auto, odkazy na vaše dopyty, táto voľba. Bez nich web nefunguje, preto sú vždy zapnuté (súhlas nie je potrebný).</span></div>
-            <span className="ckon">Vždy zapnuté</span>
+            <div><b>{tl("Nevyhnutné")}</b><span className="mute">{tl("Prihlásenie predajcu, obľúbené diely, uložené hľadania, Moje auto, odkazy na vaše dopyty, táto voľba. Bez nich web nefunguje, preto sú vždy zapnuté (súhlas nie je potrebný).")}</span></div>
+            <span className="ckon">{tl("Vždy zapnuté")}</span>
           </div>
           <div className="ckcat">
-            <div><b>Meranie návštevnosti</b><span className="mute">{CONSENT_UI ? "Google Analytics (Google Ireland Ltd.): koľko ľudí web navštívi, ktoré stránky a z akého zariadenia. Bez reklamy a bez prepájania s účtom Google. Cookies _ga a _ga_* (najviac 2 roky)." + (HAS_OPTIONAL ? "" : " Zatiaľ nie je spustené.") : "Momentálne nepoužívame žiadne nástroje na meranie návštevnosti ani reklamu."}</span></div>
+            <div><b>{tl("Meranie návštevnosti")}</b><span className="mute">{CONSENT_UI ? tl("Google Analytics (Google Ireland Ltd.): koľko ľudí web navštívi, ktoré stránky a z akého zariadenia. Bez reklamy a bez prepájania s účtom Google. Cookies _ga a _ga_* (najviac 2 roky).") + (HAS_OPTIONAL ? "" : tl(" Zatiaľ nie je spustené.")) : tl("Momentálne nepoužívame žiadne nástroje na meranie návštevnosti ani reklamu.")}</span></div>
             {CONSENT_UI
-              ? <label className="cksw"><input type="checkbox" checked={an} onChange={(e) => setAn(e.target.checked)} /> <span>{an ? "Zapnuté" : "Vypnuté"}</span></label>
-              : <span className="ckoff">Nepoužívame</span>}
+              ? <label className="cksw"><input type="checkbox" checked={an} onChange={(e) => setAn(e.target.checked)} /> <span>{an ? tl("Zapnuté") : tl("Vypnuté")}</span></label>
+              : <span className="ckoff">{tl("Nepoužívame")}</span>}
           </div>
-          <p className="mute">{consent ? `Vaša voľba z ${new Date(consent.at).toLocaleString("sk-SK", { dateStyle: "short", timeStyle: "short" })} je uložená len v tomto prehliadači.` : "Vaša voľba sa uloží len v tomto prehliadači."} <Link href="/cookies" onClick={() => { setSettings(false); close(); }}>Zoznam všetkých údajov v prehliadači</Link></p>
+          <p className="mute">{consent ? `Vaša voľba z ${new Date(consent.at).toLocaleString("sk-SK", { dateStyle: "short", timeStyle: "short" })} je uložená len v tomto prehliadači.` : tl("Vaša voľba sa uloží len v tomto prehliadači.")} <Link href={hl("/cookies")} onClick={() => { setSettings(false); close(); }}>{tl("Zoznam všetkých údajov v prehliadači")}</Link></p>
           <div className="ckb">
             {CONSENT_UI ? <>
-              <button className="ckbtn" onClick={() => done(an)}>Uložiť voľbu</button>
-              <button className="ckbtn" onClick={() => done(true)}>Prijať všetky</button>
-              <button className="ckbtn" onClick={() => done(false)}>Odmietnuť všetky</button>
-            </> : <button className="ckbtn" onClick={() => done(false)}>Zavrieť</button>}
+              <button className="ckbtn" onClick={() => done(an)}>{tl("Uložiť voľbu")}</button>
+              <button className="ckbtn" onClick={() => done(true)}>{tl("Prijať všetky")}</button>
+              <button className="ckbtn" onClick={() => done(false)}>{tl("Odmietnuť všetky")}</button>
+            </> : <button className="ckbtn" onClick={() => done(false)}>{tl("Zavrieť")}</button>}
           </div>
         </div>
       </div>
@@ -81,5 +84,6 @@ function AnalyticsScript() {
 }
 
 export function CookieSettingsLink() {
-  return <button type="button" className="lnk ckl" onClick={() => window.dispatchEvent(new Event("rz-consent-open"))}>Nastavenia cookies</button>;
+  const tl = useT();
+  return <button type="button" className="lnk ckl" onClick={() => window.dispatchEvent(new Event("rz-consent-open"))}>{tl("Nastavenia cookies")}</button>;
 }

@@ -7,6 +7,8 @@ const eslintConfig = [
   ...nextTs,
   // Fotky sú z Supabase Storage alebo ukážkové SVG; zmenšujú sa už pri nahrávaní, next/image netreba.
   { rules: { "@next/next/no-img-element": "off" } },
+  // Stránky sú v app/[lang] (App Router) – pravidlo pre starý pages router by ich považovalo za pages/.
+  { rules: { "@next/next/no-html-link-for-pages": "off" } },
   // Nové pravidlá z eslint-plugin-react-hooks 7 sú pre React Compiler, ktorý nepoužívame. Náš vzor
   // (po načítaní stránky prečítať localStorage / adresu a nastaviť stav) je zámerný a funguje.
   { rules: { "react-hooks/set-state-in-effect": "off", "react-hooks/refs": "off", "react-hooks/purity": "off", "react-hooks/preserve-manual-memoization": "off" } },

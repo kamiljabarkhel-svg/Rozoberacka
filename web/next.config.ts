@@ -62,7 +62,20 @@ const nextConfig: NextConfig = {
     const site = (process.env.NEXT_PUBLIC_SITE_URL || "").replace(/\/$/, "");
     const toDomain = /^https:\/\/(?!rozoberacka\.vercel\.app)[a-z0-9.-]+$/.test(site)
       ? [{ source: "/:path*", has: [{ type: "host" as const, value: "rozoberacka.vercel.app" }], destination: site + "/:path*", permanent: true }] : [];
-    return [...toDomain, { source: "/blog/pouzite-diely-z-vrakoviska", destination: "/blog", permanent: true }];
+    return [...toDomain, { source: "/blog/pouzite-diely-z-vrakoviska", destination: "/blog", permanent: true },
+      // slovenčina je bez predpony – /sk/... presmeruje na čistú adresu
+      { source: "/sk", destination: "/", permanent: true }, { source: "/sk/:path*", destination: "/:path*", permanent: true },
+      // časti bez poľskej verzie (portál predajcu, fórum, blog…) – z /pl/... na slovenskú stránku
+      { source: "/pl/:part(admin|blog|forum|havarovane-vozidla|vozidlo|pre-predajcov|predajca|inzerat)/:rest*", destination: "/:part/:rest*", permanent: false },
+      { source: "/pl/:part(admin|blog|forum|havarovane-vozidla|vozidlo|pre-predajcov|predajca|inzerat)", destination: "/:part", permanent: false }];
+  } }),
+  // Jazyky: stránky sú v app/[lang]. Slovenské adresy (bez predpony) sa vnútorne prepíšu na /sk/..., poľské sú /pl/...
+  // afterFiles: súbory v public/, api a metadáta (sitemap, ikony) majú prednosť.
+  ...(preview ? {} : { async rewrites() {
+    return { beforeFiles: [], fallback: [], afterFiles: [
+      { source: "/", destination: "/sk" },
+      { source: "/:path((?!pl(?:/|$)|sk(?:/|$)|api/|_next/).+)", destination: "/sk/:path" },
+    ] };
   } }),
 };
 

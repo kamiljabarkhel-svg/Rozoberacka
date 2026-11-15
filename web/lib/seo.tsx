@@ -1,6 +1,7 @@
 // Pomôcky pre vyhľadávače: adresa webu, „slug“ adries, názvy stránok a štruktúrované údaje.
 import type { CarListing, Catalog, Listing } from "./types";
 import { OPERATOR } from "./operator";
+import { lhref, tr, type Lang } from "./i18n";
 
 /** Verejná adresa webu. Na Verceli sa doplní sama; po kúpe domény nastaviť NEXT_PUBLIC_SITE_URL. */
 export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL
@@ -93,7 +94,8 @@ const SUB_PHRASE: Record<string, string> = { "Riadenie a servo": "diely riadenia
 /** Malé prvé písmeno, skratky (ABS, DPF) ostanú. */
 const lowerFirst = (t: string) => (/^[A-ZÁČĎÉÍĽĹŇÓÔŔŠŤÚÝŽ]{2}/.test(t) ? t : t.charAt(0).toLowerCase() + t.slice(1));
 
-export function landingTitle(x: Landing, cat: Catalog): string {
+export function landingTitle(x: Landing, cat: Catalog, lang: Lang = "sk"): string {
+  if (lang === "pl") return landingTitlePl(x, cat);
   const car = [cat.brands.find((v) => v.id === x.brandId)?.name, cat.models.find((v) => v.id === x.modelId)?.name].filter(Boolean).join(" ");
   const c = cat.categories.find((v) => v.id === x.cat)?.name, s = cat.subcategories.find((v) => v.id === x.sub)?.name;
   const what = s ? (SUB_PHRASE[s] || lowerFirst(s)) : c ? (CAT_PHRASE[x.cat] || lowerFirst(c)) : "diely";
@@ -102,7 +104,10 @@ export function landingTitle(x: Landing, cat: Catalog): string {
 }
 
 /** Drobčeky (navigácia „Úvod › Škoda › Octavia III“) aj pre štruktúrované údaje. */
-export function landingCrumbs(x: Landing, cat: Catalog): { name: string; href: string }[] {
+export function landingCrumbs(x: Landing, cat: Catalog, lang: Lang = "sk"): { name: string; href: string }[] {
+  return landingCrumbsSk(x, cat).map((c) => ({ name: tr(lang, c.name), href: lhref(lang, c.href) }));
+}
+function landingCrumbsSk(x: Landing, cat: Catalog): { name: string; href: string }[] {
   const out = [{ name: "Úvod", href: "/" }];
   const b = cat.brands.find((v) => v.id === x.brandId), m = cat.models.find((v) => v.id === x.modelId);
   const c = cat.categories.find((v) => v.id === x.cat), s = cat.subcategories.find((v) => v.id === x.sub);
@@ -144,10 +149,11 @@ export function productLd(l: Listing, cat: Catalog, path: string) {
   };
 }
 
-export function siteLd() {
+export function siteLd(lang: Lang = "sk") {
+  const home = lang === "pl" ? "/pl" : "/";
   return [
-    { "@context": "https://schema.org", "@type": "WebSite", name: SITE_NAME, url: SITE_URL + "/", inLanguage: "sk",
-      potentialAction: { "@type": "SearchAction", target: SITE_URL + "/?q={search_term_string}", "query-input": "required name=search_term_string" } },
+    { "@context": "https://schema.org", "@type": "WebSite", name: SITE_NAME, url: SITE_URL + home, inLanguage: lang,
+      potentialAction: { "@type": "SearchAction", target: SITE_URL + (lang === "pl" ? "/pl" : "/") + "?q={search_term_string}", "query-input": "required name=search_term_string" } },
     { "@context": "https://schema.org", "@type": "Organization", name: SITE_NAME, url: SITE_URL + "/", legalName: OPERATOR.name,
       ...(OPERATOR.email ? { email: OPERATOR.email } : {}), logo: SITE_URL + "/icon.svg" },
   ];
@@ -185,4 +191,20 @@ export function vehicleLd(c: CarListing, title: string, path: string) {
       seller: { "@type": c.seller.type === "Firma" ? "Organization" : "Person", name: c.seller.name },
     },
   };
+}
+
+// Poľské nadpisy vstupných stránok: „Używane lampy i reflektory Škoda Octavia“.
+const CAT_PHRASE_PL: Record<string, string> = {
+  motor: "silniki i części silnika", pr: "skrzynie biegów i sprzęgła", kar: "części karoserii", sv: "lampy i reflektory", kol: "koła i felgi",
+  el: "części elektryczne", pod: "części zawieszenia i układu kierowniczego", brz: "hamulce", chl: "części układu chłodzenia i klimatyzacji",
+  pal: "części układu paliwowego i wydechowego", int: "części wnętrza",
+};
+function landingTitlePl(x: Landing, cat: Catalog): string {
+  const car = [cat.brands.find((v) => v.id === x.brandId)?.name, cat.models.find((v) => v.id === x.modelId)?.name].filter(Boolean).join(" ");
+  const c = cat.categories.find((v) => v.id === x.cat)?.name, s = cat.subcategories.find((v) => v.id === x.sub)?.name;
+  const named = s ? tr("pl", s) : c && !CAT_PHRASE_PL[x.cat] ? tr("pl", c) : "";
+  if (named) return `${named} – używane części${car ? " " + car : ""}${x.city ? " – " + x.city : ""}`;
+  const what = c ? CAT_PHRASE_PL[x.cat] : "części samochodowe";
+  if (x.city) return `Używane ${what} – ${x.city}`;
+  return car ? `Używane ${what} ${car}` : `Używane ${what}`;
 }

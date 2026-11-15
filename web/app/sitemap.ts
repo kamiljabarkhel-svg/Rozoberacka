@@ -4,6 +4,7 @@ import { NAVODY, navodPath } from "@/lib/navody";
 import { BLOG, blogPath } from "@/lib/blog";
 import { SITE_URL, carName, landingPath, listingPath, sellerPath, vehiclePath, vehicleTitle, type Landing } from "@/lib/seo";
 import { CARS_ENABLED } from "@/lib/features";
+import { lhref } from "@/lib/i18n";
 import { forumOverview, forumSitemap, sectionPath, threadPath } from "@/lib/forum";
 
 export const revalidate = 3600;
@@ -49,5 +50,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     if (CARS_ENABLED) for (const c of await sitemapCars().catch(() => [])) out.push({ url: SITE_URL + vehiclePath(c.id, vehicleTitle(c, cat), c.condition), lastModified: new Date(c.updatedAt), changeFrequency: "weekly", priority: 0.5 });
     for (const l of listings) out.push({ url: SITE_URL + listingPath(l.id, l.name, carName(l, cat)), lastModified: new Date(l.updatedAt), changeFrequency: "weekly", priority: 0.6 });
   } catch { /* pri výpadku databázy aspoň základné stránky */ }
-  return out;
+  // Poľská verzia: rovnaké stránky s predponou /pl a hreflang medzi nimi (portál predajcu, fórum a blog sú len po slovensky).
+  const all: MetadataRoute.Sitemap = [];
+  for (const e of out) {
+    const path = e.url.slice(SITE_URL.length) || "/";
+    const pl = lhref("pl", path);
+    if (pl === path) { all.push(e); continue; }
+    const languages = { sk: SITE_URL + path, pl: SITE_URL + pl, "x-default": SITE_URL + path };
+    all.push({ ...e, alternates: { languages } }, { ...e, url: SITE_URL + pl, priority: Math.round((e.priority ?? 0.5) * 8) / 10, alternates: { languages } });
+  }
+  return all;
 }

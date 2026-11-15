@@ -1,4 +1,5 @@
 "use client";
+import { useT } from "@/lib/i18n/client";
 // Hľadanie v hlavičke s našepkávaním: autá a kategórie z katalógu, názvy dielov z inzerátov, OEM číslo.
 import { useEffect, useMemo, useRef, useState } from "react";
 import { getCatalog, suggestNames } from "@/lib/data";
@@ -14,6 +15,7 @@ const OEM_RE = /^(?=.*\d)(?=.*[a-z])[a-z0-9 .\-/]{5,24}$/i;
 let catCache: Promise<Catalog> | null = null;
 
 export default function HeaderSearch({ value, onChange, onPick }: { value: string; onChange: (v: string) => void; onPick: (p: Pick) => void }) {
+  const tl = useT();
   const [open, setOpen] = useState(false);
   const [act, setAct] = useState(-1);
   const [cat, setCat] = useState<Catalog | null>(null);
@@ -41,17 +43,17 @@ export default function HeaderSearch({ value, onChange, onPick }: { value: strin
       const cars: Item[] = [];
       for (const m of cat.models) {
         const b = cat.brands.find((x) => x.id === m.brandId);
-        if (b && has(`${b.name} ${m.name}`)) cars.push({ key: "m" + m.id, group: "Auto", label: `${b.name} ${m.name}`, hint: `${m.yearFrom}–${m.yearTo || "dnes"}`, pick: { kind: "f", label: `${b.name} ${m.name}`, patch: { brand: b.id, model: m.id } } });
+        if (b && has(`${b.name} ${m.name}`)) cars.push({ key: "m" + m.id, group: tl("Auto"), label: `${b.name} ${m.name}`, hint: `${m.yearFrom}–${m.yearTo || tl("dnes")}`, pick: { kind: "f", label: `${b.name} ${m.name}`, patch: { brand: b.id, model: m.id } } });
       }
-      for (const b of cat.brands) if (has(b.name)) cars.unshift({ key: "b" + b.id, group: "Auto", label: b.name, hint: "všetky modely", pick: { kind: "f", label: b.name, patch: { brand: b.id, model: null } } });
+      for (const b of cat.brands) if (has(b.name)) cars.unshift({ key: "b" + b.id, group: tl("Auto"), label: b.name, hint: tl("všetky modely"), pick: { kind: "f", label: b.name, patch: { brand: b.id, model: null } } });
       out.push(...cars.slice(0, 5));
       const cs: Item[] = [];
-      for (const c of cat.categories) if (has(c.name)) cs.push({ key: "c" + c.id, group: "Kategória", label: c.name, pick: { kind: "f", label: c.name, patch: { cat: c.id, sub: null } } });
-      for (const s of cat.subcategories) if (has(s.name)) cs.push({ key: "s" + s.id, group: "Kategória", label: s.name, hint: cat.categories.find((c) => c.id === s.categoryId)?.name, pick: { kind: "f", label: s.name, patch: { cat: s.categoryId, sub: s.id } } });
+      for (const c of cat.categories) if (has(c.name) || has(tl(c.name))) cs.push({ key: "c" + c.id, group: tl("Kategória"), label: tl(c.name), pick: { kind: "f", label: tl(c.name), patch: { cat: c.id, sub: null } } });
+      for (const s of cat.subcategories) if (has(s.name) || has(tl(s.name))) cs.push({ key: "s" + s.id, group: tl("Kategória"), label: tl(s.name), hint: tl(cat.categories.find((c) => c.id === s.categoryId)?.name || ""), pick: { kind: "f", label: tl(s.name), patch: { cat: s.categoryId, sub: s.id } } });
       out.push(...cs.slice(0, 4));
     }
-    for (const n of names) out.push({ key: "n" + n.name, group: "Diely v ponuke", label: n.name, hint: n.n > 1 ? `${n.n}×` : undefined, pick: { kind: "q", q: n.name } });
-    if (OEM_RE.test(value.trim()) && /\d/.test(value)) out.unshift({ key: "oem", group: "Číslo dielu", label: `Hľadať číslo dielu ${value.trim().toUpperCase()}`, pick: { kind: "q", q: value.trim() } });
+    for (const n of names) out.push({ key: "n" + n.name, group: tl("Diely v ponuke"), label: n.name, hint: n.n > 1 ? `${n.n}×` : undefined, pick: { kind: "q", q: n.name } });
+    if (OEM_RE.test(value.trim()) && /\d/.test(value)) out.unshift({ key: "oem", group: tl("Číslo dielu"), label: tl("Hľadať číslo dielu {0}", value.trim().toUpperCase()), pick: { kind: "q", q: value.trim() } });
     return out;
   }, [value, cat, names]);
 
@@ -67,7 +69,7 @@ export default function HeaderSearch({ value, onChange, onPick }: { value: strin
 
   return (
     <div className="hs" ref={box}>
-      <input type="search" value={value} placeholder="Hľadajte diel, OEM číslo alebo auto" aria-label="Hľadať"
+      <input type="search" value={value} placeholder={tl("Hľadajte diel, OEM číslo alebo auto")} aria-label={tl("Hľadať")}
         role="combobox" aria-expanded={show} aria-controls="hs-list" aria-autocomplete="list" autoComplete="off"
         aria-activedescendant={show && act >= 0 ? "hs-" + act : undefined}
         onFocus={() => { loadCat(); setOpen(true); }}
@@ -79,7 +81,7 @@ export default function HeaderSearch({ value, onChange, onPick }: { value: strin
           else if (e.key === "ArrowUp") { e.preventDefault(); setAct((a) => Math.max(-1, a - 1)); }
           else if (e.key === "Enter" && act >= 0) { e.preventDefault(); choose(items[act]); }
         }} />
-      <button type="submit" aria-label="Hľadať" onClick={() => setOpen(false)}><Icon id="i-q" /></button>
+      <button type="submit" aria-label={tl("Hľadať")} onClick={() => setOpen(false)}><Icon id="i-q" /></button>
       {show && (
         <ul id="hs-list" role="listbox" className="hs-list">
           {items.map((it, i) => (

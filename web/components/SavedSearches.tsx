@@ -1,4 +1,5 @@
 "use client";
+import { useT } from "@/lib/i18n/client";
 // Pás „Uložené hľadania“ nad výsledkami: názov hľadania, počet nových dielov od poslednej návštevy, odstránenie.
 import { useEffect, useState } from "react";
 import type { Catalog, Filters } from "@/lib/types";
@@ -6,6 +7,7 @@ import { searchListings } from "@/lib/data";
 import { describe, type Saved } from "@/lib/saved";
 
 export default function SavedSearches({ list, cat, onOpen, onRemove }: { list: Saved[]; cat: Catalog | null; onOpen: (s: Saved) => void; onRemove: (id: string) => void }) {
+  const tl = useT();
   const [fresh, setFresh] = useState<Record<string, number>>({});
   const key = list.map((s) => s.id + s.seenAt).join("|");
   useEffect(() => {
@@ -20,14 +22,14 @@ export default function SavedSearches({ list, cat, onOpen, onRemove }: { list: S
   }, [key]); // eslint-disable-line react-hooks/exhaustive-deps
   if (!list.length) return null;
   return (
-    <div className="saved" aria-label="Uložené hľadania">
-      <b>Uložené hľadania</b>
+    <div className="saved" aria-label={tl("Uložené hľadania")}>
+      <b>{tl("Uložené hľadania")}</b>
       {list.map((s) => (
         <span key={s.id} className="saved-i">
-          <button className="chip" onClick={() => { setFresh((o) => ({ ...o, [s.id]: 0 })); onOpen(s); }} title="Zobraziť výsledky">
-            {describe(s.f, cat)}{fresh[s.id] ? <em className="saved-n">{fresh[s.id] >= 30 ? "30+" : fresh[s.id]} {fresh[s.id] === 1 ? "nový" : fresh[s.id] < 5 ? "nové" : "nových"}</em> : null}
+          <button className="chip" onClick={() => { setFresh((o) => ({ ...o, [s.id]: 0 })); onOpen(s); }} title={tl("Zobraziť výsledky")}>
+            {describe(s.f, cat)}{fresh[s.id] ? <em className="saved-n">{fresh[s.id] >= 30 ? "30+" : fresh[s.id]} {fresh[s.id] === 1 ? tl("nový") : fresh[s.id] < 5 ? tl("nové") : tl("nových")}</em> : null}
           </button>
-          <button className="saved-x" aria-label={"Odstrániť hľadanie " + describe(s.f, cat)} onClick={() => onRemove(s.id)}>×</button>
+          <button className="saved-x" aria-label={tl("Odstrániť hľadanie ") + describe(s.f, cat)} onClick={() => onRemove(s.id)}>{tl("×")}</button>
         </span>
       ))}
     </div>

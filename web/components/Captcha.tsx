@@ -1,4 +1,5 @@
 "use client";
+import { useT } from "@/lib/i18n/client";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 // Cloudflare Turnstile – ochrana registrácie, prihlásenia a obnovy hesla proti robotom.
@@ -21,6 +22,7 @@ function load(): Promise<void> {
 
 /** Vráti prvok s overením, aktuálny token a reset (token platí len na jeden pokus). */
 export function useCaptcha() {
+  const tl = useT();
   const box = useRef<HTMLDivElement>(null), wid = useRef<string>("");
   const [token, setToken] = useState(""), [fail, setFail] = useState(false);
   useEffect(() => {
@@ -38,7 +40,7 @@ export function useCaptcha() {
   const reset = useCallback(() => { setToken(""); if (wid.current && window.turnstile) window.turnstile.reset(wid.current); }, []);
   const el = CAPTCHA_KEY ? <div className="captcha">
     <div ref={box} />
-    {fail && <small className="f-err" role="alert">Overenie proti robotom sa nenačítalo. Skontrolujte pripojenie alebo blokovanie reklám a obnovte stránku.</small>}
+    {fail && <small className="f-err" role="alert">{tl("Overenie proti robotom sa nenačítalo. Skontrolujte pripojenie alebo blokovanie reklám a obnovte stránku.")}</small>}
   </div> : null;
   return { el, token, reset, needed: !!CAPTCHA_KEY };
 }

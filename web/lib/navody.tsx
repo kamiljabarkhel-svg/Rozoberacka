@@ -90,3 +90,5 @@ export const NAVODY: Navod[] = [
 ];
 
 export const navodPath = (slug: string) => "/navody/" + slug;
+/** Návody v jazyku stránky (poľské v navody.pl.tsx). */
+export async function navodyFor(lang: string): Promise<Navod[]> { return lang === "pl" ? (await import("./navody.pl")).NAVODY_PL : NAVODY; }

@@ -1,8 +1,10 @@
 "use client";
+import { useT } from "@/lib/i18n/client";
 import { useState } from "react";
 
 /** Mapa s približnou polohou (mesto predajcu). Načíta sa až po kliknutí – dovtedy sa nič neposiela do OpenStreetMap. */
 export default function CityMap({ city, note = "mesto z inzerátu, nie presná adresa" }: { city: string; note?: string }) {
+  const tl = useT();
   const [st, setSt] = useState<"idle" | "load" | "err" | { lat: number; lon: number }>("idle");
   if (!city) return null;
   const show = async () => {
@@ -16,12 +18,12 @@ export default function CityMap({ city, note = "mesto z inzerátu, nie presná a
     const d = 0.08, bb = [st.lon - d * 1.6, st.lat - d, st.lon + d * 1.6, st.lat + d].map((x) => x.toFixed(4)).join(",");
     return <div className="citymap">
       <iframe title={`Mapa – ${city}`} loading="lazy" src={`https://www.openstreetmap.org/export/embed.html?bbox=${bb}&layer=mapnik&marker=${st.lat.toFixed(5)},${st.lon.toFixed(5)}`} />
-      <small className="mute">Približná poloha: {city} ({note}). Mapa © <a href={`https://www.openstreetmap.org/?mlat=${st.lat}&mlon=${st.lon}#map=12/${st.lat}/${st.lon}`} target="_blank" rel="noopener">prispievatelia OpenStreetMap</a></small>
+      <small className="mute">{tl("Približná poloha:")} {city} ({note}{tl("). Mapa ©")} <a href={`https://www.openstreetmap.org/?mlat=${st.lat}&mlon=${st.lon}#map=12/${st.lat}/${st.lon}`} target="_blank" rel="noopener">{tl("prispievatelia OpenStreetMap")}</a></small>
     </div>;
   }
   return <div className="citymap-b">
-    <button type="button" className="ubtn" onClick={show} disabled={st === "load"}>{st === "load" ? "Načítavam mapu…" : `Zobraziť na mape: ${city}`}</button>
-    {st === "err" && <small className="mute">Mesto „{city}“ sa na mape nepodarilo nájsť.</small>}
-    {st === "idle" && <small className="mute">Mapa sa načíta z OpenStreetMap až po kliknutí.</small>}
+    <button type="button" className="ubtn" onClick={show} disabled={st === "load"}>{st === "load" ? tl("Načítavam mapu…") : `Zobraziť na mape: ${city}`}</button>
+    {st === "err" && <small className="mute">{tl("Mesto „")}{city}{tl("“ sa na mape nepodarilo nájsť.")}</small>}
+    {st === "idle" && <small className="mute">{tl("Mapa sa načíta z OpenStreetMap až po kliknutí.")}</small>}
   </div>;
 }

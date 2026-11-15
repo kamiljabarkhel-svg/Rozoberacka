@@ -1,4 +1,5 @@
 "use client";
+import { useHref, useLang, useT } from "@/lib/i18n/client";
 // Celá ponuka jedného predajcu (verejná stránka /predajci/…): hľadanie v jeho dieloch, kategórie s počtami,
 // zoradenie a „Načítať viac“, kým sa nezobrazia všetky. Prvú stránku pripraví server (rýchle a pre Google).
 import { useEffect, useRef, useState } from "react";
@@ -16,6 +17,9 @@ export default function SellerStock({ seller, cat: cat0, initial }: {
   seller: string; cat: Catalog;
   initial: { items: Listing[]; total: number; cats: [string, number][] };
 }) {
+  const hl = useHref();
+  const tl = useT();
+  const lang = useLang();
   const { favs, toggle } = useFavs();
   const [q, setQ] = useState(""), [qx, setQx] = useState("");
   const [c, setC] = useState(""), [sort, setSort] = useState<Filters["sort"]>("new");
@@ -56,26 +60,26 @@ export default function SellerStock({ seller, cat: cat0, initial }: {
   const catList = [...cat.categories].sort((a, b) => a.sort - b.sort).filter((x) => cats.get(x.id) || c === x.id);
   const filtered = qx || c;
   return (
-    <section className="stock" aria-label="Ponuka predajcu">
+    <section className="stock" aria-label={tl("Ponuka predajcu")}>
       <div className="stock-h">
-        <h2>Diely v ponuke <span className="mute">({filtered ? `${total} z ${initial.total}` : total})</span></h2>
+        <h2>{tl("Diely v ponuke")} <span className="mute">({filtered ? `${total} z ${initial.total}` : total})</span></h2>
         {initial.total > 0 && <div className="stock-t">
-          <input type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Hľadať v ponuke predajcu (diel, OEM, auto)" aria-label="Hľadať v ponuke predajcu" />
-          <select value={sort} onChange={(e) => setSort(e.target.value as Filters["sort"])} aria-label="Zoradiť">
-            <option value="new">Najnovšie</option><option value="asc">Najlacnejšie</option><option value="desc">Najdrahšie</option>
+          <input type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder={tl("Hľadať v ponuke predajcu (diel, OEM, auto)")} aria-label={tl("Hľadať v ponuke predajcu")} />
+          <select value={sort} onChange={(e) => setSort(e.target.value as Filters["sort"])} aria-label={tl("Zoradiť")}>
+            <option value="new">{tl("Najnovšie")}</option><option value="asc">{tl("Najlacnejšie")}</option><option value="desc">{tl("Najdrahšie")}</option>
           </select>
-          <a className="rank-note" href="/ako-zoradujeme">Ako zoraďujeme ponuky</a>
+          <a className="rank-note" href={hl("/ako-zoradujeme")}>{tl("Ako zoraďujeme ponuky")}</a>
         </div>}
       </div>
-      {initial.total > 0 && catList.length > 1 && <div className="chips" aria-label="Kategórie v ponuke predajcu">
-        <button className="chip" aria-pressed={!c} onClick={() => setC("")}>Všetky ({base})</button>
-        {catList.map((x) => <button key={x.id} className="chip" aria-pressed={c === x.id} onClick={() => setC(c === x.id ? "" : x.id)}><Icon id={catIcon(x.id)} />{x.name} ({cats.get(x.id) || 0})</button>)}
+      {initial.total > 0 && catList.length > 1 && <div className="chips" aria-label={tl("Kategórie v ponuke predajcu")}>
+        <button className="chip" aria-pressed={!c} onClick={() => setC("")}>{tl("Všetky (")}{base})</button>
+        {catList.map((x) => <button key={x.id} className="chip" aria-pressed={c === x.id} onClick={() => setC(c === x.id ? "" : x.id)}><Icon id={catIcon(x.id)} />{tl(x.name)} ({cats.get(x.id) || 0})</button>)}
       </div>}
-      {err && <div className="err" role="alert">Diely sa nepodarilo načítať: {err}</div>}
+      {err && <div className="err" role="alert">{tl("Diely sa nepodarilo načítať:")} {err}</div>}
       {items.length
         ? <div className={"grid" + (busy ? " is-busy" : "")}>{items.map((l) => <ListingCard key={l.id} l={l} cat={cat} fav={favs.includes(l.id)} onFav={toggle} />)}</div>
-        : <div className="empty">{initial.total ? <>V ponuke predajcu sme nič nenašli. <button className="lnk" onClick={() => { setQ(""); setC(""); }}>Zobraziť všetky diely</button></> : "Predajca teraz nemá aktívne inzeráty."}</div>}
-      {total > items.length && <p className="stock-more"><button className="add more" disabled={busy} onClick={more}>{busy ? "Načítavam…" : `Načítať ďalšie (zobrazených ${items.length} z ${pieces(total)})`}</button></p>}
+        : <div className="empty">{initial.total ? <>{tl("V ponuke predajcu sme nič nenašli.")} <button className="lnk" onClick={() => { setQ(""); setC(""); }}>{tl("Zobraziť všetky diely")}</button></> : tl("Predajca teraz nemá aktívne inzeráty.")}</div>}
+      {total > items.length && <p className="stock-more"><button className="add more" disabled={busy} onClick={more}>{busy ? tl("Načítavam…") : tl("Načítať ďalšie (zobrazených {0} z {1})", items.length, pieces(total, lang))}</button></p>}
     </section>
   );
 }

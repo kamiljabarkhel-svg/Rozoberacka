@@ -517,3 +517,14 @@ export async function sitemapCars(): Promise<{ id: number; brandId: number; mode
   if (error) return [];
   return ((data || []) as Row[]).map((r) => ({ id: Number(r.id), brandId: Number(r.brand_id), modelId: (r.model_id as number) ?? null, year: Number(r.year), condition: String(r.condition || ""), updatedAt: String(r.updated_at) }));
 }
+
+/** Strojové preklady názvov a popisov (supabase/36, tabuľka listing_tr). Chýbajúci preklad = slovenský originál. */
+export type ListingTr = { name: string; description: string | null };
+export async function getListingTr(ids: number[], lang: string): Promise<Map<number, ListingTr>> {
+  const out = new Map<number, ListingTr>();
+  if (IS_DEMO || !ids.length) return out;
+  const { data, error } = await client().from("listing_tr").select("listing_id,name,description").eq("lang", lang).in("listing_id", ids.slice(0, 200));
+  if (error) return out;   // tabuľka ešte nemusí byť (pred spustením supabase/36)
+  for (const r of data || []) out.set(Number(r.listing_id), { name: String(r.name), description: (r.description as string) ?? null });
+  return out;
+}

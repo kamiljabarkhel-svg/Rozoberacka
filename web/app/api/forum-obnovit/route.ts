@@ -7,8 +7,8 @@ export async function POST() {
   while (hits.length && hits[0] < now - 60_000) hits.shift();
   if (hits.length >= 60) return Response.json({ ok: false }, { status: 429 });
   hits.push(now);
-  revalidatePath("/forum");
-  revalidatePath("/forum/[sekcia]", "page");
-  revalidatePath("/forum/[sekcia]/[tema]", "page");
+  revalidatePath("/[lang]/forum", "page");
+  revalidatePath("/[lang]/forum/[sekcia]", "page");
+  revalidatePath("/[lang]/forum/[sekcia]/[tema]", "page");
   return Response.json({ ok: true });
 }

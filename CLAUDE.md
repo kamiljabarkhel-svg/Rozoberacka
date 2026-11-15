@@ -376,3 +376,13 @@ Overené na Slov-Lexe: Občiansky zákonník § 597, 599, 612, 618, 619 (znenie 
 
 ## Google Analytics zapnuté (14. 11. 2026, 21:00)
 - GA4: účet „KJ trade s. r. o.“ (autosuciastky.eu@gmail.com), vlastníctvo autosuciastky.eu, ID **G-DV4930RWJ2** v `NEXT_PUBLIC_GA_ID` (Vercel). Uchovávanie 14 mesiacov, Google signals vypnuté, zdieľanie údajov vypnuté (okrem technickej podpory), dodatok o spracúvaní údajov prijatý. Načíta sa len po súhlase.
+
+## Poľská verzia (15. 11. 2026)
+- Verejná časť pre kupujúcich je aj po poľsky na **/pl** (rovnaké slovenské adresy s predponou: `/pl/diel/…`, `/pl/diely/…`, `/pl/kategoria/…`, `/pl/mesto/…`, `/pl/predajci/…`, `/pl/dopyt`, `/pl/navody`, právne stránky). Portál predajcu, fórum, blog a havarované vozidlá sú len po slovensky (`/pl/forum` presmeruje).
+- Technika: všetky stránky sú v `web/app/[lang]/…`; `next.config.ts` prepisuje adresy bez predpony na `/sk/…` (návštevník `/sk` nevidí). Zoznam poľských stránok `PL_PATHS` v `lib/i18n/index.ts`.
+- Preklad: kľúčom je slovenský text. Slovník `lib/i18n/pl.ts`; v klientskych komponentoch `const tl = useT()` a odkazy `useHref()`, na serveri `tr(lang, …)` a `lhref(lang, …)`, v serverových komponentoch bez jazyka `<T>{"…"}</T>`. **Nový text na verejnej časti = doplniť preklad do `pl.ts`** (chýbajúci preklad ukáže slovenčinu). Návody: `lib/navody.pl.tsx`; právne stránky: `TermsPl.tsx`, `PrivacyPl.tsx`, `CookiesPl.tsx` – informatívny preklad, záväzná je slovenská verzia. Pri zmene slovenských podmienok upraviť aj poľské.
+- Ceny: € a približne v zł (`components/Price.tsx`, kurz ECB cez `/api/kurz`, obnova 12 h).
+- **Texty inzerátov** (názov, popis) sa prekladajú strojovo: `supabase/36_preklady.sql` (tabuľka `listing_tr`, fronta `translate_outbox`, `translate_save`), Edge Function `preklady` (DeepL, telefóny/e-maily/čísla dielov sa neposielajú), plán `supabase/37_preklady_plan.sql` (každých 10 min). Kým preklad nie je, ukáže sa slovenčina s poznámkou. Kupujúci si môže zobraziť originál. Potrebný **DeepL API Pro** (Free používa texty na trénovanie) – kľúč `DEEPL_API_KEY` v Supabase Secrets vkladá majiteľ.
+- SEO: hreflang sk-SK / pl-PL / x-default (`lib/hreflang.ts`), canonical na vlastný jazyk, mapa webu s poľskými adresami. `revalidatePath` používa vzory s `[lang]`.
+- `TERMS_VERSION` 2026-11-15 (licencia na strojový preklad, poľská verzia, DeepL v zásadách).
+- Česká verzia: neskôr rovnakým spôsobom (`cs`).

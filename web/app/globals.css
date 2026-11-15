@@ -1791,3 +1791,15 @@ select,input:not([type=checkbox]):not([type=radio]):not([type=range]),textarea{b
 
 /* Turnstile */
 .captcha{min-height:65px;display:grid;gap:4px}
+
+/* Prepínač jazyka v hlavičke (14. 11. 2026) */
+.langsw{display:inline-flex;align-items:center;gap:2px;margin-right:6px;font-size:13px;font-weight:700}
+.langsw a{color:#c9ced6;text-decoration:none;padding:4px 6px;border-radius:3px}
+.langsw a[aria-current]{color:var(--accink);background:var(--acc)}
+.langsw a:hover{color:#fff}
+.langsw a[aria-current]:hover{color:var(--accink)}
+@media(max-width:520px){.langsw{margin-right:2px;font-size:12px}.langsw a{padding:3px 4px}}
+.pln{font-size:.72em;font-weight:500;opacity:.8;white-space:nowrap}
+.linkbtn{background:none;border:0;padding:0;color:var(--link);text-decoration:underline;cursor:pointer;font:inherit}
+.tr-note{margin-top:6px}
+.legal-tr{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--acc);padding:10px 12px;border-radius:4px}
