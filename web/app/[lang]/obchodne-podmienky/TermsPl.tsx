@@ -37,6 +37,7 @@ export default function TermsPl() {
       <h2>3a. Obowiązki sprzedawcy</h2>
       <ul>
         <li>Sprzedawca podaje prawdziwe dane o sobie i o części, w tym znane wady i uszkodzenia.</li>
+        <li>Do nazwy i opisu ogłoszenia nie wpisuje danych osobowych (imienia i nazwiska, adresu, telefonu, e-maila) – kontakt podaje się w osobnych polach. Nazwa i opis są publiczne i w polskiej wersji portalu tłumaczone automatycznie.</li>
         <li>Sprzedaje tylko części, które posiada lub którymi może rozporządzać. Zabronione są części kradzione, części ze zmienionym numerem identyfikacyjnym i rzeczy, których sprzedaży zakazuje prawo.</li>
         <li><b>Przedsiębiorca sprzedający konsumentowi</b> przestrzega przepisów o ochronie konsumentów: odpowiada za wady, które ujawnią się w ciągu 24 miesięcy od odbioru; przy części używanej (także regenerowanej) może uzgodnić z konsumentem krótszy okres, co najmniej 12 miesięcy (§ 619 słowackiego Kodeksu cywilnego) – uzgodniony okres podaje w ogłoszeniu i na dokumencie. Przy sprzedaży na odległość konsument ma prawo odstąpić od umowy w ciągu 14 dni (§ 20 ustawy nr 108/2024 Z. z.). Przy sprzedaży innemu przedsiębiorcy odpowiedzialność za wady regulują słowacki Kodeks handlowy i umowa stron.</li>
         <li><b>Osoba prywatna</b> odpowiada za wady, o których nie poinformowała kupującego (§ 597 i 599 słowackiego Kodeksu cywilnego). Przepisy o ochronie konsumentów nie mają zastosowania do sprzedaży prywatnej.</li>

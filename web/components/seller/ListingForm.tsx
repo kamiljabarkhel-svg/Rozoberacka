@@ -286,7 +286,7 @@ export default function ListingForm({ uid, cat, prof, edit, donor, onSaved, whee
             {bad.has("photos") && <small className="pp-ferr">{MSG.photos}</small>}
             <small className="mute">Fotky sa pred nahraním zmenšia, aby sa stránka načítala rýchlo.</small>
           </div>
-          <div className="full">{L({ k: "desc", t: "Popis", children: <><textarea value={v.description} maxLength={1000} rows={6} placeholder="Stav, poškodenia, čo je súčasťou, z akého auta…" onChange={(e) => { set("description", e.target.value); clear("desc"); }} /><small className="mute">{v.description.length} / 1000</small></> })}</div>
+          <div className="full">{L({ k: "desc", t: "Popis", children: <><textarea value={v.description} maxLength={1000} rows={6} placeholder="Stav, poškodenia, čo je súčasťou, z akého auta…" onChange={(e) => { set("description", e.target.value); clear("desc"); }} /><small className="mute">{v.description.length} / 1000 · Popis je verejný a strojovo sa prekladá do poľštiny – nepíšte doň meno, adresu, telefón ani e-mail (telefón zadáte v kroku Kontakt).</small></> })}</div>
         </>}
         {step === 4 && <>
           {L({ k: "city", t: "Mesto", children: <input value={v.city} maxLength={60} onChange={(e) => { set("city", e.target.value); clear("city"); }} /> })}

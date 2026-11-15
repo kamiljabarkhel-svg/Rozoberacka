@@ -47,6 +47,7 @@ export default async function Page({ params }: P) {
       <h2>3a. Povinnosti predajcu</h2>
       <ul>
         <li>Predajca uvádza pravdivé údaje o sebe aj o diele vrátane známych vád a poškodení.</li>
+        <li>Do názvu a popisu inzerátu nepíše osobné údaje (meno, adresu, telefón, e-mail) – kontakt sa zadáva v samostatných poliach. Názov a popis sú verejné a na poľskej verzii portálu sa strojovo prekladajú.</li>
         <li>Predáva len diely, ktoré vlastní alebo s ktorými smie nakladať. Zakázané sú kradnuté diely, diely s pozmeneným identifikačným číslom a veci, ktorých predaj zakazuje zákon.</li>
         <li><b>Podnikateľ predávajúci spotrebiteľovi</b> dodržiava predpisy na ochranu spotrebiteľa: zodpovedá za vady, ktoré sa prejavia do 24 mesiacov od prevzatia; pri použitom (aj repasovanom) diele sa so spotrebiteľom môže dohodnúť na kratšej dobe, najmenej 12 mesiacov (§ 619 Občianskeho zákonníka) – dohodnutú dobu uvedie v inzeráte aj na doklade. Pri predaji na diaľku má spotrebiteľ právo odstúpiť od zmluvy do 14 dní (§ 20 zákona č. 108/2024 Z. z.). Pri predaji inému podnikateľovi sa zodpovednosť za vady riadi Obchodným zákonníkom a dohodou strán.</li>
         <li><b>Súkromná osoba</b> zodpovedá za vady, na ktoré kupujúceho neupozornila (§ 597 a 599 Občianskeho zákonníka). Predpisy na ochranu spotrebiteľa sa na súkromný predaj nevzťahujú.</li>

@@ -20,8 +20,8 @@ type Row = { id: number; name: string; description: string | null; src_hash: str
 
 const escX = (s: string) => s.replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]!));
 const unX = (s: string) => s.replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&apos;/g, "'").replace(/&#(\d+);/g, (_, n) => String.fromCharCode(Number(n))).replace(/&amp;/g, "&");
-// e-mail | telefón (aspoň 9 číslic) | slovo s číslicou (číslo dielu, rozmer, kód motora)
-const KEEP = /[\w.+-]+@[\w-]+\.[\w.-]+|\+?\d[\d \/-]{7,}\d|\b(?=[A-Za-z0-9-]*\d)[A-Za-z0-9][A-Za-z0-9.\/-]*[A-Za-z0-9]\b/g;
+// odkaz | e-mail | telefón (aspoň 9 číslic) | slovo s číslicou (číslo dielu, rozmer, kód motora, ŠPZ, VIN)
+const KEEP = /https?:\/\/\S+|www\.\S+|[\w.+-]+@[\w-]+\.[\w.-]+|\+?\d[\d \/-]{7,}\d|\b(?=[A-Za-z0-9-]*\d)[A-Za-z0-9][A-Za-z0-9.\/-]*[A-Za-z0-9]\b/g;
 
 /** Text → XML pre DeepL, chránené časti ako <k i="n"/>. */
 export function protect(s: string): { xml: string; keep: string[] } {
