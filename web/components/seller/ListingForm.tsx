@@ -6,7 +6,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { Catalog, Condition, Specs, VehicleType } from "@/lib/types";
 import { CONDITIONS, condLabel, isUniversal, oemOptional, PCDS, RIM_DIAMETERS, SEASONS, SPEC_LABEL, specsErrors, VEHICLE_TYPES, WHEEL_CAT, WHEEL_SUBS, wheelDefaults, wheelKind, wheelMissing, type WheelKind } from "@/lib/types";
 import { carName } from "@/lib/seo";
-import { saveListing, skError, type Donor, type ListingInput, type MyListing, type PhotoItem, type Profile } from "@/lib/seller";
+import { saveListing, skError, type Donor, type ListingInput, type MyListing, type PhotoItem, type Profile, cleanOemAlt } from "@/lib/seller";
 import ScanText from "../ScanText";
 
 const STEPS = ["Diel", "Auto", "Stav, cena a podmienky", "Fotky a popis", "Kontakt"];
@@ -41,7 +41,7 @@ export default function ListingForm({ uid, cat, prof, edit, donor, onSaved, whee
   const [step, setStep] = useState(0);
   const [v, setV] = useState({
     name: edit?.name || "", categoryId: edit?.categoryId || (wheelOnly ? WHEEL_CAT : ""), subcategoryId: edit?.subcategoryId ?? null as number | null,
-    oem: edit?.oem || "", partMaker: edit?.partMaker || "",
+    oem: edit?.oem || "", oemAlt: (edit?.oemAlt || []).join(", "), partMaker: edit?.partMaker || "",
     brandId: edit?.brandId ?? donor?.brandId ?? 0, modelId: edit?.modelId ?? donor?.modelId ?? 0, engineId: edit ? edit.engineId : donor?.engineId ?? null as number | null, year: edit?.year ?? donor?.year ?? 0,
     gearbox: edit?.gearbox || donor?.gearbox || "", km: edit?.km != null ? String(edit.km) : donor?.km != null ? String(donor.km) : "", side: edit?.side || "",
     condition: (edit?.condition || "") as Condition | "", price: edit ? String(edit.price) : "", warranty: edit?.warranty || (prof?.type === "Súkromná osoba" ? "Bez záruky" : "12 mesiacov"),
@@ -130,7 +130,7 @@ export default function ListingForm({ uid, cat, prof, edit, donor, onSaved, whee
     if (b.size) { const first = Math.min(...[...b].map((k) => STEP_OF[k])); setErr(`Doplňte povinné polia (${b.size}). Sú označené červenou.`); setStep(first); focusBad(); return; }
     const x: ListingInput = {
       name: v.name, brandId: v.brandId, modelId: v.modelId, engineId: v.engineId, year: v.year, categoryId: v.categoryId,
-      subcategoryId: v.subcategoryId, oem: v.oem, partMaker: v.partMaker, price: Math.round(Number(v.price.replace(",", ".")) * 100) / 100,
+      subcategoryId: v.subcategoryId, oem: v.oem, oemAlt: cleanOemAlt(v.oemAlt, v.oem), partMaker: v.partMaker, price: Math.round(Number(v.price.replace(",", ".")) * 100) / 100,
       city: v.city, condition: v.condition as Condition, description: v.description, warranty: v.warranty, shipping: v.shipping,
       phone: v.phone, km: isUniversal(v.categoryId) ? null : v.km ? Math.max(0, parseInt(v.km.replace(/\D/g, ""), 10) || 0) : null,
       vtype: wheelMode ? (subName === "Pneumatiky nákladné a autobusové" ? "nakladne" : subName === "Pneumatiky na motorky" ? "motorky" : "osobne") : vt, tested: wheel ? false : v.tested, returns14: v.returns14, fits,
@@ -199,6 +199,9 @@ export default function ListingForm({ uid, cat, prof, edit, donor, onSaved, whee
           }}><option value="">{!v.categoryId ? "Najprv vyberte kategóriu" : wheel ? "Vyberte…" : "Nevybraná"}</option>{subs.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}</select> })}
           {kind !== "pneu" && kind !== "puklice" && L({ k: "oem", t: oemOptional(v.categoryId, vt) ? "Číslo dielu (OEM) – nepovinné" : "Kód súčiastky / OEM číslo", req: !oemOptional(v.categoryId, vt), children: <span className="oemin"><input value={v.oem} maxLength={40} placeholder={wheel ? "napr. 5E0601025 (originálne disky)" : "napr. 5E1941015"} onChange={(e) => { set("oem", e.target.value); clear("oem"); }} />
             <ScanText kind="oem" onResult={(x) => { set("oem", x); clear("oem"); }} /></span> })}
+          {kind !== "pneu" && kind !== "puklice" && L({ t: "Náhradné čísla dielu – nepovinné", req: false,
+            children: <><input value={v.oemAlt} maxLength={400} placeholder="napr. 5E1941015A, 5E1941015B" onChange={(e) => set("oemAlt", e.target.value)} autoComplete="off" />
+              <small className="mute">Iné čísla toho istého dielu – staršie alebo novšie číslo, číslo iného výrobcu. Oddeľte čiarkou, najviac 10. Diel sa nájde aj podľa nich.</small></> })}
           {L({ t: kind === "pneu" ? "Značka pneumatík" : kind === "disk" ? "Výrobca diskov" : kind === "kolesa" ? "Značka pneumatík / diskov" : "Výrobca dielu", req: false,
             children: <input value={v.partMaker} maxLength={60} placeholder={kind === "pneu" ? "Michelin, Continental, Nokian…" : kind === "disk" ? "originál Škoda, BBS, Borbet, OZ…" : kind === "kolesa" ? "Continental / originál VW" : "Bosch, Valeo, Hella…"} onChange={(e) => set("partMaker", e.target.value)} /> })}
           {!isUniversal(v.categoryId) && <p className="full mute pp-hint"><b>Číslo dielu je najdôležitejší údaj inzerátu.</b> Nájdete ho na štítku alebo vyrazené na diele. Kupujúci podľa neho overí, že diel pasuje – aj pri rovnakom modeli auta sa diely líšia podľa motora, výbavy či roku. Web podľa čísla spojí aj rovnaké diely iných áut.</p>}

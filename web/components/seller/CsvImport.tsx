@@ -4,14 +4,14 @@ import { useEffect, useMemo, useState } from "react";
 import type { Catalog, Condition } from "@/lib/types";
 import { CONDITIONS, condLabel, cleanSpecs, isUniversal, specsErrors, SPEC_LABEL, VEHICLE_TYPES, WHEEL_CAT, wheelDefaults, wheelKind, wheelMissing, type Specs } from "@/lib/types";
 import { SPEC_COLS } from "@/lib/csvExport";
-import { importMany, type ListingInput, type Profile } from "@/lib/seller";
+import { importMany, type ListingInput, type Profile, cleanOemAlt } from "@/lib/seller";
 import { baseName, byExactName, groupByKey, isPhoto, keyOf, MAX_PHOTOS, sortPhotos, splitNames } from "@/lib/bulkPhotos";
 
 const MAX = 500;
 const REQ = ["nazov", "cena", "kategoria"];
 /** povinné pri bežných dieloch, pri univerzálnych (pneumatiky, výbava jazdca, iné…) nie */
 const REQ_PART = ["znacka", "model", "oem"];
-const OPT = ["druh", "motorizacia", "rocnik", "podkategoria", "stav", "zaruka", "popis", "mesto", "telefon", "pasuje", "strana", "odskusany", "vratenie", "km", "vyrobca", "fotky", ...SPEC_COLS.map(([c]) => c)];
+const OPT = ["druh", "motorizacia", "rocnik", "podkategoria", "stav", "zaruka", "popis", "mesto", "telefon", "pasuje", "strana", "odskusany", "vratenie", "km", "vyrobca", "nahradne_cisla", "fotky", ...SPEC_COLS.map(([c]) => c)];
 const norm = (s: string) => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/\s+/g, " ").trim();
 
 function parse(text: string): string[][] {
@@ -36,6 +36,7 @@ const ALIAS: Record<string, string> = {
   brand: "znacka", make: "znacka", znacka_auta: "znacka", car_brand: "znacka",
   car_model: "model", engine: "motorizacia", year: "rocnik", rok: "rocnik",
   oem_number: "oem", oem_cislo: "oem", cislo_dielu: "oem", part_number: "oem", partnumber: "oem",
+  nahradne: "nahradne_cisla", nahradne_cislo: "nahradne_cisla", oem_alt: "nahradne_cisla", alt_oem: "nahradne_cisla", alternative_numbers: "nahradne_cisla", cross_reference: "nahradne_cisla",
   price: "cena", price_vat: "cena", cena_s_dph: "cena",
   category: "kategoria", categorytext: "kategoria", subcategory: "podkategoria",
   condition: "stav", warranty: "zaruka", description: "popis", city: "mesto", phone: "telefon",
@@ -187,7 +188,7 @@ export default function CsvImport({ uid, cat, prof, onDone }: { uid: string; cat
         row: k + 2, name: name || "(bez názvu)", ok, errors, warns, photoNames: splitNames(g("fotky")), oemKey: keyOf(oem),
         data: ok ? { name, brandId: model ? brand!.id : 0, modelId: model?.id ?? 0, engineId: engine?.id ?? null, year: model ? year : 0,
           vtype: (VEHICLE_TYPES.find((t) => norm(t.name) === norm(g("druh")) || t.id === norm(g("druh")))?.id) ?? null, categoryId: c!.id, subcategoryId: sub?.id ?? null,
-          oem, partMaker: g("vyrobca"), price, city, condition, description, warranty, shipping: "Len osobný odber", phone,
+          oem, oemAlt: cleanOemAlt(g("nahradne_cisla"), oem), partMaker: g("vyrobca"), price, city, condition, description, warranty, shipping: "Len osobný odber", phone,
           side, gearbox: "", km: Number.isFinite(km) ? km : null, tested: yes(g("odskusany")), returns14: yes(g("vratenie")), fits, specs, donorId: null } : undefined,
       };
     }));
@@ -212,6 +213,7 @@ export default function CsvImport({ uid, cat, prof, onDone }: { uid: string; cat
     <model>Octavia III</model>
     <rocnik>2015</rocnik>
     <oem>5E1941015</oem>
+    <nahradne_cisla><cislo>5E1941015A</cislo></nahradne_cisla>
     <cena>120</cena>
     <kategoria>Svetlá</kategoria>
     <podkategoria>Predné svetlá</podkategoria>
@@ -231,7 +233,7 @@ export default function CsvImport({ uid, cat, prof, onDone }: { uid: string; cat
     <div>
       <header className="pp-h"><h1>Import z CSV alebo XML</h1><span className="pp-bulkbtns"><a className="ubtn" href={sampleHref} download="vzor-autosuciastky.csv">Vzor CSV</a><a className="ubtn" href={sampleXmlHref} download="vzor-autosuciastky.xml">Vzor XML</a></span></header>
       <div className="pp-box">
-        <p>Povinné stĺpce: <b>{[...REQ, ...REQ_PART].join(", ")}</b> – pri pneumatikách, diskoch, výbave jazdca, príslušenstve a „Iné“ stačí <b>{REQ.join(", ")}</b> (stĺpec <b>druh</b>: osobné, veterány, dodávky, nákladné, autobusy alebo motorky). Pri veteránoch je číslo dielu (oem) nepovinné. Voliteľné: {OPT.join(", ")}. Oddeľovač <b>;</b> alebo <b>,</b>, najviac {MAX} riadkov. Stav: Nový, Repasovaný, Veľmi dobrý, Dobrý alebo Na opravu. V stĺpci <b>pasuje</b> oddeľte autá znakom | (napr. „Škoda Octavia III | VW Golf VII“).</p>
+        <p>Povinné stĺpce: <b>{[...REQ, ...REQ_PART].join(", ")}</b> – pri pneumatikách, diskoch, výbave jazdca, príslušenstve a „Iné“ stačí <b>{REQ.join(", ")}</b> (stĺpec <b>druh</b>: osobné, veterány, dodávky, nákladné, autobusy alebo motorky). Pri veteránoch je číslo dielu (oem) nepovinné. Voliteľné: {OPT.join(", ")}. Oddeľovač <b>;</b> alebo <b>,</b>, najviac {MAX} riadkov. Stav: Nový, Repasovaný, Veľmi dobrý, Dobrý alebo Na opravu. V stĺpci <b>pasuje</b> oddeľte autá znakom | (napr. „Škoda Octavia III | VW Golf VII“). V stĺpci <b>nahradne_cisla</b> môžete zapísať iné čísla toho istého dielu (staršie, novšie, iného výrobcu), oddelené znakom | – najviac 10.</p>
         <p className="mute">Pneumatiky a disky (kategória „Pneumatiky a disky“): stĺpce pneu_sirka (205), pneu_profil (55), priemer (16), sezona (letné/zimné/celoročné), dezen_mm, dot (rok), index_nosnosti, index_rychlosti, sirka_disku (7), roztec (5x112), et (49), stredovy_otvor (57.1), kusy, material (Hliník/Oceľ).</p>
         <p className="mute"><b>XML</b> (napr. export zo skladového programu alebo e-shopu): každý diel je jeden prvok (&lt;diel&gt;, &lt;item&gt;, &lt;SHOPITEM&gt;…), v ňom prvky s rovnakými názvami ako stĺpce CSV (&lt;nazov&gt;, &lt;znacka&gt;, &lt;oem&gt;, &lt;cena&gt;…). Viac fotiek alebo áut zapíšte ako &lt;fotky&gt;&lt;fotka&gt;a.jpg&lt;/fotka&gt;&lt;/fotky&gt;. Rozumieme aj anglickým názvom (name, brand, price, description, category…). Pozrite si vzor XML.</p>
         <p className="mute">Popis musí mať aspoň 20 znakov. Mesto a telefón sa doplnia z profilu, ak ich v súbore nemáte.</p>

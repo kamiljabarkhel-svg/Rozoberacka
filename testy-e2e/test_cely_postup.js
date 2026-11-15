@@ -211,7 +211,7 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
   });
   await step("CSV import", async () => {
     await pg.click(".pp-nav button:has-text('Import z CSV')");
-    const csv = "nazov;znacka;model;rocnik;oem;cena;kategoria;stav;popis;pasuje;fotky\nAlternátor 140A;Volkswagen;Golf VII;2015;03L903023;85;Elektro;Dobrý;Odskúšaný alternátor, nabíja správne.;Škoda Octavia III;alt1.png|chyba.png\nZlý riadok;Tesla;X;;12;0;Nič;;krátky;;\n";
+    const csv = "nazov;znacka;model;rocnik;oem;cena;kategoria;stav;popis;pasuje;nahradne_cisla;fotky\nAlternátor 140A;Volkswagen;Golf VII;2015;03L903023;85;Elektro;Dobrý;Odskúšaný alternátor, nabíja správne.;Škoda Octavia III;03L 903 024 | 03L903023;alt1.png|chyba.png\nZlý riadok;Tesla;X;;12;0;Nič;;krátky;;;\n";
     require("fs").writeFileSync("i.csv", csv); require("fs").copyFileSync("a.png", "alt1.png"); await pg.setInputFiles(".pp-file input", "i.csv");
     await pg.waitForSelector(".pp-pre li.err"); const okc = await pg.locator(".pp-pre li.ok").count(); if (okc !== 1) throw new Error("ok rows " + okc + " :: " + (await pg.locator(".pp-pre").innerText()));
     await pg.waitForSelector(".pp-pre li.ok:has-text('bez fotky – inzerát bude pozastavený')");
@@ -376,6 +376,21 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
     await pg.click("text=Zverejniť 2 inzeráty"); await pg.waitForSelector(".pp-toast:has-text('Zverejnené: 2 inzeráty')", { timeout: 30000 });
     await pg.click(".pp-nav button:has-text('Moje inzeráty')"); await pg.click(".pp-chips >> text=Aktívne");
     await pg.waitForSelector(".pp-row:has-text('Volant kožený') .pp-th img"); await pg.waitForSelector(".pp-row:has-text('Predné svetlo ľavé') .pp-th img");
+  });
+  await step("náhradné a podobné čísla dielov", async () => {
+    // náhradné číslo z CSV: diel sa nájde podľa neho, detail ho ukáže (hlavné číslo sa medzi náhradné neuloží)
+    await b2.goto(B + "/?q=" + encodeURIComponent("03L903024")); await b2.waitForSelector(".card:has-text('Alternátor 140A')");
+    await b2.click(".card:has-text('Alternátor 140A') h2 a"); await b2.waitForURL("**/diel/**");
+    await b2.waitForSelector(".oem-alt:has-text('03L 903 024')"); if (await b2.locator(".oem-alt a", { hasText: /^03L903023$/ }).count()) throw new Error("hlavné číslo medzi náhradnými");
+    const o = await (await fetch(B + "/cislo-dielu/03l903024")).text(); if (!o.includes("Alternátor 140A") || !o.includes("ako náhradné číslo")) throw new Error("stránka náhradného čísla");
+    // podobné čísla: 5E1941015 ↔ 5E1941015B (diel z fotiek)
+    await b2.goto(B + "/?q=5E1941015"); await b2.waitForSelector(".simoem a:has-text('5E1941015B')");
+    await b2.click(".simoem a:has-text('5E1941015B')"); await b2.waitForURL("**/cislo-dielu/5e1941015b"); await b2.waitForSelector("#podobne a:has-text('5E1941015')");
+    const n = await (await fetch(B + "/cislo-dielu/5E1941015X")).text(); if (!n.includes("teraz nikto neponúka") || !n.includes('content="noindex, follow"')) throw new Error("číslo bez ponuky s podobnými");
+    // predajca zapíše náhradné číslo vo formulári
+    await pg.click(".pp-nav button:has-text('Moje inzeráty')"); await pg.click(".pp-row:has-text('Volant kožený') >> text=Upraviť");
+    await pg.locator("label:has-text('Náhradné čísla dielu') input").fill("5E0419091A, 5e0419091, 12"); await pg.click("text=Uložiť zmeny"); await pg.waitForSelector(".pp-toast:has-text('Zmeny uložené')");
+    await b2.goto(B + "/?q=5E0419091A"); await b2.waitForSelector(".card:has-text('Volant kožený')");
   });
   let reqUrl = "";
   await step("dopyt: kupujuci zada", async () => {

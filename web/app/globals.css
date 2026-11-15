@@ -1812,3 +1812,9 @@ select,input:not([type=checkbox]):not([type=radio]):not([type=range]),textarea{b
 .seo-about h2{font-size:17px;margin:0 0 8px;color:var(--ink,#1d2127)}
 .seo-about p{margin:0 0 8px;max-width:80ch}
 .seo-text{max-width:80ch;font-size:14px;line-height:1.6;margin:20px 0}
+
+/* Náhradné a podobné čísla dielov (15. 11. 2026) */
+.simoem{margin:6px 0 0;font-size:14px;line-height:1.5}
+.oem-alt{margin:8px 0 0;font-size:14px}
+.oem-alt .oeml{display:inline;margin-right:4px}
+.oem-line .lnk + .lnk{margin-left:12px}

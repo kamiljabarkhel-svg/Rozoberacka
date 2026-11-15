@@ -9,6 +9,7 @@ import type { Catalog, Filters, Specs, VehicleType } from "@/lib/types";
 import { cleanSpecs, CONDITIONS, condLabel, emptyFilters, PCDS, RIM_DIAMETERS, RIM_WIDTHS, SEASONS, TIRE_PROFILES, TIRE_WIDTHS, VEHICLE_TYPES, WHEEL_CAT, WHEEL_CONDS } from "@/lib/types";
 import { getCatalog, getCities, getStats, initialData, searchListings, type SearchPage } from "@/lib/data";
 import { decodeVin, vinYearText } from "@/lib/vin";
+import SimilarOems from "./SimilarOems";
 import { pieces, plural, sk } from "@/lib/format";
 import { useFavs } from "@/lib/favs";
 import { filterKey, hasCriteria, MAX_SAVED, useSaved } from "@/lib/saved";
@@ -429,6 +430,7 @@ export default function Home({ ssr }: { ssr?: HomeSsr | null }) {
             <div className="head-t">
               <h1 id="c-title">{title}</h1>
               <span className="cnt-w"><span className="cnt" aria-live="polite">{res ? (wheels ? (lang === "pl" ? plPl(res.total, ["oferta", "oferty", "ofert"]) : plural(res.total, "ponuka", "ponuky", "ponúk")) : pieces(res.total, lang)) : tl("Načítavam…")}</span>{!STATIC_PREVIEW && <Link className="sortinfo" href={hl("/ako-zoradujeme")}>{tl("Ako zoraďujeme ponuky")}</Link>}</span>
+              {!wheels && f.q && <SimilarOems q={f.q} />}
             </div>
             <span className="head-a">
               <label className="sortsel">{tl("Zoradiť")}

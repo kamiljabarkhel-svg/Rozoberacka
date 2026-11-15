@@ -49,6 +49,8 @@ export type Listing = {
   categoryId: string;
   subcategoryId: number | null;
   oem: string | null;
+  /** náhradné čísla toho istého dielu (staršie/novšie číslo, číslo iného výrobcu) – supabase/39 */
+  oemAlt?: string[];
   price: number;
   city: string | null;
   condition: Condition;

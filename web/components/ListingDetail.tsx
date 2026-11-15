@@ -164,7 +164,7 @@ export default function ListingDetail({ id, onClose, initial, catalog, trInitial
           {isTrader(l.seller.type) && <p className="mute pnote">{tl("Konečná cena vrátane DPH. Cenu dopravy si dohodnite s predajcom pred kúpou.")}</p>}
           <p className="car">{univ ? universalLabel(l.vtype) : <>{[bName, mName, eName].filter(Boolean).join(" ")}{l.year ? ", " + l.year : ""}</>}</p>
           {specsLine(l.specs) && <p className="specs-box"><span>{l.categoryId === "kol" ? tl("Rozmer a parametre") : tl("Parametre")}</span><b>{specsLine(l.specs)}</b></p>}
-          {(l.oem || !isUniversal(l.categoryId)) && <OemBox oem={l.oem} vtype={cat.models.find((x) => x.id === l.modelId)?.vehicleType || l.vtype || "osobne"} />}
+          {(l.oem || !isUniversal(l.categoryId)) && <OemBox oem={l.oem} alt={l.oemAlt} vtype={cat.models.find((x) => x.id === l.modelId)?.vehicleType || l.vtype || "osobne"} />}
           <div className="dacts" ref={actsRef}>
             <PhoneButton id={l.id} />
             <button className="fav" aria-pressed={fav} onClick={() => toggle(l.id)}>{fav ? "♥" : "♡"} {tl("Obľúbené")}</button>

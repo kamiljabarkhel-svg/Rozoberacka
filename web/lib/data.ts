@@ -79,7 +79,7 @@ export { thumbPath, mediumPath } from "./photos";
 
 const LISTING_COLS =
   "id,name,brand_id,model_id,engine_id,year,category_id,subcategory_id,oem,price,city,condition,description,warranty,shipping,created_at,updated_at,seller_id,donor_id," +
-  "side,donor_gearbox,donor_km,tested,returns_14d,top_until,part_maker,specs,vtype," +
+  "side,donor_gearbox,donor_km,tested,returns_14d,top_until,part_maker,specs,vtype,oem_alt," +
   "sellers(name,seller_type,city,verified,ico,address),listing_photos(path,position),listing_fits(brand_id,model_id,engine_id)";
 
 function toListing(r: Row): Listing {
@@ -89,7 +89,7 @@ function toListing(r: Row): Listing {
     id: Number(r.id), name: String(r.name),
     brandId: (r.brand_id as number) ?? null, modelId: (r.model_id as number) ?? null, engineId: (r.engine_id as number) ?? null,
     year: (r.year as number) ?? null, vtype: (r.vtype as VehicleType) ?? null, categoryId: String(r.category_id), subcategoryId: (r.subcategory_id as number) ?? null,
-    oem: (r.oem as string) ?? null, price: Number(r.price), city: (r.city as string) ?? null,
+    oem: (r.oem as string) ?? null, oemAlt: Array.isArray(r.oem_alt) ? (r.oem_alt as string[]) : [], price: Number(r.price), city: (r.city as string) ?? null,
     condition: r.condition as Condition, description: (r.description as string) ?? null,
     warranty: String(r.warranty), shipping: String(r.shipping), createdAt: String(r.created_at),
     photos: photos.map((p) => photoUrl(String(p.path))),
@@ -213,9 +213,29 @@ export async function reportListing(id: number, reason: string, note: string, co
 /** Jeden inzerát (len aktívny). */
 export async function getListing(id: number): Promise<Listing | null> {
   if (IS_DEMO) return (await demoData()).listings.find((l) => l.id === id) || null;
-  const { data, error } = await client().from("listings").select(LISTING_COLS).eq("id", id).eq("status", "active").maybeSingle();
+  let { data, error } = await client().from("listings").select(LISTING_COLS).eq("id", id).eq("status", "active").maybeSingle();
+  // kým nie je v databáze spustený supabase/39 (stĺpec oem_alt), načítame diel bez náhradných čísel
+  if (error && /oem_alt/.test(error.message)) ({ data, error } = await client().from("listings").select(LISTING_COLS.replace("oem_alt,", "")).eq("id", id).eq("status", "active").maybeSingle());
   if (error) throw new Error("listing: " + error.message);
   return data ? toListing(data as unknown as Row) : null;
+}
+
+/** Podobné čísla dielov (rovnaký základ, iné písmeno na konci) – samostatný odkaz, nie zhoda. supabase/39 */
+export async function getSimilarOems(key: string): Promise<{ oem: string; n: number }[]> {
+  const k = key.toUpperCase().replace(/[^A-Z0-9]/g, "");
+  if (k.length < 4) return [];
+  if (IS_DEMO) {
+    const base = k.replace(/[A-Z]+$/, "").length >= 6 ? k.replace(/[A-Z]+$/, "") : k;
+    const m = new Map<string, number>();
+    for (const l of (await demoData()).listings) for (const o of [l.oem, ...(l.oemAlt || [])]) {
+      const x = (o || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+      if (x !== k && x.startsWith(base) && x.length <= base.length + 3) m.set(x, (m.get(x) || 0) + 1);
+    }
+    return [...m].map(([oem, n]) => ({ oem, n })).sort((a, b) => b.n - a.n || a.oem.localeCompare(b.oem)).slice(0, 12);
+  }
+  const { data, error } = await client().rpc("similar_oems", { p_key: k });
+  if (error) return [];   // funkcia ešte nie je v databáze – odkaz sa jednoducho neukáže
+  return ((data || []) as { oem: string; n: number }[]).map((x) => ({ oem: String(x.oem), n: Number(x.n) }));
 }
 
 /** Všetky autá, na ktoré diel pasuje (vlastné auto + „pasuje aj na“ + rovnaké OEM). */
@@ -420,7 +440,7 @@ export async function getSeoCounts(): Promise<SeoCount[]> {
 }
 
 /** Aktívne inzeráty pre sitemap (id, názov, auto, posledná zmena). */
-export async function getSitemapListings(): Promise<{ id: number; name: string; oem: string | null; brandId: number | null; modelId: number | null; engineId: number | null; updatedAt: string }[]> {
+export async function getSitemapListings(): Promise<{ id: number; name: string; oem: string | null; oemAlt?: string[]; brandId: number | null; modelId: number | null; engineId: number | null; updatedAt: string }[]> {
   if (IS_DEMO) return (await demoData()).listings.map((l) => ({ id: l.id, name: l.name, oem: l.oem, brandId: l.brandId, modelId: l.modelId, engineId: l.engineId, updatedAt: l.updatedAt }));
   const rows = await selectAllWhere<Row>("listings", "id,name,oem,brand_id,model_id,updated_at", "id", { status: "active" });
   return rows.map((r) => ({ id: Number(r.id), name: String(r.name), oem: (r.oem as string) ?? null, brandId: (r.brand_id as number) ?? null, modelId: (r.model_id as number) ?? null, engineId: null, updatedAt: String(r.updated_at) }));

@@ -3,7 +3,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getCatalog, searchListings } from "@/lib/data";
+import { getCatalog, getSimilarOems, searchListings } from "@/lib/data";
 import { pickCatalog } from "@/lib/catalogSort";
 import { emptyFilters, type Catalog, type Listing } from "@/lib/types";
 import { oemKey } from "@/lib/search";
@@ -19,9 +19,10 @@ type P = { params: Promise<{ lang: string; oem: string }> };
 async function load(raw: string) {
   const key = oemKey(decodeURIComponent(raw));
   if (key.length < 4) return null;
-  const [cat, res] = await Promise.all([getCatalog(), searchListings({ ...emptyFilters, vtype: "", q: key }, [], 0, 100)]);
-  const items = res.items.filter((l) => oemKey(l.oem) === key);
-  return { key, cat, items };
+  const [cat, res, similar] = await Promise.all([getCatalog(), searchListings({ ...emptyFilters, vtype: "", q: key }, [], 0, 100), getSimilarOems(key)]);
+  // presné číslo alebo náhradné číslo, ktoré zapísal predajca (supabase/39)
+  const items = res.items.filter((l) => oemKey(l.oem) === key || (l.oemAlt || []).some((a) => oemKey(a) === key));
+  return { key, cat, items, similar };
 }
 
 /** Najčastejší názov dielu („Vstrekovač“) a vozidlá, na ktoré podľa predajcov pasuje (vlastné auto + „Pasuje aj na“). */
@@ -44,7 +45,8 @@ export async function generateMetadata({ params }: P): Promise<Metadata> {
   const { lang, oem } = await params;
   if (lang !== "sk") return {};
   const d = await load(oem);
-  if (!d || !d.items.length) return { title: "Číslo dielu", robots: { index: false } };
+  if (!d || (!d.items.length && !d.similar.length)) return { title: "Číslo dielu", robots: { index: false } };
+  if (!d.items.length) return { title: `${d.key} – podobné čísla dielov`, robots: { index: false, follow: true }, alternates: { canonical: oemPath(d.key) } };
   const s = summary(d.items, d.cat);
   const car = s.cars.slice(0, 2).map((c) => c[0]).join(", ");
   const minP = Math.min(...d.items.map((l) => l.price));
@@ -65,10 +67,23 @@ export default async function Page({ params }: P) {
   const { lang, oem } = await params;
   if (lang !== "sk") notFound();
   const d = await load(oem);
-  if (!d || !d.items.length) notFound();
-  const { key, cat, items } = d;
-  const s = summary(items, cat);
+  if (!d || (!d.items.length && !d.similar.length)) notFound();
+  const { key, cat, items, similar } = d;
   const path = oemPath(key);
+  const similarBlock = similar.length > 0 && (
+    <section id="podobne" className="landing-links"><h2>Podobné čísla dielov</h2>
+      <ul>{similar.map((x) => <li key={x.oem}><Link href={oemPath(x.oem)}>{x.oem}</Link> <span className="mute">({pieces(x.n, "sk")})</span></li>)}</ul>
+      <p className="mute small">Čísla s rovnakým základom a iným písmenom alebo koncovkou. Nie je to to isté číslo – výrobca môže písmenom odlíšiť inú verziu dielu (iný konektor, iné uchytenie). Pred kúpou si zhodu overte u predajcu alebo v servise.</p>
+    </section>);
+  if (!items.length) return (
+    <main id="main" className="main landing">
+      <Crumbs items={[{ name: "Úvod", href: "/" }]} last={"Číslo dielu " + key} />
+      <h1>Číslo dielu {key}</h1>
+      <p className="landing-lead">Diel s presne týmto číslom teraz nikto neponúka. Pozrite si podobné čísla nižšie alebo zadajte dopyt – predajcovia vám pošlú ponuku.</p>
+      {similarBlock}
+      <div className="rq-cta"><p><b>Potrebujete diel {key}?</b> Zadajte dopyt – bez registrácie.</p><Link className="btn2" href="/dopyt">Zadať dopyt na diel</Link></div>
+    </main>);
+  const s = summary(items, cat);
   const minP = Math.min(...items.map((l) => l.price)), maxP = Math.max(...items.map((l) => l.price));
   const crumbs = [{ name: "Úvod", href: "/" }, { name: "Číslo dielu " + key, href: path }];
   return (
@@ -83,12 +98,14 @@ export default async function Page({ params }: P) {
         takže {key} je to isté ako {s.display && s.display !== key ? s.display : key.replace(/(.{3})(.{3})(.+)/, "$1 $2 $3")}.
       </p>
       <LandingGrid items={items} cat={pickCatalog(cat, items)} />
+      {items.some((l) => oemKey(l.oem) !== key) && <p className="mute small">Niektoré ponuky majú iné hlavné číslo – predajca uviedol {key} ako náhradné číslo toho istého dielu.</p>}
       {s.cars.length > 0 && (
         <section className="landing-links"><h2>Na aké vozidlá diel {key} pasuje</h2>
           <ul>{s.cars.map(([n, v]) => <li key={n}><Link href={landingPath({ brandId: v.brandId, modelId: v.modelId, cat: "", sub: null }, cat)}>{n}</Link></li>)}</ul>
           <p className="mute small">Zoznam vozidiel zostavujeme z údajov predajcov (auto, z ktorého je diel, a „Pasuje aj na“). Nie je to overený katalóg výrobcu – pred kúpou si zhodu overte u predajcu alebo v servise podľa VIN.</p>
         </section>
       )}
+      {similarBlock}
       <p className="seo-text mute">Hľadáte diel s číslom {key}? Na autosuciastky.eu predávajú vrakoviská, autoservisy aj súkromní predajcovia použité a nové náhradné diely s uvedeným číslom dielu (OEM). Číslo dielu nájdete na nálepke alebo vyrazené priamo na starom diele. Predajcovi zavoláte alebo napíšete bez registrácie.</p>
       <div className="rq-cta"><p><b>Potrebujete diel {key} inak (iný stav, iné mesto)?</b> Zadajte dopyt – predajcovia vám pošlú ponuku. Bez registrácie.</p>
         <Link className="btn2" href="/dopyt">Zadať dopyt na diel</Link></div>

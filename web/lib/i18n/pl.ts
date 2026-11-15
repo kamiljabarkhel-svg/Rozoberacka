@@ -981,5 +981,10 @@ export const PL: Record<string, string> = {
  "✓ Upozornenie „": "✓ Powiadomienie „",
  "📱 Pridať autosuciastky.eu na plochu": "📱 Dodaj autosuciastky.eu do ekranu głównego",
  "🚗 Moje auto:": "🚗 Moje auto:",
- "🚗 Uložiť ako moje auto": "🚗 Zapisz jako moje auto"
+ "🚗 Uložiť ako moje auto": "🚗 Zapisz jako moje auto",
+  "Podobné čísla dielov:": "Podobne numery części:",
+  "Podobné čísla": "Podobne numery",
+  "Náhradné čísla": "Numery zamienne",
+  "podľa predajcu ide o ten istý diel": "według sprzedawcy to ta sama część",
+  "nie je to to isté číslo; písmeno na konci môže znamenať inú verziu dielu. Overte si to u predajcu.": "to nie ten sam numer; litera na końcu może oznaczać inną wersję części. Sprawdź to u sprzedawcy.",
 };
