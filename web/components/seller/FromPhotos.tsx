@@ -7,12 +7,14 @@ import { useEffect, useMemo, useState } from "react";
 import type { Catalog, Condition, VehicleType } from "@/lib/types";
 import { CONDITIONS, condLabel, oemOptional, VEHICLE_TYPES } from "@/lib/types";
 import { carName } from "@/lib/seo";
-import { myDonors, saveListing, skError, type Donor, type ListingInput, type Profile } from "@/lib/seller";
+import { myDonors, prepPhoto, saveListing, skError, type Donor, type ListingInput, type Profile } from "@/lib/seller";
 import { baseName, isPhoto, MAX_PHOTOS, sortPhotos } from "@/lib/bulkPhotos";
 import { commonFor } from "./Donors";
 import ScanText from "../ScanText";
+import CityInput, { cityCanon, cityOk, useObce } from "./CityInput";
+import { splitPhotoFiles, tooBigMsg } from "@/lib/photos";
 
-type Part = { id: number; files: File[]; name: string; cat: string; sub: string; side: string; oem: string; price: string; cond: Condition | ""; err?: string };
+type Part = { id: number; files: File[]; name: string; cat: string; sub: string; side: string; oem: string; price: string; cond: Condition | ""; desc: string; err?: string };
 const digits = (s: string) => s.replace(/\D/g, "").length;
 const oemLen = (s: string) => s.replace(/[^A-Za-z0-9]/g, "").length;
 const plural = (n: number, a: string, b: string, c: string) => (n === 1 ? a : n >= 2 && n <= 4 ? b : c);
@@ -25,7 +27,8 @@ export default function FromPhotos({ uid, cat, prof, onDone }: { uid: string; ca
   const [donorId, setDonorId] = useState<number | null>(null);
   const [vt, setVt] = useState<VehicleType>(() => { try { const x = localStorage.getItem("rozoberacka-druh"); if (x && VEHICLE_TYPES.some((t) => t.id === x)) return x as VehicleType; } catch {} return "osobne"; });
   const [car, setCar] = useState({ brandId: 0, modelId: 0, engineId: null as number | null, year: 0 });
-  const [b, setB] = useState({ cond: "Dobrý" as Condition, warranty: firm ? "12 mesiacov" : "Bez záruky", shipping: "Len osobný odber", city: prof?.city || "", phone: prof?.phone || "", note: "" });
+  const [b, setB] = useState({ cond: "Dobrý" as Condition, warranty: firm ? "12 mesiacov" : "Bez záruky", shipping: "Len osobný odber", city: prof?.city || "", phone: prof?.phone || "", note: "", gearbox: "", km: "", tested: false });
+  const obce = useObce();
   useEffect(() => { myDonors().then(setDonors).catch(() => setDonors([])); }, []);
   const donor = donors.find((d) => d.id === donorId) || null;
 
@@ -54,14 +57,15 @@ export default function FromPhotos({ uid, cat, prof, onDone }: { uid: string; ca
 
   const addFiles = (list: FileList | null) => {
     if (!list) return;
-    const add = sortPhotos([...list].filter(isPhoto));
+    const { ok, tooBig } = splitPhotoFiles([...list].filter(isPhoto));
+    const add = sortPhotos(ok);
     setFiles((o) => { const seen = new Set(o.map((f) => baseName(f).toLowerCase() + f.size)); return [...o, ...add.filter((f) => !seen.has(baseName(f).toLowerCase() + f.size))]; });
-    setMsg("");
+    setMsg(tooBigMsg(tooBig));
   };
   const toggle = (f: File) => setSel((s) => (s.includes(f) ? s.filter((x) => x !== f) : [...s, f]));
   const common = commonFor(vt);
   const cats = cat.categories.filter((c) => c.id !== "kol" && (!c.vtypes?.length || c.vtypes.includes(vt)));
-  const newPart = (fs: File[]): Part => ({ id: nextId++, files: fs, name: "", cat: "", sub: "", side: "", oem: "", price: "", cond: "" });
+  const newPart = (fs: File[]): Part => (fs.forEach((f) => prepPhoto(f).catch(() => {})), { id: nextId++, files: fs, name: "", cat: "", sub: "", side: "", oem: "", price: "", cond: "", desc: "" });
   const makeOne = () => {
     if (!sel.length) return;
     if (sel.length > MAX_PHOTOS) return setMsg(`Jeden diel môže mať najviac ${MAX_PHOTOS} fotiek. Označili ste ${sel.length}.`);
@@ -76,12 +80,19 @@ export default function FromPhotos({ uid, cat, prof, onDone }: { uid: string; ca
   const dropPhoto = (id: number, f: File) => setParts((p) => p.flatMap((q) => (q.id !== id ? [q] : q.files.length > 1 ? [{ ...q, files: q.files.filter((x) => x !== f) }] : [])));
   const removePart = (id: number) => setParts((p) => p.filter((q) => q.id !== id));
 
+  const kmNum = b.km.trim() ? Math.max(0, parseInt(b.km.replace(/\D/g, ""), 10) || 0) : null;
+  const description = (p: Part) => {
+    const from = donor ? `Diel z rozoberaného vozidla ${carText}${donor.km != null ? `, ${donor.km.toLocaleString("sk-SK")} km` : ""}${donor.gearbox ? `, ${donor.gearbox.toLowerCase()} prevodovka` : ""}${donor.color ? `, farba ${donor.color}` : ""}.`
+      : `${p.name.trim()} z vozidla ${carText}${kmNum != null ? `, ${kmNum.toLocaleString("sk-SK")} km` : ""}${b.gearbox ? `, ${b.gearbox.toLowerCase()} prevodovka` : ""}.`;
+    return [p.desc.trim(), from, b.note.trim()].filter(Boolean).join(" ").slice(0, 1000);
+  };
+
   // ---- kontrola ----
   const batchErr: string[] = [];
   if (!car.brandId) batchErr.push("Vyberte značku vozidla.");
   if (car.brandId && models.length && !car.modelId) batchErr.push("Vyberte model vozidla.");
   if (!car.year) batchErr.push("Vyberte ročník vozidla.");
-  if (!b.city.trim()) batchErr.push("Zadajte mesto.");
+  if (!cityOk(obce, b.city)) batchErr.push("Vyberte mesto alebo obec zo zoznamu.");
   if (digits(b.phone) < 9) batchErr.push("Telefón musí mať aspoň 9 číslic.");
   const partErr = (p: Part): string[] => {
     const e: string[] = [];
@@ -89,15 +100,12 @@ export default function FromPhotos({ uid, cat, prof, onDone }: { uid: string; ca
     if (!p.cat) e.push("kategória");
     if (!oemOptional(p.cat, vt) && oemLen(p.oem) < 4) e.push("číslo dielu");
     if (!(Number(p.price.replace(",", ".")) > 0)) e.push("cena");
+    if (description(p).length < 20) e.push("popis (aspoň 20 znakov)");
     return e;
   };
   const badParts = parts.filter((p) => partErr(p).length);
   const ready = parts.length > 0 && !batchErr.length && !badParts.length;
 
-  const description = (p: Part) => {
-    const from = donor ? `Diel z rozoberaného vozidla ${carText}${donor.km != null ? `, ${donor.km.toLocaleString("sk-SK")} km` : ""}${donor.gearbox ? `, ${donor.gearbox.toLowerCase()} prevodovka` : ""}${donor.color ? `, farba ${donor.color}` : ""}.` : `${p.name.trim()} z vozidla ${carText}.`;
-    return (from + (b.note.trim() ? " " + b.note.trim() : "")).slice(0, 1000);
-  };
   async function publish() {
     setTried(true); setMsg("");
     if (!ready) return setMsg(batchErr[0] || (badParts.length ? `Doplňte údaje pri ${badParts.length} ${plural(badParts.length, "dieli", "dieloch", "dieloch")} (označené červenou).` : "Najprv vytvorte aspoň jeden diel z fotiek."));
@@ -109,9 +117,9 @@ export default function FromPhotos({ uid, cat, prof, onDone }: { uid: string; ca
       const input: ListingInput = {
         name: p.name.trim(), brandId: car.brandId, modelId: car.modelId, engineId: car.engineId, year: car.year, vtype: vt,
         categoryId: p.cat, subcategoryId: cat.subcategories.find((s) => s.categoryId === p.cat && s.name === p.sub)?.id ?? null,
-        oem: p.oem.trim(), partMaker: "", price: Math.round(Number(p.price.replace(",", ".")) * 100) / 100, city: b.city.trim(), condition: cond,
+        oem: p.oem.trim(), partMaker: "", price: Math.round(Number(p.price.replace(",", ".")) * 100) / 100, city: cityCanon(obce, b.city), condition: cond,
         description: description(p), warranty: firm && cond === "Nový" ? "24 mesiacov" : b.warranty, shipping: b.shipping, phone: b.phone.trim(),
-        side: p.side, gearbox: donor?.gearbox || "", km: donor?.km ?? null, tested: false, returns14: false, fits: [], specs: {}, donorId: donor?.id ?? null,
+        side: p.side, gearbox: donor?.gearbox || b.gearbox, km: donor ? donor.km ?? null : kmNum, tested: b.tested, returns14: false, fits: [], specs: {}, donorId: donor?.id ?? null,
       };
       try { await saveListing(uid, null, input, p.files.map((file) => ({ file, url: "" })), []); ok++; }
       catch (e) { left.push({ ...p, err: skError(e) }); }
@@ -147,9 +155,12 @@ export default function FromPhotos({ uid, cat, prof, onDone }: { uid: string; ca
           <label>Stav (ak pri dieli nezmeníte)<select value={b.cond} onChange={(e) => { const c = e.target.value as Condition; setB({ ...b, cond: c, warranty: firm && c === "Nový" ? "24 mesiacov" : b.warranty }); }}>{CONDITIONS.map((c) => <option key={c} value={c}>{condLabel(c)}</option>)}</select></label>
           <label>Zodpovednosť za vady<select value={b.warranty} onChange={(e) => setB({ ...b, warranty: e.target.value })}>{!firm && <option value="Bez záruky">Bez záruky (súkromný predaj)</option>}<option>12 mesiacov</option><option>24 mesiacov</option></select></label>
           <label>Odovzdanie<select value={b.shipping} onChange={(e) => setB({ ...b, shipping: e.target.value })}><option>Len osobný odber</option><option>Zasielam kuriérom</option></select></label>
-          <label>Mesto *<input value={b.city} maxLength={60} onChange={(e) => setB({ ...b, city: e.target.value })} /></label>
+          {!donor && <label>Prevodovka vozidla<select value={b.gearbox} onChange={(e) => setB({ ...b, gearbox: e.target.value })}><option value="">Neuvedená</option><option>Manuálna</option><option>Automatická</option></select></label>}
+          {!donor && <label>Najazdené km vozidla<input value={b.km} inputMode="numeric" maxLength={9} placeholder="napr. 184000" onChange={(e) => setB({ ...b, km: e.target.value })} /></label>}
+          <label>Mesto alebo obec *<CityInput id="fp-city" value={b.city} onChange={(x) => setB({ ...b, city: x })} /></label>
           <label>Telefón *<input value={b.phone} inputMode="tel" maxLength={30} onChange={(e) => setB({ ...b, phone: e.target.value })} /></label>
         </div>
+        <label className="pp-chk"><input type="checkbox" checked={b.tested} onChange={(e) => setB({ ...b, tested: e.target.checked })} /><span>Všetky diely sú odskúšané</span></label>
         <label className="fp-note">Doplnok k popisu všetkých dielov (nepovinné)<input value={b.note} maxLength={300} onChange={(e) => setB({ ...b, note: e.target.value })} placeholder="napr. Diely sú odskúšané pred demontážou. Pošleme aj na dobierku." /></label>
         <p className="mute fp-hint">Popis vznikne sám: „{donor || carText ? (donor ? `Diel z rozoberaného vozidla ${carText}.` : `Názov dielu z vozidla ${carText || "…"}.`) : "Názov dielu z vozidla …"}{b.note.trim() ? " " + b.note.trim() : ""}“ Neskôr ho môžete pri každom inzeráte upraviť.</p>
         {missingProfile && <p className="mute">Tip: mesto a telefón si uložte v Profile – nabudúce sa doplnia samy.</p>}
@@ -188,7 +199,7 @@ export default function FromPhotos({ uid, cat, prof, onDone }: { uid: string; ca
 
       {parts.length > 0 && (
         <div className="pp-box">
-          <h2>4. Doplňte názov, číslo dielu a cenu ({parts.length} {plural(parts.length, "diel", "diely", "dielov")})</h2>
+          <h2>4. Doplňte názov, kategóriu, číslo dielu a cenu ({parts.length} {plural(parts.length, "diel", "diely", "dielov")})</h2>
           <datalist id="fp-names">{common.map(([n]) => <option key={n} value={n} />)}</datalist>
           <ul className="fp-parts">{parts.map((p) => {
             const e = tried ? partErr(p) : [];
@@ -203,6 +214,7 @@ export default function FromPhotos({ uid, cat, prof, onDone }: { uid: string; ca
                   <label>Cena € *<input value={p.price} inputMode="decimal" maxLength={10} onChange={(e) => upd(p.id, { price: e.target.value })} placeholder="€" /></label>
                   <label>Stav<select value={p.cond} onChange={(e) => upd(p.id, { cond: e.target.value as Condition | "" })}><option value="">{condLabel(b.cond)} (ako všetky)</option>{CONDITIONS.filter((c) => c !== b.cond).map((c) => <option key={c} value={c}>{condLabel(c)}</option>)}</select></label>
                   <label>Strana<select value={p.side} onChange={(e) => upd(p.id, { side: e.target.value })}><option value="">—</option><option>Ľavá</option><option>Pravá</option></select></label>
+                  <label className="fp-desc">Popis dielu – stav, poškodenia, čo je súčasťou (nepovinné)<input value={p.desc} maxLength={500} onChange={(e) => upd(p.id, { desc: e.target.value })} placeholder="napr. Bez prasklín, chýba jeden úchyt." /></label>
                 </div>
                 {(e.length > 0 || p.err) && <p className="pp-err">{p.err || `Doplňte: ${e.join(", ")}.`}</p>}
                 <button type="button" className="lnk fp-rm" onClick={() => removePart(p.id)}>Zrušiť diel (fotky sa vrátia)</button>

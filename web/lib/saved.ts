@@ -20,7 +20,9 @@ function write(v: Saved[]) {
 /** Kľúč hľadania – rovnaké filtre = rovnaké hľadanie. */
 export function filterKey(f: Filters): string {
   const { fav: _fav, sort: _sort, ...rest } = f; // eslint-disable-line @typescript-eslint/no-unused-vars
-  return JSON.stringify({ ...rest, q: rest.q.trim().toLowerCase() });
+  // kľúče zoradené a chýbajúce nové polia doplnené – staršie uložené hľadania (bez „km“) sa porovnajú správne
+  const o: Record<string, unknown> = { ...rest, km: rest.km || null, q: rest.q.trim().toLowerCase() };
+  return JSON.stringify(Object.keys(o).sort().map((k) => [k, o[k]]));
 }
 export function hasCriteria(f: Filters): boolean {
   // druh vozidla sám o sebe nie je kritérium (úvod má predvolené osobné autá)
@@ -39,7 +41,7 @@ export function describe(f: Filters, cat: Catalog | null): string {
   if (f.min != null) p.push(`od ${f.min} €`);
   if (f.max != null) p.push(`do ${f.max} €`);
   if (f.cond) p.push(f.cond);
-  if (f.city) p.push(f.city);
+  if (f.city) p.push(f.km ? `${f.city} + ${f.km} km` : f.city);
   if (f.side) p.push(`${f.side} strana`);
   if (f.tested) p.push("odskúšané");
   if (f.ret) p.push("s vrátením");

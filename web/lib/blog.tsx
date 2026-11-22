@@ -200,7 +200,6 @@ export const BLOG: BlogPost[] = [
         <h2>Ako ušetriť čas pri veľa dieloch</h2>
         <ul>
           <li><strong>Hromadne z fotiek</strong> – nahráte všetky fotky naraz a z označených fotiek vytvoríte inzeráty.</li>
-          <li><strong>Z auta na diely</strong> – zapíšete rozoberané auto raz a pridáte z neho veľa dielov naraz.</li>
           <li><strong>Import z CSV</strong> – ak máte sklad v tabuľke, nahráte ho jedným súborom.</li>
         </ul>
 

@@ -92,6 +92,8 @@ export type Filters = {
   max: number | null;
   cond: string;
   city: string;
+  /** okruh v km okolo mesta (prázdne = len to mesto) */
+  km?: number | null;
   sort: "new" | "asc" | "desc";
   fav: boolean;
   side: string;
@@ -102,7 +104,7 @@ export type Filters = {
 export const emptyFilters: Filters = {
   vtype: "", wtype: "", specs: {},
   q: "", brand: null, model: null, engine: null, year: null, cat: "", sub: null,
-  min: null, max: null, cond: "", city: "", sort: "new", fav: false, side: "", tested: false, ret: false,
+  min: null, max: null, cond: "", city: "", km: null, sort: "new", fav: false, side: "", tested: false, ret: false,
 };
 
 // ---------- Pneumatiky a disky ----------
@@ -173,10 +175,12 @@ export function wheelKind(subName: string | null | undefined): WheelKind {
   if (n === "Puklice") return "puklice";
   return "ine";
 }
-/** Povinné parametre podľa druhu (dezén len pri použitých pneumatikách – rieši formulár). Databáza vyžaduje rozmer: pneu tw+tp+rd, disk pcd+rd,
- *  kolesá aspoň jedno z toho (predajca často pozná len rozmer pneumatiky alebo len disku). */
+/** Povinné parametre podľa druhu (dezén len pri použitých pneumatikách). Databáza vyžaduje menej (pneu tw+tp+rd, disk pcd+rd,
+ *  kolesá rozmer pneumatiky alebo disku – supabase/23, 25); formulár a import chcú viac, aby kupujúci našiel ponuku podľa filtrov.
+ *  Kolesá (disk s pneumatikou, od 22. 11. 2026): celý rozmer pneumatiky aj disku, sezóna a materiál – kupujúci ich hľadá podľa disku. */
 export const WHEEL_REQ: Record<WheelKind, (keyof Specs)[]> = {
-  pneu: ["tw", "tp", "rd", "pcs"], disk: ["rd", "pcd", "rw", "et", "pcs"], kolesa: ["tw", "tp", "rd", "pcd", "pcs"], puklice: ["rd", "pcs"], ine: [],
+  pneu: ["tw", "tp", "rd", "season", "pcs"], disk: ["rd", "pcd", "rw", "et", "mat", "pcs"],
+  kolesa: ["tw", "tp", "rd", "season", "pcd", "rw", "et", "mat", "pcs"], puklice: ["rd", "pcs"], ine: [],
 };
 /** Sezóna a materiál vyplývajúce z podkategórie (napr. „Pneumatiky zimné“ → zimné). */
 export function wheelDefaults(subName: string | null | undefined): Specs {
@@ -188,14 +192,7 @@ export function wheelDefaults(subName: string | null | undefined): Specs {
 /** Chýbajúce povinné parametre kolesa (prázdne polia). */
 export function wheelMissing(kind: WheelKind, s: Specs | null | undefined, isNew = false): (keyof Specs)[] {
   const has = (k: keyof Specs) => !!(s?.[k] || "").trim();
-  if (kind === "kolesa") {
-    const tire = has("tw") && has("tp") && has("rd"), disk = has("pcd") && has("rd");
-    const req: (keyof Specs)[] = ["pcs"];
-    if (!tire && !disk) req.push("tw", "tp", "rd", "pcd");   // stačí rozmer pneumatiky ALEBO disku
-    if (tire && !isNew) req.push("tread");
-    return req.filter((k) => !has(k));
-  }
-  const req = [...WHEEL_REQ[kind]]; if (kind === "pneu" && !isNew) req.push("tread");
+  const req = [...WHEEL_REQ[kind]]; if ((kind === "pneu" || kind === "kolesa") && !isNew) req.push("tread");
   return req.filter((k) => !has(k));
 }
 /** Kolesá: je vyplnený celý rozmer pneumatiky alebo disku? */

@@ -1258,7 +1258,7 @@ a{color:var(--link)}
 .fp-th em{position:absolute;left:4px;bottom:4px;background:rgba(0,0,0,.65);color:#fff;font:600 .72rem/1 var(--f-b);font-style:normal;padding:3px 5px;border-radius:2px}
 .fp-th button{position:absolute;top:3px;right:3px;width:22px;height:22px;border:0;border-radius:3px;background:rgba(0,0,0,.65);color:#fff;font-size:1rem;line-height:1;cursor:pointer}
 .fp-f{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
-.fp-name{grid-column:1/-1}
+.fp-name,.fp-desc{grid-column:1/-1}
 .fp .oemin{display:flex;gap:6px;flex-wrap:nowrap}
 .fp .oemin input{flex:1 1 auto;width:auto}
 .fp-oem input{font-variant-numeric:tabular-nums;letter-spacing:.03em}
@@ -1824,3 +1824,7 @@ select,input:not([type=checkbox]):not([type=radio]):not([type=range]),textarea{b
 .pp-alt .lnk{font-weight:600;white-space:nowrap}
 .pp-alt-add{justify-self:start}
 .pp-alt small{font-weight:400}
+
+/* Pneumatiky a disky: ďalšie veci (snímače TPMS, snehové reťaze, skrutky…) – 22. 11. 2026 */
+.wb-extra{display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:10px 0 4px}
+.wb-extra .wb-l{font-size:.95rem;margin-right:4px}

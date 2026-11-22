@@ -214,16 +214,33 @@ export async function shrink(file: File): Promise<{ big: Blob; medium: Blob; thu
 
 export type PhotoItem = { path?: string; url: string; file?: File };
 
+/** Zmenšenie fotky sa spustí hneď po výbere (prepPhoto vo formulári) – pri „Zverejniť“ je už hotové a ostane len nahrať. */
+const prepCache = new WeakMap<File, ReturnType<typeof shrink>>();
+export function prepPhoto(file: File): ReturnType<typeof shrink> {
+  let p = prepCache.get(file);
+  if (!p) { p = shrink(file); prepCache.set(file, p); p.catch(() => prepCache.delete(file)); }
+  return p;
+}
+
+/** Spustí úlohy najviac po `n` naraz a vráti výsledky v pôvodnom poradí. */
+async function limitAll<T>(jobs: (() => Promise<T>)[], n: number): Promise<T[]> {
+  const out = new Array<T>(jobs.length); let next = 0;
+  await Promise.all(Array.from({ length: Math.min(n, jobs.length) }, async () => { while (next < jobs.length) { const i = next++; out[i] = await jobs[i](); } }));
+  return out;
+}
+
 /** Zmenší a nahrá jednu fotku inzerátu; vráti cestu veľkej verzie. */
 async function uploadPhoto(c: SupabaseClient, uid: string, lid: number, file: File, k: number): Promise<string> {
-  const { big, medium, thumb, small } = await shrink(file);
+  const { big, medium, thumb, small } = await prepPhoto(file);
   const path = `${uid}/${lid}/${Date.now()}-${k}${small === "webp" ? ".w" : ""}.jpg`;
-  const up = await c.storage.from(PHOTO_BUCKET).upload(path, big, { contentType: "image/jpeg", upsert: false });
-  if (up.error) throw new Error("Fotku sa nepodarilo nahrať: " + up.error.message);
-  // menšie verzie; ak zlyhajú, web použije veľkú
+  // všetky tri veľkosti naraz; menšie verzie môžu zlyhať (web potom použije veľkú)
   const st = small === "webp" ? "image/webp" : "image/jpeg";
-  await c.storage.from(PHOTO_BUCKET).upload(thumbPath(path), thumb, { contentType: st, upsert: false });
-  await c.storage.from(PHOTO_BUCKET).upload(mediumPath(path), medium, { contentType: st, upsert: false });
+  const [up] = await Promise.all([
+    c.storage.from(PHOTO_BUCKET).upload(path, big, { contentType: "image/jpeg", upsert: false }),
+    c.storage.from(PHOTO_BUCKET).upload(thumbPath(path), thumb, { contentType: st, upsert: false }),
+    c.storage.from(PHOTO_BUCKET).upload(mediumPath(path), medium, { contentType: st, upsert: false }),
+  ]);
+  if (up.error) throw new Error("Fotku sa nepodarilo nahrať: " + up.error.message);
   return path;
 }
 
@@ -241,22 +258,24 @@ export async function saveListing(uid: string, id: number | null, x: ListingInpu
     if (r.error && !alt.length && /oem_alt/.test(r.error.message)) r = await c.from("listings").update(dbRow(x)).eq("id", lid);   // pred supabase/39
     if (r.error) throw new Error(skError(r.error));
   }
-  const ct = await c.from("listing_contacts").upsert({ listing_id: lid, phone: x.phone.trim() });
-  if (ct.error) throw new Error(skError(ct.error));
-  const del = await c.from("listing_fits").delete().eq("listing_id", lid);
-  if (del.error) throw new Error(skError(del.error));
-  if (x.fits.length) {
-    const fi = await c.from("listing_fits").insert(x.fits.map((f) => ({ listing_id: lid, brand_id: f.brandId, model_id: f.modelId, engine_id: f.engineId })));
-    if (fi.error) throw new Error(skError(fi.error));
-  }
-  // fotky: nahrať nové, zmazať odstránené, zapísať poradie
-  const paths: string[] = [];
-  for (let k = 0; k < photos.length; k++) {
-    const p = photos[k];
-    if (p.path) { paths.push(p.path); continue; }
-    if (!p.file) continue;
-    paths.push(await uploadPhoto(c, uid, lid, p.file, k));
-  }
+  const id2 = lid;
+  // telefón, „pasuje aj na“ a fotky sa ukladajú naraz (predtým po jednom – ukladanie trvalo dlho)
+  const side = (async () => {
+    const ct = await c.from("listing_contacts").upsert({ listing_id: id2, phone: x.phone.trim() });
+    if (ct.error) throw new Error(skError(ct.error));
+    const del = await c.from("listing_fits").delete().eq("listing_id", id2);
+    if (del.error) throw new Error(skError(del.error));
+    if (x.fits.length) {
+      const fi = await c.from("listing_fits").insert(x.fits.map((f) => ({ listing_id: id2, brand_id: f.brandId, model_id: f.modelId, engine_id: f.engineId })));
+      if (fi.error) throw new Error(skError(fi.error));
+    }
+  })();
+  // fotky: nahrať nové (po 3 naraz), zmazať odstránené, zapísať poradie
+  const items = photos.filter((p) => p.path || p.file);
+  const [paths] = await Promise.all([
+    limitAll(items.map((p, k) => () => (p.path ? Promise.resolve(p.path) : uploadPhoto(c, uid, id2, p.file!, k))), 3),
+    side,
+  ]);
   const gone = oldPaths.filter((p) => !paths.includes(p));
   if (gone.length) await c.storage.from(PHOTO_BUCKET).remove(gone.flatMap(filesOf));
   const dp = await c.from("listing_photos").delete().eq("listing_id", lid);
@@ -323,7 +342,7 @@ export async function addPhotos(uid: string, l: MyListing, files: File[], activa
   const c = sellerClient();
   const start = l.photos.length;
   const paths: string[] = [];
-  for (let k = 0; k < files.length; k++) paths.push(await uploadPhoto(c, uid, l.id, files[k], start + k));
+  paths.push(...await limitAll(files.map((f, k) => () => uploadPhoto(c, uid, l.id, f, start + k)), 3));
   if (paths.length) {
     const ip = await c.from("listing_photos").insert(paths.map((path, k) => ({ listing_id: l.id, path, position: start + k })));
     if (ip.error) { await c.storage.from(PHOTO_BUCKET).remove(paths.flatMap(filesOf)); throw new Error(skError(ip.error)); }

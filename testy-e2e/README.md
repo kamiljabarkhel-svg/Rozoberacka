@@ -11,3 +11,5 @@ Cesty v `start.sh` a `gw.js` sú z testovacieho prostredia agenta; pred spusten�
 Ostrá Supabase sa týmto testom nemení.
 
 **Produkčná verzia (7. 11. 2026):** `web/` zostaviť s premennými testovacej Supabase (`NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321` a anon kľúč zo `start.sh`), spustiť `prodstart.sh` a test pustiť s `RZ_PROD=1` (mapa webu sa v produkcii obnovuje raz za hodinu, preto sa v nej mestá a predajcovia nekontrolujú). Test zlyhá aj vtedy, keď bezpečnostné hlavičky (CSP) niečo zablokujú. Napodobenina prihlásenia (`gw.js`) vie aj dvojité overenie (TOTP) – kód pre test dáva `/e2e/totp?secret=…`.
+
+**Od 22. 11. 2026:** web pre test zostaviť aj s `NEXT_PUBLIC_DONORS=1` („Z auta na diely“ je na ostrom webe skryté, test ho ďalej používa) a v testovacej databáze spustiť `supabase/40_okruh_mest.sql`.

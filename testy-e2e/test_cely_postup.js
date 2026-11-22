@@ -16,12 +16,12 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
     const a = await pg.locator(".pa .btn").boundingBox(), o = await pg.locator(".oemrow").boundingBox();
     if (!(a.y < o.y)) throw new Error(`Hladat y=${a.y} oem y=${o.y}`);
   });
-  await step("popularne znacky nastavia znacku, cena od-do", async () => {
-    await pg.click(".pop .chip:has-text('Škoda')"); await pg.waitForURL(/znacka=\d+/);
-    if (await pg.locator(".pop .chip:has-text('Škoda')").getAttribute("aria-pressed") !== "true") throw new Error("tlacidlo nie je zapnute");
+  await step("cena od-do (najpopulárnejšie značky od 22. 11. 2026 nie sú)", async () => {
+    if (await pg.locator(".pop .chip").count()) throw new Error("tlačidlá najpopulárnejších značiek");
+    await pg.selectOption(".panel label:has-text('Značka') select", { label: "Škoda" }); await pg.waitForURL(/znacka=\d+/);
     await pg.fill(".price-range input[aria-label^='Cena od']", "60"); await pg.waitForURL(/cena_od=60/);
     await pg.fill(".price-range input[aria-label^='Cena od']", ""); await pg.waitForFunction(() => !location.search.includes("cena_od"));
-    await pg.click(".pop .chip:has-text('Škoda')"); await pg.waitForFunction(() => !location.search.includes("znacka="));
+    await pg.selectOption(".panel label:has-text('Značka') select", ""); await pg.waitForFunction(() => !location.search.includes("znacka="));
     if ((await pg.locator(".pa .btn").innerText()) !== "Hľadať") throw new Error("texty tlacidiel");
   });
   // Hľadanie podľa VIN je od 15. 11. 2026 skryté (NEXT_PUBLIC_VIN=1 ho zapne – vtedy spustiť test s RZ_VIN=1)
@@ -301,19 +301,25 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
     await pg.click(".pp-wheels-cta >> text=Pridať pneumatiky a disky"); await pg.waitForSelector("h1:has-text('Predať pneumatiky, disky alebo puklice')");
     if (await pg.locator(".pp-vt-big").count()) throw new Error("pri pneumatikach sa pyta druh vozidla");
     await pg.click("text=Ďalej →"); await pg.waitForSelector(".pp-ferr:has-text('čo predávate')");
-    // pneumatiky: rozmer, sezóna zo zvolenej dlaždice, bez čísla dielu
-    await pg.click(".pp-wt-g button:text-is('Pneumatiky zimné')"); await pg.waitForSelector(".pp-specg legend:text-is('Pneumatika')");
+    // pneumatiky: jedna dlaždica „Pneumatiky“, sezóna sa vyberá len raz (v rozmeroch), bez čísla dielu
+    for (const t of ["Pneumatiky zimné", "Disky hliníkové"]) if (await pg.locator(`.pp-wt-g button:text-is('${t}')`).count()) throw new Error("staré dlaždice " + t);
+    await pg.click(".pp-wt-g button:text-is('Pneumatiky')"); await pg.waitForSelector(".pp-specg legend:text-is('Pneumatika')");
     if (await pg.locator(".pp-form label:has-text('OEM')").count()) throw new Error("pri pneumatikách je pole OEM");
-    if (await pg.inputValue(".pp-specg label:has-text('Sezóna') select") !== "zimné") throw new Error("sezóna sa nevyplnila");
+    if (await pg.locator(".pp-specg legend:text-is('Sada')").count()) throw new Error("samostatný rámik Sada");
     await pg.fill(".pp-form label:has-text('Názov inzerátu') input", "Disky 16 Škoda 5x112");
-    await pg.click("text=Ďalej →"); await pg.waitForSelector(".pp-ferr:has-text('šírka pneumatiky')");
+    await pg.click("text=Ďalej →"); await pg.waitForSelector(".pp-ferr:has-text('sezóna')"); await pg.waitForSelector(".pp-ferr:has-text('šírka pneumatiky')");
+    await pg.selectOption(".pp-specg label:has-text('Sezóna') select", "zimné");
+    // kolesá: povinný rozmer pneumatiky aj disku
+    await pg.click(".pp-wt-g button:has-text('Kolesá')"); await pg.waitForSelector(".pp-specg legend:text-is('Disk')");
+    await pg.click("text=Ďalej →"); for (const t of ["rozteč", "zális", "materiál", "šírka pneumatiky"]) await pg.waitForSelector(`.pp-ferr:has-text('${t}')`);
     // disky
-    await pg.click(".pp-wt-g button:text-is('Disky hliníkové')"); await pg.waitForSelector(".pp-specg legend:text-is('Disk')");
+    await pg.click(".pp-wt-g button:text-is('Disky')"); await pg.waitForSelector(".pp-specg legend:text-is('Disk')");
+    await pg.selectOption(".pp-specg label:has-text('Materiál') select", "Hliník");
     if (await pg.locator(".pp-specg legend:text-is('Pneumatika')").count()) throw new Error("pri diskoch sú polia pneumatiky");
     await pg.fill(".pp-specg label:has-text('Rozteč') input", "5x112"); await pg.selectOption(".pp-specg label:has-text('Priemer') select", "16");
     await pg.fill(".pp-specg label:has-text('Zális') input", "abc");
     await pg.click("text=Ďalej →"); await pg.waitForSelector(".pp-ferr:has-text('Doplňte alebo opravte')");
-    await pg.fill(".pp-specg label:has-text('Zális') input", "46"); await pg.fill(".pp-specg label:has-text('Šírka disku') input", "6.5"); await pg.fill(".pp-specg label:has-text('Počet kusov') input", "4");
+    await pg.fill(".pp-specg label:has-text('Zális') input", "46"); await pg.fill(".pp-specg label:has-text('Šírka disku') input", "6.5"); await pg.selectOption(".pp-specg label:has-text('Počet kusov') select", "4");
     await pg.click("text=Ďalej →"); await pg.waitForSelector(".pp-form label:has-text('Značka auta')");
     if (await pg.locator(".pp-form label:has-text('Prevodovka auta')").count()) throw new Error("pri diskoch je prevodovka auta");
     // puklice – celé zverejnenie
@@ -385,6 +391,26 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
     await pg.click("text=Zverejniť 2 inzeráty"); await pg.waitForSelector(".pp-toast:has-text('Zverejnené: 2 inzeráty')", { timeout: 30000 });
     await pg.click(".pp-nav button:has-text('Moje inzeráty')"); await pg.click(".pp-chips >> text=Aktívne");
     await pg.waitForSelector(".pp-row:has-text('Volant kožený') .pp-th img"); await pg.waitForSelector(".pp-row:has-text('Predné svetlo ľavé') .pp-th img");
+  });
+  await step("filtre: bez najpopulárnejších značiek, ročník pri čísle dielu, okruh v km", async () => {
+    await b2.goto(B + "/"); if (await b2.locator("text=Najpopulárnejšie značky").count()) throw new Error("sekcia Najpopulárnejšie značky");
+    await b2.goto(B + "/?kat=kol"); await b2.click(".wb-extra .chip:has-text('Snímače tlaku (TPMS)')"); await b2.waitForURL(/pod=\d+/);
+    await b2.waitForSelector(".wb-extra .chip[aria-pressed='true']:has-text('TPMS')");
+    await b2.goto(B + "/?q=5E1941015&rok=2016"); await b2.waitForSelector(".cnt");
+    if (await b2.locator(".adv label:has-text('Ročník')").count()) throw new Error("ročník pri hľadaní čísla dielu");
+    await b2.waitForFunction(() => !/rok=/.test(location.search));
+    await b2.goto(B + "/?q=kapota"); await b2.waitForSelector(".adv label:has-text('Ročník')", { state: "attached" });
+    // okruh: diel v Bytči (asi 15 km od Žiliny) sa ukáže pri „Žilina do 30 km“
+    const sql = (q) => require("child_process").execSync(`psql -h /tmp/pgt -p 5499 -U postgres -d e2e -tAc "${q}"`).toString().trim();
+    sql("update listings set city = 'Bytča' where name = 'Volant kožený'");
+    try {
+      await b2.goto(B + "/?mesto=" + encodeURIComponent("Žilina")); await b2.waitForSelector(".adv label:has-text('Okruh') select");
+      await b2.waitForSelector(".card:has-text('Volant kožený')", { state: "detached", timeout: 15000 }).catch(() => { throw new Error("Bytča v Žiline bez okruhu"); });
+      await b2.selectOption(".adv label:has-text('Okruh') select", "30"); await b2.waitForURL(/okruh=30/);
+      await b2.waitForSelector(".card:has-text('Volant kožený')");
+      await b2.goto(B + "/?mesto=" + encodeURIComponent("Žilina") + "&okruh=10"); await b2.waitForSelector(".card");
+      await b2.waitForSelector(".card:has-text('Volant kožený')", { state: "detached", timeout: 15000 }).catch(() => { throw new Error("Bytča je v okruhu 10 km"); });
+    } finally { sql("update listings set city = 'Žilina' where name = 'Volant kožený'"); }
   });
   await step("náhradné a podobné čísla dielov", async () => {
     // náhradné číslo z CSV: diel sa nájde podľa neho, detail ho ukáže (hlavné číslo sa medzi náhradné neuloží)

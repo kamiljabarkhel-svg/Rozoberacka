@@ -9,4 +9,7 @@ export const EMAIL_REPLIES = process.env.NEXT_PUBLIC_EMAIL_REPLIES === "1";
 /** Hľadanie podľa VIN (úvod, dopyt). Skryté na želanie majiteľa 15. 11. 2026 – dekódovanie (lib/vin.ts) ostáva v kóde.
  *  Zapnutie: NEXT_PUBLIC_VIN=1 vo Verceli. */
 export const VIN_ENABLED = process.env.NEXT_PUBLIC_VIN === "1";
+/** Portál predajcu – „Z auta na diely“ (rozoberané vozidlá, tabuľka donor_cars). Skryté na želanie majiteľa 22. 11. 2026 – kód a tabuľky ostávajú.
+ *  Zapnutie: NEXT_PUBLIC_DONORS=1 vo Verceli. */
+export const DONORS_ENABLED = process.env.NEXT_PUBLIC_DONORS === "1";
 export const PL_ENABLED = process.env.NEXT_PUBLIC_PL === "1";

@@ -7,6 +7,7 @@ import { SPEC_COLS } from "@/lib/csvExport";
 import { sampleCsvHref, sampleXmlHref } from "@/lib/importSamples";
 import { importMany, type ListingInput, type Profile, cleanOemAlt } from "@/lib/seller";
 import { baseName, byExactName, groupByKey, isPhoto, keyOf, MAX_PHOTOS, sortPhotos, splitNames } from "@/lib/bulkPhotos";
+import { splitPhotoFiles, tooBigMsg } from "@/lib/photos";
 
 const MAX = 500;
 const REQ = ["nazov", "cena", "kategoria"];
@@ -81,11 +82,12 @@ export default function CsvImport({ uid, cat, prof, onDone }: { uid: string; cat
   const [pre, setPre] = useState<Pre[] | null>(null);
   const [head, setHead] = useState("");
   const [busy, setBusy] = useState(false), [res, setRes] = useState<string[]>([]);
-  const [files, setFiles] = useState<File[]>([]), [done, setDone] = useState(0);
+  const [files, setFiles] = useState<File[]>([]), [done, setDone] = useState(0), [bigErr, setBigErr] = useState("");
   const addFiles = (list: FileList | null) => {
     if (!list) return;
-    const add = [...list].filter(isPhoto);
+    const { ok: add, tooBig } = splitPhotoFiles([...list].filter(isPhoto));
     setFiles((o) => { const seen = new Set(o.map((f) => baseName(f).toLowerCase() + f.size)); return [...o, ...add.filter((f) => !seen.has(baseName(f).toLowerCase() + f.size))]; });
+    setBigErr(tooBigMsg(tooBig));
   };
   // priradenie fotiek k riadkom: stĺpec „fotky“ (presné názvy) alebo číslo dielu v názve súboru
   const matches = useMemo(() => {
@@ -220,6 +222,7 @@ export default function CsvImport({ uid, cat, prof, onDone }: { uid: string; cat
               <label className="pp-add pp-folder"><input type="file" multiple {...{ webkitdirectory: "" }} onChange={(e) => { addFiles(e.target.files); e.target.value = ""; }} /><span>Vybrať celý priečinok</span></label>
               {files.length > 0 && <button type="button" className="lnk" onClick={() => setFiles([])}>Odobrať fotky ({files.length})</button>}
             </span>
+            {bigErr && <span className="pp-err" role="alert">{bigErr}</span>}
             <span className="mute">Fotky sa k riadkom priradia: podľa stĺpca <b>fotky</b> (názvy súborov oddelené |, napr. <code>svetlo1.jpg|svetlo2.jpg</code>), alebo podľa <b>čísla dielu v názve súboru</b> (<code>5E1941015.jpg</code>, <code>5E1941015_2.jpg</code>). Najviac {MAX_PHOTOS} fotiek na inzerát, formát JPG, PNG alebo WebP (na iPhone zvoľte v Nastavenia → Fotoaparát → Formáty „Najkompatibilnejší“). Fotky sa pred nahraním zmenšia v prehliadači.</span></li>
         </ol>
         {head && <p className="pp-err">{head}</p>}

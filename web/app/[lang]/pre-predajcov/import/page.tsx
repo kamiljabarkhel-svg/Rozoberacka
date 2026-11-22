@@ -87,7 +87,7 @@ export default async function Page({ params }: P) {
       <Table rows={OPTIONAL} />
 
       <h2>Pneumatiky a disky</h2>
-      <p>Pri kategórii „Pneumatiky a disky“ vyplňte rozmery – podľa nich ich kupujúci hľadajú. Pri pneumatikách aspoň šírku, profil a priemer, pri diskoch aspoň rozteč a priemer.</p>
+      <p>Pri kategórii „Pneumatiky a disky“ vyplňte rozmery – podľa nich ich kupujúci hľadajú. Povinné sú: pri <b>pneumatikách</b> šírka, profil, priemer, sezóna a počet kusov (pri použitých aj dezén); pri <b>diskoch</b> priemer, rozteč, šírka disku, ET, materiál a počet kusov; pri <b>kolesách</b> (disk s pneumatikou) oboje; pri <b>puklíciach</b> priemer a počet kusov. Sezónu a materiál netreba, ak ich prezradí podkategória (napr. „Pneumatiky zimné“, „Disky hliníkové“).</p>
       <Table rows={WHEELS} />
 
       <h2>Fotky</h2>

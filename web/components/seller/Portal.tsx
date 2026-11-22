@@ -21,12 +21,13 @@ import {
 } from "@/lib/seller";
 import ListingForm from "./ListingForm";
 import Donors from "./Donors";
+import CityInput from "./CityInput";
 import Cars from "./Cars";
 import Requests from "./Requests";
 import CsvImport from "./CsvImport";
 import BulkPhotos from "./BulkPhotos";
 import FromPhotos from "./FromPhotos";
-import { CARS_ENABLED, EMAIL_REPLIES } from "@/lib/features";
+import { CARS_ENABLED, DONORS_ENABLED, EMAIL_REPLIES } from "@/lib/features";
 
 type Tab = "home" | "list" | "donor" | "cars" | "form" | "csv" | "photos" | "addph" | "wheels" | "req" | "msg" | "prof";
 const TABS: [Tab, string][] = [["home", "Nástenka"], ["list", "Moje inzeráty"], ["donor", "Z auta na diely"], ["form", "Jeden inzerát"], ["wheels", "Pneumatiky, disky, puklice"], ["csv", "Import z CSV / XML"], ["photos", "Hromadne z fotiek"], ["req", "Dopyty na diely"], ["msg", "Správy od kupujúcich"], ["prof", "Profil a nastavenia"]];
@@ -34,7 +35,7 @@ const TAB_LABEL = Object.fromEntries(TABS) as Record<Tab, string>;
 /** Menu v skupinách s nadpismi, aby predajca hneď videl, kde čo je. */
 const NAV_GROUPS: [string, Tab[]][] = [
   ["Prehľad", ["home", "list"]],
-  ["Pridať inzeráty", ["form", "wheels", "photos", "csv", "donor"]],
+  ["Pridať inzeráty", DONORS_ENABLED ? ["form", "wheels", "photos", "csv", "donor"] : ["form", "wheels", "photos", "csv"]],
   ["Kupujúci", ["msg", "req"]],
   ["Môj účet", ["prof"]],
 ];
@@ -84,7 +85,7 @@ export default function Portal() {
 
   // záložka podľa adresy (#list, #msg…) aj pri tlačidle Späť
   useEffect(() => {
-    const read = () => { const h = window.location.hash.replace("#", "") as Tab; if (TABS.some(([t]) => t === h) || h === "addph") setTab(h); };
+    const read = () => { const h = window.location.hash.replace("#", "") as Tab; if ((TABS.some(([t]) => t === h) && (h !== "donor" || DONORS_ENABLED)) || h === "addph") setTab(h); };
     read(); window.addEventListener("hashchange", read);
     return () => window.removeEventListener("hashchange", read);
   }, []);
@@ -140,16 +141,16 @@ export default function Portal() {
           onDup={(l) => act(() => duplicate(session.user.id, l), "Kópia je pozastavená – upravte ju, pridajte fotky a aktivujte")}
           onDelete={(ls) => act(() => deleteListings(ls), ls.length > 1 ? `Zmazané: ${ls.length}` : "Inzerát zmazaný")} />}
         {tab === "req" && cat && <Requests uid={session.user.id} cat={cat} prof={prof} items={items} onSent={flash} />}
-        {tab === "donor" && cat && <Donors uid={session.user.id} cat={cat} prof={prof} items={items}
+        {tab === "donor" && DONORS_ENABLED && cat && <Donors uid={session.user.id} cat={cat} prof={prof} items={items}
           onAddOne={(d) => { setEdit(null); setDonor(d); setTab("form"); window.scrollTo({ top: 0 }); }}
           onSellCar={CARS_ENABLED ? (d) => { setSellDonor(d); setTab("cars"); history.replaceState(null, "", "#cars"); window.scrollTo({ top: 0 }); } : undefined}
           onDone={async (m) => { flash(m); await reload(session); }} />}
         {CARS_ENABLED && tab === "cars" && cat && <Cars key={sellDonor?.id ?? "cars"} uid={session.user.id} cat={cat} prof={prof} fromDonor={sellDonor} onDone={(m) => { setSellDonor(null); flash(m); }} />}
         {tab === "form" && cat && <ListingForm key={edit?.id ?? "new-" + (donor?.id ?? "")} uid={session.user.id} cat={cat} prof={prof} edit={edit} donor={donor}
           onWheels={() => { setEdit(null); go("wheels"); }}
-          onSaved={async (id) => { await reload(session); setEdit(null); go("list"); flash(edit ? "Zmeny uložené" : `Inzerát #${id} je zverejnený`); }} />}
+          onSaved={(id) => { const was = !!edit; setEdit(null); go("list"); flash(was ? "Zmeny uložené" : `Inzerát #${id} je zverejnený`); void reload(session); }} />}
         {tab === "wheels" && cat && <ListingForm key="wheels" wheelOnly uid={session.user.id} cat={cat} prof={prof} edit={null}
-          onSaved={async (id) => { await reload(session); go("list"); flash(`Inzerát #${id} je zverejnený`); }} />}
+          onSaved={(id) => { go("list"); flash(`Inzerát #${id} je zverejnený`); void reload(session); }} />}
         {tab === "csv" && cat && <CsvImport uid={session.user.id} cat={cat} prof={prof} onDone={async (n) => { await reload(session); flash(`Importované: ${n}`); go("list"); }} />}
         {(tab === "photos" || tab === "addph") && <div>
           <header className="pp-h"><h1>Hromadne z fotiek</h1></header>
@@ -406,7 +407,7 @@ function ProfileTab({ prof, onSave, onPw }: { prof: Profile; onSave: (p: Profile
             <span><b>Ako súkromná osoba</b><small>Príležitostný predaj, nie v rámci podnikania. Kupujúci uvidí poučenie, že sa nepoužijú predpisy na ochranu spotrebiteľa. Zodpovedáte za vady, na ktoré kupujúceho neupozorníte.</small></span></label>
         </fieldset>
         <label className={bad === "name" ? "bad" : ""}><span>{firm ? "Obchodné meno" : "Meno (zobrazí sa kupujúcim)"} <em className="req">*</em></span><input id="pf-name" aria-invalid={bad === "name"} value={p.name} onChange={set("name")} maxLength={120} required />{fe("name")}</label>
-        <label>Mesto<input value={p.city} onChange={set("city")} maxLength={60} /></label>
+        <label>Mesto alebo obec (predvyplní sa do inzerátov)<CityInput id="pf-city" value={p.city || ""} onChange={(x) => setP({ ...p, city: x })} /></label>
         {firm && <label className={bad === "ico" ? "bad" : ""}><span>IČO <em className="req">*</em></span><input id="pf-ico" aria-invalid={bad === "ico"} value={p.ico} onChange={set("ico")} inputMode="numeric" maxLength={11} placeholder="12345678" required />{fe("ico")}</label>}
         {firm && <label className={bad === "address" ? "bad" : ""}><span>Sídlo / miesto podnikania <em className="req">*</em></span><input id="pf-address" aria-invalid={bad === "address"} value={p.address} onChange={set("address")} maxLength={200} placeholder="Ulica 1, 900 01 Mesto" required />{fe("address")}</label>}
         <label className={bad === "phone" ? "bad" : ""}>Telefón (predvyplní sa do inzerátov)<input id="pf-phone" aria-invalid={bad === "phone"} value={p.phone} onChange={set("phone")} inputMode="tel" />{fe("phone")}</label>

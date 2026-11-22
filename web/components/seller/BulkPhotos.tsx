@@ -4,6 +4,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { addPhotos, skError, type MyListing } from "@/lib/seller";
 import { baseName, groupByKey, isPhoto, keyOf, MAX_PHOTOS, sortPhotos } from "@/lib/bulkPhotos";
+import { splitPhotoFiles, tooBigMsg } from "@/lib/photos";
 
 type Plan = { l: MyListing; files: File[]; cut: number; how: string };
 
@@ -13,9 +14,9 @@ export default function BulkPhotos({ uid, items, onDone }: { uid: string; items:
   const [busy, setBusy] = useState(false), [done, setDone] = useState(0), [errs, setErrs] = useState<string[]>([]);
   const addFiles = (list: FileList | null) => {
     if (!list) return;
-    const add = [...list].filter(isPhoto);
+    const { ok: add, tooBig } = splitPhotoFiles([...list].filter(isPhoto));
     setFiles((o) => { const seen = new Set(o.map((f) => baseName(f).toLowerCase() + f.size)); return [...o, ...add.filter((f) => !seen.has(baseName(f).toLowerCase() + f.size))]; });
-    setErrs([]);
+    setErrs(tooBig.length ? [tooBigMsg(tooBig)] : []);
   };
 
   const { plans, unused, ambiguous } = useMemo(() => {

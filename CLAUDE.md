@@ -419,3 +419,12 @@ Overené na Slov-Lexe: Občiansky zákonník § 597, 599, 612, 618, 619 (znenie 
 
 ## Návod k importu (15. 11. 2026, 17:45)
 - Portál (Import z CSV / XML) má len krátke zhrnutie a odkaz na `/pre-predajcov/import` (nové okno) – podrobný návod so stĺpcami, pneumatikami, fotkami, XML a častými problémami. Pri novom stĺpci importu ho doplniť aj do tabuliek v `app/[lang]/pre-predajcov/import/page.tsx`. Vzory CSV/XML: `lib/importSamples.ts`.
+
+## Pripomienky 22. 11. 2026
+- Úvod bez „Najpopulárnejšie značky“. Pri hľadaní čísla dielu sa ročník neponúka (`looksLikeOem`).
+- **Okruh v km** pod mestom (`Filters.km`, adresa `okruh`, `lib/obce.ts`): mestá v okruhu počíta prehliadač, `search_listings` dostane `cities` (`supabase/40`, výsledok má `"v": 40`). Pri ďalšej zmene `search_listings` vychádzať z 40.
+- **Mestá a obce**: `public/obce.json` (2 889 obcí SR so súradnicami, Wikidata CC0, `web/scripts/gen-obce.py`), výber `components/seller/CityInput.tsx` – formulár, hromadne z fotiek, profil. Inzerát sa uloží s presným názvom zo zoznamu.
+- Pneumatiky a disky (predajca): dlaždice Pneumatiky / Disky / Kolesá / Puklice + „Alebo iné“; podkategóriu pri pneumatikách určí sezóna, pri diskoch materiál. Povinné (`WHEEL_REQ` v `lib/types.ts`): pneumatiky šírka, profil, priemer, sezóna, kusy (+ dezén pri použitých); disky priemer, rozteč, šírka, ET, materiál, kusy; kolesá oboje; puklice priemer, kusy. Kupujúci: tlačidlá „Ďalšie“ (TPMS, reťaze…) podľa podkategórie.
+- Fotka najviac 20 MB (`MAX_PHOTO_MB` v `lib/photos.ts`). Zmenšenie fotky začne hneď po výbere (`prepPhoto`), nahrávanie po 3 naraz.
+- „Z auta na diely“ je skryté (`DONORS_ENABLED`, `NEXT_PUBLIC_DONORS=1`); e2e test sa zostavuje s `NEXT_PUBLIC_DONORS=1`.
+- Hromadne z fotiek vyžaduje to isté ako jeden inzerát (popis ≥ 20 znakov sa skladá z popisu dielu, vozidla a doplnku).

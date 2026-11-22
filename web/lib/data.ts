@@ -145,9 +145,20 @@ export function filterParams(f: Filters): Record<string, unknown> {
 export type SearchPage = { items: Listing[]; total: number; base: number; cats: Map<string, number>; subs: Map<number, number> };
 
 /** Hľadanie inzerátov. So Supabase beží v databáze (funkcia search_listings), v ukážke v prehliadači. */
+/** Mestá inzerátov v okruhu `f.km` okolo `f.city` (null = bez okruhu alebo sa nepodarilo načítať zoznam obcí). */
+async function radiusCities(f: Filters): Promise<string[] | null> {
+  if (!f.city || !f.km || typeof window === "undefined") return null;
+  try {
+    const { loadObce, citiesWithin } = await import("./obce");
+    return citiesWithin(await loadObce(), f.city, f.km, await getCities());
+  } catch { return null; }
+}
+
 export async function searchListings(f: Filters, favs: number[], offset: number, limit: number, extra: { exclude?: number; seller?: string; donor?: number } = {}): Promise<SearchPage> {
+  const near = await radiusCities(f);
   if (IS_DEMO) {
     let all = (await demoData()).listings;
+    if (near) { all = all.filter((l) => !!l.city && near.includes(l.city)); f = { ...f, city: "" }; }
     if (extra.exclude != null) all = all.filter((l) => l.id !== extra.exclude);
     if (extra.seller) all = all.filter((l) => l.sellerId === extra.seller);
     if (extra.donor != null) all = all.filter((l) => l.donorId === extra.donor);
@@ -156,8 +167,15 @@ export async function searchListings(f: Filters, favs: number[], offset: number,
   }
   const p: Record<string, unknown> = { ...filterParams(f), sort: f.sort, limit, offset, ...extra };
   if (f.fav) p.ids = favs;
-  const { data, error } = await client().rpc("search_listings", { p });
+  if (near) { p.cities = near; delete p.city; }
+  let { data, error } = await client().rpc("search_listings", { p });
   if (error) throw new Error("search: " + error.message);
+  // Databáza bez supabase/40 okruh nepozná (nevráti "v") – vtedy hľadáme len v zvolenom meste.
+  if (near && !(data as { v?: number } | null)?.v) {
+    delete p.cities; p.city = f.city;
+    ({ data, error } = await client().rpc("search_listings", { p }));
+    if (error) throw new Error("search: " + error.message);
+  }
   const d = (data || {}) as { total?: number; base?: number; cats?: Record<string, number>; subs?: Record<string, number>; items?: Row[] };
   return {
     items: (d.items || []).map(toListing), total: Number(d.total || 0), base: Number(d.base || 0),
@@ -167,7 +185,14 @@ export async function searchListings(f: Filters, favs: number[], offset: number,
 }
 
 /** Mestá, v ktorých sú aktívne inzeráty (filter Mesto). */
+let citiesCache: { at: number; p: Promise<string[]> } | null = null;
 export async function getCities(): Promise<string[]> {
+  if (typeof window === "undefined") return loadCities();   // server: pamätá si Next.js (fetch cache)
+  if (citiesCache && Date.now() - citiesCache.at < 5 * 60_000) return citiesCache.p;
+  const p = loadCities(); citiesCache = { at: Date.now(), p }; p.catch(() => { citiesCache = null; });
+  return p;
+}
+async function loadCities(): Promise<string[]> {
   if (IS_DEMO) return [...new Set((await demoData()).listings.map((l) => l.city).filter((c): c is string => !!c))].sort((a, b) => a.localeCompare(b, "sk"));
   const { data, error } = await client().rpc("listing_cities");
   if (error) throw new Error("cities: " + error.message);
