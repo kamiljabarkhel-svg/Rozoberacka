@@ -17,7 +17,7 @@ import { download, listingsCsv } from "@/lib/csvExport";
 import { plural, price as fmtPrice } from "@/lib/format";
 import {
   changePassword, confirmFresh, setPrices, deleteAccount, deleteListings, exportMyData, duplicate, ensureProfile, getSession, markRead, myListings, myMessages, onAuthChange, sellerReply,
-  saveProfile, setStatus, setTop, signOut, skError, type Donor, type Message, type MyListing, type Profile, type Status,
+  requestBrandSet, saveProfile, setStatus, setTop, signOut, skError, type Donor, type Message, type MyListing, type Profile, type Status,
 } from "@/lib/seller";
 import ListingForm from "./ListingForm";
 import Donors from "./Donors";
@@ -163,7 +163,7 @@ export default function Portal() {
         </div>}
         {tab === "msg" && <Messages msgs={msgs} onRead={(ids) => act(() => markRead(ids), "Označené ako prečítané")}
           onReply={async (id, body) => { try { await sellerReply(id, body); await reload(session); flash(EMAIL_REPLIES ? "Odpoveď odoslaná – kupujúcemu príde e-mailom" : "Odpoveď uložená"); return true; } catch (e) { flash(skError(e)); return false; } }} />}
-        {tab === "prof" && prof && <><ProfileTab prof={prof} onSave={async (p) => { await saveProfile(p); setProf(p); flash("Profil uložený"); }} onPw={() => setPwMode(true)} /><MyData uid={session.user.id} /></>}
+        {tab === "prof" && prof && <><ProfileTab prof={prof} cat={cat} items={items || []} onSave={async (p) => { await saveProfile(p); setProf(p); flash("Profil uložený"); }} onPw={() => setPwMode(true)} /><MyData uid={session.user.id} /></>}
       </section>
       {toast && <div className="pp-toast" role="status">{toast}</div>}
     </div>
@@ -379,7 +379,7 @@ function Thread({ m, onRead, onReply }: { m: Message; onRead: (ids: number[]) =>
 }
 
 // ---------- PROFIL ----------
-function ProfileTab({ prof, onSave, onPw }: { prof: Profile; onSave: (p: Profile) => Promise<void>; onPw: () => void }) {
+function ProfileTab({ prof, cat, items, onSave, onPw }: { prof: Profile; cat: Catalog | null; items: MyListing[]; onSave: (p: Profile) => Promise<void>; onPw: () => void }) {
   const [p, setP] = useState(prof), [busy, setBusy] = useState(false), [err, setErr] = useState(""), [decl, setDecl] = useState(false);
   const firm = p.type === "Firma";
   const set = (k: keyof Profile) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => setP({ ...p, [k]: e.target.value });
@@ -412,7 +412,7 @@ function ProfileTab({ prof, onSave, onPw }: { prof: Profile; onSave: (p: Profile
         {firm && <label className={bad === "address" ? "bad" : ""}><span>Sídlo / miesto podnikania <em className="req">*</em></span><input id="pf-address" aria-invalid={bad === "address"} value={p.address} onChange={set("address")} maxLength={200} placeholder="Ulica 1, 900 01 Mesto" required />{fe("address")}</label>}
         <label className={bad === "phone" ? "bad" : ""}>Telefón (predvyplní sa do inzerátov)<input id="pf-phone" aria-invalid={bad === "phone"} value={p.phone} onChange={set("phone")} inputMode="tel" />{fe("phone")}</label>
         <label>E-mail<input value={p.email} disabled /></label>
-        <label className="pp-chk full"><input type="checkbox" checked={p.notifyRequests !== false} onChange={(e) => setP({ ...p, notifyRequests: e.target.checked })} /><span>Posielať e-mail o nových dopytoch kupujúcich na značky, ktoré predávam (najviac 20 denne)</span></label>
+        <RequestPrefs p={p} setP={setP} cat={cat} items={items} />
         {p.type !== prof.type && <label className="pp-chk full"><input type="checkbox" checked={decl} onChange={(e) => setDecl(e.target.checked)} /><span>{firm
           ? "Vyhlasujem, že diely predávam ako podnikateľ (obchodník) a uvedené údaje sú pravdivé."
           : "Vyhlasujem, že diely nepredávam v rámci podnikania. Ak by som predával pravidelne za účelom zisku, zaregistrujem sa ako podnikateľ."}</span></label>}
@@ -483,3 +483,29 @@ function PriceBulk({ n, onApply }: { n: number; onApply: (fn: (p: number) => num
     </span>
   );
 }
+
+/** Profil → Dopyty na diely: na ktoré značky chce predajca dopyty (supabase/41) a či chce e-mail. */
+function RequestPrefs({ p, setP, cat, items }: { p: Profile; setP: (p: Profile) => void; cat: Catalog | null; items: MyListing[] }) {
+  const name = (id: number) => cat?.brands.find((b) => b.id === id)?.name || `#${id}`;
+  const auto = [...(requestBrandSet(items, { ...p, requestAll: false, requestBrands: [] }) || [])].map(name).sort((a, b) => a.localeCompare(b, "sk"));
+  const chosen = p.requestBrands || [];
+  const options = (cat?.brands || []).filter((b) => b.name !== "Iná značka" && !chosen.includes(b.id)).sort((a, b) => a.name.localeCompare(b.name, "sk"));
+  return (
+    <fieldset className="full pp-reqp">
+      <legend>Dopyty na diely</legend>
+      <p className="mute small">Kupujúci, ktorí diel nenašli, zadajú dopyt. Vy ich vidíte v záložke Dopyty na diely a môžete im poslať ponuku.</p>
+      <label className="pp-chk"><input type="radio" name="rqall" checked={!p.requestAll} onChange={() => setP({ ...p, requestAll: false })} />
+        <span><b>Len na moje značky</b><small>{auto.length ? `Z vašich inzerátov (aj „Pasuje aj na“): ${auto.join(", ")}.` : "Zatiaľ nemáte aktívne inzeráty."} Ďalšie značky si pridajte nižšie.</small></span></label>
+      {!p.requestAll && <div className="pp-reqb">
+        {chosen.map((id) => <span key={id} className="chip">{name(id)} <button type="button" className="lnk" aria-label={`Odobrať ${name(id)}`} onClick={() => setP({ ...p, requestBrands: chosen.filter((x) => x !== id) })}>✕</button></span>)}
+        <select value="" aria-label="Pridať značku" onChange={(e) => { const id = Number(e.target.value); if (id) setP({ ...p, requestBrands: [...chosen, id] }); }}>
+          <option value="">+ Pridať značku…</option>{options.map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}
+        </select>
+      </div>}
+      <label className="pp-chk"><input type="radio" name="rqall" checked={!!p.requestAll} onChange={() => setP({ ...p, requestAll: true })} />
+        <span><b>Na všetky značky</b><small>Napríklad vrakovisko, ktoré rozoberá rôzne vozidlá.</small></span></label>
+      <label className="pp-chk"><input type="checkbox" checked={p.notifyRequests !== false} onChange={(e) => setP({ ...p, notifyRequests: e.target.checked })} /><span>Posielať mi e-mail o nových dopytoch (najviac 20 denne)</span></label>
+    </fieldset>
+  );
+}
+

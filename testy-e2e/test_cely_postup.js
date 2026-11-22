@@ -451,6 +451,22 @@ const TERMS = /TERMS_VERSION = "([^"]+)"/.exec(require("fs").readFileSync((proce
   await step("dopyt: kupujuci vidi ponuku", async () => {
     await b2.goto(B + reqUrl); await b2.waitForSelector("text=Ponuky od predajcov (1)"); await b2.waitForSelector("text=95 €");
   });
+  await step("dopyt: značky v profile (supabase/41) a odkaz e-mailom", async () => {
+    await b2.goto(B + "/dopyt"); await b2.selectOption("label:has-text('Značka') select", { label: "Toyota" });
+    await b2.fill("label:has-text('Aký diel') input", "Zadný nárazník test 41"); await b2.fill("label:has-text('Meno') input", "Jožo");
+    await b2.fill("label:has-text('Telefón alebo e-mail') input", "jozo41@test.invalid"); await b2.check(".pp-chk input"); await b2.click("text=Odoslať dopyt predajcom");
+    await b2.waitForSelector("text=Dopyt je odoslaný"); await b2.waitForSelector("text=pošleme aj na e-mail");
+    await pg.click(".pp-nav button:has-text('Dopyty na diely')"); await pg.waitForSelector(".pp-msgs li:has-text('Ľavé predné svetlo xenón')");
+    if (await pg.locator(".pp-msgs li:has-text('Zadný nárazník test 41')").count()) throw new Error("Toyota medzi mojimi značkami");
+    await pg.click(".pp-nav button:has-text('Profil a nastavenia')"); await pg.waitForSelector(".pp-reqp");
+    await pg.selectOption(".pp-reqb select", { label: "Toyota" }); await pg.waitForSelector(".pp-reqb .chip:has-text('Toyota')");
+    await pg.click("text=Uložiť profil"); await pg.waitForSelector(".pp-toast:has-text('Profil uložený')");
+    await pg.click(".pp-nav button:has-text('Dopyty na diely')"); await pg.waitForSelector(".pp-msgs li:has-text('Zadný nárazník test 41')");
+    // po obnovení stránky si profil značku pamätá
+    await pg.reload(); await pg.click(".pp-nav button:has-text('Profil a nastavenia')"); await pg.waitForSelector(".pp-reqb .chip:has-text('Toyota')");
+    await pg.click(".pp-reqb .chip:has-text('Toyota') button"); await pg.click("text=Uložiť profil"); await pg.waitForSelector(".pp-toast:has-text('Profil uložený')");
+    await b2.goto(B + reqUrl); await b2.waitForSelector("text=Ponuky od predajcov (1)");
+  });
   await step("hodnotenie predajcu z dopytu", async () => {
     await b2.click("text=Ohodnotiť predajcu"); await b2.click(".rate-s button[aria-label='5 z 5']");
     await b2.fill(".rate textarea", "Rýchla odpoveď, diel sedel."); await b2.click("text=Uložiť hodnotenie");

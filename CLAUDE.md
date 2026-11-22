@@ -428,3 +428,5 @@ Overené na Slov-Lexe: Občiansky zákonník § 597, 599, 612, 618, 619 (znenie 
 - Fotka najviac 20 MB (`MAX_PHOTO_MB` v `lib/photos.ts`). Zmenšenie fotky začne hneď po výbere (`prepPhoto`), nahrávanie po 3 naraz.
 - „Z auta na diely“ je skryté (`DONORS_ENABLED`, `NEXT_PUBLIC_DONORS=1`); e2e test sa zostavuje s `NEXT_PUBLIC_DONORS=1`.
 - Hromadne z fotiek vyžaduje to isté ako jeden inzerát (popis ≥ 20 znakov sa skladá z popisu dielu, vozidla a doplnku).
+- **Dopyty** (`supabase/41`): predajca dostane dopyt (e-mail, filter „Len moje značky“, inzeráty pri ponuke), ak značku má ako auto aktívneho inzerátu, v „Pasuje aj na“, v profile (`seller_private.request_brands`) alebo má „Na všetky značky“ (`request_all`). Funkcia `seller_matches_brand`, web `requestBrandSet`/`listingsForBrand` v `lib/seller.ts`. Kupujúci s e-mailovým kontaktom dostane raz odkaz `/dopyt/<token>` (Edge Function `dopyty`, `request_buyer_outbox`/`request_buyer_mark`).
+

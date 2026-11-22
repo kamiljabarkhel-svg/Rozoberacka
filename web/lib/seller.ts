@@ -17,7 +17,9 @@ export function sellerClient(): SupabaseClient {
   return sb;
 }
 
-export type Profile = { id: string; email: string; name: string; type: string; city: string; phone: string; ico: string; address: string; verified: boolean; ratingAvg?: number | null; ratingCount?: number; notifyRequests?: boolean };
+export type Profile = { id: string; email: string; name: string; type: string; city: string; phone: string; ico: string; address: string; verified: boolean; ratingAvg?: number | null; ratingCount?: number; notifyRequests?: boolean;
+  /** dopyty aj na tieto značky (okrem značiek z inzerátov a „Pasuje aj na“) / na všetky značky – supabase/41 */
+  requestBrands?: number[]; requestAll?: boolean };
 export type Status = "active" | "paused" | "sold" | "blocked";
 export type MyListing = {
   id: number; name: string; brandId: number; modelId: number; engineId: number | null; year: number; // 0 = bez auta (univerzálny diel)
@@ -122,12 +124,19 @@ export async function ensureProfile(s: Session): Promise<Profile> {
     if (again.error) throw new Error(skError(again.error));
     sel = again.data;
   }
-  // notify_requests pribudol v supabase/34 – ak by ešte nebol, načíta sa aspoň telefón
-  let pr: { phone?: string | null; notify_requests?: boolean } | null = null;
-  const pr1 = await c.from("seller_private").select("phone,notify_requests").eq("seller_id", uid).maybeSingle();
-  if (pr1.error) pr = (await c.from("seller_private").select("phone").eq("seller_id", uid).maybeSingle()).data; else pr = pr1.data;
+  // notify_requests pribudol v supabase/34, request_* v 41 – ak by ešte neboli, načíta sa aspoň to staršie
+  type Priv = { phone?: string | null; notify_requests?: boolean; request_all?: boolean; request_brands?: number[] | null };
+  const readPriv = async (): Promise<Priv | null> => {
+    for (const cols of ["phone,notify_requests,request_all,request_brands", "phone,notify_requests", "phone"]) {
+      const r = await c.from("seller_private").select(cols).eq("seller_id", uid).maybeSingle();
+      if (!r.error) return r.data as Priv | null;
+    }
+    return null;
+  };
+  const pr = await readPriv();
   return { id: uid, email: s.user.email || "", name: sel.name, type: sel.seller_type, city: sel.city || "", phone: pr?.phone || "", ico: sel.ico || "", address: sel.address || "", verified: !!sel.verified,
-    ratingAvg: sel.rating_avg != null ? Number(sel.rating_avg) : null, ratingCount: Number(sel.rating_count || 0), notifyRequests: pr?.notify_requests !== false };
+    ratingAvg: sel.rating_avg != null ? Number(sel.rating_avg) : null, ratingCount: Number(sel.rating_count || 0), notifyRequests: pr?.notify_requests !== false,
+    requestAll: !!pr?.request_all, requestBrands: (pr?.request_brands || []).map(Number) };
 }
 export async function saveProfile(p: Profile) {
   const c = sellerClient();
@@ -135,7 +144,9 @@ export async function saveProfile(p: Profile) {
   const a = await c.from("sellers").update({ name: p.name.trim(), seller_type: p.type, city: p.city.trim() || null,
     ico: firm ? p.ico.replace(/\s/g, "") || null : null, address: firm ? p.address.trim() || null : null }).eq("id", p.id);
   if (a.error) throw new Error(skError(a.error));
-  const b = await c.from("seller_private").upsert({ seller_id: p.id, phone: p.phone.trim() || null, notify_requests: p.notifyRequests !== false, updated_at: new Date().toISOString() });
+  const base = { seller_id: p.id, phone: p.phone.trim() || null, notify_requests: p.notifyRequests !== false, updated_at: new Date().toISOString() };
+  let b = await c.from("seller_private").upsert({ ...base, request_all: !!p.requestAll, request_brands: [...new Set(p.requestBrands || [])].slice(0, 300) });
+  if (b.error && /request_(all|brands)/.test(b.error.message)) b = await c.from("seller_private").upsert(base);   // databáza bez supabase/41
   if (b.error) throw new Error(skError(b.error));
 }
 
@@ -465,6 +476,18 @@ export async function setPrices(rows: { id: number; price: number }[]) {
 }
 
 // ---------- DOPYTY NA DIELY ----------
+/** Značky, na ktoré predajca dostáva dopyty: auto aktívneho inzerátu, „Pasuje aj na“ a značky z profilu (supabase/41). null = všetky. */
+export function requestBrandSet(items: MyListing[], prof: Profile | null): Set<number> | null {
+  if (prof?.requestAll) return null;
+  const s = new Set<number>(prof?.requestBrands || []);
+  for (const i of items) if (i.status === "active") { if (i.brandId) s.add(i.brandId); for (const f of i.fits) if (f.brandId) s.add(f.brandId); }
+  return s;
+}
+/** Inzeráty, ktoré sa hodia k dopytu na značku: auto inzerátu alebo „Pasuje aj na“. */
+export function listingsForBrand(items: MyListing[], brandId: number): MyListing[] {
+  return items.filter((i) => i.status === "active" && (i.brandId === brandId || i.fits.some((f) => f.brandId === brandId)));
+}
+
 export type PartRequest = { id: number; brandId: number; modelId: number | null; engineId: number | null; year: number | null; vin: string; categoryId: string | null;
   partName: string; note: string; contactName: string; contact: string; city: string; createdAt: string; expiresAt: string };
 export type MyOffer = { id: number; requestId: number; price: number; phone: string; listingId: number | null; note: string; createdAt: string };

@@ -4,22 +4,24 @@ import { useEffect, useMemo, useState } from "react";
 import type { Catalog } from "@/lib/types";
 import { carName } from "@/lib/seo";
 import { price as fmt } from "@/lib/format";
-import { myOffers, openRequests, sendOffer, skError, type MyListing, type MyOffer, type PartRequest, type Profile } from "@/lib/seller";
+import { listingsForBrand, myOffers, openRequests, requestBrandSet, sendOffer, skError, type MyListing, type MyOffer, type PartRequest, type Profile } from "@/lib/seller";
 
 export default function Requests({ uid, cat, prof, items, onSent }: { uid: string; cat: Catalog; prof: Profile | null; items: MyListing[]; onSent: (m: string) => void }) {
   const [reqs, setReqs] = useState<PartRequest[] | null>(null), [offers, setOffers] = useState<MyOffer[]>([]);
   const [err, setErr] = useState(""), [onlyMine, setOnlyMine] = useState(true), [open, setOpen] = useState<number | null>(null);
-  const myBrands = useMemo(() => new Set(items.map((i) => i.brandId)), [items]);
+  const myBrands = useMemo(() => requestBrandSet(items, prof), [items, prof]);   // null = všetky značky
   const load = () => Promise.all([openRequests(), myOffers()]).then(([r, o]) => { setReqs(r); setOffers(o); }).catch((e) => setErr(skError(e)));
   useEffect(() => { load(); }, []);
-  const shown = (reqs || []).filter((r) => !onlyMine || !myBrands.size || myBrands.has(r.brandId));
+  const filtering = onlyMine && !!myBrands && myBrands.size > 0;
+  const shown = (reqs || []).filter((r) => !filtering || myBrands!.has(r.brandId));
   return (
     <div>
       <header className="pp-h"><h1>Dopyty kupujúcich</h1>
-        {myBrands.size > 0 && <label className="pp-chk"><input type="checkbox" checked={onlyMine} onChange={(e) => setOnlyMine(e.target.checked)} /><span>Len značky, ktoré predávam</span></label>}</header>
+        {myBrands && myBrands.size > 0 && <label className="pp-chk"><input type="checkbox" checked={onlyMine} onChange={(e) => setOnlyMine(e.target.checked)} /><span>Len moje značky</span></label>}</header>
       <p className="mute pp-note">Kupujúci, ktorí nenašli diel, tu napísali, čo hľadajú. Ak diel máte, zavolajte im alebo pošlite ponuku – uvidia ju na svojej stránke dopytu. Kontakt kupujúceho používajte len na ponuku tohto dielu.</p>
+      <p className="mute pp-note">{!myBrands ? "Dostávate dopyty na všetky značky." : "Moje značky = značky áut vo vašich aktívnych inzerátoch, v „Pasuje aj na“ a tie, ktoré si vyberiete v profile."} Nastavíte to v <a href="#prof">Profil a nastavenia → Dopyty na diely</a>.</p>
       {err && <p className="pp-err">{err}</p>}
-      {reqs && !shown.length && <div className="empty">Zatiaľ žiadne otvorené dopyty{onlyMine && myBrands.size ? " pre vaše značky" : ""}.</div>}
+      {reqs && !shown.length && <div className="empty">Zatiaľ žiadne otvorené dopyty{filtering ? " pre vaše značky" : ""}.</div>}
       <ul className="pp-msgs">{shown.map((r) => {
         const mine = offers.find((o) => o.requestId === r.id);
         const car = carName(r, cat, true) + (r.year ? `, ${r.year}` : "");
@@ -30,7 +32,7 @@ export default function Requests({ uid, cat, prof, items, onSent }: { uid: strin
             {r.note && <p>{r.note}</p>}
             <div className="pp-mf"><span>{r.contactName}: <b>{/@/.test(r.contact) ? <a href={"mailto:" + r.contact}>{r.contact}</a> : <a href={"tel:" + r.contact.replace(/\s/g, "")}>{r.contact}</a>}</b></span>
               {mine ? <span className="tg">✓ Ponuka odoslaná: {fmt(mine.price)}</span> : open === r.id ? null : <button className="btn pp-btn-s" onClick={() => setOpen(r.id)}>Mám tento diel – poslať ponuku</button>}</div>
-            {open === r.id && !mine && <OfferForm prof={prof} items={items.filter((i) => i.status === "active" && i.brandId === r.brandId)} cat={cat}
+            {open === r.id && !mine && <OfferForm prof={prof} items={listingsForBrand(items, r.brandId)} cat={cat}
               onCancel={() => setOpen(null)} onSend={async (o) => { await sendOffer(uid, r.id, o); setOpen(null); await load(); onSent("Ponuka odoslaná"); }} />}
           </li>);
       })}</ul>

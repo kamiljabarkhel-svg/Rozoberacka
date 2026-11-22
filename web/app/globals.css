@@ -1828,3 +1828,11 @@ select,input:not([type=checkbox]):not([type=radio]):not([type=range]),textarea{b
 /* Pneumatiky a disky: ďalšie veci (snímače TPMS, snehové reťaze, skrutky…) – 22. 11. 2026 */
 .wb-extra{display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:10px 0 4px}
 .wb-extra .wb-l{font-size:.95rem;margin-right:4px}
+
+/* Profil → Dopyty na diely (22. 11. 2026) */
+.pp-reqp{display:grid;gap:10px;border:1px solid var(--line);border-radius:6px;padding:12px 14px}
+.pp-reqp legend{font-weight:700;padding:0 4px}
+.pp-reqp .pp-chk small{display:block;color:var(--mute);font-size:.86rem;margin-top:2px}
+.pp-reqb{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-left:26px}
+.pp-reqb .chip button{padding:0 2px;margin-left:2px}
+.pp-reqb select{max-width:240px}

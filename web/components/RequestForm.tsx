@@ -86,6 +86,7 @@ export default function RequestForm() {
         <h2>{tl("Dopyt je odoslaný")}</h2>
         <p>{tl("Vrakoviská a predajcovia ho uvidia vo svojom portáli a ozvú sa vám na")} <b>{v.contact}</b>{tl(". Ponuky nájdete aj na tejto súkromnej adrese – uložte si ju:")}</p>
         <p className="rq-url"><Link href={hl("/dopyt/" + done)}>{url}</Link></p>
+        {/@/.test(v.contact) && <p>{tl("Odkaz vám o pár minút pošleme aj na e-mail")} <b>{v.contact.trim()}</b>{tl(", aby ste ho nestratili.")}</p>}
         <p className="mute">{tl("Adresu si pamätáme aj v tomto prehliadači. Dopyt platí 30 dní, potom sa sám uzavrie.")}</p>
         <p><Link className="btn" href={hl("/dopyt/" + done)}>{tl("Zobraziť ponuky")}</Link></p>
       </div>
@@ -111,7 +112,8 @@ export default function RequestForm() {
         <label className="full">{tl("Poznámka")}<textarea value={v.note} maxLength={500} rows={3} onChange={(e) => set({ note: e.target.value })} placeholder={tl("farba, strana, stav, termín…")} /></label>
         <h2 className="full rq-h">{tl("Kontakt")}</h2>
         <label>{tl("Meno *")}<input value={v.name} maxLength={80} onChange={(e) => set({ name: e.target.value })} autoComplete="name" /></label>
-        <label>{tl("Telefón alebo e-mail *")}<input value={v.contact} maxLength={120} onChange={(e) => set({ contact: e.target.value })} autoComplete="tel" /></label>
+        <label>{tl("Telefón alebo e-mail *")}<input value={v.contact} maxLength={120} onChange={(e) => set({ contact: e.target.value })} autoComplete="tel" />
+          <small className="mute">{tl("Keď zadáte e-mail, pošleme vám naň aj odkaz na ponuky predajcov.")}</small></label>
         <label className="pp-chk full"><input type="checkbox" checked={agree} onChange={(e) => setAgree(e.target.checked)} />
           <span>{tl("Súhlasím, aby môj dopyt vrátane mena a kontaktu videli registrovaní predajcovia na autosuciastky.eu a ozvali sa mi s ponukou. Dopyt sa po 60 dňoch zmaže.")} <a href={hl("/ochrana-osobnych-udajov")} target="_blank">{tl("Ochrana osobných údajov")}</a></span></label>
         {err && <p className="full pp-err" role="alert">{err}</p>}
