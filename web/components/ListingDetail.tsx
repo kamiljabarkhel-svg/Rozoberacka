@@ -115,7 +115,7 @@ export default function ListingDetail({ id, onClose, initial, catalog, trInitial
   const univ = !l.brandId;   // univerzálny diel (pneumatiky, výbava jazdca…) bez konkrétneho auta
   const rows: [string, string][] = [
     ...(univ ? [["Vozidlo", universalLabel(l.vtype)] as [string, string]] : [
-    ["Značka", bName || "neuvedené"], ["Model", mName || "neuvedené"], ["Motorizácia", eName || "Pasuje na všetky motorizácie"],
+    ["Značka", bName || "neuvedené"], ["Model", mName || "neuvedené"], ["Motorizácia", eName || "Neuvedená – overte si u predajcu"],
     ["Ročník", l.year ? String(l.year) : "neuvedené"]] as [string, string][]),
     ...((l.oem || !isUniversal(l.categoryId)) ? [["Číslo dielu (OEM)", l.oem || "neuvedené"] as [string, string]] : []),
     ["Kategória", cName + (sName ? " · " + sName : "")],
@@ -157,6 +157,10 @@ export default function ListingDetail({ id, onClose, initial, catalog, trInitial
           ) : (
             <div className="gal"><div className="main"><div className="nop"><Icon id={catIcon(l.categoryId)} /><span>{tl("Predajca nepridal fotky")}</span></div></div></div>
           )}
+          {/* popis pod fotkami (želanie majiteľa 23. 11. 2026) */}
+          <section className="ddesc" aria-labelledby="ddesc-h"><h2 id="ddesc-h">{tl("Popis")}</h2><p className="desc">{(tx && !orig ? tx.description : l.description) || tl("Predajca nepridal popis.")}</p>
+            {tx && <p className="mute small tr-note">{orig ? "Oryginalny tekst sprzedawcy (po słowacku)." : "Tłumaczenie automatyczne z języka słowackiego."} <button type="button" className="linkbtn" onClick={() => setOrig(!orig)}>{orig ? "Pokaż tłumaczenie" : "Pokaż oryginał"}</button></p>}
+            {lang === "pl" && !tx && l.description && <p className="mute small tr-note">Opis sprzedawcy jest po słowacku – tłumaczenie pojawi się wkrótce.</p>}</section>
         </div>
         <div className="di">
           <h1>{tx && !orig ? tx.name : l.name}</h1>
@@ -169,9 +173,6 @@ export default function ListingDetail({ id, onClose, initial, catalog, trInitial
             <PhoneButton id={l.id} />
             <button className="fav" aria-pressed={fav} onClick={() => toggle(l.id)}>{fav ? "♥" : "♡"} {tl("Obľúbené")}</button>
           </div>
-          <section className="ddesc" aria-labelledby="ddesc-h"><h2 id="ddesc-h">{tl("Popis")}</h2><p className="desc">{(tx && !orig ? tx.description : l.description) || tl("Predajca nepridal popis.")}</p>
-            {tx && <p className="mute small tr-note">{orig ? "Oryginalny tekst sprzedawcy (po słowacku)." : "Tłumaczenie automatyczne z języka słowackiego."} <button type="button" className="linkbtn" onClick={() => setOrig(!orig)}>{orig ? "Pokaż tłumaczenie" : "Pokaż oryginał"}</button></p>}
-            {lang === "pl" && !tx && l.description && <p className="mute small tr-note">Opis sprzedawcy jest po słowacku – tłumaczenie pojawi się wkrótce.</p>}</section>
           <ContactBox id={l.id} name={l.name} seller={l.seller.name} path={listingPath(l.id, l.name, carName(l, cat), l.oem)} cat={cat} />
           <Tags l={l} />
           {!univ && <MyCarFit vehicles={vehicles} cat={cat} />}
@@ -192,7 +193,7 @@ export default function ListingDetail({ id, onClose, initial, catalog, trInitial
       {groups.length > 0 && <>
         <h2 className="sh">{tl("Pasuje na")}</h2>
         <ul className="fits">
-          {groups.map((g) => <li key={g.label}><b>{g.label.replace("(viac modelov)", tl("(viac modelov)"))}</b><br /><span className="mute">{g.engines ? g.engines.join(", ") : tl("všetky motorizácie")}</span></li>)}
+          {groups.map((g) => <li key={g.label}><b>{g.label.replace("(viac modelov)", tl("(viac modelov)"))}</b><br /><span className="mute">{g.engines ? g.engines.join(", ") : tl("motorizácia neuvedená")}</span></li>)}
         </ul>
         <p className="mute fits-note">{tl("Zoznam skladáme z údajov predajcov (vlastné auto, „pasuje aj na“ a inzeráty s rovnakým OEM číslom). Nie je to overený katalóg.")}</p>
       </>}
