@@ -1836,3 +1836,8 @@ select,input:not([type=checkbox]):not([type=radio]):not([type=range]),textarea{b
 .pp-reqb{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-left:26px}
 .pp-reqb .chip button{padding:0 2px;margin-left:2px}
 .pp-reqb select{max-width:240px}
+/* Dopyty na diely v profile: prepínače a zaškrtávanie zarovnané vľavo pri texte (23. 11. 2026) */
+.pp-reqp .pp-chk{justify-content:flex-start;text-align:left}
+.pp-reqp .pp-chk input{flex:none;width:18px!important;height:18px;margin:2px 0 0;padding:0}
+.pp-reqp .pp-chk span{flex:1;min-width:0}
+.pp-reqp .pp-reqb{margin-left:27px}
